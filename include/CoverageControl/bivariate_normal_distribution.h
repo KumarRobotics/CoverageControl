@@ -13,7 +13,7 @@
 #include "parameters.h"
 #include "typedefs.h"
 
-namespace coveragecontrol {
+namespace CoverageControl {
 	class BivariateNormalDistribution {
 
 		private:
@@ -56,6 +56,11 @@ namespace coveragecontrol {
 				peak_val_ = peak_val;
 			}
 
+			Point2 GetMean() const { return mean_; }
+			Point2 GetSigma() const { return sigma_; }
+			double GetRho() const { return rho_; }
+			double GetScale() const { return peak_val_; }
+
 			// Transform Point for standard distribution N~((0,0), 1)
 			Point2 TransformPoint(Point2 const &in_point) const {
 				if(is_circular_) {
@@ -74,5 +79,5 @@ namespace coveragecontrol {
 			}
 	};
 
-} /* namespace coveragecontrol */
+} /* namespace CoverageControl */
 #endif /* _COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_ */

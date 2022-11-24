@@ -7,13 +7,13 @@
 
 #include <cmath>
 
-namespace coveragecontrol {
+namespace CoverageControl {
 
 	double const kEps = 1e-10;
-	double constexpr kSqrt2 = std::sqrt(2);
-	double constexpr kOneBySqrt2 = 1./std::sqrt(2);
-	double constexpr kInfD = std::numeric_limits<double>::infinity();
+	double const kSqrt2 = std::sqrt(2);
+	double const kOneBySqrt2 = 1./std::sqrt(2);
+	double const kInfD = std::numeric_limits<double>::infinity();
 
-} /* namespace coveragecontrol */
+} /* namespace CoverageControl */
 #endif /* COVERAGECONTROL_CONSTANTS_H_ */
 

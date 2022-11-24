@@ -10,7 +10,7 @@
 
 #include "constants.h"
 
-namespace coveragecontrol {
+namespace CoverageControl {
 
 	class Vec2d {
 
@@ -126,5 +126,5 @@ namespace coveragecontrol {
 			}
 	};
 
-} /* namespace coveragecontrol */
+} /* namespace CoverageControl */
 #endif /* COVERAGECONTROL_VEC2D_H_ */

@@ -8,11 +8,11 @@
 #include <Eigen/Dense> // Eigen is used for maps
 #include "vec2d.h"
 
-namespace coveragecontrol {
+namespace CoverageControl {
 
 	typedef Vec2d Point2;
 	typedef Eigen::MatrixXd MapType;
 
-} /* namespace coveragecontrol */
+} /* namespace CoverageControl */
 #endif /* COVERAGECONTROL_TYPEDEFS_H_ */
 
