@@ -1,6 +1,5 @@
-obj/
-bin/
 data/
+build/
 # Prerequisites
 *.d
 

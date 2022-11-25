@@ -10,9 +10,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 
-
 find_package(Eigen3 REQUIRED NO_MODULE)
-find_package(PythonLibs REQUIRED)
+find_package(Python COMPONENTS Interpreter Development)
+add_subdirectory(${PROJECT_SOURCE_DIR}/extern/pybind11)
+find_package(pybind11 CONFIG)
+
+#############################
+## CoverageControl library ##
+#############################
 
 add_library(CoverageControl SHARED src/generate_world_map.cu)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/cuda_helpers/)
@@ -35,6 +40,19 @@ install(EXPORT CoverageControl-targets
 	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControl")
 
 configure_file(CoverageControl_config.h.in CoverageControl_config.h)
+
+##################################
+## CoverageControl python binds ##
+##################################
+pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
+target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/pybind11/include/ ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m)
+target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+###########
+## Tests ##
+###########
 
 add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
 target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)
