@@ -1,0 +1,2 @@
+#define CoverageControl_VERSION_MAJOR @CoverageControl_VERSION_MAJOR@
+#define CoverageControl_VERSION_MINOR @CoverageControl_VERSION_MINOR@
