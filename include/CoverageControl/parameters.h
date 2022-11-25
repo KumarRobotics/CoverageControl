@@ -54,6 +54,12 @@ namespace CoverageControl {
 	// Needs testing to be sure that the probability masses are not significantly off
 	double const pTruncationBND = 4;
 
+	// These settings are only required if the IDF is generated using random gaussians
+	double const pMinVariance = 1;
+	double const pMaxVariance = 10;
+	double const pMinPeak = 5;
+	double const pMaxPeak = 10;
+
 } /* namespace CoverageControl */
 
 #endif /* COVERAGECONTROL_PARAMETERS_H_ */

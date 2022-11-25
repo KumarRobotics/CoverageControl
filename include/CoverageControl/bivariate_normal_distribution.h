@@ -30,7 +30,7 @@ namespace CoverageControl {
 			BivariateNormalDistribution () {
 				is_circular_ = true;
 				sigma_ = Point2(1, 1);
-				mean_ = Point2();
+				mean_ = Point2(0, 0);
 				rho_ = 0;
 			}
 
