@@ -45,10 +45,9 @@ int main(int argc, char** argv) {
 	std::string robot_map_filename = "data/robot_local_map";
 	std::string sensor_filename = "data/sensor";
 
-	for(int i = 0; i < 2200; ++i) {
+	for(int i = 0; i < 2; ++i) {
 		std::cout << i << std::endl;
-		MapType local_map;
-		robot.GetRobotLocalMap(local_map);
+		auto local_map = robot.GetRobotLocalMap();
 		auto sensor_view = robot.GetSensorView();
 		std::string istr = std::to_string(i);
 		MapUtils::WriteMap(local_map, robot_map_filename + istr + ".dat");

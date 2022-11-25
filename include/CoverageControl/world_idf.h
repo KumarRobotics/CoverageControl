@@ -122,6 +122,10 @@ namespace CoverageControl {
 				MapUtils::GetSubMap(pos, sensor_size, pWorldMapSize, world_map_, submap);
 			}
 
+			void PrintMapSize() const {
+				std::cout << "World map size: " << world_map_.rows() << " " << world_map_.cols() << std::endl;
+			}
+
 			double GetMaxValue() const { return world_map_.maxCoeff(); }
 
 			const MapType& GetWorldMap() const { return world_map_; }

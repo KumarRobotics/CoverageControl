@@ -2,9 +2,11 @@
 #include <CoverageControl/typedefs.h>
 #include <CoverageControl/bivariate_normal_distribution.h>
 #include <CoverageControl/world_idf.h>
+#include <CoverageControl/robot_model.h>
 /* #include <CoverageControl/coverage_system.h> */
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 
 using namespace CoverageControl;
@@ -35,5 +37,19 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetWorldMap", &WorldIDF::GetWorldMap, py::return_value_policy::reference_internal)
 		.def("WriteWorldMap", &WorldIDF::WriteWorldMap)
 		.def("GetMaxValue", &WorldIDF::GetMaxValue)
+		.def("PrintMapSize", &WorldIDF::PrintMapSize)
 		;
+
+	py::class_<RobotModel>(m, "RobotModel")
+		.def(py::init<Point2 const, WorldIDF const>())
+		.def("StepControl", &RobotModel::StepControl)
+		.def("UpdateRobotPosition", &RobotModel::UpdateRobotPosition)
+		.def("GetGlobalStartPosition", &RobotModel::GetGlobalStartPosition)
+		.def("GetGlobalCurrentPosition", &RobotModel::GetGlobalCurrentPosition)
+		.def("GetAllPositions", &RobotModel::GetAllPositions)
+		.def("GetRobotMap", &RobotModel::GetRobotMap)
+		.def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap)
+		.def("GetSensorView", &RobotModel::GetSensorView)
+		;
+
 }
