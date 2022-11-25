@@ -1,6 +1,8 @@
 import numpy as np
+import math
 import pyCoverageControl # Main library
 from pyCoverageControl import Point2 # for defining points
+from pyCoverageControl import PointVector # for defining list of points
 
 # We can visualize the map in python
 # Doesn't look great as there aren't many distributions
@@ -11,8 +13,54 @@ import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
     ax = sns.heatmap(map, cmap=colormap)
-    ax.set_box_aspect(1)
+    ax.set_box_aspect(1) # Throws an error on lower versions of seaborn?
     plt.show()
+
+
+####################
+## CoverageSystem ##
+####################
+from pyCoverageControl import CoverageSystem
+# Create an environment with random distributions and robots at random start positions
+# See the parameter file for the range of random distributions
+num_gaussians = 100
+num_robots = 2
+env = CoverageSystem(num_gaussians, num_robots)
+map = env.GetWorldIDF()
+plot_map(map)
+
+# We can provide controls or update the positions directly
+# The size of these vectors should be the same as the number of robots
+new_robot_positions = PointVector()
+new_robot_positions.append(Point2(100,100))
+new_robot_positions.append(Point2(150,150))
+env.UpdateRobotPositions(new_robot_positions)
+
+control_directions = PointVector()
+control_directions.append(Point2(math.sin(math.pi/4), math.cos(math.pi/4)))
+control_directions.append(Point2(math.sin(math.pi/6), math.cos(math.pi/6)))
+speeds = pyCoverageControl.DblVector()
+speeds.append(1)
+speeds.append(1)
+env.StepControl(control_directions, speeds)
+
+# Get current global robot positions
+robot_positions = env.GetRobotPositions()
+print(type(robot_positions))
+print(robot_positions[0])
+
+# Get local map of a robot
+robot_id = 0
+local_map = env.GetRobotLocalMap(robot_id) 
+plot_map(local_map)
+
+# Get sensor view of a robot
+robot_id = 0
+sensor_view = env.GetRobotSensorView(robot_id) 
+plot_map(sensor_view)
+
+
+# Examples of each class
 
 ############
 ## Point2 ##
@@ -24,6 +72,10 @@ pt.x = 5
 pt.y = 10
 print(pt.x)
 
+point_list = PointVector()
+point_list.append(pt)
+pt1 = Point2(512, 512)
+point_list.append(pt1)
 
 #################################
 ## BivariateNormalDistribution ##
@@ -61,7 +113,6 @@ plot_map(map)
 ## RobotModel ##
 ################
 
-import math
 from pyCoverageControl import RobotModel
 # RobotModel requires an initial start position and a WorldIDF
 # It does not modify the WorldIDF but only queries it
@@ -94,3 +145,21 @@ plot_map(robot_map)
 # Get the sensor view of the robot
 sensor_view = robot.GetSensorView()
 plot_map(sensor_view)
+
+###############################
+## Additional CoverageSystem ##
+###############################
+
+# We can also give the start positions of the robots
+robot_positions = PointVector()
+robot_positions.append(Point2(100,100))
+robot_positions.append(Point2(150,150))
+env1 = CoverageSystem(world_idf, robot_positions)
+
+# We can also specify distributions and robots
+bnd_list = pyCoverageControl.BNDVector()
+bnd_list.append(dist1)
+bnd_list.append(dist2)
+bnd_list.append(dist3)
+env2 = CoverageSystem(bnd_list, robot_positions)
+

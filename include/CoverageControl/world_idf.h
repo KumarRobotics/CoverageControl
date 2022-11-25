@@ -40,6 +40,14 @@ namespace CoverageControl {
 				normal_distributions_.push_back(distribution);
 			}
 
+			/** Add Normal distributions to world IDF **/
+			void AddNormalDistribution(std::vector <BivariateNormalDistribution> const &dists) {
+				normal_distributions_.reserve(dists.size());
+				for(auto const &dist:dists) {
+					normal_distributions_.push_back(dist);
+				}
+			}
+
 			/** Integrate each normal distribution over a rectangle (cell).
 				*  If the cell is far away, the importance is set to 0
 				**/

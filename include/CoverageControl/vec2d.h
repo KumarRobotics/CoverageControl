@@ -99,7 +99,7 @@ namespace CoverageControl {
 				return Vec2d(x_ + vec.x(), y_ + vec.y());
 			}
 
-			Vec2d operator- (Vec2d const &vec) const { 
+			Vec2d operator- (Vec2d const &vec) const {
 				return Vec2d(x_ - vec.x(), y_ - vec.y());
 			}
 

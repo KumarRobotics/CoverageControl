@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 	std::ofstream dists_file("data/dists.dat");
 	WorldIDF world;
 	for(size_t i = 0; i < 100; ++i) {
-		/* Point2 mean(distrib(gen), distrib(gen)); */
-		Point2 mean(i * 100, i * 100);
+		Point2 mean(distrib(gen), distrib(gen));
+		/* Point2 mean(i * 100, i * 100); */
 		double var(distrib_var(gen));
 		double peak(distrib_var(gen));
 		dists_file << mean.x() << " " << mean.y() << " " << var << " " << peak << std::endl;
