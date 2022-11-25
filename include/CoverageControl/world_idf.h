@@ -122,9 +122,9 @@ namespace CoverageControl {
 				MapUtils::GetSubMap(pos, sensor_size, pWorldMapSize, world_map_, submap);
 			}
 
-			double GetMaxValue() {
-				return world_map_.maxCoeff();
-			}
+			double GetMaxValue() const { return world_map_.maxCoeff(); }
+
+			const MapType& GetWorldMap() const { return world_map_; }
 
 	};
 
