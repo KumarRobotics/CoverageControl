@@ -1,16 +1,21 @@
 # CoverageControl
 Provides environment for Coverage Control problem.
 
-## Requirements
-    - CUDA nvcc
-    - Eigen
-    - Boost
-    - yaml-cpp
+## Dependencies
+```bash
+- CUDA nvcc
+- Eigen
+- Boost
+- yaml-cpp
+```
+
+Helper bash functions are provided in the file `setup.sh`.
 
 ## Installation
 
 Copy the `setup.sh` file. It will clone the repository and install.   
-Assuming main workspace directory: `${HOME}/CoverageControl_ws`. Change inside `setup.sh` otherwise.
+Workspace directory: `${HOME}/CoverageControl_ws`.  See `setup.sh` file.  
+It has installations for `pybind11` , `yaml-cpp`, and `eigen3` as well, which can be commented out if it has already been installed. See end of the file.
 
 ```bash
 bash setup.sh
@@ -22,5 +27,3 @@ export PYTHONPATH="${PYTHONPATH}:${HOME}/CoverageControl_ws/install/lib"
 ```
 
 Go to `CoverageControl/scripts/python` and check if the file `coverage.py` works. It contains minimal examples.
-
-If you make changes to the CoverageControl repository, run the last two lines in `setup.sh` file by appropriately substituting `${BUILD_DIR}`

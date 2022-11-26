@@ -14,8 +14,8 @@ import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
     ax = sns.heatmap(map, cmap=colormap)
-    ax.set_box_aspect(1) # Throws an error on lower versions of seaborn?
-    # plt.show()
+    # ax.set_box_aspect(1) # Throws an error on lower versions of seaborn?
+    plt.show()
 
 
 ################
