@@ -52,12 +52,12 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ## Tests ##
 ###########
 
-add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
-target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(map_generation PRIVATE Eigen3::Eigen CoverageControl)
-install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
+# add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
+# target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)
+# target_link_libraries(map_generation PRIVATE Eigen3::Eigen CoverageControl)
+# install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-add_executable(robot_map ${PROJECT_SOURCE_DIR}/test/robot_map.cpp)
-target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControl)
-install(TARGETS robot_map DESTINATION ${CMAKE_INSTALL_BINDIR})
+# add_executable(robot_map ${PROJECT_SOURCE_DIR}/test/robot_map.cpp)
+# target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)
+# target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControl)
+# install(TARGETS robot_map DESTINATION ${CMAKE_INSTALL_BINDIR})

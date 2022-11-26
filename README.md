@@ -9,7 +9,7 @@ Provides environment for Coverage Control problem.
 ## Installation
 
 Copy the `setup.sh` file. It will clone the repository and install. 
-Assuming main workspace directory: ${HOME}/CoverageControl_ws. Change `setup.sh` otherwise.
+Assuming main workspace directory: `${HOME}/CoverageControl_ws`. Change inside `setup.sh` otherwise.
 
 ```
 bash setup.sh
