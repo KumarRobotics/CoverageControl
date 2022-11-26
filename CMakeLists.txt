@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
 project(CoverageControl VERSION 0.1 LANGUAGES CUDA CXX)
-set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -12,8 +11,7 @@ include(GNUInstallDirs)
 
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(Python COMPONENTS Interpreter Development)
-add_subdirectory(${PROJECT_SOURCE_DIR}/extern/pybind11)
-find_package(pybind11 CONFIG)
+find_package(pybind11 REQUIRED)
 
 #############################
 ## CoverageControl library ##
@@ -45,7 +43,7 @@ configure_file(CoverageControl_config.h.in CoverageControl_config.h)
 ## CoverageControl python binds ##
 ##################################
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/pybind11/include/ ${PYTHON_INCLUDE_DIRS})
+target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m)
 target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
