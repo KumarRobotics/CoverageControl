@@ -71,20 +71,19 @@ namespace CoverageControl {
 			Parameters() {}
 
 			Parameters (std::string const &config_file) : config_file_{config_file}{
-				if(not std::filesystem::exists(config_file_)) {
-					std::cerr << config_file_ << std::endl;
-					throw std::runtime_error{"Config file not found"};
-				}
-				config_file_ = config_file;
+				/* if(not std::filesystem::exists(config_file_)) { */
+				/* 	std::cerr << config_file_ << std::endl; */
+				/* 	throw std::runtime_error{"Config file not found"}; */
+				/* } */
 				ParseConfig();
 			}
 
 			void SetConfig (std::string const &config_file) {
 				config_file_ = config_file;
-				if(not std::filesystem::exists(config_file_)) {
-					std::cerr << config_file_ << std::endl;
-					throw std::runtime_error{"Config file not found"};
-				}
+				/* if(not std::filesystem::exists(config_file_)) { */
+				/* 	std::cerr << config_file_ << std::endl; */
+				/* 	throw std::runtime_error{"Config file not found"}; */
+				/* } */
 				ParseConfig();
 			}
 			void ParseConfig();
