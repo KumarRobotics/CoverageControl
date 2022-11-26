@@ -12,6 +12,7 @@
 #include <cmath>
 #include <helper_cuda.h>
 
+
 __device__ __constant__ int cu_num_dists;
 __device__ __constant__ int cu_map_size;
 __device__ __constant__ float cu_resolution;
@@ -134,3 +135,4 @@ void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, 
 		throw strstr.str();
 	}
 }
+

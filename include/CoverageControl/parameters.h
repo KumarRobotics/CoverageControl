@@ -13,52 +13,83 @@
 #ifndef COVERAGECONTROL_PARAMETERS_H_
 #define COVERAGECONTROL_PARAMETERS_H_
 
+#include <filesystem>
+#include <iostream>
 #include <cmath>
+#include <yaml-cpp/yaml.h>
 
 namespace CoverageControl {
 
-	// Assuming same resolution in both the directions. Pixel area = pResolution^2
-	double const pResolution = 1;
+	class Parameters {
+		public:
 
-	// Actual size of maps is size * pResolution, e.g.,  pWorldMapSize * pResolution
-	// For ~1 km^2 actual environment, we would have a 512 grid world with each cell representing pRobotMapSize=2 m^2
-	int constexpr pWorldMapSize = 1024;
+			std::string config_file_;
 
-	// Robot map saves what the robot has seen
-	// Could make it sparse if size becomes a problem
-	int constexpr pRobotMapSize = pWorldMapSize;
-	double constexpr pUnknownImportance = 0.01;
+			// Assuming same resolution in both the directions. Pixel area = pResolution^2
+			double pResolution = 1;
 
-	// Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
-	// Should be greater than pCommunicationRange so that they can form different channels of the same image.
-	int const pLocalMapSize = 64;
-	double const pCommunicationRange = 64; // Radius of communication (in meters)
+			// Actual size of maps is size * pResolution, e.g.,  pWorldMapSize * pResolution
+			// For ~1 km^2 actual environment, we have a 1024 grid world with each cell pResolution * pRobotMapSize=1 m^2
+			int pWorldMapSize = 1024;
 
-	// Assuming square sensor FOV.
-	// Actual FOV: square with side pResolution * pSensorSize
-	// Robot is placed at the center of FOV
-	// Make it even so that I don't have to deal with substracting by half-resolution.
-	// Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
-	int const pSensorSize = 12; // Positive integer. NOTE: Needs to be even
+			// Robot map saves what the robot has seen
+			// Could make it sparse if size becomes a problem
+			int pRobotMapSize = pWorldMapSize;
+			double pUnknownImportance = 0.01;
 
-	// Each time step corresponds to 0.1s, i.e., 10Hz
-	double const pTimeStep = 0.1;
-	// in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
-	double const pMaxRobotSpeed = 5;
-	// This is not cause a hard constraint, but helpful for initializing vectors
+			// Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
+			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
+			int pLocalMapSize = 64;
+			double pCommunicationRange = 64; // Radius of communication (in meters)
 
-	double const pEpisodeSteps = 1000; // Total time is pEpisodeSteps * pTimeStep
+			// Assuming square sensor FOV.
+			// Actual FOV: square with side pResolution * pSensorSize
+			// Robot is placed at the center of FOV
+			// Make it even so that I don't have to deal with substracting by half-resolution.
+			// Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
+			int pSensorSize = 12; // Positive integer. NOTE: Needs to be even
 
-	// Bivariate Normal Distribution truncated after pTruncationBND * sigma
-	// Helps in reducing the number of erfc evaluations
-	// Needs testing to be sure that the probability masses are not significantly off
-	double const pTruncationBND = 4;
+			// Each time step corresponds to 0.1s, i.e., 10Hz
+			double pTimeStep = 0.1;
+			// in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
+			double pMaxRobotSpeed = 5;
+			// This is not cause a hard constraint, but helpful for initializing vectors
 
-	// These settings are only required if the IDF is generated using random gaussians
-	double const pMinVariance = 1;
-	double const pMaxVariance = 10;
-	double const pMinPeak = 5;
-	double const pMaxPeak = 10;
+			int pEpisodeSteps = 1000; // Total time is pEpisodeSteps * pTimeStep
+
+			// Bivariate Normal Distribution truncated after pTruncationBND * sigma
+			// Helps in reducing the number of erfc evaluations
+			// Needs testing to be sure that the probability masses are not significantly off
+			double pTruncationBND = 4;
+
+			// These settings are only required if the IDF is generated using random gaussians
+			double pMinVariance = 1;
+			double pMaxVariance = 10;
+			double pMinPeak = 5;
+			double pMaxPeak = 10;
+
+			Parameters() {}
+
+			Parameters (std::string const &config_file) : config_file_{config_file}{
+				if(not std::filesystem::exists(config_file_)) {
+					std::cerr << config_file_ << std::endl;
+					throw std::runtime_error{"Config file not found"};
+				}
+				config_file_ = config_file;
+				ParseConfig();
+			}
+
+			void SetConfig (std::string const &config_file) {
+				config_file_ = config_file;
+				if(not std::filesystem::exists(config_file_)) {
+					std::cerr << config_file_ << std::endl;
+					throw std::runtime_error{"Config file not found"};
+				}
+				ParseConfig();
+			}
+			void ParseConfig();
+
+	};
 
 } /* namespace CoverageControl */
 

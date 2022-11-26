@@ -6,6 +6,7 @@
 #define COVERAGECONTROL_MAP_UTILS_H_
 
 #include <cmath>
+#include <CoverageControl/parameters.h>
 
 namespace CoverageControl {
 	namespace MapUtils {
@@ -18,17 +19,17 @@ namespace CoverageControl {
 		};
 
 		// Gets the closest point on the grid
-		void GetClosestGridCoordinate(Point2 pt, int &idx, int &idy) {
-			pt = pt/pResolution;
+		void GetClosestGridCoordinate(double const resolution, Point2 pt, int &idx, int &idy) {
+			pt = pt/resolution;
 			pt = Point2(std::round(pt.x()), std::round(pt.y()));
 			idx = (int)(pt.x());
 			idy = (int)(pt.y());
 		}
 
 		// Compute necessary map transformations when the point is close to the boundary
-		void ComputeOffsets(Point2 const &pos, int submap_size, int map_size, MapBounds &index, MapBounds &offset) {
+		void ComputeOffsets(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapBounds &index, MapBounds &offset) {
 			int pos_idx = 0, pos_idy = 0;
-			GetClosestGridCoordinate(pos, pos_idx, pos_idy);
+			GetClosestGridCoordinate(resolution, pos, pos_idx, pos_idy);
 			index.left = pos_idx - submap_size/2;
 			index.right = pos_idx + submap_size/2;
 			index.bottom = pos_idy - submap_size/2;
@@ -45,9 +46,9 @@ namespace CoverageControl {
 			offset.height = index.top + offset.top - (index.bottom + offset.bottom);
 		}
 
-		void GetSubMap(Point2 const &pos, int const submap_size, int const map_size, MapType const &map, MapType &submap) {
+		void GetSubMap(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapType const &map, MapType &submap) {
 			MapBounds index, offset;
-			ComputeOffsets(pos, submap_size, map_size, index, offset);
+			ComputeOffsets(resolution, pos, submap_size, map_size, index, offset);
 			submap.block(offset.left, offset.bottom, offset.width, offset.height) = map.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
 		}
 
@@ -63,11 +64,11 @@ namespace CoverageControl {
 			return 0;
 		}
 
-		int IsPointOutsideBoundary(Point2 const &pos, int const sensor_size, int const boundary) {
-			if (pos.x() <= -sensor_size * pResolution/2.) { return 1; }
-			if (pos.y() <= -sensor_size * pResolution/2.) { return 1; }
-			if (pos.x() >= boundary * pResolution + sensor_size * pResolution/2.) { return 1; }
-			if (pos.y() >= boundary * pResolution + sensor_size * pResolution/2.) { return 1; }
+		int IsPointOutsideBoundary(double const resolution, Point2 const &pos, int const sensor_size, int const boundary) {
+			if (pos.x() <= -sensor_size * resolution/2.) { return 1; }
+			if (pos.y() <= -sensor_size * resolution/2.) { return 1; }
+			if (pos.x() >= boundary * resolution + sensor_size * resolution/2.) { return 1; }
+			if (pos.y() >= boundary * resolution + sensor_size * resolution/2.) { return 1; }
 			return 0;
 		}
 

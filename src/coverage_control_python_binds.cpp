@@ -2,6 +2,7 @@
 
 #include <CoverageControl/vec2d.h>
 #include <CoverageControl/typedefs.h>
+#include <CoverageControl/parameters.h>
 #include <CoverageControl/bivariate_normal_distribution.h>
 #include <CoverageControl/world_idf.h>
 #include <CoverageControl/robot_model.h>
@@ -22,6 +23,12 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	m.doc() = "CoverageControl library";
 
 	py::bind_vector<std::vector<double>>(m, "DblVector");
+
+	py::class_<Parameters>(m, "Parameters")
+		.def(py::init<>())
+		.def(py::init<std::string const &>())
+		.def("SetConfig", &Parameters::SetConfig)
+		;
 
 	py::class_<Point2>(m, "Point2")
 		.def(py::init<>())
@@ -44,7 +51,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	py::bind_vector<BNDVector>(m, "BNDVector");
 
 	py::class_<WorldIDF>(m, "WorldIDF")
-		.def(py::init<>())
+		.def(py::init<Parameters const &>())
 		.def("AddNormalDistribution", py::overload_cast<BivariateNormalDistribution const &>(&WorldIDF::AddNormalDistribution))
 		.def("AddNormalDistribution", py::overload_cast<BNDVector const &>(&WorldIDF::AddNormalDistribution))
 		.def("GenerateMap", &WorldIDF::GenerateMap)
@@ -56,7 +63,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		;
 
 	py::class_<RobotModel>(m, "RobotModel")
-		.def(py::init<Point2 const, WorldIDF const>())
+		.def(py::init<Parameters const &, Point2 const, WorldIDF const>())
 		.def("StepControl", &RobotModel::StepControl)
 		.def("UpdateRobotPosition", &RobotModel::UpdateRobotPosition)
 		.def("GetGlobalStartPosition", &RobotModel::GetGlobalStartPosition)
@@ -68,10 +75,9 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		;
 
 	py::class_<CoverageSystem>(m, "CoverageSystem")
-		.def(py::init<int const, int const>())
-		.def(py::init<WorldIDF const &>())
-		.def(py::init<WorldIDF const &, PointVector const &>())
-		.def(py::init<BNDVector const &, PointVector const &>())
+		.def(py::init<Parameters const &, int const, int const>())
+		.def(py::init<Parameters const &, WorldIDF const &, PointVector const &>())
+		.def(py::init<Parameters const &, BNDVector const &, PointVector const &>())
 		.def("GetWorldIDF", &CoverageSystem::GetWorldIDF, py::return_value_policy::reference_internal)
 		.def("StepControl", &CoverageSystem::StepControl)
 		.def("UpdateRobotPositions", &CoverageSystem::UpdateRobotPositions)

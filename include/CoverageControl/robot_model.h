@@ -23,6 +23,8 @@ namespace CoverageControl {
 
 		private:
 
+			Parameters const params_;
+
 			Point2 global_start_position_, global_current_position_;
 			Point2 local_start_position_, local_current_position_;
 			std::vector <Point2> robot_positions_; // Stores the local positions of the robot in order
@@ -35,30 +37,30 @@ namespace CoverageControl {
 
 			// Gets the sensor data from world IDF at the global_current_position_ and updates robot_map_
 			void UpdateRobotMap() {
-				sensor_view_ = MapType::Zero(pSensorSize, pSensorSize);
-				if(MapUtils::IsPointOutsideBoundary(global_current_position_, pSensorSize, pWorldMapSize)) {
+				sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
+				if(MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize)) {
 					return;
 				}
-				world_idf_->GetSubWorldMap(global_current_position_, pSensorSize, sensor_view_);
+				world_idf_->GetSubWorldMap(global_current_position_, params_.pSensorSize, sensor_view_);
 				MapUtils::MapBounds index, offset;
-				MapUtils::ComputeOffsets(global_current_position_, pSensorSize, pWorldMapSize, index, offset);
+				MapUtils::ComputeOffsets(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize, index, offset);
 				robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = sensor_view_.block(offset.left, offset.bottom, offset.width, offset.height);
 			}
 
 		public:
 
 			// Constructor: requires global_start_position_ and world_idf_
-			RobotModel (Point2 const &global_start_position, WorldIDF const &world_idf): global_start_position_{global_start_position} {
+			RobotModel (Parameters const &params, Point2 const &global_start_position, WorldIDF const &world_idf): params_{params}, global_start_position_{global_start_position} {
 				world_idf_ = std::make_shared<const WorldIDF> (world_idf);
 				global_current_position_ = global_start_position_;
 
-				sensor_view_ = MapType::Zero(pSensorSize, pSensorSize);
-				local_map_ = MapType::Zero(pLocalMapSize, pLocalMapSize);
+				sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
+				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				local_start_position_ = Point2{0,0};
-				robot_positions_.reserve(pEpisodeSteps); // More steps can be executed. But reserving for efficiency
+				robot_positions_.reserve(params_.pEpisodeSteps); // More steps can be executed. But reserving for efficiency
 				local_current_position_ = local_start_position_;
 				robot_positions_.push_back(local_current_position_);
-				robot_map_ = MapType::Constant(pRobotMapSize, pRobotMapSize, pUnknownImportance);
+				robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance);
 				UpdateRobotMap();
 			}
 
@@ -69,7 +71,7 @@ namespace CoverageControl {
 				auto dir = direction;
 				auto sp = speed;
 				Point2 new_pos(0,0);
-				if(sp > pMaxRobotSpeed) { sp = pMaxRobotSpeed; }
+				if(sp > params_.pMaxRobotSpeed) { sp = params_.pMaxRobotSpeed; }
 				if(sp < 0) {
 					std::cerr << "Speed needs to be non-negative\n";
 					return 1;
@@ -79,7 +81,7 @@ namespace CoverageControl {
 					return 1;
 				}
 				if(sp > kEps) {
-					new_pos = local_current_position_ + dir * sp * pTimeStep;
+					new_pos = local_current_position_ + dir * sp * params_.pTimeStep;
 				}
 				UpdateRobotPosition(new_pos);
 				return 0;
@@ -100,9 +102,9 @@ namespace CoverageControl {
 			const MapType& GetSensorView() const { return sensor_view_; }
 
 			const MapType& GetRobotLocalMap() {
-				local_map_ = MapType::Zero(pLocalMapSize, pLocalMapSize);
-				if(not MapUtils::IsPointOutsideBoundary(global_current_position_, pLocalMapSize, pWorldMapSize)) {
-					MapUtils::GetSubMap(global_current_position_, pLocalMapSize, pRobotMapSize, robot_map_, local_map_);
+				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
+					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, robot_map_, local_map_);
 				}
 				return local_map_;
 			}

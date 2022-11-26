@@ -15,8 +15,17 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
     ax = sns.heatmap(map, cmap=colormap)
     ax.set_box_aspect(1) # Throws an error on lower versions of seaborn?
-    plt.show()
+    # plt.show()
 
+
+################
+## Parameters ##
+################
+# The parameters can be changed from python without needing to recompile.
+# The parameters are given in config/parameters.yaml
+# After changing the parameters, use the following function call to use the yaml file.
+# Make sure the path of the file is correct
+params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
 
 ####################
 ## CoverageSystem ##
@@ -26,7 +35,7 @@ from pyCoverageControl import CoverageSystem
 # See the parameter file for the range of random distributions
 num_gaussians = 100
 num_robots = 2
-env = CoverageSystem(num_gaussians, num_robots)
+env = CoverageSystem(params_, num_gaussians, num_robots)
 map = env.GetWorldIDF()
 plot_map(map)
 
@@ -102,7 +111,7 @@ dist3 = BND(mean, sigma_skewed, rho, peak_val) # general BND
 ## WorldIDF ##
 ##############
 from pyCoverageControl import WorldIDF # for defining world idf
-world_idf = WorldIDF()
+world_idf = WorldIDF(params_)
 world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
 world_idf.GenerateMapCuda() # Generate map, use GenerateMap() for cpu version
 world_idf.PrintMapSize()
@@ -123,7 +132,7 @@ from pyCoverageControl import RobotModel
 # RobotModel requires an initial start position and a WorldIDF
 # It does not modify the WorldIDF but only queries it
 start_pos = Point2(0, 0)
-robot = RobotModel(start_pos, world_idf)
+robot = RobotModel(params_, start_pos, world_idf)
 
 # Get the start global position of the robot
 robot_pos = robot.GetGlobalStartPosition()
@@ -160,12 +169,11 @@ plot_map(sensor_view)
 robot_positions = PointVector()
 robot_positions.append(Point2(100,100))
 robot_positions.append(Point2(150,150))
-env1 = CoverageSystem(world_idf, robot_positions)
+env1 = CoverageSystem(params_, world_idf, robot_positions)
 
 # We can also specify distributions and robots
 bnd_list = pyCoverageControl.BNDVector()
 bnd_list.append(dist1)
 bnd_list.append(dist2)
 bnd_list.append(dist3)
-env2 = CoverageSystem(bnd_list, robot_positions)
-
+env2 = CoverageSystem(params_, bnd_list, robot_positions)

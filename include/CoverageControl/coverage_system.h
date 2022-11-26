@@ -23,6 +23,7 @@ namespace CoverageControl {
 
 	class CoverageSystem {
 		private:
+			Parameters const params_;
 			WorldIDF world_idf_;
 			size_t num_robots_ = 0;
 			std::vector <RobotModel> robots_;
@@ -31,13 +32,13 @@ namespace CoverageControl {
 		public:
 			// Initialize IDF with num_gaussians distributions
 			// Initialize num_robots with random start positions
-			CoverageSystem(int const num_gaussians, int const num_robots) {
+			CoverageSystem(Parameters const &params, int const num_gaussians, int const num_robots) : params_{params}, world_idf_{WorldIDF(params_)}{
 				std::srand(0);
 				std::random_device rd;  //Will be used to obtain a seed for the random number engine
 				std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-				std::uniform_real_distribution<> distrib(0, pWorldMapSize * pResolution);
-				std::uniform_real_distribution<> distrib_var(pMinVariance, pMaxVariance);
-				std::uniform_real_distribution<> distrib_peak(pMinPeak, pMaxPeak);
+				std::uniform_real_distribution<> distrib(0, params_.pWorldMapSize * params_.pResolution);
+				std::uniform_real_distribution<> distrib_var(params_.pMinVariance, params_.pMaxVariance);
+				std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
 				for(int i = 0; i < num_gaussians; ++i) {
 					Point2 mean(distrib(gen), distrib(gen));
 					double var(distrib_var(gen));
@@ -50,31 +51,27 @@ namespace CoverageControl {
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
 					Point2 start_pos(distrib(gen), distrib(gen));
-					robots_.push_back(RobotModel(start_pos, world_idf_));
+					robots_.push_back(RobotModel(params_, start_pos, world_idf_));
 				}
 				num_robots_ = robots_.size();
 			}
 
-			// Can create the system using a previously created WorldIDF object
-			CoverageSystem(WorldIDF const &world_idf) {
-				SetWorldIDF(world_idf);
-			}
-
-			CoverageSystem(WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) {
+			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				SetWorldIDF(world_idf);
 				robots_.reserve(robot_positions.size());
 				for(auto const &pos:robot_positions) {
-					robots_.push_back(RobotModel(pos, world_idf_));
+					robots_.push_back(RobotModel(params_, pos, world_idf_));
 				}
 				num_robots_ = robots_.size();
 			}
 
-			CoverageSystem(std::vector <BivariateNormalDistribution> const &dists, std::vector <Point2> const &robot_positions) {
+			CoverageSystem(Parameters const &params, std::vector <BivariateNormalDistribution> const &dists, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
+				/* world_idf_ = WorldIDF(params_); */
 				world_idf_.AddNormalDistribution(dists);
 				num_robots_ = robot_positions.size();
 				robots_.reserve(num_robots_);
 				for(auto const &pos:robot_positions) {
-					robots_.push_back(RobotModel(pos, world_idf_));
+					robots_.push_back(RobotModel(params_, pos, world_idf_));
 				}
 
 			}
@@ -129,9 +126,9 @@ namespace CoverageControl {
 			}
 
 			const MapType& GetCommunicationMap(size_t const id) {
-				communication_map_ = MapType::Zero(pLocalMapSize, pLocalMapSize);
+				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				if(id < num_robots_) {
-					double comm_range_sqr = pCommunicationRange * pCommunicationRange;
+					double comm_range_sqr = params_.pCommunicationRange * params_.pCommunicationRange;
 					auto robot_positions = GetRobotPositions();
 					for(size_t i = 0; i < num_robots_; ++i) {
 						if(id == i) {
@@ -140,7 +137,7 @@ namespace CoverageControl {
 						auto relative_pos = robot_positions[i] - robot_positions[id];
 						if(relative_pos.NormSqr() <= comm_range_sqr) {
 							int pos_idx, pos_idy;
-							MapUtils::GetClosestGridCoordinate(relative_pos, pos_idx, pos_idy);
+							MapUtils::GetClosestGridCoordinate(params_.pResolution, relative_pos, pos_idx, pos_idy);
 							communication_map_(pos_idx, pos_idy) = 1;
 						}
 					}

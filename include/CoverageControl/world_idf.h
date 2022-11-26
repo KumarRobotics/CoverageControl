@@ -26,13 +26,14 @@ namespace CoverageControl {
 		private:
 			std::vector <BivariateNormalDistribution> normal_distributions_;
 			MapType world_map_;
+			Parameters params_;
 
 			// The diagonal points are given as input
 			// Returns the total importance in a rectangle by summing up for normal distribution
 
 		public:
-			WorldIDF() {
-				world_map_ = MapType(pWorldMapSize, pWorldMapSize);
+			WorldIDF(Parameters const &params): params_{params}{
+				world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
 			}
 
 			/** Add Normal distribution to world IDF **/
@@ -56,7 +57,7 @@ namespace CoverageControl {
 				Point2 top_left(Point2(bottom_left.x(), top_right.y()));
 				double importance = 0;
 				for(auto const &normal_distribution:normal_distributions_) {
-					if(normal_distribution.TransformPoint((bottom_left + top_right)/2.).NormSqr() > pTruncationBND * pTruncationBND + pResolution * pResolution) {
+					if(normal_distribution.TransformPoint((bottom_left + top_right)/2.).NormSqr() > params_.pTruncationBND * params_.pTruncationBND + params_.pResolution * params_.pResolution) {
 						continue;
 					}
 					importance += normal_distribution.IntegrateQuarterPlane(bottom_left);
@@ -69,12 +70,12 @@ namespace CoverageControl {
 
 			/** Fills in values of the world_map_ with the total importance for each cell **/
 			void GenerateMap() {
-				for(size_t i = 0; i < pWorldMapSize; ++i) { // Row (x index)
-					double x1 = pResolution * i; // Left x-coordinate of pixel
-					double x2 = x1 + pResolution; // Right x-coordinate of pixel
-					for(size_t j = 0; j < pWorldMapSize; ++j) { // Column (y index)
-						double y1 = pResolution * j; // Lower y-coordinate of pixel
-						double y2 = y1 + pResolution; // Upper y-coordinate of pixel
+				for(int i = 0; i < params_.pWorldMapSize; ++i) { // Row (x index)
+					double x1 = params_.pResolution * i; // Left x-coordinate of pixel
+					double x2 = x1 + params_.pResolution; // Right x-coordinate of pixel
+					for(int j = 0; j < params_.pWorldMapSize; ++j) { // Column (y index)
+						double y1 = params_.pResolution * j; // Lower y-coordinate of pixel
+						double y2 = y1 + params_.pResolution; // Upper y-coordinate of pixel
 						double importance	= ComputeImportanceRectangle(Point2(x1,y1), Point2(x2,y2));
 						if(std::abs(importance) < kEps) {
 							importance = 0;
@@ -85,9 +86,9 @@ namespace CoverageControl {
 			}
 
 			void GenerateMapCuda() {
-				float resolution = (float) pResolution;
-				float truncation = (float) pTruncationBND;
-				int map_size = (int) pWorldMapSize;
+				float resolution = (float) params_.pResolution;
+				float truncation = (float) params_.pTruncationBND;
+				int map_size = (int) params_.pWorldMapSize;
 
 				int num_dists = normal_distributions_.size();
 				/* std::cout << "num_dists: " << num_dists << std::endl; */
@@ -105,15 +106,15 @@ namespace CoverageControl {
 					host_dists[i].scale = (float)(normal_distributions_[i].GetScale());
 				}
 
-				float *importance_vec = (float*) malloc(pWorldMapSize * pWorldMapSize * sizeof(float));
+				float *importance_vec = (float*) malloc(params_.pWorldMapSize * params_.pWorldMapSize * sizeof(float));
 				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, importance_vec);
 				/* GenerateMap(); */
-				for(size_t i = 0; i < pWorldMapSize; ++i) {
-					for(size_t j = 0; j < pWorldMapSize; ++j) {
+				for(int i = 0; i < params_.pWorldMapSize; ++i) {
+					for(int j = 0; j < params_.pWorldMapSize; ++j) {
 						/* if(std::abs(world_map_(i, j) - (double) importance_vec[i*pWorldMapSize + j]) > 10e-5) { */
 						/* 	std::cout << "Diff: " << i << " " << j <<  " " << world_map_(i, j) << " " << (double) importance_vec[i*pWorldMapSize + j] << std::endl; */
 						/* } */
-						world_map_(i, j) = (double) (importance_vec[i * pWorldMapSize + j]);
+						world_map_(i, j) = (double) (importance_vec[i * params_.pWorldMapSize + j]);
 					}
 				}
 
@@ -127,7 +128,7 @@ namespace CoverageControl {
 			}
 
 			void GetSubWorldMap(Point2 const &pos, int const sensor_size, MapType &submap) const {
-				MapUtils::GetSubMap(pos, sensor_size, pWorldMapSize, world_map_, submap);
+				MapUtils::GetSubMap(params_.pResolution, pos, sensor_size, params_.pWorldMapSize, world_map_, submap);
 			}
 
 			void PrintMapSize() const {

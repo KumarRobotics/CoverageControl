@@ -5,6 +5,7 @@ Provides environment for Coverage Control problem.
     - CUDA nvcc
     - Eigen
     - Boost
+    - yaml-cpp
 
 ## Installation
 
@@ -21,3 +22,5 @@ export PYTHONPATH="${PYTHONPATH}:${HOME}/CoverageControl_ws/install/lib"
 ```
 
 Go to `CoverageControl/scripts/python` and check if the file `coverage.py` works. It contains minimal examples.
+
+If you make changes to the CoverageControl repository, run the last two lines in `setup.sh` file by appropriately substituting `${BUILD_DIR}`
