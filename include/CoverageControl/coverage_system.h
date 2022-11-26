@@ -26,6 +26,7 @@ namespace CoverageControl {
 			WorldIDF world_idf_;
 			size_t num_robots_ = 0;
 			std::vector <RobotModel> robots_;
+			MapType communication_map_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -111,20 +112,42 @@ namespace CoverageControl {
 
 			const MapType& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
 
-			const MapType& GetRobotLocalMap(size_t const idx) {
-				if(idx < num_robots_) {
-					return robots_[idx].GetRobotLocalMap();
+			const MapType& GetRobotLocalMap(size_t const id) {
+				if(id < num_robots_) {
+					return robots_[id].GetRobotLocalMap();
 				} else {
 					throw std::out_of_range{"Robot index more than the number of robots"};
 				}
 			}
 
-			const MapType& GetRobotSensorView(size_t const idx) {
-				if(idx < num_robots_) {
-					return robots_[idx].GetSensorView();
+			const MapType& GetRobotSensorView(size_t const id) {
+				if(id < num_robots_) {
+					return robots_[id].GetSensorView();
 				} else {
 					throw std::out_of_range{"Robot index more than the number of robots"};
 				}
+			}
+
+			const MapType& GetCommunicationMap(size_t const id) {
+				communication_map_ = MapType::Zero(pLocalMapSize, pLocalMapSize);
+				if(id < num_robots_) {
+					double comm_range_sqr = pCommunicationRange * pCommunicationRange;
+					auto robot_positions = GetRobotPositions();
+					for(size_t i = 0; i < num_robots_; ++i) {
+						if(id == i) {
+							continue;
+						}
+						auto relative_pos = robot_positions[i] - robot_positions[id];
+						if(relative_pos.NormSqr() <= comm_range_sqr) {
+							int pos_idx, pos_idy;
+							MapUtils::GetClosestGridCoordinate(relative_pos, pos_idx, pos_idy);
+							communication_map_(pos_idx, pos_idy) = 1;
+						}
+					}
+				} else {
+					throw std::out_of_range{"Robot index more than the number of robots"};
+				}
+				return communication_map_;
 			}
 	};
 

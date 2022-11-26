@@ -8,6 +8,7 @@ from pyCoverageControl import PointVector # for defining list of points
 # Doesn't look great as there aren't many distributions
 # The axes are interchanged and y is flipped. How to fix this?
 # Make tick positions multiples of 100
+# Scale the colors to the max value of the IDF map by adding input parameter
 import matplotlib.pyplot as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
@@ -31,11 +32,6 @@ plot_map(map)
 
 # We can provide controls or update the positions directly
 # The size of these vectors should be the same as the number of robots
-new_robot_positions = PointVector()
-new_robot_positions.append(Point2(100,100))
-new_robot_positions.append(Point2(150,150))
-env.UpdateRobotPositions(new_robot_positions)
-
 control_directions = PointVector()
 control_directions.append(Point2(math.sin(math.pi/4), math.cos(math.pi/4)))
 control_directions.append(Point2(math.sin(math.pi/6), math.cos(math.pi/6)))
@@ -44,21 +40,31 @@ speeds.append(1)
 speeds.append(1)
 env.StepControl(control_directions, speeds)
 
+# Update the local position of the robots
+new_robot_positions = PointVector()
+new_robot_positions.append(Point2(10, 10))
+new_robot_positions.append(Point2(11,11))
+env.UpdateRobotPositions(new_robot_positions)
+
 # Get current global robot positions
 robot_positions = env.GetRobotPositions()
 print(type(robot_positions))
 print(robot_positions[0])
+print(robot_positions[1])
 
 # Get local map of a robot
 robot_id = 0
-local_map = env.GetRobotLocalMap(robot_id) 
+local_map = env.GetRobotLocalMap(robot_id)
 plot_map(local_map)
 
 # Get sensor view of a robot
 robot_id = 0
-sensor_view = env.GetRobotSensorView(robot_id) 
+sensor_view = env.GetRobotSensorView(robot_id)
 plot_map(sensor_view)
 
+# Get Communication Map
+comm_map = env.GetCommunicationMap(robot_id)
+plot_map(comm_map)
 
 # Examples of each class
 
@@ -120,7 +126,7 @@ start_pos = Point2(0, 0)
 robot = RobotModel(start_pos, world_idf)
 
 # Get the start global position of the robot
-robot_pos = robot.GetGlobalStartPosition() 
+robot_pos = robot.GetGlobalStartPosition()
 
 # There are two ways to update the position of the robot (1) control (2) position update
 control_dir = Point2(math.sin(math.pi/4), math.cos(math.pi/4))
@@ -131,7 +137,7 @@ new_pos = Point2(512, 512)
 robot.UpdateRobotPosition(new_pos)
 
 # Get the current global position of the robot
-robot_pos = robot.GetGlobalCurrentPosition() 
+robot_pos = robot.GetGlobalCurrentPosition()
 
 # Get all local positions of the robot
 all_robot_positions = robot.GetAllPositions()

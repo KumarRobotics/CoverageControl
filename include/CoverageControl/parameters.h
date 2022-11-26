@@ -32,7 +32,7 @@ namespace CoverageControl {
 	// Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 	// Should be greater than pCommunicationRange so that they can form different channels of the same image.
 	int const pLocalMapSize = 64;
-	double const pCommunicationRange = 64; // Radius of communication
+	double const pCommunicationRange = 64; // Radius of communication (in meters)
 
 	// Assuming square sensor FOV.
 	// Actual FOV: square with side pResolution * pSensorSize

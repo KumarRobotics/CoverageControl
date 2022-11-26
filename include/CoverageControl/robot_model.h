@@ -50,6 +50,7 @@ namespace CoverageControl {
 			// Constructor: requires global_start_position_ and world_idf_
 			RobotModel (Point2 const &global_start_position, WorldIDF const &world_idf): global_start_position_{global_start_position} {
 				world_idf_ = std::make_shared<const WorldIDF> (world_idf);
+				global_current_position_ = global_start_position_;
 
 				sensor_view_ = MapType::Zero(pSensorSize, pSensorSize);
 				local_map_ = MapType::Zero(pLocalMapSize, pLocalMapSize);
@@ -100,7 +101,7 @@ namespace CoverageControl {
 
 			const MapType& GetRobotLocalMap() {
 				local_map_ = MapType::Zero(pLocalMapSize, pLocalMapSize);
-				if(not MapUtils::IsPointOutsideBoundary(global_current_position_, pRobotMapSize, pWorldMapSize)) {
+				if(not MapUtils::IsPointOutsideBoundary(global_current_position_, pLocalMapSize, pWorldMapSize)) {
 					MapUtils::GetSubMap(global_current_position_, pLocalMapSize, pRobotMapSize, robot_map_, local_map_);
 				}
 				return local_map_;

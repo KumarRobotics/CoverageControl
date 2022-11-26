@@ -78,6 +78,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotPositions", &CoverageSystem::GetRobotPositions)
 		.def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap, py::return_value_policy::reference_internal)
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
+		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
 		;
 
 }
