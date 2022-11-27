@@ -15,7 +15,7 @@ struct BND_Cuda {
 	float scale, rho;
 };
 
-void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float *importance_vec);
+void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float *importance_vec, float &);
 
 #endif /* COVERAGECONTROL_GENERATE_WORLD_MAP_H_ */
 

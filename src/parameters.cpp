@@ -21,6 +21,7 @@ namespace CoverageControl {
 		pMaxRobotSpeed = yaml_config_["pMaxRobotSpeed"].as<double>();
 		pEpisodeSteps = yaml_config_["pEpisodeSteps"].as<int>();
 		pTruncationBND = yaml_config_["pTruncationBND"].as<double>();
+		pNorm = yaml_config_["pNorm"].as<double>();
 		pMinVariance = yaml_config_["pMinVariance"].as<double>();
 		pMaxVariance = yaml_config_["pMaxVariance"].as<double>();
 		pMinPeak = yaml_config_["pMinPeak"].as<double>();

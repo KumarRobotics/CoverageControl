@@ -62,6 +62,9 @@ namespace CoverageControl {
 			// Needs testing to be sure that the probability masses are not significantly off
 			double pTruncationBND = 4;
 
+			// Used to normalize map. Max value will be scaled to pNorm. 255 for images
+			double pNorm = 255;
+
 			// These settings are only required if the IDF is generated using random gaussians
 			double pMinVariance = 1;
 			double pMaxVariance = 10;

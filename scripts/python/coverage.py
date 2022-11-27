@@ -9,12 +9,15 @@ import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
-    ax = sns.heatmap(map.transpose(), cmap=colormap, square=True)
+    ax = sns.heatmap(map.transpose(), vmax=255, cmap=colormap, square=True)
     ax.invert_yaxis()
     nrow, ncol = map.shape
-    print(nrow)
-    plt.xticks(np.arange(0, nrow, 100), np.arange(0, nrow, 100))
-    plt.yticks(np.arange(0, ncol, 100), np.arange(0, ncol, 100))
+    if(nrow > 50 and nrow < 500):
+        septicks = 5 ** (math.floor(math.log(nrow, 5)) - 1)
+    else:
+        septicks = 10 ** (math.floor(math.log(nrow, 10)) - 1)
+    plt.xticks(np.arange(0, nrow, septicks), np.arange(0, nrow, septicks))
+    plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
     plt.show()
 
 
@@ -117,7 +120,7 @@ world_idf.GenerateMapCuda() # Generate map, use GenerateMap() for cpu version
 world_idf.PrintMapSize()
 # world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
 map = world_idf.GetWorldMap(); # Get the world map as numpy nd-array. You can only "view", i.e., flags.writeable = False, flags.owndata = False
-max_val = world_idf.GetMaxValue(); # Get the maximum importance value for the entire map. Useful for normalization
+normalization_factor = world_idf.GetNormalizationFactor(); # Get the normalization factor used in the map
 print(map.dtype)
 print(map.flags)
 print(type(map))

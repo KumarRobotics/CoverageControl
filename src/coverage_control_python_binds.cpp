@@ -60,7 +60,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GenerateMapCuda", &WorldIDF::GenerateMapCuda)
 		.def("GetWorldMap", &WorldIDF::GetWorldMap, py::return_value_policy::reference_internal)
 		.def("WriteWorldMap", &WorldIDF::WriteWorldMap)
-		.def("GetMaxValue", &WorldIDF::GetMaxValue)
+		.def("GetNormalizationFactor", &WorldIDF::GetNormalizationFactor)
 		.def("PrintMapSize", &WorldIDF::PrintMapSize)
 		;
 

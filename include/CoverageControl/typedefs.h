@@ -13,7 +13,8 @@ namespace CoverageControl {
 
 	typedef Vec2d Point2;
 	typedef std::vector<Point2> PointVector;
-	typedef Eigen::MatrixXd MapType;
+	typedef Eigen::MatrixXd MapTypeDbl;
+	typedef Eigen::Matrix<unsigned char, Eigen::Dynamic, Eigen::Dynamic> MapType;
 
 } /* namespace CoverageControl */
 #endif /* COVERAGECONTROL_TYPEDEFS_H_ */

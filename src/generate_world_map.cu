@@ -11,7 +11,8 @@
 #include <cuda_runtime.h>
 #include <cmath>
 #include <helper_cuda.h>
-
+#include <thrust/extrema.h>
+#include <thrust/device_ptr.h>
 
 __device__ __constant__ int cu_num_dists;
 __device__ __constant__ int cu_map_size;
@@ -89,16 +90,10 @@ __global__ void kernel (BND_Cuda const *cu_dists, float *importance_vec) {
 	}
 	float2 bottom_left = make_float2(idx * cu_resolution, idy * cu_resolution);
 	float2 top_right = make_float2(idx * cu_resolution + cu_resolution, idy * cu_resolution + cu_resolution);
-	/* if(total_importance > 1e-5) { */
-	/* 	printf("%d, %d, %d, %.5f, %.5f, %.5f\n", idx, idy, vec_idx, bottom_left.x, bottom_left.y, total_importance); */
-	/* } */
-	/* printf("%d, %d, %f , %f, %f\n", cu_num_dists, cu_map_size, cu_truncation, cu_resolution, cu_OneBySqrt2); */
-	/* return; */
-	/* printf("%f, %f, %f , %f, %f\n", cu_dists[0].mean_x, cu_dists[0].mean_y, cu_truncation, cu_resolution, cu_OneBySqrt2); */
 	importance_vec[vec_idx] = ComputeImportanceRectangle(cu_dists, bottom_left, top_right);
 }
 
-void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float *host_importance_vec) {
+void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float *host_importance_vec, float &max) {
 
 	checkCudaErrors(cudaDeviceSynchronize());
 
@@ -123,10 +118,15 @@ void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, 
 
 	kernel <<<dimGrid, dimBlock>>>(cu_dists, device_importance_vec);
 
+  thrust::device_ptr<float> d_ptr = thrust::device_pointer_cast(device_importance_vec);
+  max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
+
 	checkCudaErrors(cudaMemcpy(host_importance_vec, device_importance_vec, map_size * map_size * sizeof(float), cudaMemcpyDeviceToHost));
 
 	checkCudaErrors(cudaFree(cu_dists));
 	checkCudaErrors(cudaFree(device_importance_vec));
+
+	/* auto largest_val_ptr = thrust::max_element(host_importance_vec, host_importance_vec + map_size * map_size); */
 
 	cudaError_t error = cudaGetLastError();
 	if(error != cudaSuccess) {

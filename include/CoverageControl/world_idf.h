@@ -27,6 +27,7 @@ namespace CoverageControl {
 			std::vector <BivariateNormalDistribution> normal_distributions_;
 			MapType world_map_;
 			Parameters params_;
+			double normalization_factor_ = 0;
 
 			// The diagonal points are given as input
 			// Returns the total importance in a rectangle by summing up for normal distribution
@@ -107,14 +108,18 @@ namespace CoverageControl {
 				}
 
 				float *importance_vec = (float*) malloc(params_.pWorldMapSize * params_.pWorldMapSize * sizeof(float));
-				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, importance_vec);
+				float max = 0;
+				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, importance_vec, max);
 				/* GenerateMap(); */
+				normalization_factor_ = params_.pNorm / max;
 				for(int i = 0; i < params_.pWorldMapSize; ++i) {
 					for(int j = 0; j < params_.pWorldMapSize; ++j) {
 						/* if(std::abs(world_map_(i, j) - (double) importance_vec[i*pWorldMapSize + j]) > 10e-5) { */
 						/* 	std::cout << "Diff: " << i << " " << j <<  " " << world_map_(i, j) << " " << (double) importance_vec[i*pWorldMapSize + j] << std::endl; */
 						/* } */
-						world_map_(i, j) = (double) (importance_vec[i * params_.pWorldMapSize + j]);
+						/* world_map_(i, j) = (double) (importance_vec[i * params_.pWorldMapSize + j]); */
+						/* MapType2 map(params_.pWorldMapSize, params_.pWorldMapSize); */
+						world_map_(i, j) = static_cast<unsigned char> (std::round(importance_vec[i * params_.pWorldMapSize + j] * normalization_factor_));
 					}
 				}
 
@@ -135,7 +140,7 @@ namespace CoverageControl {
 				std::cout << "World map size: " << world_map_.rows() << " " << world_map_.cols() << std::endl;
 			}
 
-			double GetMaxValue() const { return world_map_.maxCoeff(); }
+			auto GetNormalizationFactor() const { return normalization_factor_; }
 
 			const MapType& GetWorldMap() const { return world_map_; }
 

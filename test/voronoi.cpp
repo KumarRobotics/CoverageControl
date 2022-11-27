@@ -18,6 +18,7 @@ using namespace CoverageControl;
 int main(int argc, char** argv) {
 	Parameters params;
 	CoverageSystem env(params, 100, 20);
+	std::cout << "Env created" << std::endl;
 	env.ComputeVoronoiCells();
 	return 0;
 }

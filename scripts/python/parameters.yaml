@@ -37,8 +37,11 @@ pEpisodeSteps: 1000
 # Needs testing to be sure that the probability masses are not significantly off
 pTruncationBND: 4
 
+# Used to normalize map. Max value will be scaled to pNorm. 255 for images
+pNorm: 255
+
 # These settings are only required if the IDF is generated using random gaussians
-pMinVariance: 1
+pMinVariance: 6
 pMaxVariance: 10
-pMinPeak: 5
+pMinPeak: 6
 pMaxPeak: 10
