@@ -25,12 +25,6 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::bind_vector<std::vector<double>>(m, "DblVector");
 
-	py::class_<Parameters>(m, "Parameters")
-		.def(py::init<>())
-		.def(py::init<std::string const &>())
-		.def("SetConfig", &Parameters::SetConfig)
-		;
-
 	py::class_<Point2>(m, "Point2")
 		.def(py::init<>())
 		.def(py::init<double const, double const>())
@@ -43,6 +37,23 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::bind_vector<PointVector>(m, "PointVector");
 	py::bind_vector<std::vector<PointVector>>(m, "PolygonVector");
+
+	py::class_<Edge>(m, "Edge")
+		.def(py::init<double const, double const, double const, double const>())
+		.def_readwrite("x1", &Edge::x1)
+		.def_readwrite("y1", &Edge::y1)
+		.def_readwrite("x2", &Edge::x2)
+		.def_readwrite("y2", &Edge::y2)
+		;
+	py::bind_vector<std::vector<Edge>>(m, "EdgeList");
+
+	py::class_<VoronoiCell>(m, "VoronoiCell")
+		.def_readonly("cell", &VoronoiCell::cell)
+		.def_readonly("mass", &VoronoiCell::mass)
+		.def_readonly("centroid", &VoronoiCell::centroid)
+		.def_readonly("site", &VoronoiCell::site)
+		;
+	py::bind_vector<std::vector<VoronoiCell>>(m, "VoronoiCells");
 
 	py::class_<BivariateNormalDistribution>(m, "BivariateNormalDistribution")
 		.def(py::init<>())
@@ -87,7 +98,31 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap, py::return_value_policy::reference_internal)
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
+		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells)
 		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells)
+		.def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges)
+		;
+
+	py::class_<Parameters>(m, "Parameters")
+		.def(py::init<>())
+		.def(py::init<std::string const &>())
+		.def("SetConfig", &Parameters::SetConfig)
+		.def_readonly("pResolution", &Parameters::pResolution)
+		.def_readonly("pWorldMapSize", &Parameters::pWorldMapSize)
+		.def_readonly("pRobotMapSize", &Parameters::pRobotMapSize)
+		.def_readonly("pUnknownImportance", &Parameters::pUnknownImportance)
+		.def_readonly("pLocalMapSize", &Parameters::pLocalMapSize)
+		.def_readonly("pCommunicationRange", &Parameters::pCommunicationRange)
+		.def_readonly("pSensorSize", &Parameters::pSensorSize)
+		.def_readonly("pTimeStep", &Parameters::pTimeStep)
+		.def_readonly("pMaxRobotSpeed", &Parameters::pMaxRobotSpeed)
+		.def_readonly("pEpisodeSteps", &Parameters::pEpisodeSteps)
+		.def_readonly("pTruncationBND", &Parameters::pTruncationBND)
+		.def_readonly("pNorm", &Parameters::pNorm)
+		.def_readonly("pMinVariance", &Parameters::pMinVariance)
+		.def_readonly("pMaxVariance", &Parameters::pMaxVariance)
+		.def_readonly("pMinPeak", &Parameters::pMinPeak)
+		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
 		;
 
 }

@@ -16,6 +16,7 @@
 #include "typedefs.h"
 #include "world_idf.h"
 #include "map_utils.h"
+#include "voronoi.h"
 
 namespace CoverageControl {
 
@@ -29,6 +30,7 @@ namespace CoverageControl {
 			Point2 local_start_position_, local_current_position_;
 			std::vector <Point2> robot_positions_; // Stores the local positions of the robot in order
 			double normalization_factor_ = 0;
+			VoronoiCell voronoi_cell_;
 
 			MapType robot_map_; // Stores what the robot has seen. Has the same reference as world map.
 			MapType sensor_view_; // Stores the current sensor view of the robot
@@ -109,6 +111,9 @@ namespace CoverageControl {
 				}
 				return local_map_;
 			}
+
+			void SetVoronoiCell(VoronoiCell const &cell) { voronoi_cell_ = cell; }
+			auto GetVoronoiCell() { return voronoi_cell_; }
 
 	};
 

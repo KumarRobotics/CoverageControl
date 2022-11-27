@@ -5,7 +5,7 @@
 #include <CGAL/Polygon_with_holes_2.h>
 #include <CGAL/Arr_linear_traits_2.h>
 #include <CGAL/Arrangement_2.h>
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 // includes for defining the Voronoi diagram adaptor
 #include <CGAL/Delaunay_triangulation_2.h>
 
@@ -17,14 +17,14 @@
 /* typedef CGAL::Voronoi_diagram_2<DT,AT,AP>                                    VD; */
 /* typedef CGAL::Delaunay_triangulation_2<K>																		Delaunay_triangulation_2; */
 
-/* typedef K::Point_2 Point_2; */
+/* typedef K::CGAL_Point2 CGAL_Point2; */
 /* typedef K::Iso_rectangle_2 Iso_rectangle_2; */
 /* typedef K::Segment_2 Segment_2; */
 /* typedef K::Ray_2 Ray_2; */
 /* typedef K::Line_2 Line_2; */
 
-typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef K::Point_2 Point_2;
+typedef CGAL::Exact_predicates_exact_constructions_kernel K;
+typedef K::Point_2 CGAL_Point2;
 typedef K::Iso_rectangle_2 Iso_rectangle_2;
 typedef K::Segment_2 Segment_2;
 typedef K::Ray_2 Ray_2;
@@ -51,6 +51,6 @@ typedef CGAL::Arrangement_2<Traits_2> Arrangement_2;
 
 /* typedef CGAL::Aff_transformation_2<Traits_2> Transform2; */
 /* typedef CGAL::Simple_cartesian<double>  K_double; */
-/* typedef K_double::Point_2 Point_2_double; */
+/* typedef K_double::CGAL_Point2 Point_2_double; */
 
 #endif /* _COVERAGECONTROL_CGAL_CONFIG_H_ */

@@ -1,10 +1,13 @@
+#include <list>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/cgal_config.h>
+#include <CGAL/Boolean_set_operations_2.h>
+#include <CGAL/Polygon_2_algorithms.h>
 
 namespace CoverageControl {
 
-	Point2 CGALtoCC(Point_2 const pt) {
-		return Point2(pt.x(), pt.y());
+	Point2 CGALtoCC(CGAL_Point2 const pt) {
+		return Point2(CGAL::to_double(pt.x()), CGAL::to_double(pt.y()));
 	}
 	struct CGAL_Cropped_voronoi_from_delaunay{
 		std::list<Segment_2> m_cropped_vd;
@@ -37,7 +40,7 @@ namespace CoverageControl {
 		}
 
 	template<class Arrangement>
-		void CGAL_GeneratePolygons (const Arrangement& arr, std::vector <Polygon_2> &polygon_list) {
+		void CGAL_GeneratePolygons (const Arrangement& arr, std::list <Polygon_2> &polygon_list) {
 			CGAL_precondition (arr.is_valid());
 			typename Arrangement::Face_const_iterator    fit;
 			for (fit = arr.faces_begin(); fit != arr.faces_end(); ++fit) {
@@ -49,45 +52,141 @@ namespace CoverageControl {
 			}
 		}
 
+	bool IsPointInPoly(CGAL_Point2 const &pt, Polygon_2 const &poly) {
+		auto pgn_begin = poly.begin();
+		auto pgn_end = poly.end();
+		switch(CGAL::bounded_side_2(pgn_begin, pgn_end,pt, K())) {
+			case CGAL::ON_BOUNDED_SIDE :
+				return true;
+				break;
+			case CGAL::ON_BOUNDARY:
+				return true;
+				break;
+			case CGAL::ON_UNBOUNDED_SIDE:
+				return false;
+				break;
+		}
+		return false;
+	}
+
 	void Voronoi::ComputeVoronoiCells() {
 		Delaunay_triangulation_2 dt2;
-		std::vector<Point_2> CGAL_sites;
+		std::vector<CGAL_Point2> CGAL_sites;
+		std::cout << "Number of sites: " << sites_.size() << std::endl;
 		for(auto const pt:sites_) {
-			CGAL_sites.push_back(Point_2(pt.x(), pt.y()));
+			CGAL_sites.push_back(CGAL_Point2(pt.x(), pt.y()));
 		}
 		dt2.insert(CGAL_sites.begin(), CGAL_sites.end());
 
 		Iso_rectangle_2 bbox(0, 0, map_size_, map_size_);
 		CGAL_Cropped_voronoi_from_delaunay vor(bbox);
 		dt2.draw_dual(vor);
+		Polygon_2 bbox_poly;
+		bbox_poly.push_back(CGAL_Point2(0, 0));
+		bbox_poly.push_back(CGAL_Point2(map_size_, 0));
+		bbox_poly.push_back(CGAL_Point2(map_size_, map_size_));
+		bbox_poly.push_back(CGAL_Point2(0, map_size_));
 
+
+		auto s1 = Segment_2(CGAL_Point2(0,0), CGAL_Point2(map_size_,0));
+		/* CGAL::insert(arr_, s1); */
+		vor.segments_.push_back(s1);
+		auto s2 = Segment_2(CGAL_Point2(map_size_,0), CGAL_Point2(map_size_, map_size_));
+		/* CGAL::insert(arr_, s2); */
+		vor.segments_.push_back(s2);
+		auto s3 = Segment_2(CGAL_Point2(map_size_, map_size_), CGAL_Point2(0, map_size_));
+		/* CGAL::insert(arr_, s3); */
+		vor.segments_.push_back(s3);
+		auto s4 = Segment_2(CGAL_Point2(0, map_size_), CGAL_Point2(0, 0));
+		/* CGAL::insert(arr_, s4); */
+		vor.segments_.push_back(s4);
+
+		std::cout << "Computing arrangement" << std::endl;
 		Arrangement_2 arr_;
 		CGAL::insert(arr_, vor.rays_.begin(), vor.rays_.end());
 		CGAL::insert(arr_, vor.lines_.begin(), vor.lines_.end());
 		CGAL::insert(arr_, vor.segments_.begin(), vor.segments_.end());
-		auto s1 = Segment_2(Point_2(0,0), Point_2(map_size_,0));
-		CGAL::insert(arr_, s1);
-		auto s2 = Segment_2(Point_2(map_size_,0), Point_2(map_size_, map_size_));
-		CGAL::insert(arr_, s2);
-		auto s3 = Segment_2(Point_2(map_size_, map_size_), Point_2(0, map_size_));
-		CGAL::insert(arr_, s3);
-		auto s4 = Segment_2(Point_2(0, map_size_), Point_2(0, 0));
-		CGAL::insert(arr_, s4);
+		std::cout << "Arrangement created" << std::endl;
 
-		std::vector <Polygon_2> polygon_list;
+		std::list <Polygon_2> polygon_list;
 		CGAL_GeneratePolygons(arr_, polygon_list);
-		for(auto const &poly:polygon_list) {
-			PointVector poly_points;
-			for(auto const &p:poly) {
-				poly_points.push_back(Point2(p.x(), p.y()));
+		std::cout << "Polygons generated" << std::endl;
+
+		for(auto it = polygon_list.begin(); it != polygon_list.end();) {
+			if(not CGAL::do_intersect(bbox_poly, *it)) {
+				it = polygon_list.erase(it);
+			} else {
+				++it;
 			}
-			voronoi_cells_.push_back(poly_points);
 		}
+		std::cout << "Polygon pruning done" << std::endl;
+
+		for(auto const &pt:CGAL_sites) {
+			for(auto it = polygon_list.begin(); it != polygon_list.end(); ++it) {
+				if(IsPointInPoly(pt, *it) == true) {
+					PointVector poly_points;
+					for(auto const &p:(*it)) {
+						poly_points.push_back(CGALtoCC(p));
+					}
+					VoronoiCell vcell;
+					vcell.site = CGALtoCC(pt);
+					vcell.cell = poly_points;
+					voronoi_cells_.push_back(vcell);
+					it = polygon_list.erase(it);
+					break;
+				}
+			}
+		}
+		std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl;
+
+		for(auto &vcell:voronoi_cells_) {
+			vcell.mass = 0;
+			vcell.centroid = Point2(0,0);
+			Polygon_2 cgal_poly;
+			for(auto const &p:vcell.cell) {
+				cgal_poly.push_back(CGAL_Point2(p.x(), p.y()));
+			}
+			int min_i = std::floor(CGAL::to_double(cgal_poly.left_vertex()->x())/resolution_);
+			min_i = min_i < 0 ? 0 : min_i;
+			int max_i = std::ceil(CGAL::to_double(cgal_poly.right_vertex()->x())/resolution_);
+			max_i = max_i > map_size_ ? map_size_ : max_i;
+			int min_j = std::floor(CGAL::to_double(cgal_poly.bottom_vertex()->y())/resolution_);
+			min_j = min_j < 0 ? 0 : min_j;
+			int max_j = std::ceil(CGAL::to_double(cgal_poly.top_vertex()->y())/resolution_);
+			max_j = max_j > map_size_ ? map_size_ : max_j;
+			
+			for(int i = min_i; i < max_i; ++i) {
+				for(int j = min_j; j < max_j; ++j) {
+					double x = i * resolution_ + resolution_/2.;
+					double y = j * resolution_ + resolution_/2.;
+					CGAL_Point2 pt(x, y);
+					if(IsPointInPoly(pt, cgal_poly)) {
+						vcell.mass += (*map_)(i, j);
+						vcell.centroid = vcell.centroid + Point2(x, y) * static_cast<double>((*map_)(i, j));
+					}
+				}
+			}
+			if(vcell.mass < kEps) {
+				vcell.centroid = vcell.site;
+			} else {
+				vcell.centroid = vcell.centroid / vcell.mass;
+			}
+		}
+
+		/* std::cout << "Arrangement polygon list obtained" << std::endl; */
+		/* for(auto &poly:polygon_list) { */
+		/* 	if(not CGAL::do_intersect(bbox_poly, poly)) { continue; } */
+		/* 	PointVector poly_points; */
+		/* 	for(auto const &p:poly) { */
+		/* 		poly_points.push_back(CGALtoCC(p)); */
+		/* 	} */
+		/* 	voronoi_cells_.push_back(poly_points); */
+		/* } */
 
 		for(auto it = vor.m_cropped_vd.begin(); it != vor.m_cropped_vd.end(); ++it) {
 			auto source = CGALtoCC(it->source());
 			auto target = CGALtoCC(it->target());
-			voronoi_edges_.push_back(std::make_pair(source, target));
+			voronoi_edges_.push_back(Edge(source.x(), source.y(), target.x(), target.y()));
 		}
 	}
 

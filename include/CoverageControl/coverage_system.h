@@ -30,6 +30,8 @@ namespace CoverageControl {
 			std::vector <RobotModel> robots_;
 			MapType communication_map_;
 			Voronoi voronoi_;
+			double normalization_factor_ = 0;
+			std::vector <VoronoiCell> voronoi_cells_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -49,6 +51,7 @@ namespace CoverageControl {
 					world_idf_.AddNormalDistribution(dist);
 				}
 				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
 
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
@@ -60,6 +63,7 @@ namespace CoverageControl {
 
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				SetWorldIDF(world_idf);
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
 				robots_.reserve(robot_positions.size());
 				for(auto const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
@@ -68,8 +72,9 @@ namespace CoverageControl {
 			}
 
 			CoverageSystem(Parameters const &params, std::vector <BivariateNormalDistribution> const &dists, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
-				/* world_idf_ = WorldIDF(params_); */
 				world_idf_.AddNormalDistribution(dists);
+				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
 				num_robots_ = robot_positions.size();
 				robots_.reserve(num_robots_);
 				for(auto const &pos:robot_positions) {
@@ -78,7 +83,9 @@ namespace CoverageControl {
 
 			}
 
-			void SetWorldIDF(WorldIDF const &world_idf) { world_idf_ = world_idf; }
+			void SetWorldIDF(WorldIDF const &world_idf) { world_idf_ = world_idf;
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
+			}
 
 			void StepControl(std::vector<Point2> const &directions, std::vector<double> speeds) {
 				if((directions.size() != num_robots_) and (speeds.size() != num_robots_)) {
@@ -150,11 +157,23 @@ namespace CoverageControl {
 			}
 
 			void ComputeVoronoiCells() {
-				voronoi_ = Voronoi(GetRobotPositions(), params_.pWorldMapSize);
+				voronoi_ = Voronoi(GetRobotPositions(), world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+				voronoi_cells_ = voronoi_.GetVoronoiCells();
+				for(size_t i = 0; i < num_robots_; ++i) {
+					robots_[i].SetVoronoiCell(voronoi_cells_[i]);
+				}
 			}
-			std::vector <PointVector> GetVoronoiCells() {
-				ComputeVoronoiCells();
-				return voronoi_.GetVoronoiCells();
+			auto GetVoronoiCells() {
+				return voronoi_cells_;
+			}
+
+			auto GetVoronoiEdges () {
+				return voronoi_.GetVoronoiEdges();
+			}
+
+			double GetNormalizationFactor() {
+				normalization_factor_=world_idf_.GetNormalizationFactor();
+				return normalization_factor_;
 			}
 	};
 
