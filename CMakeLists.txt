@@ -18,7 +18,7 @@ find_package(yaml-cpp REQUIRED)
 ## CoverageControl library ##
 #############################
 
-add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp)
+add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/cuda_helpers/)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp)
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native)
@@ -52,6 +52,11 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ###########
 ## Tests ##
 ###########
+
+add_executable(voronoi ${PROJECT_SOURCE_DIR}/test/voronoi.cpp)
+target_include_directories(voronoi PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(voronoi PRIVATE Eigen3::Eigen CoverageControl)
+install(TARGETS voronoi DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
 # target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)

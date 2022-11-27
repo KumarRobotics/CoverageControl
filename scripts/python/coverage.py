@@ -5,16 +5,16 @@ from pyCoverageControl import Point2 # for defining points
 from pyCoverageControl import PointVector # for defining list of points
 
 # We can visualize the map in python
-# Doesn't look great as there aren't many distributions
-# The axes are interchanged and y is flipped. How to fix this?
-# Make tick positions multiples of 100
-# Scale the colors to the max value of the IDF map by adding input parameter
-import matplotlib.pyplot as plt
+import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
-    ax = sns.heatmap(map, cmap=colormap)
-    # ax.set_box_aspect(1) # Throws an error on lower versions of seaborn?
+    ax = sns.heatmap(map.transpose(), cmap=colormap, square=True)
+    ax.invert_yaxis()
+    nrow, ncol = map.shape
+    print(nrow)
+    plt.xticks(np.arange(0, nrow, 100), np.arange(0, nrow, 100))
+    plt.yticks(np.arange(0, ncol, 100), np.arange(0, ncol, 100))
     plt.show()
 
 

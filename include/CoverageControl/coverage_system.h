@@ -18,6 +18,7 @@
 #include "typedefs.h"
 #include "bivariate_normal_distribution.h"
 #include "map_utils.h"
+#include "voronoi.h"
 
 namespace CoverageControl {
 
@@ -28,6 +29,7 @@ namespace CoverageControl {
 			size_t num_robots_ = 0;
 			std::vector <RobotModel> robots_;
 			MapType communication_map_;
+			Voronoi voronoi_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -145,6 +147,14 @@ namespace CoverageControl {
 					throw std::out_of_range{"Robot index more than the number of robots"};
 				}
 				return communication_map_;
+			}
+
+			void ComputeVoronoiCells() {
+				voronoi_ = Voronoi(GetRobotPositions(), params_.pWorldMapSize);
+			}
+			std::vector <PointVector> GetVoronoiCells() {
+				ComputeVoronoiCells();
+				return voronoi_.GetVoronoiCells();
 			}
 	};
 

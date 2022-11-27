@@ -7,6 +7,7 @@
 #include <CoverageControl/world_idf.h>
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
+#include <CoverageControl/voronoi.h>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
@@ -41,6 +42,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 				});
 
 	py::bind_vector<PointVector>(m, "PointVector");
+	py::bind_vector<std::vector<PointVector>>(m, "PolygonVector");
 
 	py::class_<BivariateNormalDistribution>(m, "BivariateNormalDistribution")
 		.def(py::init<>())
@@ -85,6 +87,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap, py::return_value_policy::reference_internal)
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
+		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells)
 		;
 
 }
