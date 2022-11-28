@@ -8,7 +8,7 @@ pWorldMapSize: 512
 # Robot map saves what the robot has seen
 # Could make it sparse if size becomes a problem
 pRobotMapSize: 512
-pUnknownImportance: 0.01
+pUnknownImportance: 0.1 # fraction of the largest imaportance of a grid cell
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
@@ -37,8 +37,8 @@ pEpisodeSteps: 1000
 # Needs testing to be sure that the probability masses are not significantly off
 pTruncationBND: 4
 
-# Used to normalize map. Max value will be scaled to pNorm. 255 for images
-pNorm: 255
+# Used to normalize map. Max value will be scaled to pNorm.
+pNorm: 1
 
 # These settings are only required if the IDF is generated using random gaussians
 pMinVariance: 6

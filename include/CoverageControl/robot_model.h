@@ -63,7 +63,7 @@ namespace CoverageControl {
 				robot_positions_.reserve(params_.pEpisodeSteps); // More steps can be executed. But reserving for efficiency
 				local_current_position_ = local_start_position_;
 				robot_positions_.push_back(local_current_position_);
-				robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * normalization_factor_);
+				robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
 				UpdateRobotMap();
 			}
 

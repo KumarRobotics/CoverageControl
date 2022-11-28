@@ -107,23 +107,23 @@ namespace CoverageControl {
 					host_dists[i].scale = (float)(normal_distributions_[i].GetScale());
 				}
 
-				float *importance_vec = (float*) malloc(params_.pWorldMapSize * params_.pWorldMapSize * sizeof(float));
+				/* float *importance_vec = (float*) malloc(params_.pWorldMapSize * params_.pWorldMapSize * sizeof(float)); */
 				float max = 0;
-				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, importance_vec, max);
+				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, params_.pNorm, world_map_.data(), max);
 				/* GenerateMap(); */
 				normalization_factor_ = params_.pNorm / max;
-				for(int i = 0; i < params_.pWorldMapSize; ++i) {
-					for(int j = 0; j < params_.pWorldMapSize; ++j) {
-						/* if(std::abs(world_map_(i, j) - (double) importance_vec[i*pWorldMapSize + j]) > 10e-5) { */
-						/* 	std::cout << "Diff: " << i << " " << j <<  " " << world_map_(i, j) << " " << (double) importance_vec[i*pWorldMapSize + j] << std::endl; */
-						/* } */
-						/* world_map_(i, j) = (double) (importance_vec[i * params_.pWorldMapSize + j]); */
-						/* MapType2 map(params_.pWorldMapSize, params_.pWorldMapSize); */
-						world_map_(i, j) = static_cast<unsigned char> (std::round(importance_vec[i * params_.pWorldMapSize + j] * normalization_factor_));
-					}
-				}
+				/* for(int i = 0; i < params_.pWorldMapSize; ++i) { */
+				/* 	for(int j = 0; j < params_.pWorldMapSize; ++j) { */
+				/* 		/1* if(std::abs(world_map_(i, j) - (double) importance_vec[i*pWorldMapSize + j]) > 10e-5) { *1/ */
+				/* 		/1* 	std::cout << "Diff: " << i << " " << j <<  " " << world_map_(i, j) << " " << (double) importance_vec[i*pWorldMapSize + j] << std::endl; *1/ */
+				/* 		/1* } *1/ */
+				/* 		/1* world_map_(i, j) = (double) (importance_vec[i * params_.pWorldMapSize + j]); *1/ */
+				/* 		/1* MapType2 map(params_.pWorldMapSize, params_.pWorldMapSize); *1/ */
+				/* 		world_map_(i, j) = importance_vec[i * params_.pWorldMapSize + j] * normalization_factor_; */
+				/* 	} */
+				/* } */
 
-				free(importance_vec);
+				/* free(importance_vec); */
 				free(host_dists);
 			}
 

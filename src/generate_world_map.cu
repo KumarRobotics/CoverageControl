@@ -19,6 +19,7 @@ __device__ __constant__ int cu_map_size;
 __device__ __constant__ float cu_resolution;
 __device__ __constant__ float cu_truncation;
 __device__ __constant__ float cu_OneBySqrt2;
+__device__ __constant__ float cu_normalization_factor;
 
 __device__
 float2 TransformPoint(BND_Cuda const *cu_dists, int i, float2 const &in_point) {
@@ -93,7 +94,16 @@ __global__ void kernel (BND_Cuda const *cu_dists, float *importance_vec) {
 	importance_vec[vec_idx] = ComputeImportanceRectangle(cu_dists, bottom_left, top_right);
 }
 
-void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float *host_importance_vec, float &max) {
+__global__ void normalize (float *importance_vec) {
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	int idy = blockIdx.y * blockDim.y + threadIdx.y;
+	int vec_idx = idx * cu_map_size + idy;
+	if(not (idx < cu_map_size and idy < cu_map_size)) {
+		return;
+	}
+	importance_vec[vec_idx] *= cu_normalization_factor;
+}
+void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float const pNorm, float *host_importance_vec, float &max) {
 
 	checkCudaErrors(cudaDeviceSynchronize());
 
@@ -121,6 +131,11 @@ void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, 
   thrust::device_ptr<float> d_ptr = thrust::device_pointer_cast(device_importance_vec);
   max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
 
+	float normalization_factor = pNorm / max;
+	checkCudaErrors(cudaMemcpyToSymbol(cu_normalization_factor, &normalization_factor, sizeof(float)));
+
+	normalize <<<dimGrid, dimBlock>>>(device_importance_vec);
+
 	checkCudaErrors(cudaMemcpy(host_importance_vec, device_importance_vec, map_size * map_size * sizeof(float), cudaMemcpyDeviceToHost));
 
 	checkCudaErrors(cudaFree(cu_dists));
@@ -135,4 +150,3 @@ void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, 
 		throw strstr.str();
 	}
 }
-
