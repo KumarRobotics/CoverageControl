@@ -1,4 +1,5 @@
 #include <list>
+#include <omp.h>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/cgal_config.h>
 #include <CGAL/Boolean_set_operations_2.h>
@@ -52,21 +53,11 @@ namespace CoverageControl {
 			}
 		}
 
-	bool IsPointInPoly(CGAL_Point2 const &pt, Polygon_2 const &poly) {
-		auto pgn_begin = poly.begin();
-		auto pgn_end = poly.end();
-		switch(CGAL::bounded_side_2(pgn_begin, pgn_end,pt, K())) {
-			case CGAL::ON_BOUNDED_SIDE :
-				return true;
-				break;
-			case CGAL::ON_BOUNDARY:
-				return true;
-				break;
-			case CGAL::ON_UNBOUNDED_SIDE:
-				return false;
-				break;
+	inline bool IsPointInPoly(CGAL_Point2 const &pt, Polygon_2 const &poly) {
+		if(CGAL::bounded_side_2(poly.begin(), poly.end(),pt, K()) == CGAL::ON_UNBOUNDED_SIDE) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	void Voronoi::ComputeVoronoiCells() {
@@ -121,6 +112,8 @@ namespace CoverageControl {
 		}
 		/* std::cout << "Polygon pruning done" << std::endl; */
 
+		// Create voronoi_cells_ such that the correct cell is assigned to the robot
+		voronoi_cells_.reserve(num_robots_);
 		for(auto const &pt:CGAL_sites) {
 			for(auto it = polygon_list.begin(); it != polygon_list.end(); ++it) {
 				if(IsPointInPoly(pt, *it) == true) {
@@ -139,7 +132,10 @@ namespace CoverageControl {
 		}
 		/* std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl; */
 
-		for(auto &vcell:voronoi_cells_) {
+		// Compute mass and centroid of the cells
+#pragma omp parallel for
+		for(int iCell = 0; iCell < num_robots_; ++iCell) {
+			auto &vcell = voronoi_cells_[iCell];
 			vcell.mass = 0;
 			vcell.centroid = Point2(0,0);
 			Polygon_2 cgal_poly;
@@ -160,9 +156,11 @@ namespace CoverageControl {
 					double x = i * resolution_ + resolution_/2.;
 					double y = j * resolution_ + resolution_/2.;
 					CGAL_Point2 pt(x, y);
-					if(IsPointInPoly(pt, cgal_poly)) {
+					if(CGAL::bounded_side_2(cgal_poly.begin(), cgal_poly.end(), pt, K()) == CGAL::ON_UNBOUNDED_SIDE) {
+						continue;
+					} else {
 						vcell.mass += (*map_)(i, j);
-						vcell.centroid = vcell.centroid + Point2(x, y) * static_cast<double>((*map_)(i, j));
+						vcell.centroid = vcell.centroid + Point2(x, y) * (*map_)(i, j);
 					}
 				}
 			}
@@ -172,7 +170,6 @@ namespace CoverageControl {
 				vcell.centroid = vcell.centroid / vcell.mass;
 			}
 		}
-
 		/* std::cout << "Arrangement polygon list obtained" << std::endl; */
 		/* for(auto &poly:polygon_list) { */
 		/* 	if(not CGAL::do_intersect(bbox_poly, poly)) { continue; } */

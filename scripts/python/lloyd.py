@@ -34,6 +34,10 @@ robot_id = 0
 #     local_map = env.GetRobotLocalMap(robot_id)
 #     comm_map = env.GetCommunicationMap(robot_id)
 
+
+print("lloyd start")
+env.Lloyd()
+print("lloyd end")
 ###################
 ## Visualization ##
 ###################

@@ -13,6 +13,7 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(Python COMPONENTS Interpreter Development)
 find_package(pybind11 REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(OpenMP REQUIRED)
 
 #############################
 ## CoverageControl library ##
@@ -20,7 +21,7 @@ find_package(yaml-cpp REQUIRED)
 
 add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/cuda_helpers/)
-target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp)
+target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX)
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native)
 
 install(TARGETS CoverageControl EXPORT CoverageControl-targets
@@ -45,7 +46,7 @@ configure_file(CoverageControl_config.h.in CoverageControl_config.h)
 ##################################
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
 target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp)
+target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX)
 target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 

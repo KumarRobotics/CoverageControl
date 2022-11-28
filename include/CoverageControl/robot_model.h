@@ -38,12 +38,14 @@ namespace CoverageControl {
 			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
 
 			// Gets the sensor data from world IDF at the global_current_position_ and updates robot_map_
-			void UpdateRobotMap() {
+			void UpdateSensorView() {
 				sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 				if(MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize)) {
 					return;
 				}
 				world_idf_->GetSubWorldMap(global_current_position_, params_.pSensorSize, sensor_view_);
+			}
+			void UpdateRobotMap() {
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize, index, offset);
 				robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = sensor_view_.block(offset.left, offset.bottom, offset.width, offset.height);
@@ -64,7 +66,14 @@ namespace CoverageControl {
 				local_current_position_ = local_start_position_;
 				robot_positions_.push_back(local_current_position_);
 				robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
-				UpdateRobotMap();
+				if(params_.pUpdateSensorView == true) {
+					UpdateSensorView();
+				}
+				if(params_.pUpdateRobotMap == false) {
+					robot_map_ = world_idf_->GetWorldMap();
+				} else {
+					UpdateRobotMap();
+				}
 			}
 
 			// Time step robot with the given control direction and speed
@@ -94,7 +103,12 @@ namespace CoverageControl {
 				local_current_position_ = new_pos;
 				robot_positions_.push_back(local_current_position_);
 				global_current_position_ = local_current_position_ + global_start_position_;
-				UpdateRobotMap();
+				if(params_.pUpdateSensorView == true) {
+					UpdateSensorView();
+				}
+				if(params_.pUpdateRobotMap == true) {
+					UpdateRobotMap();
+				}
 			}
 
 			Point2 GetGlobalStartPosition() const { return global_start_position_; }

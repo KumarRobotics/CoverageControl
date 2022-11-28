@@ -178,6 +178,28 @@ namespace CoverageControl {
 					}
 				}
 			}
+
+			void Lloyd() {
+				bool cont_flag = true;
+				for(int iStep = 0; iStep < params_.pEpisodeSteps and cont_flag == true; ++iStep) {
+					std::cout << "iStep: " << iStep << std::endl;
+					cont_flag = false;
+					ComputeVoronoiCells();
+					for(size_t i = 0; i < num_robots_; ++i) {
+						auto direction = voronoi_cells_[i].centroid - voronoi_cells_[i].site;
+						double speed = direction.Norm() / params_.pTimeStep;
+						if(speed < kEps) {
+							continue;
+						}
+						cont_flag = true;
+						speed = std::min(params_.pMaxRobotSpeed, speed);
+						if(robots_[i].StepControl(direction, speed)) {
+							std::cerr << "Control incorrect\n";
+						}
+					}
+				}
+			}
+
 			auto GetVoronoiCells() {
 				return voronoi_cells_;
 			}

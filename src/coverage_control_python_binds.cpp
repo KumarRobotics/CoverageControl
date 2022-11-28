@@ -99,10 +99,11 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap, py::return_value_policy::reference_internal)
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
-		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells)
-		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells)
+		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells, py::return_value_policy::reference_internal)
+		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::reference_internal)
 		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
+		.def("Lloyd", &CoverageSystem::Lloyd)
 		;
 
 	py::class_<Parameters>(m, "Parameters")
@@ -115,6 +116,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pUnknownImportance", &Parameters::pUnknownImportance)
 		.def_readonly("pLocalMapSize", &Parameters::pLocalMapSize)
 		.def_readonly("pCommunicationRange", &Parameters::pCommunicationRange)
+		.def_readonly("pUpdateRobotMap", &Parameters::pUpdateRobotMap)
+		.def_readonly("pUpdateSensorView", &Parameters::pUpdateSensorView)
 		.def_readonly("pSensorSize", &Parameters::pSensorSize)
 		.def_readonly("pTimeStep", &Parameters::pTimeStep)
 		.def_readonly("pMaxRobotSpeed", &Parameters::pMaxRobotSpeed)

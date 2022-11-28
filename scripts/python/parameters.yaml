@@ -16,6 +16,10 @@ pLocalMapSize: 64
 # Radius of communication (in meters)
 pCommunicationRange: 64
 
+# Set pUpdateRobotMap to false for centralized known world
+pUpdateRobotMap: false
+pUpdateSensorView: false
+
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize
 # Robot is placed at the center of FOV

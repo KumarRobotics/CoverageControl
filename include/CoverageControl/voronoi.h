@@ -28,10 +28,12 @@ namespace CoverageControl {
 			/* std::vector <Edge> voronoi_edges_; */
 			std::shared_ptr <const MapType> map_;
 			double resolution_ = 0;
+			int num_robots_;
 		public:
 			Voronoi() {}
 			Voronoi(PointVector const &sites, MapType const &map, int const map_size, double const &resolution) : sites_{sites}, map_size_{map_size}, resolution_{resolution} {
 				map_ = std::make_shared<const MapType>(map);
+				num_robots_ = sites_.size();
 				ComputeVoronoiCells();
 			}
 			void ComputeVoronoiCells();

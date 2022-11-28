@@ -42,6 +42,10 @@ namespace CoverageControl {
 			int pLocalMapSize = 64;
 			double pCommunicationRange = 64; // Radius of communication (in meters)
 
+			// Set pUpdateRobotMap to false for centralized known world
+			bool pUpdateRobotMap = false;
+			bool pUpdateSensorView = false;
+
 			// Assuming square sensor FOV.
 			// Actual FOV: square with side pResolution * pSensorSize
 			// Robot is placed at the center of FOV
