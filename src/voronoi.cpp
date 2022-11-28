@@ -10,21 +10,21 @@ namespace CoverageControl {
 		return Point2(CGAL::to_double(pt.x()), CGAL::to_double(pt.y()));
 	}
 	struct CGAL_Cropped_voronoi_from_delaunay{
-		std::list<Segment_2> m_cropped_vd;
+		/* std::list<Segment_2> m_cropped_vd; */
 		Iso_rectangle_2 bbox_;
 		std::vector<Ray_2> rays_;
 		std::vector<Line_2> lines_;
 		std::vector<Segment_2> segments_;
 		CGAL_Cropped_voronoi_from_delaunay(Iso_rectangle_2 const &bbox):bbox_(bbox) {}
-		template <class RSL>
-			void crop_and_extract_segment(const RSL& rsl){
-				CGAL::Object obj = CGAL::intersection(rsl, bbox_);
-				const Segment_2* s=CGAL::object_cast<Segment_2>(&obj);
-				if (s) m_cropped_vd.push_back(*s);
-			}
-		void operator<<(const Ray_2& ray)    { crop_and_extract_segment(ray); rays_.push_back(ray); }
-		void operator<<(const Line_2& line)  { crop_and_extract_segment(line); lines_.push_back(line); }
-		void operator<<(const Segment_2& seg){ crop_and_extract_segment(seg); segments_.push_back(seg); }
+		/* template <class RSL> */
+			/* void crop_and_extract_segment(const RSL& rsl){ */
+			/* 	CGAL::Object obj = CGAL::intersection(rsl, bbox_); */
+			/* 	const Segment_2* s=CGAL::object_cast<Segment_2>(&obj); */
+			/* 	if (s) m_cropped_vd.push_back(*s); */
+			/* } */
+		void operator<<(const Ray_2& ray)    { rays_.push_back(ray); }
+		void operator<<(const Line_2& line)  { lines_.push_back(line); }
+		void operator<<(const Segment_2& seg){ segments_.push_back(seg); }
 	};
 
 	template<class Arrangement>
@@ -183,11 +183,11 @@ namespace CoverageControl {
 		/* 	voronoi_cells_.push_back(poly_points); */
 		/* } */
 
-		for(auto it = vor.m_cropped_vd.begin(); it != vor.m_cropped_vd.end(); ++it) {
-			auto source = CGALtoCC(it->source());
-			auto target = CGALtoCC(it->target());
-			voronoi_edges_.push_back(Edge(source.x(), source.y(), target.x(), target.y()));
-		}
+		/* for(auto it = vor.m_cropped_vd.begin(); it != vor.m_cropped_vd.end(); ++it) { */
+		/* 	auto source = CGALtoCC(it->source()); */
+		/* 	auto target = CGALtoCC(it->target()); */
+		/* 	voronoi_edges_.push_back(Edge(source.x(), source.y(), target.x(), target.y())); */
+		/* } */
 	}
 
 } /* namespace CoverageControl */

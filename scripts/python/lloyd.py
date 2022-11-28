@@ -15,25 +15,31 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 params_ = pyCoverageControl.Parameters('parameters.yaml')
 
 num_gaussians = 100
-num_robots = 40
+num_robots = 20
 env = CoverageSystem(params_, num_gaussians, num_robots)
 map = env.GetWorldIDF()
 robot_positions = env.GetRobotPositions()
 print(type(map))
 print(type(robot_positions))
-plot_pos_x = np.array([])
-plot_pos_y = np.array([])
-for pos in robot_positions:
-    plot_pos_x = np.append(plot_pos_x, pos.x / params_.pResolution)
-    plot_pos_y = np.append(plot_pos_y, pos.y / params_.pResolution)
 
 env.ComputeVoronoiCells()
 voronoi_cells = env.GetVoronoiCells()
-voronoi_edges = env.GetVoronoiEdges()
 
+# robot_id = 0
+# for step in range(0, params_.pEpisodeSteps):
+#     print(step)
+#     env.StepLloyd()
+#     voronoi_cells = env.GetVoronoiCells()
+#     robot_positions = env.GetRobotPositions()
+#     local_map = env.GetRobotLocalMap(robot_id)
+#     comm_map = env.GetCommunicationMap(robot_id)
 
+###################
+## Visualization ##
+###################
 
 plt.ion()
+
 fig = plt.figure()
 ax = sns.heatmap(map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True)
 ax.invert_yaxis()
@@ -42,6 +48,12 @@ nrow, ncol = map.shape
 septicks = 10 ** (math.floor(math.log(nrow, 10)))
 plt.xticks(np.arange(0, nrow, septicks), np.arange(0, nrow, septicks))
 plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
+
+plot_pos_x = np.array([])
+plot_pos_y = np.array([])
+for pos in robot_positions:
+    plot_pos_x = np.append(plot_pos_x, pos.x / params_.pResolution)
+    plot_pos_y = np.append(plot_pos_y, pos.y / params_.pResolution)
 
 plot_robots, = ax.plot(plot_pos_x, plot_pos_y, 'go')
 print(plot_robots)
@@ -68,15 +80,26 @@ plot_centroids, = ax.plot(centroid_x, centroid_y, 'r+')
 fig.canvas.draw()
 fig.canvas.flush_events()
 
-# for step in range(0, params_.pEpisodeSteps):
-#     print(step)
-#     env.StepLloyd()
+
+
 prev_robot_pos = robot_positions
+fig_local = plt.figure()
+local_map = env.GetRobotLocalMap(0)
+local_ax = sns.heatmap(data=local_map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True)
+cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
+local_ax.invert_yaxis()
+fig_local.canvas.draw()
+fig_local.canvas.flush_events()
+
+
 for step in range(0, params_.pEpisodeSteps):
     print(step)
     env.StepLloyd()
     voronoi_cells = env.GetVoronoiCells()
     robot_positions = env.GetRobotPositions()
+    local_map = env.GetRobotLocalMap(0)
+    sns.heatmap(data=local_map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax)
+    local_ax.invert_yaxis()
     for i in range(0, num_robots):
         plot_pos_x[i] =  robot_positions[i].x / params_.pResolution
         plot_pos_y[i] =  robot_positions[i].y / params_.pResolution
@@ -103,4 +126,6 @@ for step in range(0, params_.pEpisodeSteps):
 
     fig.canvas.draw()
     fig.canvas.flush_events()
+    fig_local.canvas.draw()
+    fig_local.canvas.flush_events()
 

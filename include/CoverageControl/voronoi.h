@@ -25,7 +25,7 @@ namespace CoverageControl {
 			PointVector sites_;
 			int map_size_;
 			std::vector <VoronoiCell> voronoi_cells_;
-			std::vector <Edge> voronoi_edges_;
+			/* std::vector <Edge> voronoi_edges_; */
 			std::shared_ptr <const MapType> map_;
 			double resolution_ = 0;
 		public:
@@ -36,7 +36,7 @@ namespace CoverageControl {
 			}
 			void ComputeVoronoiCells();
 			auto GetVoronoiCells() {return voronoi_cells_;}
-			auto GetVoronoiEdges() {return voronoi_edges_;}
+			/* auto GetVoronoiEdges() {return voronoi_edges_;} */
 	};
 
 } /* namespace CoverageControl */

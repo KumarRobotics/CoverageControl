@@ -101,7 +101,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
 		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells)
 		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells)
-		.def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges)
+		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
 		;
 

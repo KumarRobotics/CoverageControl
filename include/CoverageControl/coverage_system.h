@@ -182,9 +182,9 @@ namespace CoverageControl {
 				return voronoi_cells_;
 			}
 
-			auto GetVoronoiEdges () {
-				return voronoi_.GetVoronoiEdges();
-			}
+			/* auto GetVoronoiEdges () { */
+			/* 	return voronoi_.GetVoronoiEdges(); */
+			/* } */
 
 			double GetNormalizationFactor() {
 				normalization_factor_=world_idf_.GetNormalizationFactor();
