@@ -57,7 +57,7 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 add_executable(voronoi ${PROJECT_SOURCE_DIR}/test/voronoi.cpp)
 target_include_directories(voronoi PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(voronoi PRIVATE Eigen3::Eigen CoverageControl)
+target_link_libraries(voronoi PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
 install(TARGETS voronoi DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
