@@ -172,9 +172,13 @@ namespace CoverageControl {
 				ComputeVoronoiCells();
 				for(size_t i = 0; i < num_robots_; ++i) {
 					auto diff = voronoi_cells_[i].centroid - voronoi_cells_[i].site;
-					double speed = 2 * voronoi_cells_[i].mass * diff.Norm();
+					auto dist = diff.Norm();
+					double speed = 2 * voronoi_cells_[i].mass * dist;
 					/* double speed = diff.Norm() / params_.pTimeStep; */
-					if(speed < kEps) {
+					if(dist <= params_.pResolution) {
+						speed = dist / params_.pTimeStep;
+					}
+					if(speed <= kEps) {
 						continue;
 					}
 					cont_flag = true;
