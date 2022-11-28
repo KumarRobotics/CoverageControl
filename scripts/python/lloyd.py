@@ -25,7 +25,7 @@ print(type(robot_positions))
 env.ComputeVoronoiCells()
 voronoi_cells = env.GetVoronoiCells()
 
-# robot_id = 0
+robot_id = 0
 # for step in range(0, params_.pEpisodeSteps):
 #     print(step)
 #     env.StepLloyd()
@@ -40,7 +40,7 @@ voronoi_cells = env.GetVoronoiCells()
 
 plt.ion()
 
-fig = plt.figure()
+fig = plt.figure("Environment")
 ax = sns.heatmap(map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True)
 ax.invert_yaxis()
 nrow, ncol = map.shape
@@ -83,23 +83,24 @@ fig.canvas.flush_events()
 
 
 prev_robot_pos = robot_positions
-fig_local = plt.figure()
-local_map = env.GetRobotLocalMap(0)
-local_ax = sns.heatmap(data=local_map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True)
+fig_local = plt.figure("Local Map of Robot" + str(robot_id))
+local_map = env.GetRobotLocalMap(robot_id)
+local_ax = sns.heatmap(data=np.flip(local_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
 cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
-local_ax.invert_yaxis()
 fig_local.canvas.draw()
 fig_local.canvas.flush_events()
-
+local_ax.tick_params(left=False, bottom=False)
+local_ax.set(xticklabels=[])
+local_ax.set(yticklabels=[])
 
 for step in range(0, params_.pEpisodeSteps):
     print(step)
     env.StepLloyd()
     voronoi_cells = env.GetVoronoiCells()
     robot_positions = env.GetRobotPositions()
-    local_map = env.GetRobotLocalMap(0)
-    sns.heatmap(data=local_map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax)
-    local_ax.invert_yaxis()
+    local_map = env.GetRobotLocalMap(robot_id)
+    sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
+    local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id].x, 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id].y, 2))
     for i in range(0, num_robots):
         plot_pos_x[i] =  robot_positions[i].x / params_.pResolution
         plot_pos_y[i] =  robot_positions[i].y / params_.pResolution
