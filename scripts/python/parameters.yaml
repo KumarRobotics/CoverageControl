@@ -45,7 +45,7 @@ pTruncationBND: 4
 pNorm: 1
 
 # These settings are only required if the IDF is generated using random gaussians
-pMinVariance: 6
-pMaxVariance: 10
+pMinSigma: 6
+pMaxSigma: 10
 pMinPeak: 6
 pMaxPeak: 10

@@ -124,8 +124,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pEpisodeSteps", &Parameters::pEpisodeSteps)
 		.def_readonly("pTruncationBND", &Parameters::pTruncationBND)
 		.def_readonly("pNorm", &Parameters::pNorm)
-		.def_readonly("pMinVariance", &Parameters::pMinVariance)
-		.def_readonly("pMaxVariance", &Parameters::pMaxVariance)
+		.def_readonly("pMinSigma", &Parameters::pMinSigma)
+		.def_readonly("pMaxSigma", &Parameters::pMaxSigma)
 		.def_readonly("pMinPeak", &Parameters::pMinPeak)
 		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
 		;

@@ -70,8 +70,8 @@ namespace CoverageControl {
 			double pNorm = 255;
 
 			// These settings are only required if the IDF is generated using random gaussians
-			double pMinVariance = 1;
-			double pMaxVariance = 10;
+			double pMinSigma = 1;
+			double pMaxSigma = 10;
 			double pMinPeak = 5;
 			double pMaxPeak = 10;
 

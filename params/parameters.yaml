@@ -12,9 +12,9 @@ pUnknownImportance: 0.1 # fraction of the largest imaportance of a grid cell
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
-pLocalMapSize: 64
+pLocalMapSize: 128
 # Radius of communication (in meters)
-pCommunicationRange: 64
+pCommunicationRange: 128
 
 # Set pUpdateRobotMap to false for centralized known world
 pUpdateRobotMap: false
@@ -26,7 +26,7 @@ pUpdateSensorView: false
 # Make it even so that I don't have to deal with substracting by half-resolution.
 # Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
 # Positive integer. NOTE: Needs to be even
-pSensorSize: 12
+pSensorSize: 24
 
 # Each time step corresponds to 0.1s, i.e., 10Hz
 pTimeStep: 0.1
@@ -45,7 +45,7 @@ pTruncationBND: 4
 pNorm: 1
 
 # These settings are only required if the IDF is generated using random gaussians
-pMinVariance: 6
-pMaxVariance: 10
+pMinSigma: 6
+pMaxSigma: 10
 pMinPeak: 6
 pMaxPeak: 10
