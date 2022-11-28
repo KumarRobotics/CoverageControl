@@ -30,6 +30,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def(py::init<double const, double const>())
 		.def_property("x", &Point2::x, &Point2::SetX)
 		.def_property("y", &Point2::y, &Point2::SetY)
+		.def("NormSqr", &Point2::NormSqr)
 		.def("__repr__",
 				[](const Point2 &a) {
 				return "<CoverageControl.Point2: (" + std::to_string(a.x()) + "," + std::to_string(a.y()) + ")>";
@@ -101,6 +102,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells)
 		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells)
 		.def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges)
+		.def("StepLloyd", &CoverageSystem::StepLloyd)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

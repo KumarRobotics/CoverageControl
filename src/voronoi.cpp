@@ -72,7 +72,7 @@ namespace CoverageControl {
 	void Voronoi::ComputeVoronoiCells() {
 		Delaunay_triangulation_2 dt2;
 		std::vector<CGAL_Point2> CGAL_sites;
-		std::cout << "Number of sites: " << sites_.size() << std::endl;
+		/* std::cout << "Number of sites: " << sites_.size() << std::endl; */
 		for(auto const pt:sites_) {
 			CGAL_sites.push_back(CGAL_Point2(pt.x(), pt.y()));
 		}
@@ -101,16 +101,16 @@ namespace CoverageControl {
 		/* CGAL::insert(arr_, s4); */
 		vor.segments_.push_back(s4);
 
-		std::cout << "Computing arrangement" << std::endl;
+		/* std::cout << "Computing arrangement" << std::endl; */
 		Arrangement_2 arr_;
 		CGAL::insert(arr_, vor.rays_.begin(), vor.rays_.end());
 		CGAL::insert(arr_, vor.lines_.begin(), vor.lines_.end());
 		CGAL::insert(arr_, vor.segments_.begin(), vor.segments_.end());
-		std::cout << "Arrangement created" << std::endl;
+		/* std::cout << "Arrangement created" << std::endl; */
 
 		std::list <Polygon_2> polygon_list;
 		CGAL_GeneratePolygons(arr_, polygon_list);
-		std::cout << "Polygons generated" << std::endl;
+		/* std::cout << "Polygons generated" << std::endl; */
 
 		for(auto it = polygon_list.begin(); it != polygon_list.end();) {
 			if(not CGAL::do_intersect(bbox_poly, *it)) {
@@ -119,7 +119,7 @@ namespace CoverageControl {
 				++it;
 			}
 		}
-		std::cout << "Polygon pruning done" << std::endl;
+		/* std::cout << "Polygon pruning done" << std::endl; */
 
 		for(auto const &pt:CGAL_sites) {
 			for(auto it = polygon_list.begin(); it != polygon_list.end(); ++it) {
@@ -137,7 +137,7 @@ namespace CoverageControl {
 				}
 			}
 		}
-		std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl;
+		/* std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl; */
 
 		for(auto &vcell:voronoi_cells_) {
 			vcell.mass = 0;
