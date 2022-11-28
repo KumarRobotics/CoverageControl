@@ -7,6 +7,7 @@ Provides environment for Coverage Control problem.
 - Eigen
 - Boost
 - yaml-cpp
+- CGAL
 ```
 
 Helper bash functions are provided in the file `setup.sh`.
