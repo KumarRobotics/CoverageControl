@@ -35,9 +35,9 @@ robot_id = 0
 #     comm_map = env.GetCommunicationMap(robot_id)
 
 
-print("lloyd start")
-env.Lloyd()
-print("lloyd end")
+# print("lloyd start")
+# env.Lloyd()
+# print("lloyd end")
 ###################
 ## Visualization ##
 ###################
@@ -99,7 +99,8 @@ local_ax.set(yticklabels=[])
 
 for step in range(0, params_.pEpisodeSteps):
     print(step)
-    env.StepLloyd()
+    if (not env.StepLloyd()):
+        break
     voronoi_cells = env.GetVoronoiCells()
     robot_positions = env.GetRobotPositions()
     local_map = env.GetRobotLocalMap(robot_id)
