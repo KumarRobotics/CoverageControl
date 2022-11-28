@@ -8,6 +8,7 @@ Provides environment for Coverage Control problem.
 - Boost
 - yaml-cpp
 - CGAL
+- OpenMP
 ```
 
 Helper bash functions are provided in the file `setup.sh`.
