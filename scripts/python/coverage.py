@@ -9,7 +9,7 @@ import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
-    ax = sns.heatmap(map.transpose(), vmax=255, cmap=colormap, square=True)
+    ax = sns.heatmap(map.transpose(), vmax=1, cmap=colormap, square=True)
     ax.invert_yaxis()
     nrow, ncol = map.shape
     if(nrow > 50 and nrow < 500):
@@ -101,21 +101,24 @@ point_list.append(pt1)
 from pyCoverageControl import BivariateNormalDistribution as BND # for defining bivariate normal distributions
 dist1 = BND() # zero-mean, sigma = 1, circular
 
-mean = Point2(512, 512)
+mean = Point2(100, 400)
 sigma = 5
 peak_val = 3
 dist2 = BND(mean, sigma, peak_val) # circular gaussian
 
+mean3 = Point2(500, 10)
 sigma_skewed = Point2(1, 2)
 rho = 2
-dist3 = BND(mean, sigma_skewed, rho, peak_val) # general BND
+dist3 = BND(mean3, sigma_skewed, rho, peak_val) # general BND
 
 ##############
 ## WorldIDF ##
 ##############
 from pyCoverageControl import WorldIDF # for defining world idf
 world_idf = WorldIDF(params_)
+world_idf.AddNormalDistribution(dist1); # Add a distribution to the idf
 world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
+world_idf.AddNormalDistribution(dist3); # Add a distribution to the idf
 world_idf.GenerateMapCuda() # Generate map, use GenerateMap() for cpu version
 world_idf.PrintMapSize()
 # world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
