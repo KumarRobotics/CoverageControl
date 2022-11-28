@@ -171,13 +171,15 @@ namespace CoverageControl {
 				bool cont_flag = false;
 				ComputeVoronoiCells();
 				for(size_t i = 0; i < num_robots_; ++i) {
-					auto direction = voronoi_cells_[i].centroid - voronoi_cells_[i].site;
-					double speed = direction.Norm() / params_.pTimeStep;
+					auto diff = voronoi_cells_[i].centroid - voronoi_cells_[i].site;
+					double speed = 2 * voronoi_cells_[i].mass * diff.Norm();
+					/* double speed = diff.Norm() / params_.pTimeStep; */
 					if(speed < kEps) {
 						continue;
 					}
 					cont_flag = true;
 					speed = std::min(params_.pMaxRobotSpeed, speed);
+					auto direction = diff; direction.Normalize();
 					if(robots_[i].StepControl(direction, speed)) {
 						std::cerr << "Control incorrect\n";
 					}
