@@ -102,8 +102,8 @@ for step in range(0, params_.pEpisodeSteps):
     sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
     local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id].x, 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id].y, 2))
     for i in range(0, num_robots):
-        plot_pos_x[i] =  robot_positions[i].x / params_.pResolution
-        plot_pos_y[i] =  robot_positions[i].y / params_.pResolution
+        plot_pos_x[i] =  prev_robot_pos[i].x / params_.pResolution
+        plot_pos_y[i] =  prev_robot_pos[i].y / params_.pResolution
         plot_pt_x = np.array([])
         plot_pt_y = np.array([])
         for pt in voronoi_cells[i].cell:
