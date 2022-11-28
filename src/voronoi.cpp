@@ -8,6 +8,7 @@ namespace CoverageControl {
 
 	void Voronoi::ComputeMassCentroid(VoronoiCell &vcell) {
 			vcell.mass = 0;
+			vcell.obj = 0;
 			vcell.centroid = Point2(0,0);
 			Polygon_2 cgal_poly;
 			for(auto const &p:vcell.cell) {
@@ -32,6 +33,7 @@ namespace CoverageControl {
 					} else {
 						vcell.mass += (*map_)(i, j);
 						vcell.centroid = vcell.centroid + Point2(x, y) * (*map_)(i, j);
+						vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).NormSqr() * (*map_)(i, j);
 					}
 				}
 			}

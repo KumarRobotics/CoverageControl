@@ -33,7 +33,10 @@ robot_id = 0
 #     robot_positions = env.GetRobotPositions()
 #     local_map = env.GetRobotLocalMap(robot_id)
 #     comm_map = env.GetCommunicationMap(robot_id)
-
+#     print(voronoi_cells[0].mass)
+#     print(voronoi_cells[0].centroid)
+#     print(voronoi_cells[0].obj)
+#     print(voronoi_cells[0].site)
 
 # print("lloyd start")
 # env.Lloyd()

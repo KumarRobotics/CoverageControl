@@ -18,6 +18,7 @@ namespace CoverageControl {
 		PointVector cell;
 		double mass = 0;
 		Point2 centroid;
+		double obj = 0;
 	};
 
 	class Voronoi {
