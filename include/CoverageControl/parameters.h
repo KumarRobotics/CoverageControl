@@ -75,6 +75,9 @@ namespace CoverageControl {
 			double pMinPeak = 5;
 			double pMaxPeak = 10;
 
+			int pLloydOfflineMaxIteration = 100;
+			int pLloydNumOfflineTries = 10;
+
 			Parameters() {}
 
 			Parameters (std::string const &config_file) : config_file_{config_file}{

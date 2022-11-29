@@ -24,7 +24,7 @@ namespace CoverageControl {
 	class Voronoi {
 		private:
 			PointVector sites_;
-			std::shared_ptr <const MapType> map_;
+			std::shared_ptr <const MapType> map_ = nullptr;
 			int map_size_;
 			double resolution_ = 0;
 			bool compute_single_ = false;
@@ -33,6 +33,7 @@ namespace CoverageControl {
 			VoronoiCell voronoi_cell_;
 			std::vector <VoronoiCell> voronoi_cells_;
 			void ComputeMassCentroid(VoronoiCell &);
+			void ComputeMassCentroid2(VoronoiCell &);
 
 			/* std::vector <Edge> voronoi_edges_; */
 		public:
@@ -40,11 +41,22 @@ namespace CoverageControl {
 			Voronoi(PointVector const &sites, MapType const &map, int const map_size, double const &resolution, bool const compute_single = false, int const robot_id = 0) : sites_{sites}, map_size_{map_size}, resolution_{resolution}, compute_single_{compute_single}, robot_id_{robot_id} {
 				map_ = std::make_shared<const MapType>(map);
 				num_robots_ = sites_.size();
+				if(compute_single_ == false) {
+					voronoi_cells_.resize(num_robots_);
+				}
 				ComputeVoronoiCells();
 			}
+			void UpdateSites(PointVector const &sites) { sites_ = sites; num_robots_ = sites_.size(); ComputeVoronoiCells(); }
 			void ComputeVoronoiCells();
 			auto GetVoronoiCells() {return voronoi_cells_;}
 			auto GetVoronoiCell() {return voronoi_cell_;}
+			double GetObjValue() {
+				double obj = 0;
+				for(auto const &cell:voronoi_cells_) {
+					obj = obj + cell.obj;
+				}
+				return obj;
+			}
 			/* auto GetVoronoiEdges() {return voronoi_edges_;} */
 	};
 

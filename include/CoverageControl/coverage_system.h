@@ -44,7 +44,7 @@ namespace CoverageControl {
 				std::srand(0);
 				gen_ = std::mt19937(rd_()); //Standard mersenne_twister_engine seeded with rd_()
 				distrib_pts_ = std::uniform_real_distribution<>(0, params_.pWorldMapSize * params_.pResolution);
-				std::uniform_real_distribution<> distrib_var(params_.pMinVariance, params_.pMaxVariance);
+				std::uniform_real_distribution<> distrib_var(params_.pMinSigma, params_.pMaxSigma);
 				std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
 				for(int i = 0; i < num_gaussians; ++i) {
 					Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
@@ -194,35 +194,51 @@ namespace CoverageControl {
 			void Lloyd() {
 				bool cont_flag = true;
 				for(int iStep = 0; iStep < params_.pEpisodeSteps and cont_flag == true; ++iStep) {
-					std::cout << "iStep: " << iStep << std::endl;
 					cont_flag = StepLloyd();
 				}
 			}
 
-			/* void LloydOffline() { */
-			/* 	std::vector <std::vector <Point2>> all_sites; */
-			/* 	std::vector <double> all_mass; */
+			auto LloydOffline() {
+				std::vector <Voronoi> all_voronois;
+				all_voronois.resize(params_.pLloydNumOfflineTries);
+				std::vector <double> obj_values;
+				obj_values.resize(params_.pLloydNumOfflineTries, 0);
+
 /* #pragma omp parallel for */
-			/* 	for(int i = 0; i < params_.pNumLloydOfflineTries; ++i) { */
-			/* 		for(int iRobot = 0; iRobot < num_robots_; ++iRobot) { */
-			/* 			all_sites[i][iRobot] = (Point2(distrib_pts_(gen_), distrib_pts_(gen_))); */
-			/* 		} */
-			/* 		bool cont_flag = true; */
-			/* 		for(int iSteps = 0; iSteps < params_.pLloydOfflineMaxIteration and cont_flag == true; ++iSteps) { */
-			/* 			Voronoi voronoi(all_sites[i], world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution); */
-			/* 			auto voronoi_cells = voronoi.GetVoronoiCells(); */
-			/* 			cont_flag = false; */
-			/* 			for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) { */
-			/* 				auto diff = voronoi_cells[iRobot].centroid - voronoi_cells[iRobot].site; */
-			/* 				if(diff.Norm() < kEps) { */
-			/* 					continue; */
-			/* 				} */
-			/* 				cont_flag = true; */
-			/* 				all_sites[i][iRobot] = voronoi_cells[iRobot].centroid; */
-			/* 			} */
-			/* 		} */
-			/* 	} */
-			/* } */
+				for(int iter = 0; iter < params_.pLloydNumOfflineTries; ++iter) {
+					std::vector <Point2> sites;
+					sites.resize(num_robots_);
+					for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+						sites[iRobot] = Point2(distrib_pts_(gen_), distrib_pts_(gen_));
+					}
+					bool cont_flag = true;
+					Voronoi voronoi(sites, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+					for(int iSteps = 0; iSteps < params_.pLloydOfflineMaxIteration and cont_flag == true; ++iSteps) {
+						cont_flag = false;
+						auto voronoi_cells = voronoi.GetVoronoiCells();
+						for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+							auto diff = voronoi_cells[iRobot].centroid - voronoi_cells[iRobot].site;
+							if(diff.Norm() < kEps) {
+								continue;
+							}
+							cont_flag = true;
+							sites[iRobot] = voronoi_cells[iRobot].centroid;
+						}
+						voronoi.UpdateSites(sites);
+					}
+					all_voronois[iter] = voronoi;
+					obj_values[iter] = voronoi.GetObjValue();
+				}
+				Voronoi best_voronoi = all_voronois[0];
+				double min = obj_values[0];
+				for(int iter = 1; iter < params_.pLloydNumOfflineTries; ++iter) {
+					if(obj_values[iter] < min) {
+						min = obj_values[iter];
+						best_voronoi = all_voronois[iter];
+					}
+				}
+				return best_voronoi.GetVoronoiCells();
+			}
 
 			auto GetVoronoiCells() {
 				return voronoi_cells_;

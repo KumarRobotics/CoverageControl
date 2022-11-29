@@ -14,6 +14,89 @@ namespace CoverageControl {
 			for(auto const &p:vcell.cell) {
 				cgal_poly.push_back(CGAL_Point2(p.x(), p.y()));
 			}
+
+			auto start_vertex_itr = cgal_poly.vertices_circulator();
+			auto curr_vertex_itr = start_vertex_itr;
+			std::advance(curr_vertex_itr, 1);
+			auto left_vertex_itr = start_vertex_itr;
+			while(curr_vertex_itr != start_vertex_itr) {
+				if(curr_vertex_itr->x() < left_vertex_itr->x()) {
+					left_vertex_itr = curr_vertex_itr;
+				}
+				std::advance(curr_vertex_itr, 1);
+			}
+
+			int min_i = std::round(CGAL::to_double(left_vertex_itr->x())/resolution_);
+			min_i = min_i < 0 ? 0 : min_i;
+
+			auto right_vertex_itr = cgal_poly.right_vertex();
+			int max_i = std::round(CGAL::to_double(right_vertex_itr->x())/resolution_);
+			max_i = max_i > map_size_ ? map_size_ : max_i;
+
+			auto cc_pt_itr = std::next(left_vertex_itr); // Counter-clockwise pointer
+			auto c_pt_itr = std::prev(left_vertex_itr); // Clockwise pointer
+
+			for(int i = min_i; i < max_i; ++i) {
+				double x = i * resolution_ + resolution_/2.;
+				while(true) {
+					if(cc_pt_itr == left_vertex_itr) {break;}
+					if(CGAL::to_double(cc_pt_itr->x()) < x) { std::advance(cc_pt_itr, 1); }
+					else {break;}
+				}
+				while(true) {
+					if(c_pt_itr == left_vertex_itr) {break;}
+					if(CGAL::to_double(c_pt_itr->x()) < x) { std::advance(c_pt_itr, -1); }
+					else {break;}
+				}
+				if(CGAL::to_double(c_pt_itr->x()) < x) { break; }
+				if(CGAL::to_double(cc_pt_itr->x()) < x) { break; }
+
+				auto x1 = std::prev(cc_pt_itr)->x();
+				auto y1 = std::prev(cc_pt_itr)->y();
+				auto x2 = cc_pt_itr->x();
+				auto y2 = cc_pt_itr->y();
+				if((x2 - x1) < kEps) { throw std::runtime_error{"Unexpected error!"}; }
+				auto y_lower = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+				x1 = std::next(c_pt_itr)->x();
+				y1 = std::next(c_pt_itr)->y();
+				x2 = c_pt_itr->x();
+				y2 = c_pt_itr->y();
+				if((x2 - x1) < kEps) { throw std::runtime_error{"Unexpected error!"}; }
+				auto y_upper = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+
+				int min_j = std::round(CGAL::to_double(y_lower)/resolution_);
+				min_j = min_j < 0 ? 0 : min_j;
+
+				int max_j = std::round(CGAL::to_double(y_upper)/resolution_);
+				max_j = max_j > map_size_ ? map_size_ : max_j;
+
+				for(int j = min_j; j < max_j; ++j) {
+					double y = j * resolution_ + resolution_/2.;
+					auto map_val = map_->operator()(i, j);
+					vcell.mass += map_val;
+					vcell.centroid = vcell.centroid + Point2(x, y) * map_val;
+					vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).NormSqr() * map_val;
+				}
+			}
+			if(vcell.mass < kEps) {
+				vcell.centroid = vcell.site;
+			} else {
+				vcell.centroid = vcell.centroid / vcell.mass;
+			}
+	}
+
+	// This is an older slightly conservative approach.
+	// It is less prone to errors as it uses existing functions from the library.
+	// Will have to stress test the above version.
+	// Initial tests seem to all pass
+	void Voronoi::ComputeMassCentroid2(VoronoiCell &vcell) {
+			vcell.mass = 0;
+			vcell.obj = 0;
+			vcell.centroid = Point2(0,0);
+			Polygon_2 cgal_poly;
+			for(auto const &p:vcell.cell) {
+				cgal_poly.push_back(CGAL_Point2(p.x(), p.y()));
+			}
 			int min_i = std::floor(CGAL::to_double(cgal_poly.left_vertex()->x())/resolution_);
 			min_i = min_i < 0 ? 0 : min_i;
 			int max_i = std::ceil(CGAL::to_double(cgal_poly.right_vertex()->x())/resolution_);
@@ -47,6 +130,7 @@ namespace CoverageControl {
 	void Voronoi::ComputeVoronoiCells() {
 		Delaunay_triangulation_2 dt2;
 		std::vector<CGAL_Point2> CGAL_sites;
+		CGAL_sites.reserve(num_robots_);
 		/* std::cout << "Number of sites: " << sites_.size() << std::endl; */
 		for(auto const pt:sites_) {
 			CGAL_sites.push_back(CGAL_Point2(pt.x(), pt.y()));
@@ -77,10 +161,11 @@ namespace CoverageControl {
 		/* std::cout << "Polygons generated" << std::endl; */
 
 		if(compute_single_ == true) {
-			auto &pt = CGAL_sites[robot_id_];
+			auto const &pt = CGAL_sites[robot_id_];
 			for(auto it = polygon_list.begin(); it != polygon_list.end(); ++it) {
 				if(IsPointInPoly(pt, *it) == true) {
 					PointVector poly_points;
+					poly_points.reserve(it->size());
 					for(auto const &p:(*it)) {
 						poly_points.push_back(CGALtoCC(p));
 					}
@@ -94,18 +179,19 @@ namespace CoverageControl {
 			PrunePolygons(polygon_list, map_size_);
 
 			// Create voronoi_cells_ such that the correct cell is assigned to the robot
-			voronoi_cells_.reserve(num_robots_);
-			for(auto const &pt:CGAL_sites) {
+			for(int iRobot = 0; iRobot < num_robots_; ++iRobot) {
+				auto const &pt = CGAL_sites[iRobot];
 				for(auto it = polygon_list.begin(); it != polygon_list.end(); ++it) {
 					if(IsPointInPoly(pt, *it) == true) {
 						PointVector poly_points;
+						poly_points.reserve(it->size());
 						for(auto const &p:(*it)) {
 							poly_points.push_back(CGALtoCC(p));
 						}
 						VoronoiCell vcell;
 						vcell.site = CGALtoCC(pt);
 						vcell.cell = poly_points;
-						voronoi_cells_.push_back(vcell);
+						voronoi_cells_[iRobot] = vcell;
 						it = polygon_list.erase(it);
 						break;
 					}
@@ -118,6 +204,7 @@ namespace CoverageControl {
 			for(int iCell = 0; iCell < num_robots_; ++iCell) {
 				auto &vcell = voronoi_cells_[iCell];
 				ComputeMassCentroid(vcell);
+				/* ComputeMassCentroid2(vcell); */
 			}
 		}
 

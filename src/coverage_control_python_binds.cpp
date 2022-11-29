@@ -104,6 +104,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
 		.def("Lloyd", &CoverageSystem::Lloyd)
+		.def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy)
 		;
 
 	py::class_<Parameters>(m, "Parameters")
@@ -128,6 +129,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pMaxSigma", &Parameters::pMaxSigma)
 		.def_readonly("pMinPeak", &Parameters::pMinPeak)
 		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
+		.def_readonly("pLloydNumOfflineTries", &Parameters::pLloydNumOfflineTries)
+		.def_readonly("pLloydOfflineMaxIteration", &Parameters::pLloydOfflineMaxIteration)
 		;
 
 }

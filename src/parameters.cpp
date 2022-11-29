@@ -28,5 +28,7 @@ namespace CoverageControl {
 		pMaxSigma = yaml_config_["pMaxSigma"].as<double>();
 		pMinPeak = yaml_config_["pMinPeak"].as<double>();
 		pMaxPeak = yaml_config_["pMaxPeak"].as<double>();
+		pLloydOfflineMaxIteration = yaml_config_["pLloydOfflineMaxIteration"].as<int>();
+		pLloydNumOfflineTries = yaml_config_["pLloydNumOfflineTries"].as<int>();
 	}
 } /* namespace CoverageControl */

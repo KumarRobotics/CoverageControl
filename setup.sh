@@ -64,15 +64,16 @@ InstallCoverageControl () {
 UpdateCoverageControl () {
 	# Run the following commands to update after a change in the repository
 	# The CoverageControl repository is located in ${WORKSPACE_DIR}/src/CoverageControl
+	cmake -S ${WORKSPACE_DIR}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/CoverageControl
 	cmake --install ${BUILD_DIR}/CoverageControl
 }
 
 # Uncomment the following commands to install from source
-InstallPybind11
+# InstallPybind11
 # InstallYamlCPP
 # InstallEigen3
-InstallCoverageControl
+# InstallCoverageControl
 # Uncomment the line below to recompile CoverageControl (Comment the previous line)
-# UpdateCoverageControl
+UpdateCoverageControl
 
