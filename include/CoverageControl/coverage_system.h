@@ -198,46 +198,52 @@ namespace CoverageControl {
 				}
 			}
 
-			auto LloydOffline() {
-				std::vector <Voronoi> all_voronois;
-				all_voronois.resize(params_.pLloydNumOfflineTries);
+			auto LloydOracle(int const num_tries, int const max_iterations, int num_sites, MapType const &map, int const map_size, double const res) {
+				std::vector <std::vector<VoronoiCell>> all_voronoi_cells;
+				all_voronoi_cells.resize(num_tries, std::vector<VoronoiCell>(num_sites));
 				std::vector <double> obj_values;
-				obj_values.resize(params_.pLloydNumOfflineTries, 0);
+				obj_values.resize(num_tries, 0);
+				std::uniform_real_distribution<> distrib_pts(0, map_size * res);
 
-/* #pragma omp parallel for */
-				for(int iter = 0; iter < params_.pLloydNumOfflineTries; ++iter) {
+#pragma omp parallel for
+				for(int iter = 0; iter < num_tries; ++iter) {
 					std::vector <Point2> sites;
-					sites.resize(num_robots_);
-					for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-						sites[iRobot] = Point2(distrib_pts_(gen_), distrib_pts_(gen_));
+					sites.resize(num_sites);
+					for(int iSite = 0; iSite < num_sites; ++iSite) {
+						sites[iSite] = Point2(distrib_pts(gen_), distrib_pts(gen_));
 					}
 					bool cont_flag = true;
-					Voronoi voronoi(sites, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
-					for(int iSteps = 0; iSteps < params_.pLloydOfflineMaxIteration and cont_flag == true; ++iSteps) {
+					Voronoi voronoi(sites, map, map_size, res);
+					std::vector<VoronoiCell> voronoi_cells = voronoi.GetVoronoiCells();
+					for(int iSteps = 0; iSteps < max_iterations and cont_flag == true; ++iSteps) {
 						cont_flag = false;
-						auto voronoi_cells = voronoi.GetVoronoiCells();
-						for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-							auto diff = voronoi_cells[iRobot].centroid - voronoi_cells[iRobot].site;
+						voronoi_cells = voronoi.GetVoronoiCells();
+						for(int iSite = 0; iSite < num_sites; ++iSite) {
+							auto diff = voronoi_cells[iSite].centroid - voronoi_cells[iSite].site;
 							if(diff.Norm() < kEps) {
 								continue;
 							}
 							cont_flag = true;
-							sites[iRobot] = voronoi_cells[iRobot].centroid;
+							sites[iSite] = voronoi_cells[iSite].centroid;
 						}
 						voronoi.UpdateSites(sites);
 					}
-					all_voronois[iter] = voronoi;
+					all_voronoi_cells[iter] = voronoi_cells;
 					obj_values[iter] = voronoi.GetObjValue();
 				}
-				Voronoi best_voronoi = all_voronois[0];
+				int best_vornoi_idx = 0;
 				double min = obj_values[0];
-				for(int iter = 1; iter < params_.pLloydNumOfflineTries; ++iter) {
+				for(int iter = 1; iter < num_tries; ++iter) {
 					if(obj_values[iter] < min) {
 						min = obj_values[iter];
-						best_voronoi = all_voronois[iter];
+						best_vornoi_idx = iter;
 					}
 				}
-				return best_voronoi.GetVoronoiCells();
+				return all_voronoi_cells[best_vornoi_idx];
+			}
+
+			auto LloydOffline() {
+				return LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
 			}
 
 			auto GetVoronoiCells() {
