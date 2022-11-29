@@ -105,6 +105,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
 		.def("Lloyd", &CoverageSystem::Lloyd)
 		.def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy)
+		.def("StepLloydDistributed", &CoverageSystem::StepLloydDistributed, py::return_value_policy::copy)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

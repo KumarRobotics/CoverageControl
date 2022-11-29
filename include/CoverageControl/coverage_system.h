@@ -138,8 +138,8 @@ namespace CoverageControl {
 				}
 			}
 
-			const MapType& GetCommunicationMap(size_t const id) {
-				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+			auto GetRobotsInCommunication(size_t const id) {
+				PointVector robot_neighbors_pos;
 				if(id < num_robots_) {
 					double comm_range_sqr = params_.pCommunicationRange * params_.pCommunicationRange;
 					auto robot_positions = GetRobotPositions();
@@ -149,13 +149,23 @@ namespace CoverageControl {
 						}
 						auto relative_pos = robot_positions[i] - robot_positions[id];
 						if(relative_pos.NormSqr() <= comm_range_sqr) {
-							int pos_idx, pos_idy;
-							MapUtils::GetClosestGridCoordinate(params_.pResolution, relative_pos, pos_idx, pos_idy);
-							communication_map_(pos_idx, pos_idy) = 1;
+							robot_neighbors_pos.push_back(relative_pos);
 						}
 					}
 				} else {
 					throw std::out_of_range{"Robot index more than the number of robots"};
+				}
+				return robot_neighbors_pos;
+
+			}
+
+			const MapType& GetCommunicationMap(size_t const id) {
+				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				auto robot_neighbors_pos = GetRobotsInCommunication(id);
+				for(auto const &relative_pos:robot_neighbors_pos) {
+					int pos_idx, pos_idy;
+					MapUtils::GetClosestGridCoordinate(params_.pResolution, relative_pos, pos_idx, pos_idy);
+					communication_map_(pos_idx, pos_idy) = 1;
 				}
 				return communication_map_;
 			}
@@ -166,6 +176,22 @@ namespace CoverageControl {
 				for(size_t i = 0; i < num_robots_; ++i) {
 					robots_[i].SetVoronoiCell(voronoi_cells_[i]);
 				}
+			}
+
+			bool StepRobotToPoint(int const robot_id, Point2 const &goal, double const speed_factor = 1) {
+					auto diff = goal - robots_[robot_id].GetGlobalCurrentPosition();
+					auto dist = diff.Norm();
+					double speed = speed_factor * dist / params_.pTimeStep;
+					if(speed <= kEps) {
+						return 0;
+					}
+					speed = std::min(params_.pMaxRobotSpeed, speed);
+					auto direction = diff; direction.Normalize();
+					if(robots_[robot_id].StepControl(direction, speed)) {
+						std::cerr << "Control incorrect\n";
+						return 1;
+					}
+					return 0;
 			}
 
 			bool StepLloyd() {
@@ -247,10 +273,31 @@ namespace CoverageControl {
 				return LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
 			}
 
-			void LloydDistributed() {
-				for(auto &robot:robots_) {
+			int StepLloydDistributed() {
+				for(size_t i = 0; i < num_robots_; ++i) {
+					auto &robot = robots_[i];
+					PointVector robot_positions;
+					robot_positions.push_back(Point2(0, 0));
+					auto robot_neighbors_pos = GetRobotsInCommunication(i);
+					robot_positions.insert(robot_positions.end(), robot_neighbors_pos.begin(), robot_neighbors_pos.end() );
+					size_t num_robots = robot_positions.size();
 					auto robot_local_map = robot.GetRobotLocalMap();
+					auto voronoi_cells = LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots, robot_local_map, params_.pLocalMapSize, params_.pResolution);
+					std::vector <std::vector<double>> cost_matrix;
+					cost_matrix.resize(num_robots, std::vector<double>(num_robots));
+					for(size_t iRobot = 0; iRobot < num_robots; ++iRobot) {
+						for(size_t jCentroid = 0; jCentroid < voronoi_cells.size(); ++jCentroid) {
+							cost_matrix[iRobot][jCentroid] = (robot_positions[iRobot] - voronoi_cells[jCentroid].centroid).Norm();
+						}
+					}
+
+					HungarianAlgorithm HungAlgo;
+					std::vector<int> assignment;
+					HungAlgo.Solve(cost_matrix, assignment);
+					auto goal = voronoi_cells[assignment[0]].centroid;
+					StepRobotToPoint(i, goal);
 				}
+				return 0;
 			}
 
 			auto GetVoronoiCells() {
