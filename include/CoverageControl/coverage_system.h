@@ -20,6 +20,7 @@
 #include "bivariate_normal_distribution.h"
 #include "map_utils.h"
 #include "voronoi.h"
+#include <lsap/Hungarian.h>
 
 namespace CoverageControl {
 
@@ -244,6 +245,12 @@ namespace CoverageControl {
 
 			auto LloydOffline() {
 				return LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+			}
+
+			void LloydDistributed() {
+				for(auto &robot:robots_) {
+					auto robot_local_map = robot.GetRobotLocalMap();
+				}
 			}
 
 			auto GetVoronoiCells() {

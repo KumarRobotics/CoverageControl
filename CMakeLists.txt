@@ -20,8 +20,8 @@ find_package(CGAL REQUIRED)
 ## CoverageControl library ##
 #############################
 
-add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp)
-target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/cuda_helpers/)
+add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
+target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native)
 
@@ -46,7 +46,7 @@ configure_file(CoverageControl_config.h.in CoverageControl_config.h)
 ## CoverageControl python binds ##
 ##################################
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
+target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
 target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -56,7 +56,7 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ###########
 
 add_executable(voronoi ${PROJECT_SOURCE_DIR}/test/voronoi.cpp)
-target_include_directories(voronoi PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(voronoi PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(voronoi PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
 install(TARGETS voronoi DESTINATION ${CMAKE_INSTALL_BINDIR})
 
