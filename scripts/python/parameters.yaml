@@ -3,11 +3,11 @@ pResolution: 1
 
 # Actual size of maps is size * pResolution, e.g.,  pWorldMapSize * pResolution
 # For ~1 km^2 actual environment, we have a 1024 grid world with each cell pResolution * pRobotMapSize=1 m^2
-pWorldMapSize: 512
+pWorldMapSize: 1024
 
 # Robot map saves what the robot has seen
 # Could make it sparse if size becomes a problem
-pRobotMapSize: 512
+pRobotMapSize: 1024
 pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
@@ -17,7 +17,7 @@ pLocalMapSize: 128
 pCommunicationRange: 128
 
 # Set pUpdateRobotMap to false for centralized known world
-pUpdateRobotMap: false
+pUpdateRobotMap: true
 pUpdateSensorView: true
 
 # Assuming square sensor FOV.
@@ -52,5 +52,5 @@ pMaxPeak: 10
 
 
 # Settings for Lloyd offline algorithm
-pLloydOfflineMaxIteration: 100
-pLloydNumOfflineTries: 5
+pLloydMaxIterations: 100
+pLloydNumTries: 5

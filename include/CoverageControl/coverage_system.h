@@ -303,7 +303,7 @@ namespace CoverageControl {
 			}
 
 			auto LloydOffline() {
-				return LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+				return LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
 			}
 
 			bool StepOracleN(int num_steps) {
@@ -317,6 +317,7 @@ namespace CoverageControl {
 				}
 				return cont_flag;
 			}
+
 			bool StepOracle() {
 				bool cont_flag = true;
 				auto robot_positions = GetRobotPositions();
@@ -326,7 +327,7 @@ namespace CoverageControl {
 					oracle_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = robots_[i].GetSensorView().block(offset.left, offset.bottom, offset.width, offset.height);
 				}
 
-				auto voronoi_cells = LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, oracle_map_, params_.pWorldMapSize, params_.pResolution);
+				auto voronoi_cells = LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, oracle_map_, params_.pWorldMapSize, params_.pResolution);
 
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					for(size_t jCentroid = 0; jCentroid < voronoi_cells.size(); ++jCentroid) {

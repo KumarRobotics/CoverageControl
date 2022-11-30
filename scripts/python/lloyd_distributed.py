@@ -12,7 +12,7 @@ import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 
-params_ = pyCoverageControl.Parameters('parameters.yaml')
+params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
 
 num_gaussians = 100
 num_robots = 50

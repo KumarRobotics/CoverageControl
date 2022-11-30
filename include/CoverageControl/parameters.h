@@ -75,8 +75,8 @@ namespace CoverageControl {
 			double pMinPeak = 5;
 			double pMaxPeak = 10;
 
-			int pLloydOfflineMaxIteration = 100;
-			int pLloydNumOfflineTries = 10;
+			int pLloydMaxIterations = 100;
+			int pLloydNumTries = 10;
 
 			Parameters() {}
 

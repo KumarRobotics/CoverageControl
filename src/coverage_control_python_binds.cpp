@@ -132,8 +132,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pMaxSigma", &Parameters::pMaxSigma)
 		.def_readonly("pMinPeak", &Parameters::pMinPeak)
 		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
-		.def_readonly("pLloydNumOfflineTries", &Parameters::pLloydNumOfflineTries)
-		.def_readonly("pLloydOfflineMaxIteration", &Parameters::pLloydOfflineMaxIteration)
+		.def_readonly("pLloydNumTries", &Parameters::pLloydNumTries)
+		.def_readonly("pLloydMaxIterations", &Parameters::pLloydMaxIterations)
 		;
 
 }
