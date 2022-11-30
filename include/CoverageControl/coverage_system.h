@@ -66,6 +66,8 @@ namespace CoverageControl {
 				}
 				num_robots_ = robots_.size();
 				oracle_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, params_.pUnknownImportance * params_.pNorm);
+				/* cost_matrix_.resize(num_robots_, std::vector<double>(num_robots_)); */
+				voronoi_cells_.resize(num_robots_);
 				cost_matrix_.resize(num_robots_, std::vector<double>(num_robots_));
 			}
 
@@ -254,6 +256,7 @@ namespace CoverageControl {
 				std::cout << "No. of voronoi steps: " << iSteps << std::endl;
 				return voronoi_cells;
 			}
+
 			auto LloydOracle(int const num_tries, int const max_iterations, int num_sites, MapType const &map, int const map_size, double const res) {
 				std::vector <std::vector<VoronoiCell>> all_voronoi_cells;
 				all_voronoi_cells.resize(num_tries, std::vector<VoronoiCell>(num_sites));
@@ -339,7 +342,12 @@ namespace CoverageControl {
 				HungAlgo.Solve(cost_matrix_, assignment);
 
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					StepRobotToPoint(iRobot, voronoi_cells[assignment[iRobot]].centroid);
+					cont_flag = false;
+					auto goal = voronoi_cells[assignment[iRobot]].centroid;
+					if((goal - robot_positions[iRobot]).NormSqr() > params_.pResolution * params_.pResolution) {
+						StepRobotToPoint(iRobot, goal);
+						cont_flag = true;
+					}
 				}
 				return cont_flag;
 			}
@@ -348,9 +356,29 @@ namespace CoverageControl {
 				return voronoi_cells_;
 			}
 
-			/* auto GetVoronoiEdges () { */
-			/* 	return voronoi_.GetVoronoiEdges(); */
-			/* } */
+			auto GetVoronoiCell(int const robot_id) {
+				return voronoi_cells_[robot_id];
+			}
+
+			bool StepDataGenerationLocal(int const steps) {
+				bool cont_flag = StepOracleN(steps);
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					auto robot_local_map = robots_[iRobot].GetRobotLocalMap();
+					PointVector robot_positions;
+					Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
+					robot_positions.push_back(Point2(0, 0) + map_translation);
+					auto robot_neighbors_pos = GetRobotsInCommunication(iRobot);
+					for(auto const &pos:robot_neighbors_pos) {
+						robot_positions.push_back(pos + map_translation);
+					}
+					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
+					/* std::cout << "voronoi computed" << std::endl; */
+					voronoi_cells_[iRobot] = voronoi.GetVoronoiCell();
+					auto centroid = voronoi_cells_[iRobot].centroid;
+					std::cout << centroid.x() << " " << centroid.y() << std::endl;
+				}
+				return cont_flag;
+			}
 
 			double GetNormalizationFactor() {
 				normalization_factor_=world_idf_.GetNormalizationFactor();

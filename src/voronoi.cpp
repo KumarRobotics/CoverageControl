@@ -139,7 +139,11 @@ namespace CoverageControl {
 			double sz = map_size_;
 			vcell.cell = PointVector{Point2{0,0}, Point2{sz,0}, Point2{sz, sz}, Point2{0,sz}};
 			ComputeMassCentroid(vcell);
-			voronoi_cells_.push_back(vcell);
+			if(compute_single_ == true) {
+				voronoi_cell_ = vcell;
+			} else {
+				voronoi_cells_.push_back(vcell);
+			}
 			return;
 		}
 
@@ -176,7 +180,10 @@ namespace CoverageControl {
 		/* std::cout << "Polygons generated" << std::endl; */
 
 		if(compute_single_ == true) {
+			/* std::cout << " Inside if" << std::endl; */
 			auto const &pt = CGAL_sites[robot_id_];
+			/* std::cout << pt << std::endl; */
+			/* std::cout << "List size: " << polygon_list.size() << std::endl; */
 			for(auto it = polygon_list.begin(); it != polygon_list.end(); ++it) {
 				if(IsPointInPoly(pt, *it) == true) {
 					PointVector poly_points;
@@ -189,7 +196,10 @@ namespace CoverageControl {
 					break;
 				}
 			}
-			ComputeMassCentroid(voronoi_cells_[robot_id_]);
+			/* std::cout << "Computing mass" << std::endl; */
+			ComputeMassCentroid(voronoi_cell_);
+			std::cout << "Mass: " << voronoi_cell_.mass << std::endl;
+			/* std::cout << "If ends" << std::endl; */
 			return;
 		}
 		PrunePolygons(polygon_list, map_size_);

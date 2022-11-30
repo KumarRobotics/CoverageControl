@@ -15,7 +15,7 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
 
 num_gaussians = 100
-num_robots = 50
+num_robots = 20
 env = CoverageSystem(params_, num_gaussians, num_robots)
 map = env.GetWorldIDF()
 robot_positions = env.GetRobotPositions()

@@ -108,6 +108,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("StepOracle", &CoverageSystem::StepOracle)
 		.def("StepOracleN", &CoverageSystem::StepOracleN)
 		.def("GetOracleMap", &CoverageSystem::GetOracleMap, py::return_value_policy::reference_internal)
+		.def("GetVoronoiCell", &CoverageSystem::GetVoronoiCell, py::return_value_policy::copy)
+		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

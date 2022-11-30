@@ -14,7 +14,7 @@ pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
 pLocalMapSize: 128
 # Radius of communication (in meters)
-pCommunicationRange: 128
+pCommunicationRange: 64
 
 # Set pUpdateRobotMap to false for centralized known world
 pUpdateRobotMap: true
@@ -53,4 +53,4 @@ pMaxPeak: 10
 
 # Settings for Lloyd offline algorithm
 pLloydMaxIterations: 100
-pLloydNumTries: 5
+pLloydNumTries: 1
