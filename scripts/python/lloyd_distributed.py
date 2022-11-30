@@ -15,7 +15,7 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 params_ = pyCoverageControl.Parameters('parameters.yaml')
 
 num_gaussians = 100
-num_robots = 10
+num_robots = 50
 env = CoverageSystem(params_, num_gaussians, num_robots)
 map = env.GetWorldIDF()
 robot_positions = env.GetRobotPositions()
@@ -26,6 +26,10 @@ voronoi_cells = env.GetVoronoiCells()
 
 robot_id = 0
 
+for step in range(0, params_.pEpisodeSteps):
+    print(step)
+    if (env.StepLloydDistributed()):
+        break
 ###################
 ## Visualization ##
 ###################
@@ -37,7 +41,7 @@ ax = sns.heatmap(map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True
 ax.invert_yaxis()
 nrow, ncol = map.shape
 # septicks = 5 ** (math.floor(math.log(nrow, 5)) - 1)
-septicks = 10 ** (math.floor(math.log(nrow, 10)) - 2)
+septicks = 10 ** (math.floor(math.log(nrow, 10)) - 1)
 plt.xticks(np.arange(0, nrow, septicks), np.arange(0, nrow, septicks))
 plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
 
@@ -55,10 +59,12 @@ local_map = env.GetRobotLocalMap(robot_id)
 local_ax = sns.heatmap(data=np.flip(local_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
 cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
 
-for step in range(0, params_.pEpisodeSteps):
+batch = 5
+for step in range(0, round(params_.pEpisodeSteps/batch)):
     print(step)
-    if (env.StepLloydDistributed()):
-        break
+    for kk in range(0, batch):
+        if (env.StepLloydDistributed()):
+            break
     robot_positions = env.GetRobotPositions()
     local_map = env.GetRobotLocalMap(robot_id)
     sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])

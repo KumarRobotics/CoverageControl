@@ -29,7 +29,7 @@ namespace CoverageControl {
 			double resolution_ = 0;
 			bool compute_single_ = false;
 			int robot_id_ = 0;
-			int num_robots_;
+			int num_sites_;
 			VoronoiCell voronoi_cell_;
 			std::vector <VoronoiCell> voronoi_cells_;
 			void ComputeMassCentroid(VoronoiCell &);
@@ -40,13 +40,13 @@ namespace CoverageControl {
 			Voronoi() {}
 			Voronoi(PointVector const &sites, MapType const &map, int const map_size, double const &resolution, bool const compute_single = false, int const robot_id = 0) : sites_{sites}, map_size_{map_size}, resolution_{resolution}, compute_single_{compute_single}, robot_id_{robot_id} {
 				map_ = std::make_shared<const MapType>(map);
-				num_robots_ = sites_.size();
+				num_sites_ = sites_.size();
 				if(compute_single_ == false) {
-					voronoi_cells_.resize(num_robots_);
+					voronoi_cells_.resize(num_sites_);
 				}
 				ComputeVoronoiCells();
 			}
-			void UpdateSites(PointVector const &sites) { sites_ = sites; num_robots_ = sites_.size(); ComputeVoronoiCells(); }
+			void UpdateSites(PointVector const &sites) { sites_ = sites; num_sites_ = sites_.size(); ComputeVoronoiCells(); }
 			void ComputeVoronoiCells();
 			auto GetVoronoiCells() {return voronoi_cells_;}
 			auto GetVoronoiCell() {return voronoi_cell_;}

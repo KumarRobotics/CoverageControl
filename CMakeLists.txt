@@ -9,6 +9,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 
+#####################################
+## Patch for issue with MPFR 4.1.1 ##
+#####################################
+# Delete it on Ubuntu
+# This is a temporary patch
+set(MPFR_LIBRARIES /home/saurav/opt/mpfr/install/lib/libmpfr.so)
+set(MPFR_INCLUDE_DIR /home/saurav/opt/mpfr/install/include)
+#############################
+
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(Python COMPONENTS Interpreter Development)
 find_package(pybind11 REQUIRED)

@@ -8,7 +8,7 @@ pWorldMapSize: 1024
 # Robot map saves what the robot has seen
 # Could make it sparse if size becomes a problem
 pRobotMapSize: 1024
-pUnknownImportance: 0.1 # fraction of the largest imaportance of a grid cell
+pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
@@ -17,8 +17,8 @@ pLocalMapSize: 128
 pCommunicationRange: 128
 
 # Set pUpdateRobotMap to false for centralized known world
-pUpdateRobotMap: false
-pUpdateSensorView: false
+pUpdateRobotMap: true
+pUpdateSensorView: true
 
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize
@@ -53,4 +53,4 @@ pMaxPeak: 10
 
 # Settings for Lloyd offline algorithm
 pLloydOfflineMaxIteration: 100
-pLloydNumOfflineTries: 5
+pLloydNumOfflineTries: 1
