@@ -100,12 +100,14 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
 		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells, py::return_value_policy::reference_internal)
-		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::reference_internal)
+		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::copy)
 		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
 		.def("Lloyd", &CoverageSystem::Lloyd)
 		.def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy)
-		.def("StepLloydDistributed", &CoverageSystem::StepLloydDistributed, py::return_value_policy::copy)
+		.def("StepOracle", &CoverageSystem::StepOracle)
+		.def("StepOracleN", &CoverageSystem::StepOracleN)
+		.def("GetOracleMap", &CoverageSystem::GetOracleMap, py::return_value_policy::reference_internal)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

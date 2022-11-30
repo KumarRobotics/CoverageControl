@@ -38,6 +38,7 @@ namespace CoverageControl {
 			std::random_device rd_;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen_;
 			std::uniform_real_distribution<> distrib_pts_;
+			std::vector <std::vector<double>> cost_matrix_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -64,7 +65,8 @@ namespace CoverageControl {
 					robots_.push_back(RobotModel(params_, start_pos, world_idf_));
 				}
 				num_robots_ = robots_.size();
-				oracle_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
+				oracle_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, params_.pUnknownImportance * params_.pNorm);
+				cost_matrix_.resize(num_robots_, std::vector<double>(num_robots_));
 			}
 
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
@@ -132,6 +134,9 @@ namespace CoverageControl {
 				}
 			}
 
+			const MapType& GetOracleMap() {
+				return oracle_map_;
+			}
 			const MapType& GetRobotSensorView(size_t const id) {
 				if(id < num_robots_) {
 					return robots_[id].GetSensorView();
@@ -180,8 +185,8 @@ namespace CoverageControl {
 				}
 			}
 
-			bool StepRobotToLocalPoint(int const robot_id, Point2 const &goal, double const speed_factor = 1) {
-					auto diff = goal; // - robots_[robot_id].GetGlobalCurrentPosition();
+			bool StepRobotToPoint(int const robot_id, Point2 const &goal, double const speed_factor = 1) {
+					auto diff = goal - robots_[robot_id].GetGlobalCurrentPosition();
 					auto dist = diff.Norm();
 					double speed = speed_factor * dist / params_.pTimeStep;
 					if(speed <= kEps) {
@@ -227,6 +232,28 @@ namespace CoverageControl {
 				}
 			}
 
+			auto LloydOracle1(int const num_tries, int const max_iterations, int num_sites, MapType const &map, int const map_size, double const res) {
+				auto sites = GetRobotPositions();
+				bool cont_flag = true;
+				Voronoi voronoi(sites, map, map_size, res);
+				std::vector<VoronoiCell> voronoi_cells = voronoi.GetVoronoiCells();
+				int iSteps = 0;
+				for(iSteps = 0; iSteps < max_iterations and cont_flag == true; ++iSteps) {
+					cont_flag = false;
+					voronoi_cells = voronoi.GetVoronoiCells();
+					for(int iSite = 0; iSite < num_sites; ++iSite) {
+						auto diff = voronoi_cells[iSite].centroid - voronoi_cells[iSite].site;
+						if(diff.Norm() < res) {
+							continue;
+						}
+						cont_flag = true;
+						sites[iSite] = voronoi_cells[iSite].centroid;
+					}
+					voronoi.UpdateSites(sites);
+				}
+				std::cout << "No. of voronoi steps: " << iSteps << std::endl;
+				return voronoi_cells;
+			}
 			auto LloydOracle(int const num_tries, int const max_iterations, int num_sites, MapType const &map, int const map_size, double const res) {
 				std::vector <std::vector<VoronoiCell>> all_voronoi_cells;
 				all_voronoi_cells.resize(num_tries, std::vector<VoronoiCell>(num_sites));
@@ -234,7 +261,7 @@ namespace CoverageControl {
 				obj_values.resize(num_tries, 0);
 				std::uniform_real_distribution<> distrib_pts(0, map_size * res);
 
-#pragma omp parallel for
+				/* #pragma omp parallel for */
 				for(int iter = 0; iter < num_tries; ++iter) {
 					std::vector <Point2> sites;
 					sites.resize(num_sites);
@@ -246,7 +273,8 @@ namespace CoverageControl {
 					Voronoi voronoi(sites, map, map_size, res);
 					/* std::cout << "voronoi end" << std::endl; */
 					std::vector<VoronoiCell> voronoi_cells = voronoi.GetVoronoiCells();
-					for(int iSteps = 0; iSteps < max_iterations and cont_flag == true; ++iSteps) {
+					int iSteps = 0;
+					for(iSteps = 0; iSteps < max_iterations and cont_flag == true; ++iSteps) {
 						cont_flag = false;
 						voronoi_cells = voronoi.GetVoronoiCells();
 						for(int iSite = 0; iSite < num_sites; ++iSite) {
@@ -259,6 +287,7 @@ namespace CoverageControl {
 						}
 						voronoi.UpdateSites(sites);
 					}
+					std::cout << "No. of voronoi steps: " << iSteps << std::endl;
 					all_voronoi_cells[iter] = voronoi_cells;
 					obj_values[iter] = voronoi.GetObjValue();
 				}
@@ -277,52 +306,39 @@ namespace CoverageControl {
 				return LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
 			}
 
-			bool StepOracle() {
+			bool StepOracleN(int num_steps) {
 				bool cont_flag = true;
-				for(size_t i = 0; i < num_robots_; ++i) {
+				for(int i = 0; i < num_steps; ++i) {
+					std::cout << "StepOracleN: " << i << std::endl;
+					if(not StepOracle()) {
+						cont_flag = false;
+						break;
+					}
 				}
 				return cont_flag;
-
 			}
-
-			bool StepLloydDistributed() {
+			bool StepOracle() {
 				bool cont_flag = true;
+				auto robot_positions = GetRobotPositions();
 				for(size_t i = 0; i < num_robots_; ++i) {
-					PointVector robot_positions;
-					Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
-					robot_positions.push_back(Point2(0, 0) + map_translation);
-					auto robot_neighbors_pos = GetRobotsInCommunication(i);
-					for(auto const &pos:robot_neighbors_pos) {
-						robot_positions.push_back(pos + map_translation);
+					MapUtils::MapBounds index, offset;
+					MapUtils::ComputeOffsets(params_.pResolution, robot_positions[i], params_.pSensorSize, params_.pWorldMapSize, index, offset);
+					oracle_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = robots_[i].GetSensorView().block(offset.left, offset.bottom, offset.width, offset.height);
+				}
+
+				auto voronoi_cells = LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots_, oracle_map_, params_.pWorldMapSize, params_.pResolution);
+
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					for(size_t jCentroid = 0; jCentroid < voronoi_cells.size(); ++jCentroid) {
+						cost_matrix_[iRobot][jCentroid] = (robot_positions[iRobot] - voronoi_cells[jCentroid].centroid).Norm();
 					}
-					size_t num_robots = robot_positions.size();
-					auto robot_local_map = robots_[i].GetRobotLocalMap();
-					auto voronoi_cells = LloydOracle(params_.pLloydNumOfflineTries, params_.pLloydOfflineMaxIteration, num_robots, robot_local_map, params_.pLocalMapSize, params_.pResolution);
+				}
+				HungarianAlgorithm HungAlgo;
+				std::vector<int> assignment;
+				HungAlgo.Solve(cost_matrix_, assignment);
 
-
-					Point2 goal;
-
-					if(robot_neighbors_pos.size() > 0) {
-						std::vector <std::vector<double>> cost_matrix;
-						cost_matrix.resize(num_robots, std::vector<double>(num_robots));
-						for(size_t iRobot = 0; iRobot < num_robots; ++iRobot) {
-							for(size_t jCentroid = 0; jCentroid < voronoi_cells.size(); ++jCentroid) {
-								cost_matrix[iRobot][jCentroid] = (robot_positions[iRobot] - voronoi_cells[jCentroid].centroid).Norm();
-							}
-						}
-
-						HungarianAlgorithm HungAlgo;
-						std::vector<int> assignment;
-						HungAlgo.Solve(cost_matrix, assignment);
-						goal = voronoi_cells[assignment[0]].centroid;
-					} else {
-						goal = voronoi_cells[0].centroid;
-					}
-
-					if(goal.NormSqr() > params_.pResolution * params_.pResolution) {
-						StepRobotToLocalPoint(i, goal - map_translation);
-						cont_flag = false;
-					}
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					StepRobotToPoint(iRobot, voronoi_cells[assignment[iRobot]].centroid);
 				}
 				return cont_flag;
 			}

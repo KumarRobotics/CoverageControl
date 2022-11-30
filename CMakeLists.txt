@@ -64,10 +64,10 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ## Tests ##
 ###########
 
-add_executable(voronoi ${PROJECT_SOURCE_DIR}/test/voronoi.cpp)
-target_include_directories(voronoi PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(voronoi PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
-install(TARGETS voronoi DESTINATION ${CMAKE_INSTALL_BINDIR})
+add_executable(oracle ${PROJECT_SOURCE_DIR}/test/oracle.cpp)
+target_include_directories(oracle PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(oracle PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
+install(TARGETS oracle DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
 # target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)

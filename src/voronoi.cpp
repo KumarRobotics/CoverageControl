@@ -215,7 +215,7 @@ namespace CoverageControl {
 		/* std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl; */
 
 		// Compute mass and centroid of the cells
-		/* #pragma omp parallel for */
+		#pragma omp parallel for
 		for(int iCell = 0; iCell < num_sites_; ++iCell) {
 			auto &vcell = voronoi_cells_[iCell];
 			ComputeMassCentroid(vcell);

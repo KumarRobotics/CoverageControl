@@ -102,7 +102,7 @@ namespace CoverageControl {
 
 			void UpdateRobotPosition(Point2 const &new_pos) {
 				local_current_position_ = new_pos;
-				robot_positions_.push_back(local_current_position_);
+				/* robot_positions_.push_back(local_current_position_); */
 				global_current_position_ = local_current_position_ + global_start_position_;
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();
