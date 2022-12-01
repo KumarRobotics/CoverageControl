@@ -28,7 +28,7 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters('parameters.yaml')
+params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
 
 ####################
 ## CoverageSystem ##
@@ -45,8 +45,8 @@ plot_map(map)
 # We can provide controls or update the positions directly
 # The size of these vectors should be the same as the number of robots
 control_directions = PointVector()
-control_directions.append(Point2(math.sin(math.pi/4), math.cos(math.pi/4)))
-control_directions.append(Point2(math.sin(math.pi/6), math.cos(math.pi/6)))
+control_directions.append(np.array([math.sin(math.pi/4), math.cos(math.pi/4)]))
+control_directions.append(np.array([math.sin(math.pi/6), math.cos(math.pi/6)]))
 speeds = pyCoverageControl.DblVector()
 speeds.append(1)
 speeds.append(1)
@@ -54,8 +54,8 @@ env.StepControl(control_directions, speeds)
 
 # Update the local position of the robots
 new_robot_positions = PointVector()
-new_robot_positions.append(Point2(10, 10))
-new_robot_positions.append(Point2(11,11))
+new_robot_positions.append(np.array([10, 10]))
+new_robot_positions.append(np.array([11,11]))
 env.UpdateRobotPositions(new_robot_positions)
 
 # Get current global robot positions
@@ -84,11 +84,9 @@ plot_map(comm_map)
 ## Point2 ##
 ############
 # Point2 has two atrributes x and y
+# The class can be essentially used as numpy array
 pt = Point2(0,0) # Needs two arguments for x and y
 print(pt)
-pt.x = 5
-pt.y = 10
-print(pt.x)
 
 point_list = PointVector()
 point_list.append(pt)
