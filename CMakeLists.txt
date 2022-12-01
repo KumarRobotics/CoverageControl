@@ -55,6 +55,11 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ## Tests ##
 ###########
 
+add_executable(pt2 ${PROJECT_SOURCE_DIR}/test/pt2.cpp)
+target_include_directories(pt2 PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(pt2 PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
+install(TARGETS pt2 DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 add_executable(data_generation ${PROJECT_SOURCE_DIR}/test/data_generation.cpp)
 target_include_directories(data_generation PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(data_generation PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)

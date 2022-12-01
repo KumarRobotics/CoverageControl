@@ -58,7 +58,7 @@ namespace CoverageControl {
 				Point2 top_left(Point2(bottom_left.x(), top_right.y()));
 				double importance = 0;
 				for(auto const &normal_distribution:normal_distributions_) {
-					if(normal_distribution.TransformPoint((bottom_left + top_right)/2.).NormSqr() > params_.pTruncationBND * params_.pTruncationBND + params_.pResolution * params_.pResolution) {
+					if(normal_distribution.TransformPoint((bottom_left + top_right)/2.).squaredNorm() > params_.pTruncationBND * params_.pTruncationBND + params_.pResolution * params_.pResolution) {
 						continue;
 					}
 					importance += normal_distribution.IntegrateQuarterPlane(bottom_left);

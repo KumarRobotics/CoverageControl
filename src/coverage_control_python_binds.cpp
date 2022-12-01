@@ -1,5 +1,9 @@
-#include <vector>
 
+#include <pybind11/pybind11.h>
+#include <pybind11/stl_bind.h>
+#include <pybind11/eigen.h>
+
+#include <vector>
 #include <CoverageControl/vec2d.h>
 #include <CoverageControl/typedefs.h>
 #include <CoverageControl/parameters.h>
@@ -8,10 +12,6 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/voronoi.h>
-
-#include <pybind11/pybind11.h>
-#include <pybind11/stl_bind.h>
-#include <pybind11/eigen.h>
 
 
 using namespace CoverageControl;
@@ -25,16 +25,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::bind_vector<std::vector<double>>(m, "DblVector");
 
-	py::class_<Point2>(m, "Point2")
-		.def(py::init<>())
-		.def(py::init<double const, double const>())
-		.def_property("x", &Point2::x, &Point2::SetX)
-		.def_property("y", &Point2::y, &Point2::SetY)
-		.def("NormSqr", &Point2::NormSqr)
-		.def("__repr__",
-				[](const Point2 &a) {
-				return "<CoverageControl.Point2: (" + std::to_string(a.x()) + "," + std::to_string(a.y()) + ")>";
-				});
+	m.def("Point2", []() {return Point2(0, 0);});
+	m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
 
 	py::bind_vector<PointVector>(m, "PointVector");
 	py::bind_vector<std::vector<PointVector>>(m, "PolygonVector");

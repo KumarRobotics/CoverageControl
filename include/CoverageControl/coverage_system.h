@@ -157,7 +157,7 @@ namespace CoverageControl {
 							continue;
 						}
 						auto relative_pos = robot_positions[i] - robot_positions[id];
-						if(relative_pos.NormSqr() <= comm_range_sqr) {
+						if(relative_pos.squaredNorm() <= comm_range_sqr) {
 							robot_neighbors_pos.push_back(relative_pos);
 						}
 					}
@@ -189,13 +189,14 @@ namespace CoverageControl {
 
 			bool StepRobotToPoint(int const robot_id, Point2 const &goal, double const speed_factor = 1) {
 					auto diff = goal - robots_[robot_id].GetGlobalCurrentPosition();
-					auto dist = diff.Norm();
+					auto dist = diff.norm();
 					double speed = speed_factor * dist / params_.pTimeStep;
 					if(speed <= kEps) {
 						return 0;
 					}
 					speed = std::min(params_.pMaxRobotSpeed, speed);
-					auto direction = diff; direction.Normalize();
+					Point2 direction(diff);
+					direction.normalize();
 					if(robots_[robot_id].StepControl(direction, speed)) {
 						std::cerr << "Control incorrect\n";
 						return 1;
@@ -208,9 +209,9 @@ namespace CoverageControl {
 				ComputeVoronoiCells();
 				for(size_t i = 0; i < num_robots_; ++i) {
 					auto diff = voronoi_cells_[i].centroid - voronoi_cells_[i].site;
-					auto dist = diff.Norm();
+					auto dist = diff.norm();
 					double speed = 2 * voronoi_cells_[i].mass * dist;
-					/* double speed = diff.Norm() / params_.pTimeStep; */
+					/* double speed = diff.norm() / params_.pTimeStep; */
 					if(dist <= params_.pResolution) {
 						speed = dist / params_.pTimeStep;
 					}
@@ -219,7 +220,8 @@ namespace CoverageControl {
 					}
 					cont_flag = true;
 					speed = std::min(params_.pMaxRobotSpeed, speed);
-					auto direction = diff; direction.Normalize();
+					Point2 direction(diff);
+					direction.normalize();
 					if(robots_[i].StepControl(direction, speed)) {
 						std::cerr << "Control incorrect\n";
 					}
@@ -245,7 +247,7 @@ namespace CoverageControl {
 					voronoi_cells = voronoi.GetVoronoiCells();
 					for(int iSite = 0; iSite < num_sites; ++iSite) {
 						auto diff = voronoi_cells[iSite].centroid - voronoi_cells[iSite].site;
-						if(diff.Norm() < res) {
+						if(diff.norm() < res) {
 							continue;
 						}
 						cont_flag = true;
@@ -282,7 +284,7 @@ namespace CoverageControl {
 						voronoi_cells = voronoi.GetVoronoiCells();
 						for(int iSite = 0; iSite < num_sites; ++iSite) {
 							auto diff = voronoi_cells[iSite].centroid - voronoi_cells[iSite].site;
-							if(diff.Norm() < res) {
+							if(diff.norm() < res) {
 								continue;
 							}
 							cont_flag = true;
@@ -334,7 +336,7 @@ namespace CoverageControl {
 
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					for(size_t jCentroid = 0; jCentroid < voronoi_cells.size(); ++jCentroid) {
-						cost_matrix_[iRobot][jCentroid] = (robot_positions[iRobot] - voronoi_cells[jCentroid].centroid).Norm();
+						cost_matrix_[iRobot][jCentroid] = (robot_positions[iRobot] - voronoi_cells[jCentroid].centroid).norm();
 					}
 				}
 				HungarianAlgorithm HungAlgo;
@@ -344,7 +346,7 @@ namespace CoverageControl {
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					cont_flag = false;
 					auto goal = voronoi_cells[assignment[iRobot]].centroid;
-					if((goal - robot_positions[iRobot]).NormSqr() > params_.pResolution * params_.pResolution) {
+					if((goal - robot_positions[iRobot]).squaredNorm() > params_.pResolution * params_.pResolution) {
 						StepRobotToPoint(iRobot, goal);
 						cont_flag = true;
 					}

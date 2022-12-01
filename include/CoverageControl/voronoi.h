@@ -9,6 +9,7 @@
 #include <utility>
 #include <iostream>
 #include <memory>
+#include <CoverageControl/constants.h>
 #include <CoverageControl/typedefs.h>
 
 namespace CoverageControl {

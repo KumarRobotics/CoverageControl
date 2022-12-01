@@ -84,15 +84,16 @@ namespace CoverageControl {
 				auto sp = speed;
 				Point2 new_pos(0,0);
 				if(sp > params_.pMaxRobotSpeed) { sp = params_.pMaxRobotSpeed; }
-				if(sp < 0 or dir.Norm() < kEps) {
-					std::cout << sp << " " << dir.Norm() << std::endl;
+				if(sp < 0 or dir.norm() < kEps) {
+					std::cout << sp << " " << dir.norm() << std::endl;
 					std::cerr << "Speed needs to be non-negative\n";
 					return 1;
 				}
-				if(dir.Normalize() and sp > kEps) {
-					std::cerr << "Zero-vector direction given in control\n";
-					return 1;
-				}
+				/* if(dir.normalize() and sp > kEps) { */
+				/* 	std::cerr << "Zero-vector direction given in control\n"; */
+				/* 	return 1; */
+				/* } */
+				dir.normalize();
 				if(sp > kEps) {
 					new_pos = local_current_position_ + dir * sp * params_.pTimeStep;
 				}

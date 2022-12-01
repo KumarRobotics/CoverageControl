@@ -78,7 +78,7 @@ namespace CoverageControl {
 				auto map_val = map_->operator()(i, j);
 				vcell.mass += map_val;
 				vcell.centroid = vcell.centroid + Point2(x, y) * map_val;
-				vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).NormSqr() * map_val;
+				vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).squaredNorm() * map_val;
 			}
 		}
 		/* std::cout << "Computed vcell" << std::endl; */
@@ -121,7 +121,7 @@ namespace CoverageControl {
 				} else {
 					vcell.mass += (*map_)(i, j);
 					vcell.centroid = vcell.centroid + Point2(x, y) * (*map_)(i, j);
-					vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).NormSqr() * (*map_)(i, j);
+					vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).squaredNorm() * (*map_)(i, j);
 				}
 			}
 		}
@@ -151,7 +151,7 @@ namespace CoverageControl {
 		std::vector<CGAL_Point2> CGAL_sites;
 		CGAL_sites.reserve(num_sites_);
 		/* std::cout << "Number of sites: " << sites_.size() << std::endl; */
-		for(auto const pt:sites_) {
+		for(auto const &pt:sites_) {
 			CGAL_sites.push_back(CGAL_Point2(pt.x(), pt.y()));
 		}
 		dt2.insert(CGAL_sites.begin(), CGAL_sites.end());
