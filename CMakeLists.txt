@@ -20,15 +20,9 @@ find_package(CGAL REQUIRED)
 ## CoverageControl library ##
 #############################
 
-<<<<<<< HEAD
-add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp)
-target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/cuda_helpers/)
-target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL)
-=======
 add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
->>>>>>> d13fef8b04084af2cb244727786aa9714b110632
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native)
 
 install(TARGETS CoverageControl EXPORT CoverageControl-targets
