@@ -16,10 +16,14 @@
 using namespace CoverageControl;
 
 int main(int argc, char** argv) {
-	Parameters params;
+	Parameters params("/home/saurav/CoverageControl_ws/src/CoverageControl/scripts/python/parameters.yaml");
 	CoverageSystem env(params, 100, 20);
 	std::cout << "Env created" << std::endl;
-	auto voronoi_cells = env.LloydOffline();
+	for(int i = 0; i < params.pEpisodeSteps; ++i) {
+		std::cout << "steps: " << i << std::endl;
+		env.StepOracle();
+
+	}
 
 	return 0;
 }

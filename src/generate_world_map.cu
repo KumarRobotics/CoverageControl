@@ -1,16 +1,16 @@
 /**
-	* RTX 2080 Ti: CUDA Cores 4352, compute capablity: 7.5
-	* 68 SMs, 64 CUDA Cores/SM
-	* Block size: 32 x 32 = 1024 threads
-	* mean_x, mean_y, sigma, scale, rho: 5 * # of distributions
-	* resolution, size: 2
-	* map: pWorldMapSize * pWorldMapSize
-	**/
+ * RTX 2080 Ti: CUDA Cores 4352, compute capablity: 7.5
+ * 68 SMs, 64 CUDA Cores/SM
+ * Block size: 32 x 32 = 1024 threads
+ * mean_x, mean_y, sigma, scale, rho: 5 * # of distributions
+ * resolution, size: 2
+ * map: pWorldMapSize * pWorldMapSize
+ **/
 
 #include <CoverageControl/generate_world_map.ch>
 #include <cuda_runtime.h>
 #include <cmath>
-#include <helper_cuda.h>
+#include <cuda_helpers/helper_cuda.h>
 #include <thrust/extrema.h>
 #include <thrust/device_ptr.h>
 
@@ -128,8 +128,8 @@ void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, 
 
 	kernel <<<dimGrid, dimBlock>>>(cu_dists, device_importance_vec);
 
-  thrust::device_ptr<float> d_ptr = thrust::device_pointer_cast(device_importance_vec);
-  max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
+	thrust::device_ptr<float> d_ptr = thrust::device_pointer_cast(device_importance_vec);
+	max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
 
 	float normalization_factor = pNorm / max;
 	checkCudaErrors(cudaMemcpyToSymbol(cu_normalization_factor, &normalization_factor, sizeof(float)));

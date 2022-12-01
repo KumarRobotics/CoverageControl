@@ -85,6 +85,7 @@ namespace CoverageControl {
 				Point2 new_pos(0,0);
 				if(sp > params_.pMaxRobotSpeed) { sp = params_.pMaxRobotSpeed; }
 				if(sp < 0 or dir.Norm() < kEps) {
+					std::cout << sp << " " << dir.Norm() << std::endl;
 					std::cerr << "Speed needs to be non-negative\n";
 					return 1;
 				}
@@ -101,7 +102,7 @@ namespace CoverageControl {
 
 			void UpdateRobotPosition(Point2 const &new_pos) {
 				local_current_position_ = new_pos;
-				robot_positions_.push_back(local_current_position_);
+				/* robot_positions_.push_back(local_current_position_); */
 				global_current_position_ = local_current_position_ + global_start_position_;
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();

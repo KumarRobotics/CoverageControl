@@ -16,10 +16,13 @@
 using namespace CoverageControl;
 
 int main(int argc, char** argv) {
-	Parameters params;
+	Parameters params("/home/saurav/CoverageControl_ws/src/CoverageControl/params/parameters.yaml");
 	CoverageSystem env(params, 100, 20);
-	std::cout << "Env created" << std::endl;
-	auto voronoi_cells = env.LloydOffline();
+	/* std::cout << "Env created" << std::endl; */
 
+	for(int i = 0; i < 100; ++i) {
+		std::cout << i << std::endl;
+		env.StepDataGenerationLocal(10);
+	}
 	return 0;
 }

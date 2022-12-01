@@ -100,10 +100,16 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
 		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells, py::return_value_policy::reference_internal)
-		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::reference_internal)
+		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::copy)
 		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
 		.def("Lloyd", &CoverageSystem::Lloyd)
+		.def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy)
+		.def("StepOracle", &CoverageSystem::StepOracle)
+		.def("StepOracleN", &CoverageSystem::StepOracleN)
+		.def("GetOracleMap", &CoverageSystem::GetOracleMap, py::return_value_policy::reference_internal)
+		.def("GetVoronoiCell", &CoverageSystem::GetVoronoiCell, py::return_value_policy::copy)
+		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
 		;
 
 	py::class_<Parameters>(m, "Parameters")
@@ -124,10 +130,12 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pEpisodeSteps", &Parameters::pEpisodeSteps)
 		.def_readonly("pTruncationBND", &Parameters::pTruncationBND)
 		.def_readonly("pNorm", &Parameters::pNorm)
-		.def_readonly("pMinVariance", &Parameters::pMinVariance)
-		.def_readonly("pMaxVariance", &Parameters::pMaxVariance)
+		.def_readonly("pMinSigma", &Parameters::pMinSigma)
+		.def_readonly("pMaxSigma", &Parameters::pMaxSigma)
 		.def_readonly("pMinPeak", &Parameters::pMinPeak)
 		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
+		.def_readonly("pLloydNumTries", &Parameters::pLloydNumTries)
+		.def_readonly("pLloydMaxIterations", &Parameters::pLloydMaxIterations)
 		;
 
 }

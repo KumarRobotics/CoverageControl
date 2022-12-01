@@ -20,9 +20,15 @@ find_package(CGAL REQUIRED)
 ## CoverageControl library ##
 #############################
 
+<<<<<<< HEAD
 add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern/cuda_helpers/)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL)
+=======
+add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
+target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
+>>>>>>> d13fef8b04084af2cb244727786aa9714b110632
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native)
 
 install(TARGETS CoverageControl EXPORT CoverageControl-targets
@@ -46,8 +52,8 @@ configure_file(CoverageControl_config.h.in CoverageControl_config.h)
 ## CoverageControl python binds ##
 ##################################
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL)
+target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
 target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
 install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
@@ -55,10 +61,15 @@ install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 ## Tests ##
 ###########
 
-add_executable(voronoi ${PROJECT_SOURCE_DIR}/test/voronoi.cpp)
-target_include_directories(voronoi PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(voronoi PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
-install(TARGETS voronoi DESTINATION ${CMAKE_INSTALL_BINDIR})
+add_executable(data_generation ${PROJECT_SOURCE_DIR}/test/data_generation.cpp)
+target_include_directories(data_generation PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(data_generation PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
+install(TARGETS data_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# add_executable(oracle ${PROJECT_SOURCE_DIR}/test/oracle.cpp)
+# target_include_directories(oracle PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+# target_link_libraries(oracle PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
+# install(TARGETS oracle DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
 # target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)

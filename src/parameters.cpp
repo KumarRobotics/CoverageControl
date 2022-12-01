@@ -24,9 +24,11 @@ namespace CoverageControl {
 		pEpisodeSteps = yaml_config_["pEpisodeSteps"].as<int>();
 		pTruncationBND = yaml_config_["pTruncationBND"].as<double>();
 		pNorm = yaml_config_["pNorm"].as<double>();
-		pMinVariance = yaml_config_["pMinVariance"].as<double>();
-		pMaxVariance = yaml_config_["pMaxVariance"].as<double>();
+		pMinSigma = yaml_config_["pMinSigma"].as<double>();
+		pMaxSigma = yaml_config_["pMaxSigma"].as<double>();
 		pMinPeak = yaml_config_["pMinPeak"].as<double>();
 		pMaxPeak = yaml_config_["pMaxPeak"].as<double>();
+		pLloydMaxIterations = yaml_config_["pLloydMaxIterations"].as<int>();
+		pLloydNumTries = yaml_config_["pLloydNumTries"].as<int>();
 	}
 } /* namespace CoverageControl */

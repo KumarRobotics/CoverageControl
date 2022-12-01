@@ -3,22 +3,22 @@ pResolution: 1
 
 # Actual size of maps is size * pResolution, e.g.,  pWorldMapSize * pResolution
 # For ~1 km^2 actual environment, we have a 1024 grid world with each cell pResolution * pRobotMapSize=1 m^2
-pWorldMapSize: 512
+pWorldMapSize: 1024
 
 # Robot map saves what the robot has seen
 # Could make it sparse if size becomes a problem
-pRobotMapSize: 512
-pUnknownImportance: 0.1 # fraction of the largest imaportance of a grid cell
+pRobotMapSize: 1024
+pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
-pLocalMapSize: 64
+pLocalMapSize: 128
 # Radius of communication (in meters)
 pCommunicationRange: 64
 
 # Set pUpdateRobotMap to false for centralized known world
-pUpdateRobotMap: false
-pUpdateSensorView: false
+pUpdateRobotMap: true
+pUpdateSensorView: true
 
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize
@@ -26,10 +26,10 @@ pUpdateSensorView: false
 # Make it even so that I don't have to deal with substracting by half-resolution.
 # Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
 # Positive integer. NOTE: Needs to be even
-pSensorSize: 12
+pSensorSize: 24
 
 # Each time step corresponds to 0.1s, i.e., 10Hz
-pTimeStep: 0.1
+pTimeStep: 1
 # in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
 pMaxRobotSpeed: 10
 # Total time is pEpisodeSteps * pTimeStep
@@ -45,7 +45,12 @@ pTruncationBND: 4
 pNorm: 1
 
 # These settings are only required if the IDF is generated using random gaussians
-pMinVariance: 6
-pMaxVariance: 10
+pMinSigma: 6
+pMaxSigma: 10
 pMinPeak: 6
 pMaxPeak: 10
+
+
+# Settings for Lloyd offline algorithm
+pLloydMaxIterations: 100
+pLloydNumTries: 1

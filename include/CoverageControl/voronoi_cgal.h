@@ -40,6 +40,9 @@ namespace CoverageControl {
 				if (fit->is_unbounded()) { continue; }
 				else { Polygon_2 polygon;
 					CGAL_CCBTraversal<Arrangement> (fit->outer_ccb(), polygon);
+					if(not polygon.is_counterclockwise_oriented()) {
+						polygon.reverse_orientation();
+					}
 					polygon_list.push_back(polygon);
 				}
 			}
