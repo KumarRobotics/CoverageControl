@@ -253,7 +253,7 @@ namespace CoverageControl {
 					}
 					voronoi.UpdateSites(sites);
 				}
-				std::cout << "No. of voronoi steps: " << iSteps << std::endl;
+				/* std::cout << "No. of voronoi steps: " << iSteps << std::endl; */
 				return voronoi_cells;
 			}
 
@@ -290,7 +290,7 @@ namespace CoverageControl {
 						}
 						voronoi.UpdateSites(sites);
 					}
-					std::cout << "No. of voronoi steps: " << iSteps << std::endl;
+					/* std::cout << "No. of voronoi steps: " << iSteps << std::endl; */
 					all_voronoi_cells[iter] = voronoi_cells;
 					obj_values[iter] = voronoi.GetObjValue();
 				}
@@ -312,7 +312,7 @@ namespace CoverageControl {
 			bool StepOracleN(int num_steps) {
 				bool cont_flag = true;
 				for(int i = 0; i < num_steps; ++i) {
-					std::cout << "StepOracleN: " << i << std::endl;
+					/* std::cout << "StepOracleN: " << i << std::endl; */
 					if(not StepOracle()) {
 						cont_flag = false;
 						break;
@@ -374,8 +374,8 @@ namespace CoverageControl {
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					/* std::cout << "voronoi computed" << std::endl; */
 					voronoi_cells_[iRobot] = voronoi.GetVoronoiCell();
-					auto centroid = voronoi_cells_[iRobot].centroid;
-					std::cout << centroid.x() << " " << centroid.y() << std::endl;
+					/* auto centroid = voronoi_cells_[iRobot].centroid; */
+					/* std::cout << centroid.x() << " " << centroid.y() << std::endl; */
 				}
 				return cont_flag;
 			}
