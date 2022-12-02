@@ -11,10 +11,6 @@ namespace CoverageControl {
 		vcell.centroid = Point2{0,0};
 		auto &cell = vcell.cell;
 		int n = cell.size();
-		/* Polygon_2 cgal_poly; */
-		/* for(auto const &p:vcell.cell) { */
-		/* 	cgal_poly.push_back(CGAL_Point2(p.x(), p.y())); */
-		/* } */
 
 		int left_id = 0;
 		int right_id = 0;
@@ -40,7 +36,6 @@ namespace CoverageControl {
 		auto cc_pt_id = next_id(left_id); // Counter-clockwise pointer
 		auto c_pt_id  = prev_id(left_id); // Clockwise pointer
 
-		/* std::cout << "cc pointers set" << std::endl; */
 		for(int i = min_i; i < max_i; ++i) {
 			double x = i * resolution_ + resolution_/2.;
 			while(true) {
@@ -204,12 +199,12 @@ namespace CoverageControl {
 			return;
 		}
 
-		std::list <Polygon_2> polygon_list;
-		CGAL_GeneratePolygons(arr, polygon_list);
+		/* std::list <Polygon_2> polygon_list; */
+		/* CGAL_GeneratePolygons(arr, polygon_list); */
 
-		PrunePolygons(polygon_list, map_size_);
+		/* PrunePolygons(polygon_list, map_size_); */
 		// Create voronoi_cells_ such that the correct cell is assigned to the robot
-		/* #pragma omp parallel for */
+#pragma omp parallel for
 		for(int iSite = 0; iSite < num_sites_; ++iSite) {
 			auto pt = CGAL_sites[iSite];
 			Polygon_2 polygon;

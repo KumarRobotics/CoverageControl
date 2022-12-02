@@ -58,7 +58,8 @@ namespace CoverageControl {
 				Point2 top_left(Point2(bottom_left.x(), top_right.y()));
 				double importance = 0;
 				for(auto const &normal_distribution:normal_distributions_) {
-					if(normal_distribution.TransformPoint((bottom_left + top_right)/2.).squaredNorm() > params_.pTruncationBND * params_.pTruncationBND + params_.pResolution * params_.pResolution) {
+					Point2 mid_point = (bottom_left + top_right)/2.;
+					if(normal_distribution.TransformPoint(mid_point).squaredNorm() > params_.pTruncationBND * params_.pTruncationBND + params_.pResolution * params_.pResolution) {
 						continue;
 					}
 					importance += normal_distribution.IntegrateQuarterPlane(bottom_left);
@@ -107,23 +108,10 @@ namespace CoverageControl {
 					host_dists[i].scale = (float)(normal_distributions_[i].GetScale());
 				}
 
-				/* float *importance_vec = (float*) malloc(params_.pWorldMapSize * params_.pWorldMapSize * sizeof(float)); */
 				float max = 0;
 				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, params_.pNorm, world_map_.data(), max);
 				/* GenerateMap(); */
 				normalization_factor_ = params_.pNorm / max;
-				/* for(int i = 0; i < params_.pWorldMapSize; ++i) { */
-				/* 	for(int j = 0; j < params_.pWorldMapSize; ++j) { */
-				/* 		/1* if(std::abs(world_map_(i, j) - (double) importance_vec[i*pWorldMapSize + j]) > 10e-5) { *1/ */
-				/* 		/1* 	std::cout << "Diff: " << i << " " << j <<  " " << world_map_(i, j) << " " << (double) importance_vec[i*pWorldMapSize + j] << std::endl; *1/ */
-				/* 		/1* } *1/ */
-				/* 		/1* world_map_(i, j) = (double) (importance_vec[i * params_.pWorldMapSize + j]); *1/ */
-				/* 		/1* MapType2 map(params_.pWorldMapSize, params_.pWorldMapSize); *1/ */
-				/* 		world_map_(i, j) = importance_vec[i * params_.pWorldMapSize + j] * normalization_factor_; */
-				/* 	} */
-				/* } */
-
-				/* free(importance_vec); */
 				free(host_dists);
 			}
 

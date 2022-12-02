@@ -74,7 +74,6 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("UpdateRobotPosition", &RobotModel::UpdateRobotPosition)
 		.def("GetGlobalStartPosition", &RobotModel::GetGlobalStartPosition)
 		.def("GetGlobalCurrentPosition", &RobotModel::GetGlobalCurrentPosition)
-		.def("GetAllPositions", &RobotModel::GetAllPositions)
 		.def("GetRobotMap", &RobotModel::GetRobotMap)
 		.def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap)
 		.def("GetSensorView", &RobotModel::GetSensorView)

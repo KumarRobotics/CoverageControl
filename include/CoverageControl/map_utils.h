@@ -19,11 +19,9 @@ namespace CoverageControl {
 		};
 
 		// Gets the closest point on the grid
-		void GetClosestGridCoordinate(double const resolution, Point2 pt, int &idx, int &idy) {
-			pt = pt/resolution;
-			pt = Point2(std::round(pt.x()), std::round(pt.y()));
-			idx = (int)(pt.x());
-			idy = (int)(pt.y());
+		inline void GetClosestGridCoordinate(double const resolution, Point2 const &pt, int &idx, int &idy) {
+			idx = std::round(pt.x()/resolution);
+			idy = std::round(pt.y()/resolution);
 		}
 
 		// Compute necessary map transformations when the point is close to the boundary

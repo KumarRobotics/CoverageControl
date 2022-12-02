@@ -35,7 +35,7 @@ namespace CoverageControl {
 			}
 
 			// Constructor for circular distribution
-			BivariateNormalDistribution (Point2 const mean, double const sigma, double const peak_val = 1) {
+			BivariateNormalDistribution (Point2 const &mean, double const &sigma, double const peak_val = 1) {
 				is_circular_ = true;
 				sigma_ = Point2(sigma, sigma);
 				mean_ = mean;
@@ -44,7 +44,7 @@ namespace CoverageControl {
 			}
 
 			// Constructor for general distribution
-			BivariateNormalDistribution (Point2 const mean, Point2 const sigma, double const rho, double const peak_val = 1) {
+			BivariateNormalDistribution (Point2 const &mean, Point2 const &sigma, double const rho, double const peak_val = 1) {
 				if(rho_ > 0) {
 					is_circular_ = false;
 				} else {
