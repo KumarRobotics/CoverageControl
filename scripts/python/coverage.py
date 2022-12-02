@@ -55,7 +55,7 @@ env.StepControl(control_directions, speeds)
 # Update the local position of the robots
 new_robot_positions = PointVector()
 new_robot_positions.append(np.array([10, 10]))
-new_robot_positions.append(np.array([11,11]))
+new_robot_positions.append(np.array([11, 11]))
 env.UpdateRobotPositions(new_robot_positions)
 
 # Get current global robot positions
@@ -151,11 +151,6 @@ robot.UpdateRobotPosition(new_pos)
 
 # Get the current global position of the robot
 robot_pos = robot.GetGlobalCurrentPosition()
-
-# Get all local positions of the robot
-all_robot_positions = robot.GetAllPositions()
-print(type(all_robot_positions))
-print(all_robot_positions[0])
 
 # Get the local map of the robot
 robot_map = robot.GetRobotLocalMap()

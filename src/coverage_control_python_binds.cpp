@@ -74,9 +74,9 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("UpdateRobotPosition", &RobotModel::UpdateRobotPosition)
 		.def("GetGlobalStartPosition", &RobotModel::GetGlobalStartPosition)
 		.def("GetGlobalCurrentPosition", &RobotModel::GetGlobalCurrentPosition)
-		.def("GetRobotMap", &RobotModel::GetRobotMap)
-		.def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap)
-		.def("GetSensorView", &RobotModel::GetSensorView)
+		.def("GetRobotMap", &RobotModel::GetRobotMap, py::return_value_policy::reference_internal)
+		.def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap, py::return_value_policy::reference_internal)
+		.def("GetSensorView", &RobotModel::GetSensorView, py::return_value_policy::reference_internal)
 		;
 
 	py::class_<CoverageSystem>(m, "CoverageSystem")
@@ -87,6 +87,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("StepControl", &CoverageSystem::StepControl)
 		.def("UpdateRobotPositions", &CoverageSystem::UpdateRobotPositions)
 		.def("GetRobotPositions", &CoverageSystem::GetRobotPositions)
+		.def("GetRobotPosition", &CoverageSystem::GetRobotPosition)
 		.def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap, py::return_value_policy::reference_internal)
 		.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
@@ -101,6 +102,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetOracleMap", &CoverageSystem::GetOracleMap, py::return_value_policy::reference_internal)
 		.def("GetVoronoiCell", &CoverageSystem::GetVoronoiCell, py::return_value_policy::copy)
 		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
+		.def("GetRobotObstacleMap", &CoverageSystem::GetRobotObstacleMap, py::return_value_policy::copy)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

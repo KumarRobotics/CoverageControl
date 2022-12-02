@@ -154,6 +154,14 @@ namespace CoverageControl {
 				}
 			}
 
+			MapType const& GetRobotObstacleMap(size_t const id) {
+				if(id < num_robots_) {
+					return robots_[id].GetObstacleMap();
+				} else {
+					throw std::out_of_range{"Robot index more than the number of robots"};
+				}
+			}
+
 			MapType const& GetOracleMap() {
 				return oracle_map_;
 			}

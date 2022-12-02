@@ -52,7 +52,8 @@ for iter in range(0, round(params_.pEpisodeSteps/num_steps)):
         centroid = voronoi_cell.centroid
         mass = voronoi_cell.mass
         # Do something with the data
-    robot_local_map = env.GetRobotLocalMap(robot_id)
+    print(env.GetRobotPosition(robot_id))
+    robot_local_map = env.GetRobotObstacleMap(robot_id)
     sns.heatmap(ax=local_ax,data=np.flip(robot_local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
 
     fig_local.canvas.draw()
