@@ -7,14 +7,14 @@
 
 namespace CoverageControl {
 
-	Point2 CGALtoCC(CGAL_Point2 const pt) {
+	inline Point2 CGALtoCC(CGAL_Point2 const pt) {
 		return Point2(CGAL::to_double(pt.x()), CGAL::to_double(pt.y()));
 	}
-	struct CGAL_Cropped_voronoi_from_delaunay{
+	struct CGAL_DelaunayHelper{
 		std::vector<Ray_2> rays_;
 		std::vector<Line_2> lines_;
 		std::vector<Segment_2> segments_;
-		CGAL_Cropped_voronoi_from_delaunay() {}
+		CGAL_DelaunayHelper() {}
 		void operator<<(const Ray_2& ray)    { rays_.push_back(ray); }
 		void operator<<(const Line_2& line)  { lines_.push_back(line); }
 		void operator<<(const Segment_2& seg){ segments_.push_back(seg); }
@@ -34,7 +34,7 @@ namespace CoverageControl {
 
 	template<class Arrangement>
 		void CGAL_GeneratePolygons (const Arrangement& arr, std::list <Polygon_2> &polygon_list) {
-			CGAL_precondition (arr.is_valid());
+			/* CGAL_precondition (arr.is_valid()); */
 			typename Arrangement::Face_const_iterator    fit;
 			for (fit = arr.faces_begin(); fit != arr.faces_end(); ++fit) {
 				if (fit->is_unbounded()) { continue; }

@@ -43,7 +43,12 @@ namespace CoverageControl {
 		public:
 			// Initialize IDF with num_gaussians distributions
 			// Initialize num_robots with random start positions
-			CoverageSystem(Parameters const &params, int const num_gaussians, int const num_robots) : params_{params}, world_idf_{WorldIDF(params_)}{
+			CoverageSystem(
+					Parameters const &params,
+					int const num_gaussians,
+					int const num_robots) :
+				params_{params},
+				world_idf_{WorldIDF(params_)}{
 				std::srand(0);
 				gen_ = std::mt19937(rd_()); //Standard mersenne_twister_engine seeded with rd_()
 				distrib_pts_ = std::uniform_real_distribution<>(0, params_.pWorldMapSize * params_.pResolution);
@@ -187,21 +192,21 @@ namespace CoverageControl {
 				}
 			}
 
-			bool StepRobotToPoint(int const robot_id, Point2 const &goal, double const speed_factor = 1) {
-					auto diff = goal - robots_[robot_id].GetGlobalCurrentPosition();
-					auto dist = diff.norm();
-					double speed = speed_factor * dist / params_.pTimeStep;
-					if(speed <= kEps) {
-						return 0;
-					}
-					speed = std::min(params_.pMaxRobotSpeed, speed);
-					Point2 direction(diff);
-					direction.normalize();
-					if(robots_[robot_id].StepControl(direction, speed)) {
-						std::cerr << "Control incorrect\n";
-						return 1;
-					}
+			bool StepRobotToPoint(int const robot_id, Point2 const goal, double const speed_factor = 1) {
+				Point2 diff = goal - robots_[robot_id].GetGlobalCurrentPosition();
+				auto dist = diff.norm();
+				double speed = speed_factor * dist / params_.pTimeStep;
+				if(speed <= kEps) {
 					return 0;
+				}
+				speed = std::min(params_.pMaxRobotSpeed, speed);
+				Point2 direction(diff);
+				direction.normalize();
+				if(robots_[robot_id].StepControl(direction, speed)) {
+					std::cerr << "Control incorrect\n";
+					return 1;
+				}
+				return 0;
 			}
 
 			bool StepLloyd() {

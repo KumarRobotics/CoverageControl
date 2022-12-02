@@ -43,13 +43,13 @@ for iter in range(0, round(params_.pEpisodeSteps/num_steps)):
     cont_flag = env.StepDataGenerationLocal(num_steps)
     if(not cont_flag):
         break
+    positions = env.GetRobotPositions()
+    # print(positions[robot_id])
     for iRobot in range(0, num_robots):
         robot_local_map = env.GetRobotLocalMap(iRobot)
         communication_map = env.GetCommunicationMap(iRobot)
         voronoi_cell = env.GetVoronoiCell(iRobot)
         centroid = voronoi_cell.centroid
-        print(centroid.x)
-        print(centroid.y)
         mass = voronoi_cell.mass
         # Do something with the data
     robot_local_map = env.GetRobotLocalMap(robot_id)
