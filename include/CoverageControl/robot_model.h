@@ -28,13 +28,12 @@ namespace CoverageControl {
 
 			Point2 global_start_position_, global_current_position_;
 			Point2 local_start_position_, local_current_position_;
-			std::vector <Point2> robot_positions_; // Stores the local positions of the robot in order
 			double normalization_factor_ = 0;
-			VoronoiCell voronoi_cell_;
 
 			MapType robot_map_; // Stores what the robot has seen. Has the same reference as world map.
 			MapType sensor_view_; // Stores the current sensor view of the robot
 			MapType local_map_; // Stores the local map of the robot
+			MapType obstacle_map_; // Stores the obstacle map
 			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
 
 			// Gets the sensor data from world IDF at the global_current_position_ and updates robot_map_
@@ -61,10 +60,9 @@ namespace CoverageControl {
 
 				sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				obstacle_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				local_start_position_ = Point2{0,0};
-				robot_positions_.reserve(params_.pEpisodeSteps); // More steps can be executed. But reserving for efficiency
 				local_current_position_ = local_start_position_;
-				robot_positions_.push_back(local_current_position_);
 				robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();
@@ -103,7 +101,6 @@ namespace CoverageControl {
 
 			void UpdateRobotPosition(Point2 const &new_pos) {
 				local_current_position_ = new_pos;
-				/* robot_positions_.push_back(local_current_position_); */
 				global_current_position_ = local_current_position_ + global_start_position_;
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();
@@ -115,7 +112,6 @@ namespace CoverageControl {
 
 			Point2 GetGlobalStartPosition() const { return global_start_position_; }
 			Point2 GetGlobalCurrentPosition() const { return global_current_position_; }
-			std::vector <Point2> GetAllPositions() const { return robot_positions_; }
 
 			const MapType& GetRobotMap() const { return robot_map_; }
 			const MapType& GetSensorView() const { return sensor_view_; }
@@ -128,9 +124,13 @@ namespace CoverageControl {
 				return local_map_;
 			}
 
-			void SetVoronoiCell(VoronoiCell const &cell) { voronoi_cell_ = cell; }
-			auto GetVoronoiCell() { return voronoi_cell_; }
-
+			const MapType& GetObstacleMap() {
+				obstacle_map_ = MapType::Ones(params_.pLocalMapSize, params_.pLocalMapSize);
+				MapUtils::MapBounds index, offset;
+				ComputeOffsets(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, index, offset);
+				obstacle_map_.block(offset.left, offset.bottom, offset.width, offset.height) = MapType::Zero(offset.width, offset.height);
+				return obstacle_map_;
+			}
 	};
 
 } /* namespace CoverageControl */
