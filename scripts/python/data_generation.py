@@ -21,7 +21,7 @@ map = env.GetWorldIDF()
 
 robot_id = 0
 
-plot_maps = True
+plot_maps = False
 if plot_maps == True:
     plt.ion()
     fig_local = plt.figure("Local Map of Robot" + str(robot_id))

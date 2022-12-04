@@ -22,17 +22,21 @@ int main(int argc, char** argv) {
 	std::string map_filename = "data/oracle_map";
 	std::string gnuplot_script = "src/CoverageControl/scripts/gnuplot/plot_map.gp";
 
+	bool plot_map = false;
 	for(int i = 0; i < 100; ++i) {
 		std::cout << i << std::endl;
 		env.StepDataGenerationLocal(10);
 		auto oracle_map = env.GetOracleMap();
 
-		std::string imap_name = map_filename + std::to_string(i);
-		MapUtils::WriteMap(oracle_map, imap_name + ".dat");
-
-		std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + imap_name + " 1 " + std::to_string(params.pResolution) + " " + std::to_string(params.pWorldMapSize * params.pResolution);
-
-		std::system(gnuplot_command.c_str());
+		if(plot_map == true) {
+			std::stringstream ss;
+			ss << std::setw(4) << std::setfill('0') << i;
+			std::string s = ss.str();
+			std::string imap_name = map_filename + s;
+			MapUtils::WriteMap(oracle_map, imap_name + ".dat");
+			std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + imap_name + " 1 " + std::to_string(params.pResolution) + " " + std::to_string(params.pWorldMapSize * params.pResolution);
+			std::system(gnuplot_command.c_str());
+		}
 	}
 	return 0;
 }
