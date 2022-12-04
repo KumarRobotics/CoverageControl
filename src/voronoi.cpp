@@ -204,7 +204,7 @@ namespace CoverageControl {
 
 		/* PrunePolygons(polygon_list, map_size_); */
 		// Create voronoi_cells_ such that the correct cell is assigned to the robot
-#pragma omp parallel for
+#pragma omp parallel for num_threads(num_sites_)
 		for(int iSite = 0; iSite < num_sites_; ++iSite) {
 			auto pt = CGAL_sites[iSite];
 			Polygon_2 polygon;

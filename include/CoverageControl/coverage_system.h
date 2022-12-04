@@ -136,7 +136,7 @@ namespace CoverageControl {
 				}
 			}
 
-			PointVector GetRobotPositions() { 
+			PointVector GetRobotPositions() {
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					robot_global_positions_[iRobot] = robots_[iRobot].GetGlobalCurrentPosition();
 				}
@@ -365,7 +365,7 @@ namespace CoverageControl {
 				bool cont_flag = true;
 				auto voronoi_cells = LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, oracle_map_, params_.pWorldMapSize, params_.pResolution);
 
-#pragma omp parallel for
+#pragma omp parallel for num_threads(num_robots_)
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					for(size_t jCentroid = 0; jCentroid < voronoi_cells.size(); ++jCentroid) {
 						cost_matrix_[iRobot][jCentroid] = (robot_global_positions_[iRobot] - voronoi_cells[jCentroid].centroid).norm();
