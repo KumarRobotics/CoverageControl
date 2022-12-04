@@ -210,6 +210,9 @@ namespace CoverageControl {
 			Polygon_2 polygon;
 			auto obj = cgal_pl.locate(pt);
 			auto f = boost::get<Arrangement_2::Face_const_handle>(&obj);
+			if(not f) {
+				throw std::runtime_error{"Could not find a face for the robot"};
+			}
 			CGAL_CCBTraversal<Arrangement_2> ((*f)->outer_ccb(), polygon);
 			if(not polygon.is_counterclockwise_oriented()) {
 				polygon.reverse_orientation();
