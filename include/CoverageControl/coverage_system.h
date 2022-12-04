@@ -202,10 +202,14 @@ namespace CoverageControl {
 			MapType const& GetCommunicationMap(size_t const id) {
 				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				auto robot_neighbors_pos = GetRobotsInCommunication(id);
+				Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
 				for(Point2 const& relative_pos:robot_neighbors_pos) {
+					Point2 map_pos = relative_pos + map_translation;
 					int pos_idx, pos_idy;
-					MapUtils::GetClosestGridCoordinate(params_.pResolution, relative_pos, pos_idx, pos_idy);
-					communication_map_(pos_idx, pos_idy) = 1;
+					MapUtils::GetClosestGridCoordinate(params_.pResolution, map_pos, pos_idx, pos_idy);
+					if(pos_idx < params_.pLocalMapSize and pos_idy < params_.pLocalMapSize and pos_idx >= 0 and pos_idy >= 0) {
+						communication_map_(pos_idx, pos_idy) = 1;
+					}
 				}
 				return communication_map_;
 			}
@@ -225,6 +229,11 @@ namespace CoverageControl {
 				speed = std::min(params_.pMaxRobotSpeed, speed);
 				Point2 direction(diff);
 				direction.normalize();
+				/* if(robot_id == 0) { */
+				/* 	std::cout << "Goal: " << goal.x() << " " << goal.y() << std::endl; */
+				/* 	std::cout << "Direction: " << direction.x() << " " << direction.y() << std::endl; */
+				/* 	std::cout << "Speed: " << speed << std::endl; */
+				/* } */
 				if(robots_[robot_id].StepControl(direction, speed)) {
 					std::cerr << "Control incorrect\n";
 					return 1;

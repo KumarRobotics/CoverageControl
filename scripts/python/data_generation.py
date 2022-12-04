@@ -19,12 +19,15 @@ num_robots = 20
 env = CoverageSystem(params_, num_gaussians, num_robots)
 map = env.GetWorldIDF()
 
-plt.ion()
 robot_id = 0
-fig_local = plt.figure("Local Map of Robot" + str(robot_id))
-local_map = env.GetRobotLocalMap(robot_id)
-local_ax = sns.heatmap(data=np.flip(local_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
-cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
+
+plot_maps = True
+if plot_maps == True:
+    plt.ion()
+    fig_local = plt.figure("Local Map of Robot" + str(robot_id))
+    local_map = env.GetRobotLocalMap(robot_id)
+    local_ax = sns.heatmap(data=np.flip(local_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
+    cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
 
 # We use the function StepDataGenerationLocal to drive the robots around in the world
 # The CoverageSystem maintains an oracle_map_ which has the information of the world_idf_ at the locations visited by any of the robots. For locations that haven't been visited yet, the importance is set to a Parameters::pUnknownImportance
@@ -53,8 +56,9 @@ for iter in range(0, round(params_.pEpisodeSteps/num_steps)):
         mass = voronoi_cell.mass
         # Do something with the data
     print(env.GetRobotPosition(robot_id))
-    robot_local_map = env.GetRobotObstacleMap(robot_id)
-    sns.heatmap(ax=local_ax,data=np.flip(robot_local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
+    robot_local_map = env.GetRobotLocalMap(robot_id)
+    if plot_maps == True:
+        sns.heatmap(ax=local_ax,data=np.flip(robot_local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
 
-    fig_local.canvas.draw()
-    fig_local.canvas.flush_events()
+        fig_local.canvas.draw()
+        fig_local.canvas.flush_events()

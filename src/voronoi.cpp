@@ -148,7 +148,7 @@ namespace CoverageControl {
 			if(compute_single_ == true) {
 				voronoi_cell_ = vcell;
 			} else {
-				voronoi_cells_.push_back(vcell);
+				voronoi_cells_[0] = vcell;
 			}
 			return;
 		}
@@ -207,23 +207,34 @@ namespace CoverageControl {
 #pragma omp parallel for num_threads(num_sites_)
 		for(int iSite = 0; iSite < num_sites_; ++iSite) {
 			auto pt = CGAL_sites[iSite];
-			Polygon_2 polygon;
 			auto obj = cgal_pl.locate(pt);
-			auto f = boost::get<Arrangement_2::Face_const_handle>(&obj);
+			auto* f = boost::get<Arrangement_2::Face_const_handle>(&obj);
 			if(not f) {
 				throw std::runtime_error{"Could not find a face for the robot"};
 			}
-			CGAL_CCBTraversal<Arrangement_2> ((*f)->outer_ccb(), polygon);
-			if(not polygon.is_counterclockwise_oriented()) {
-				polygon.reverse_orientation();
+			/* CGAL_CCBTraversal<Arrangement_2> ((*f)->outer_ccb(), polygon); */
+			Polygon_2 polygon;
+			typename Arrangement_2::Ccb_halfedge_const_circulator circ = (*f)->outer_ccb();
+			typename Arrangement_2::Ccb_halfedge_const_circulator curr = circ;
+			typename Arrangement_2::Halfedge_const_handle he;
+			auto curr_pt = curr->source()->point();
+			do {
+				auto he = curr; curr_pt = he->target()->point();
+				polygon.push_back(curr_pt); ++curr;
+			} while(curr != circ);
+
+			if(polygon.size() == 0) {
+				throw std::runtime_error{"Zero size polygon"};
 			}
-			PointVector poly_points;
-			for(auto const &p:(polygon)) {
-				poly_points.push_back(CGALtoCC(p));
-			}
+			/* if(not polygon.is_counterclockwise_oriented()) { */
+			/* 	polygon.reverse_orientation(); */
+			/* } */
 			VoronoiCell vcell;
 			vcell.site = CGALtoCC(pt);
-			vcell.cell = poly_points;
+			vcell.cell.reserve(polygon.size());
+			for(auto const &p:polygon) {
+				vcell.cell.push_back(CGALtoCC(p));
+			}
 			ComputeMassCentroid(vcell);
 			voronoi_cells_[iSite] = vcell;
 		}
