@@ -25,8 +25,8 @@ plot_maps = True
 if plot_maps == True:
     plt.ion()
     fig_local = plt.figure("Local Map of Robot" + str(robot_id))
-    local_map = env.GetRobotLocalMap(robot_id)
-    local_ax = sns.heatmap(data=np.flip(local_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
+    oracle_map = env.GetOracleMap()
+    local_ax = sns.heatmap(data=np.flip(oracle_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
     cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
 
 # We use the function StepDataGenerationLocal to drive the robots around in the world
@@ -57,8 +57,9 @@ for iter in range(0, round(params_.pEpisodeSteps/num_steps)):
         # Do something with the data
     print(env.GetRobotPosition(robot_id))
     robot_local_map = env.GetRobotLocalMap(robot_id)
+    oracle_map = env.GetOracleMap()
     if plot_maps == True:
-        sns.heatmap(ax=local_ax,data=np.flip(robot_local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
+        sns.heatmap(ax=local_ax,data=np.flip(oracle_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
 
         fig_local.canvas.draw()
         fig_local.canvas.flush_events()

@@ -100,15 +100,15 @@ namespace CoverageControl {
 			}
 
 			void UpdateRobotPosition(Point2 const &pos) {
-				Point2 new_pos = pos;
-				if(new_pos.x() < 0) { new_pos[0] = 0; }
-				if(new_pos.y() < 0) { new_pos[1] = 0; }
-				double max_xy = params_.pRobotMapSize * params_.pResolution;
-				if(new_pos.x() > max_xy) { new_pos[0] = max_xy; }
-				if(new_pos.y() > max_xy) { new_pos[1] = max_xy; }
+				Point2 new_global_pos = pos + global_start_position_;
+				if(new_global_pos.x() < 0) { new_global_pos[0] = 0; }
+				if(new_global_pos.y() < 0) { new_global_pos[1] = 0; }
+				double max_xy = params_.pWorldMapSize * params_.pResolution;
+				if(new_global_pos.x() > max_xy) { new_global_pos[0] = max_xy; }
+				if(new_global_pos.y() > max_xy) { new_global_pos[1] = max_xy; }
 
-				local_current_position_ = new_pos;
-				global_current_position_ = local_current_position_ + global_start_position_;
+				local_current_position_ = new_global_pos - global_start_position_;
+				global_current_position_ = new_global_pos;
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();
 				}

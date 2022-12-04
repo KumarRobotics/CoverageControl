@@ -15,7 +15,7 @@ import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 
-params_ = pyCoverageControl.Parameters('parameters.yaml')
+params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
 
 num_gaussians = 100
 num_robots = 40
@@ -42,8 +42,8 @@ plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
 plot_pos_x = np.array([])
 plot_pos_y = np.array([])
 for pos in robot_positions:
-    plot_pos_x = np.append(plot_pos_x, pos.x / params_.pResolution)
-    plot_pos_y = np.append(plot_pos_y, pos.y / params_.pResolution)
+    plot_pos_x = np.append(plot_pos_x, pos[0] / params_.pResolution)
+    plot_pos_y = np.append(plot_pos_y, pos[1] / params_.pResolution)
 
 plot_robots, = ax.plot(plot_pos_x, plot_pos_y, 'go')
 print(plot_robots)
@@ -55,14 +55,14 @@ for vcell in voronoi_cells:
     plot_pt_x = np.array([])
     plot_pt_y = np.array([])
     for pt in cell:
-        plot_pt_x = np.append(plot_pt_x, pt.x / params_.pResolution)
-        plot_pt_y = np.append(plot_pt_y, pt.y / params_.pResolution)
+        plot_pt_x = np.append(plot_pt_x, pt[0] / params_.pResolution)
+        plot_pt_y = np.append(plot_pt_y, pt[1] / params_.pResolution)
     plot_pt_x = np.append(plot_pt_x, plot_pt_x[0])
     plot_pt_y = np.append(plot_pt_y, plot_pt_y[0])
     plot_cell, = ax.plot(plot_pt_x, plot_pt_y, 'r')
     plot_cells.append(plot_cell)
-    centroid_x = np.append(centroid_x, vcell.centroid.x)
-    centroid_y = np.append(centroid_y, vcell.centroid.y)
+    centroid_x = np.append(centroid_x, vcell.centroid[0])
+    centroid_y = np.append(centroid_y, vcell.centroid[1])
 plot_centroids, = ax.plot(centroid_x, centroid_y, 'r+')
 
 curr_pos = np.array([plot_pos_x, plot_pos_y]).transpose()

@@ -220,7 +220,8 @@ namespace CoverageControl {
 			}
 
 			bool StepRobotToPoint(int const robot_id, Point2 const &goal, double const speed_factor = 1) {
-				Point2 diff = goal - robots_[robot_id].GetGlobalCurrentPosition();
+				Point2 curr_pos = robots_[robot_id].GetGlobalCurrentPosition();
+				Point2 diff = goal - curr_pos;
 				double dist = diff.norm();
 				double speed = speed_factor * dist / params_.pTimeStep;
 				if(speed <= kEps) {
@@ -230,6 +231,7 @@ namespace CoverageControl {
 				Point2 direction(diff);
 				direction.normalize();
 				/* if(robot_id == 0) { */
+				/* 	std::cout << "Pos: " << curr_pos.x() << " " << curr_pos.y() << std::endl; */
 				/* 	std::cout << "Goal: " << goal.x() << " " << goal.y() << std::endl; */
 				/* 	std::cout << "Direction: " << direction.x() << " " << direction.y() << std::endl; */
 				/* 	std::cout << "Speed: " << speed << std::endl; */
