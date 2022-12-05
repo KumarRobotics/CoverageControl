@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
 	std::string gnuplot_script = "src/CoverageControl/scripts/gnuplot/plot_map.gp";
 
 	bool plot_map = false;
+	bool write_data = true	;
 	for(int i = 0; i < 100; ++i) {
 		std::cout << i << std::endl;
 		env.StepDataGenerationLocal(10);

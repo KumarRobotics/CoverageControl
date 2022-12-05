@@ -400,14 +400,17 @@ namespace CoverageControl {
 
 			bool StepDataGenerationLocal(int const steps) {
 				bool cont_flag = StepOracleN(steps);
+#pragma omp parallel for num_threads(num_robots_)
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					auto robot_local_map = robots_[iRobot].GetRobotLocalMap();
-					PointVector robot_positions;
-					Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
-					robot_positions.push_back(map_translation);
 					auto robot_neighbors_pos = GetRobotsInCommunication(iRobot);
+					PointVector robot_positions(robot_neighbors_pos.size() + 1);
+					Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
+					robot_positions[0] = map_translation;
+					int count = 1;
 					for(auto const &pos:robot_neighbors_pos) {
-						robot_positions.push_back(pos + map_translation);
+						robot_positions[count] = pos + map_translation;
+						++count;
 					}
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					/* std::cout << "voronoi computed" << std::endl; */
