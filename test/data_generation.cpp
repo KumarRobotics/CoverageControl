@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	bool plot_map = false;
 	bool write_data = true;
 	auto start = std::chrono::steady_clock::now();
-	for(int iNum = 0; iNum < 1000; ++iNum) {
+	for(int iNum = 0; iNum < 500; ++iNum) {
 		std::string data_filename = "data/cnn_data.ssv";
 		std::ofstream out_file(data_filename);
 		if(!out_file) {

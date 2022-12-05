@@ -24,6 +24,9 @@ InstallYamlCPP () {
 	git clone git@github.com:jbeder/yaml-cpp.git ${WORKSPACE_DIR}/src/yaml-cpp
 	cmake -S ${WORKSPACE_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/yaml-cpp -j4
+	if [ $? -ne 0 ]; then
+		echo "YAML build failed"
+	fi
 	cmake --install ${BUILD_DIR}/yaml-cpp
 	if [ $? -eq 0 ]; then
 		echo "yaml-cpp install succeeded"
@@ -38,6 +41,9 @@ InstallEigen3 () {
 	git clone https://gitlab.com/libeigen/eigen.git ${WORKSPACE_DIR}/src/eigen3
 	cmake -S ${WORKSPACE_DIR}/src/eigen3 -B ${BUILD_DIR}/eigen3 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/eigen3 -j4
+	if [ $? -ne 0 ]; then
+		echo "Eigen build failed"
+	fi
 	cmake --install ${BUILD_DIR}/eigen3
 	if [ $? -eq 0 ]; then
 		echo "eigen3 install succeeded"
@@ -52,6 +58,9 @@ InstallCoverageControl () {
 	git clone git@github.com:AgarwalSaurav/CoverageControl.git ${WORKSPACE_DIR}/src/CoverageControl
 	cmake -S ${WORKSPACE_DIR}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/CoverageControl
+	if [ $? -ne 0 ]; then
+		echo "CoverageControl build failed"
+	fi
 	cmake --install ${BUILD_DIR}/CoverageControl
 	if [ $? -eq 0 ]; then
 		echo "CoverageControl install succeeded"
@@ -66,7 +75,13 @@ UpdateCoverageControl () {
 	# The CoverageControl repository is located in ${WORKSPACE_DIR}/src/CoverageControl
 	cmake -S ${WORKSPACE_DIR}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/CoverageControl
+	if [ $? -ne 0 ]; then
+		echo "CoverageControl build failed"
+	fi
 	cmake --install ${BUILD_DIR}/CoverageControl
+	if [ $? -ne 0 ]; then
+		echo "CoverageControl install failed"
+	fi
 }
 
 # Uncomment the following commands to install from source
@@ -76,4 +91,3 @@ UpdateCoverageControl () {
 # InstallCoverageControl
 # Uncomment the line below to recompile CoverageControl (Comment the previous line)
 UpdateCoverageControl
-
