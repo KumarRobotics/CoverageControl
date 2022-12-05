@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 
+
 find_package(Eigen3 REQUIRED NO_MODULE)
 find_package(Python COMPONENTS Interpreter Development)
 find_package(pybind11 REQUIRED)
@@ -20,10 +21,10 @@ find_package(CGAL REQUIRED)
 ## CoverageControl library ##
 #############################
 
-add_library(CoverageControl SHARED src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
+add_library(CoverageControl STATIC src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
-set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native)
+set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 
 install(TARGETS CoverageControl EXPORT CoverageControl-targets
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
