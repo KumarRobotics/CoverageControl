@@ -153,5 +153,5 @@ if __name__ == '__main__':
     origin = {'lat': 39.945827951386065, 'lon': -75.2047706396303} # UPenn
     # origin = {'lat': 40.74050005471615, 'lon': -74.1759877275644}# New York
 
-    semantic_data_filename = 'semantic_data.geojson'
+    semantic_data_filename = 'leaflet_geojson_viz/data/semantic_data.json'
     OverpassOSMQuery(params, origin, semantic_data_filename)
