@@ -68,9 +68,10 @@ namespace CoverageControl {
 				world_idf_.GenerateMapCuda();
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 
+				std::uniform_real_distribution<> robot_pos_dist (0, 100 * params_.pResolution);
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
-					Point2 start_pos(distrib_pts_(gen_), distrib_pts_(gen_));
+					Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));
 					robots_.push_back(RobotModel(params_, start_pos, world_idf_));
 				}
 				num_robots_ = robots_.size();

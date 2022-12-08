@@ -25,10 +25,10 @@ int main(int argc, char** argv) {
 	std::string map_filename = "data/oracle_map";
 	std::string gnuplot_script = "src/CoverageControl/scripts/gnuplot/plot_map.gp";
 
-	bool plot_map = false;
-	bool write_data = true;
+	bool plot_map = true;
+	bool write_data = false;
 	auto start = std::chrono::steady_clock::now();
-	for(int iNum = 0; iNum < 500; ++iNum) {
+	for(int iNum = 0; iNum < 1; ++iNum) {
 		std::string data_filename = "data/cnn_data.ssv";
 		std::ofstream out_file(data_filename);
 		if(!out_file) {
@@ -70,15 +70,18 @@ int main(int argc, char** argv) {
 			}
 		}
 		out_file.close();
-		std::stringstream ss;
-		ss << std::setw(4) << std::setfill('0') << iNum;
-		std::string s = ss.str();
-		std::string tar_command = "tar -Jcvf ";
-		tar_command += "data/cnn_data/cnn_data_" + s +  ".tar.xz data/cnn_data.ssv";
-		std::system(tar_command.c_str());
-    auto end = std::chrono::steady_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+		if(write_data) {
+			std::stringstream ss;
+			ss << std::setw(4) << std::setfill('0') << iNum;
+			std::string s = ss.str();
+			std::string tar_command = "tar -Jcvf ";
+			tar_command += "data/cnn_data/cnn_data_" + s +  ".tar.xz data/cnn_data.ssv";
+			std::system(tar_command.c_str());
+		}
+
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsed_seconds = end-start;
+		std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 	}
 	return 0;
 }
