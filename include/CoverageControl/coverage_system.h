@@ -68,7 +68,7 @@ namespace CoverageControl {
 				world_idf_.GenerateMapCuda();
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 
-				std::uniform_real_distribution<> robot_pos_dist (0, 100 * params_.pResolution);
+				std::uniform_real_distribution<> robot_pos_dist (0, params_.pRobotInitDist);
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
 					Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));
@@ -203,11 +203,13 @@ namespace CoverageControl {
 			MapType const& GetCommunicationMap(size_t const id) {
 				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				auto robot_neighbors_pos = GetRobotsInCommunication(id);
-				Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
+				std::cout << "Num neigh: " << robot_neighbors_pos.size() << std::endl;
+				double comm_scale = (params_.pCommunicationRange * 2.) / params_.pLocalMapSize;
+				Point2 map_translation(params_.pLocalMapSize * comm_scale * params_.pResolution/2., params_.pLocalMapSize * comm_scale * params_.pResolution/2.);
 				for(Point2 const& relative_pos:robot_neighbors_pos) {
 					Point2 map_pos = relative_pos + map_translation;
 					int pos_idx, pos_idy;
-					MapUtils::GetClosestGridCoordinate(params_.pResolution, map_pos, pos_idx, pos_idy);
+					MapUtils::GetClosestGridCoordinate(params_.pResolution * comm_scale, map_pos, pos_idx, pos_idy);
 					if(pos_idx < params_.pLocalMapSize and pos_idy < params_.pLocalMapSize and pos_idx >= 0 and pos_idy >= 0) {
 						communication_map_(pos_idx, pos_idy) = 1;
 					}

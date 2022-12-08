@@ -41,6 +41,7 @@ namespace CoverageControl {
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
 			int pLocalMapSize = 64;
 			double pCommunicationRange = 64; // Radius of communication (in meters)
+			double pRobotInitDist = 100; // Distance from the origin within which to initialize the position of the robots
 
 			// Set pUpdateRobotMap to false for centralized known world
 			bool pUpdateRobotMap = false;

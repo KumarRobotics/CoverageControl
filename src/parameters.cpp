@@ -16,6 +16,7 @@ namespace CoverageControl {
 		pUnknownImportance = yaml_config_["pUnknownImportance"].as<double>();
 		pLocalMapSize = yaml_config_["pLocalMapSize"].as<int>();
 		pCommunicationRange = yaml_config_["pCommunicationRange"].as<double>();
+		pRobotInitDist = yaml_config_["pRobotInitDist"].as<double>();
 		pUpdateRobotMap = yaml_config_["pUpdateRobotMap"].as<bool>();
 		pUpdateSensorView = yaml_config_["pUpdateSensorView"].as<bool>();
 		pSensorSize = yaml_config_["pSensorSize"].as<int>();

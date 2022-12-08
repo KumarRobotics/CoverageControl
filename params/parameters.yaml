@@ -14,7 +14,8 @@ pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
 pLocalMapSize: 128
 # Radius of communication (in meters)
-pCommunicationRange: 64
+pCommunicationRange: 256
+pRobotInitDist: 100 # Distance from the origin within which to initialize the position of the robots
 
 # Set pUpdateRobotMap to false for centralized known world
 pUpdateRobotMap: true

@@ -116,6 +116,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pUnknownImportance", &Parameters::pUnknownImportance)
 		.def_readonly("pLocalMapSize", &Parameters::pLocalMapSize)
 		.def_readonly("pCommunicationRange", &Parameters::pCommunicationRange)
+		.def_readonly("pRobotInitDist", &Parameters::pRobotInitDist)
 		.def_readonly("pUpdateRobotMap", &Parameters::pUpdateRobotMap)
 		.def_readonly("pUpdateSensorView", &Parameters::pUpdateSensorView)
 		.def_readonly("pSensorSize", &Parameters::pSensorSize)

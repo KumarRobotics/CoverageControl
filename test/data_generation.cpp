@@ -59,13 +59,13 @@ int main(int argc, char** argv) {
 			}
 
 			if(plot_map == true) {
-				auto oracle_map = env.GetOracleMap();
+				auto oracle_map = env.GetCommunicationMap(0);
 				std::stringstream ss;
 				ss << std::setw(4) << std::setfill('0') << i;
 				std::string s = ss.str();
 				std::string imap_name = map_filename + s;
 				MapUtils::WriteMap(oracle_map, imap_name + ".dat");
-				std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + imap_name + " 1 " + std::to_string(params.pResolution) + " " + std::to_string(params.pWorldMapSize * params.pResolution);
+				std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + imap_name + " 1 " + std::to_string(params.pResolution) + " " + std::to_string(params.pLocalMapSize * params.pResolution);
 				std::system(gnuplot_command.c_str());
 			}
 		}
