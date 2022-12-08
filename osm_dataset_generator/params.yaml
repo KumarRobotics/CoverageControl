@@ -1,0 +1,21 @@
+area_dim: 1024 # data is extracted from a square of side area_dim in meters
+
+semantic_objects:
+
+  traffic_signals: true
+
+  amenity: # https://wiki.openstreetmap.org/wiki/Key:amenity
+    - 'fuel'
+    - 'hospital'
+    - 'parking'
+
+  road_network: # https://wiki.openstreetmap.org/wiki/Key:highway
+    - 'motorway'
+    - 'motorway_link'
+    - 'trunk'
+    - 'trunk_link'
+    - 'primary'
+    - 'secondary'
+    - 'tertiary'
+    - 'unclassified'
+    - 'residential'
