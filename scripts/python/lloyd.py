@@ -59,8 +59,8 @@ plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
 plot_pos_x = np.array([])
 plot_pos_y = np.array([])
 for pos in robot_positions:
-    plot_pos_x = np.append(plot_pos_x, pos.x / params_.pResolution)
-    plot_pos_y = np.append(plot_pos_y, pos.y / params_.pResolution)
+    plot_pos_x = np.append(plot_pos_x, pos[0] / params_.pResolution)
+    plot_pos_y = np.append(plot_pos_y, pos[1] / params_.pResolution)
 
 plot_robots, = ax.plot(plot_pos_x, plot_pos_y, 'go')
 print(plot_robots)
@@ -72,14 +72,14 @@ for vcell in voronoi_cells:
     plot_pt_x = np.array([])
     plot_pt_y = np.array([])
     for pt in cell:
-        plot_pt_x = np.append(plot_pt_x, pt.x / params_.pResolution)
-        plot_pt_y = np.append(plot_pt_y, pt.y / params_.pResolution)
+        plot_pt_x = np.append(plot_pt_x, pt[0] / params_.pResolution)
+        plot_pt_y = np.append(plot_pt_y, pt[1] / params_.pResolution)
     plot_pt_x = np.append(plot_pt_x, plot_pt_x[0])
     plot_pt_y = np.append(plot_pt_y, plot_pt_y[0])
     plot_cell, = ax.plot(plot_pt_x, plot_pt_y, 'r')
     plot_cells.append(plot_cell)
-    centroid_x = np.append(centroid_x, vcell.centroid.x)
-    centroid_y = np.append(centroid_y, vcell.centroid.y)
+    centroid_x = np.append(centroid_x, vcell.centroid[0])
+    centroid_y = np.append(centroid_y, vcell.centroid[1])
 # for edge in voronoi_edges:
 #     ax.plot([edge.x1, edge.x2], [edge.y1, edge.y2], 'r')
 plot_centroids, = ax.plot(centroid_x, centroid_y, 'r+')
@@ -108,15 +108,15 @@ for step in range(0, params_.pEpisodeSteps):
     robot_positions = env.GetRobotPositions()
     local_map = env.GetRobotLocalMap(robot_id)
     sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
-    local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id].x, 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id].y, 2))
+    local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id][0], 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id][1], 2))
     for i in range(0, num_robots):
-        plot_pos_x[i] =  prev_robot_pos[i].x / params_.pResolution
-        plot_pos_y[i] =  prev_robot_pos[i].y / params_.pResolution
+        plot_pos_x[i] =  prev_robot_pos[i][0] / params_.pResolution
+        plot_pos_y[i] =  prev_robot_pos[i][1] / params_.pResolution
         plot_pt_x = np.array([])
         plot_pt_y = np.array([])
         for pt in voronoi_cells[i].cell:
-            plot_pt_x = np.append(plot_pt_x, pt.x / params_.pResolution)
-            plot_pt_y = np.append(plot_pt_y, pt.y / params_.pResolution)
+            plot_pt_x = np.append(plot_pt_x, pt[0] / params_.pResolution)
+            plot_pt_y = np.append(plot_pt_y, pt[1] / params_.pResolution)
         plot_pt_x = np.append(plot_pt_x, plot_pt_x[0])
         plot_pt_y = np.append(plot_pt_y, plot_pt_y[0])
 
@@ -124,8 +124,8 @@ for step in range(0, params_.pEpisodeSteps):
         plot_cells[i].set_ydata(plot_pt_y)
 
         # ax.plot(plot_pt_x, plot_pt_y, 'r')
-        centroid_x[i] = voronoi_cells[i].centroid.x
-        centroid_y[i] = voronoi_cells[i].centroid.y
+        centroid_x[i] = voronoi_cells[i].centroid[0]
+        centroid_y[i] = voronoi_cells[i].centroid[1]
     # plot_centroids = ax.plot(centroid_x, centroid_y, 'r+')
     prev_robot_pos = robot_positions
     plot_robots.set_xdata(plot_pos_x)

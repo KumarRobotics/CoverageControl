@@ -45,14 +45,16 @@ namespace CoverageControl {
 
 			// Constructor for general distribution
 			BivariateNormalDistribution (Point2 const &mean, Point2 const &sigma, double const rho, double const peak_val = 1) {
+				assert(rho_ < (1- kEps));
 				if(rho_ > 0) {
 					is_circular_ = false;
+					rho_ = rho;
 				} else {
 					is_circular_ = true;
+					rho_ = 0;
 				}
 				sigma_ = sigma;
 				mean_ = mean;
-				rho_ = 0;
 				peak_val_ = peak_val;
 			}
 

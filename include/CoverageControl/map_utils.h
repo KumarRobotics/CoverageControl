@@ -25,7 +25,7 @@ namespace CoverageControl {
 		}
 
 		// Compute necessary map transformations when the point is close to the boundary
-		void ComputeOffsets(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapBounds &index, MapBounds &offset) {
+		inline void ComputeOffsets(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapBounds &index, MapBounds &offset) {
 			int pos_idx = 0, pos_idy = 0;
 			GetClosestGridCoordinate(resolution, pos, pos_idx, pos_idy);
 			index.left = pos_idx - submap_size/2;
@@ -44,14 +44,14 @@ namespace CoverageControl {
 			offset.height = index.top + offset.top - (index.bottom + offset.bottom);
 		}
 
-		void GetSubMap(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapType const &map, MapType &submap) {
+		inline void GetSubMap(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapType const &map, MapType &submap) {
 			MapBounds index, offset;
 			ComputeOffsets(resolution, pos, submap_size, map_size, index, offset);
 			submap.block(offset.left, offset.bottom, offset.width, offset.height) = map.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
 		}
 
 		/** Write the world map to a file **/
-		int WriteMap(MapType const &map, std::string const &file_name) {
+		inline int WriteMap(MapType const &map, std::string const &file_name) {
 			std::ofstream file_obj(file_name);
 			if(!file_obj) {
 				std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
@@ -62,7 +62,7 @@ namespace CoverageControl {
 			return 0;
 		}
 
-		int IsPointOutsideBoundary(double const resolution, Point2 const &pos, int const sensor_size, int const boundary) {
+		inline int IsPointOutsideBoundary(double const resolution, Point2 const &pos, int const sensor_size, int const boundary) {
 			if (pos.x() <= -sensor_size * resolution/2.) { return 1; }
 			if (pos.y() <= -sensor_size * resolution/2.) { return 1; }
 			if (pos.x() >= boundary * resolution + sensor_size * resolution/2.) { return 1; }

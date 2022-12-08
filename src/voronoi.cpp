@@ -2,7 +2,7 @@
 #include <omp.h>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/cgal_config.h>
-#include <CoverageControl/voronoi_cgal.h>
+#include <CoverageControl/cgal_utilities.h>
 
 namespace CoverageControl {
 

@@ -4,8 +4,8 @@
  * TODO: Add functionalities for importance features that are expressed as rectangles, simple polygons, and circles
  **/
 
-#ifndef COVERAGECONTROL_WORLDIDF_H_
-#define COVERAGECONTROL_WORLDIDF_H_
+#ifndef _COVERAGECONTROL_WORLDIDF_H_
+#define _COVERAGECONTROL_WORLDIDF_H_
 
 #include <vector>
 #include <fstream>
@@ -25,6 +25,7 @@ namespace CoverageControl {
 	class WorldIDF {
 		private:
 			std::vector <BivariateNormalDistribution> normal_distributions_;
+			std::vector <PointVector> polygons_;
 			MapType world_map_;
 			Parameters params_;
 			double normalization_factor_ = 0;
@@ -37,6 +38,11 @@ namespace CoverageControl {
 				world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
 			}
 
+			/** Add a uniform distribution over a polygon to world IDF **/
+			void AddUniformDistributionPolygon(PointVector const &poly) {
+				polygons_.push_back(poly);
+			}
+
 			/** Add Normal distribution to world IDF **/
 			void AddNormalDistribution(BivariateNormalDistribution const &distribution) {
 				normal_distributions_.push_back(distribution);
@@ -44,7 +50,7 @@ namespace CoverageControl {
 
 			/** Add Normal distributions to world IDF **/
 			void AddNormalDistribution(std::vector <BivariateNormalDistribution> const &dists) {
-				normal_distributions_.reserve(dists.size());
+				normal_distributions_.reserve(normal_distributions_.size() + dists.size());
 				for(auto const &dist:dists) {
 					normal_distributions_.push_back(dist);
 				}
@@ -95,7 +101,8 @@ namespace CoverageControl {
 				int num_dists = normal_distributions_.size();
 				/* std::cout << "num_dists: " << num_dists << std::endl; */
 
-				BND_Cuda *host_dists = (BND_Cuda*) malloc(num_dists * sizeof(BND_Cuda));
+				/* BND_Cuda *host_dists = (BND_Cuda*) malloc(num_dists * sizeof(BND_Cuda)); */
+				BND_Cuda *host_dists = new BND_Cuda[num_dists];
 
 				for(int i = 0; i < num_dists; ++i) {
 					auto mean = normal_distributions_[i].GetMean();
@@ -107,12 +114,43 @@ namespace CoverageControl {
 					host_dists[i].rho = (float)(normal_distributions_[i].GetRho());
 					host_dists[i].scale = (float)(normal_distributions_[i].GetScale());
 				}
+				
+				int sz = 0;
+				for (auto const &poly:polygons_) {
+					sz += poly.size();
+				}
 
-				float max = 0;
-				generate_world_map_cuda(host_dists, num_dists, map_size, resolution, truncation, params_.pNorm, world_map_.data(), max);
+				Polygons_Cuda host_polygons;
+				for (auto const &poly:polygons_) {
+					sz += poly.size();
+				}
+				host_polygons.x = new float[sz];
+				host_polygons.y = new float[sz];
+				host_polygons.sz = new int[polygons_.size()];
+				host_polygons.num_pts = sz;
+				host_polygons.num_polygons = polygons_.size();
+				int pt_count = 0, poly_count = 0;;
+				for (auto const &poly:polygons_) {
+					for(auto const &pt:poly) {
+						assert(pt_count < sz);
+						host_polygons.x[pt_count] = pt.x();
+						host_polygons.y[pt_count] = pt.y();
+						++pt_count;
+					}
+					host_polygons.sz[poly_count] = poly.size();
+					++poly_count;
+				}
+
+				float f_norm = 0;
+				generate_world_map_cuda(host_dists, host_polygons, num_dists, map_size, resolution, truncation, params_.pNorm, world_map_.data(), f_norm);
+				normalization_factor_ = static_cast<double>(f_norm);
 				/* GenerateMap(); */
-				normalization_factor_ = params_.pNorm / max;
-				free(host_dists);
+				/* normalization_factor_ = params_.pNorm / max; */
+				/* free(host_dists); */
+				delete [] host_dists;
+				delete [] host_polygons.x;
+				delete [] host_polygons.y;
+				delete [] host_polygons.sz;
 			}
 
 			/** Write the world map to a file **/

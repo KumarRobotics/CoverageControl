@@ -61,10 +61,10 @@ target_include_directories(data_generation PRIVATE ${PROJECT_SOURCE_DIR}/include
 target_link_libraries(data_generation PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
 install(TARGETS data_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-# add_executable(oracle ${PROJECT_SOURCE_DIR}/test/oracle.cpp)
-# target_include_directories(oracle PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-# target_link_libraries(oracle PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
-# install(TARGETS oracle DESTINATION ${CMAKE_INSTALL_BINDIR})
+add_executable(oracle ${PROJECT_SOURCE_DIR}/test/oracle.cpp)
+target_include_directories(oracle PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(oracle PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
+install(TARGETS oracle DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
 # target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)

@@ -106,7 +106,7 @@ dist2 = BND(mean, sigma, peak_val) # circular gaussian
 
 mean3 = Point2(500, 10)
 sigma_skewed = Point2(1, 2)
-rho = 2
+rho = 0.5
 dist3 = BND(mean3, sigma_skewed, rho, peak_val) # general BND
 
 ##############

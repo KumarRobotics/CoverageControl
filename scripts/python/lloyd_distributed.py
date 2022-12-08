@@ -48,8 +48,8 @@ plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
 plot_pos_x = np.array([])
 plot_pos_y = np.array([])
 for pos in robot_positions:
-    plot_pos_x = np.append(plot_pos_x, pos.x / params_.pResolution)
-    plot_pos_y = np.append(plot_pos_y, pos.y / params_.pResolution)
+    plot_pos_x = np.append(plot_pos_x, pos[0] / params_.pResolution)
+    plot_pos_y = np.append(plot_pos_y, pos[1] / params_.pResolution)
 
 plot_robots, = ax.plot(plot_pos_x, plot_pos_y, 'go')
 
@@ -68,10 +68,10 @@ for step in range(0, round(params_.pEpisodeSteps/batch)):
     robot_positions = env.GetRobotPositions()
     local_map = env.GetRobotLocalMap(robot_id)
     sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
-    local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id].x, 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id].y, 2))
+    local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id][0], 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id][1], 2))
     for i in range(0, num_robots):
-        plot_pos_x[i] =  prev_robot_pos[i].x / params_.pResolution
-        plot_pos_y[i] =  prev_robot_pos[i].y / params_.pResolution
+        plot_pos_x[i] =  prev_robot_pos[i][0] / params_.pResolution
+        plot_pos_y[i] =  prev_robot_pos[i][1] / params_.pResolution
 
     prev_robot_pos = robot_positions
     plot_robots.set_xdata(plot_pos_x)

@@ -1,3 +1,6 @@
+#ifndef _COVERAGECONTROL_CGAL_UTILITIES_H_
+#define _COVERAGECONTROL_CGAL_UTILITIES_H_
+
 #include <list>
 #include <omp.h>
 #include <CoverageControl/typedefs.h>
@@ -21,7 +24,7 @@ namespace CoverageControl {
 	};
 
 	template<class Arrangement>
-		void CGAL_CCBTraversal (typename Arrangement::Ccb_halfedge_const_circulator circ, Polygon_2 &polygon) {
+	inline void CGAL_CCBTraversal (typename Arrangement::Ccb_halfedge_const_circulator circ, Polygon_2 &polygon) {
 			polygon.clear();
 			typename Arrangement::Ccb_halfedge_const_circulator curr = circ;
 			typename Arrangement::Halfedge_const_handle he;
@@ -33,7 +36,7 @@ namespace CoverageControl {
 		}
 
 	template<class Arrangement>
-		void CGAL_GeneratePolygons (const Arrangement& arr, std::list <Polygon_2> &polygon_list) {
+	inline void CGAL_GeneratePolygons (const Arrangement& arr, std::list <Polygon_2> &polygon_list) {
 			/* CGAL_precondition (arr.is_valid()); */
 			typename Arrangement::Face_const_iterator    fit;
 			for (fit = arr.faces_begin(); fit != arr.faces_end(); ++fit) {
@@ -55,7 +58,7 @@ namespace CoverageControl {
 		return true;
 	}
 
-	void PrunePolygons(std::list <Polygon_2> &polygon_list, int const &map_size) {
+	inline void PrunePolygons(std::list <Polygon_2> &polygon_list, int const &map_size) {
 		Polygon_2 bbox_poly;
 		bbox_poly.push_back(CGAL_Point2(0, 0));
 		bbox_poly.push_back(CGAL_Point2(map_size, 0));
@@ -68,3 +71,4 @@ namespace CoverageControl {
 	}
 
 } /* namespace CoverageControl */
+#endif /* _COVERAGECONTROL_CGAL_UTILITIES_H_ */

@@ -9,7 +9,7 @@ import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
-    ax = sns.heatmap(map.transpose(), vmax=255, cmap=colormap, square=True)
+    ax = sns.heatmap(map.transpose(), vmax=1, cmap=colormap, square=True)
     ax.invert_yaxis()
     nrow, ncol = map.shape
     if(nrow > 50 and nrow < 500):
@@ -28,7 +28,7 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters('parameters.yaml')
+params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
 
 ############
 ## Point2 ##
@@ -36,9 +36,9 @@ params_ = pyCoverageControl.Parameters('parameters.yaml')
 # Point2 has two atrributes x and y
 pt = Point2(0,0) # Needs two arguments for x and y
 print(pt)
-pt.x = 5
-pt.y = 10
-print(pt.x)
+pt[0] = 5
+pt[1] = 10
+print(pt[0])
 
 point_list = PointVector()
 point_list.append(pt)
@@ -58,7 +58,7 @@ dist2 = BND(mean, sigma, peak_val) # circular gaussian
 
 mean3 = Point2(900,100)
 sigma_skewed = Point2(2, 3)
-rho = 2
+rho = 0.5
 dist3 = BND(mean3, sigma_skewed, rho, peak_val) # general BND
 
 ##############
@@ -68,11 +68,11 @@ from pyCoverageControl import WorldIDF # for defining world idf
 world_idf = WorldIDF(params_)
 world_idf.AddNormalDistribution(dist1); # Add a distribution to the idf
 world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
-world_idf.AddNormalDistribution(dist3); # Add a distribution to the idf
+# world_idf.AddNormalDistribution(dist3); # Add a distribution to the idf
 print("Calling CUDA")
 world_idf.GenerateMapCuda() # Generate map, use GenerateMap() for cpu version
 world_idf.PrintMapSize()
-# world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
+world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
 map = world_idf.GetWorldMap(); # Get the world map as numpy nd-array. You can only "view", i.e., flags.writeable = False, flags.owndata = False
 normalization_factor = world_idf.GetNormalizationFactor();
 print(map.dtype)

@@ -58,6 +58,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::class_<WorldIDF>(m, "WorldIDF")
 		.def(py::init<Parameters const &>())
+		.def("AddUniformDistributionPolygon", &WorldIDF::AddUniformDistributionPolygon)
 		.def("AddNormalDistribution", py::overload_cast<BivariateNormalDistribution const &>(&WorldIDF::AddNormalDistribution))
 		.def("AddNormalDistribution", py::overload_cast<BNDVector const &>(&WorldIDF::AddNormalDistribution))
 		.def("GenerateMap", &WorldIDF::GenerateMap)

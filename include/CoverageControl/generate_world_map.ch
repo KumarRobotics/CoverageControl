@@ -15,7 +15,15 @@ struct BND_Cuda {
 	float scale, rho;
 };
 
-void generate_world_map_cuda(BND_Cuda *host_dists, int num_dists, int map_size, float resolution, float truncation, float const, float *importance_vec, float &);
+struct Polygons_Cuda {
+	float *x;
+	float *y;
+	int *sz;
+	int num_pts;
+	int num_polygons;
+};
+
+void generate_world_map_cuda(BND_Cuda *, Polygons_Cuda const &, int const, int const, float const, float const, float const, float *importance_vec, float &);
 
 #endif /* COVERAGECONTROL_GENERATE_WORLD_MAP_H_ */
 

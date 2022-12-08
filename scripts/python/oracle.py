@@ -49,8 +49,8 @@ plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
 plot_pos_x = np.array([])
 plot_pos_y = np.array([])
 for pos in robot_positions:
-    plot_pos_x = np.append(plot_pos_x, pos.x / params_.pResolution)
-    plot_pos_y = np.append(plot_pos_y, pos.y / params_.pResolution)
+    plot_pos_x = np.append(plot_pos_x, pos[0] / params_.pResolution)
+    plot_pos_y = np.append(plot_pos_y, pos[1] / params_.pResolution)
 
 plot_robots, = ax.plot(plot_pos_x, plot_pos_y, 'go')
 
@@ -73,8 +73,8 @@ for step in range(0, round(params_.pEpisodeSteps/batch)):
     sns.heatmap(ax=local_ax,data=oracle_map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
     local_ax.set_title("Oracle Map")
     for i in range(0, num_robots):
-        plot_pos_x[i] =  prev_robot_pos[i].x / params_.pResolution
-        plot_pos_y[i] =  prev_robot_pos[i].y / params_.pResolution
+        plot_pos_x[i] =  prev_robot_pos[i][0] / params_.pResolution
+        plot_pos_y[i] =  prev_robot_pos[i][1] / params_.pResolution
 
     prev_robot_pos = robot_positions
     plot_oracle_robots.set_xdata(plot_pos_x)
