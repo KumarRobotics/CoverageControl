@@ -27,9 +27,9 @@ robot_id = 0
 # So for an environment, we take num_steps=10 for pEpisodeSteps/num_steps times. So we will end up with a dataset of num_robots * pEpisodeSteps/num_steps unique data
 
 def write_npz(iRobot):
-    np.savez_compressed('../../data/cnn_data/data_' + f'{(iData * 200 + iter * 20 + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
+    np.savez_compressed('../../data/cnn_data_scaled/data_' + f'{(count * num_robots + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
 
-while count < 1000000:
+while count < 50000:
     num_steps = 10
     print(str(count))
     env = CoverageSystem(params_, num_gaussians, num_robots)
@@ -41,6 +41,6 @@ while count < 1000000:
         # positions = env.GetRobotPositions()
         pool = Pool(num_robots)
         pool.map(write_npz, range(0, num_robots))
-        count = count + num_robots
-        if count >= 999999:
+        count = count + 1
+        if count * num_robots >= 999999:
             break

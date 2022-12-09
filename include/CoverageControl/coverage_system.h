@@ -203,7 +203,7 @@ namespace CoverageControl {
 			MapType const& GetCommunicationMap(size_t const id) {
 				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				auto robot_neighbors_pos = GetRobotsInCommunication(id);
-				std::cout << "Num neigh: " << robot_neighbors_pos.size() << std::endl;
+				/* std::cout << "Num neigh: " << robot_neighbors_pos.size() << std::endl; */
 				double comm_scale = (params_.pCommunicationRange * 2.) / params_.pLocalMapSize;
 				Point2 map_translation(params_.pLocalMapSize * comm_scale * params_.pResolution/2., params_.pLocalMapSize * comm_scale * params_.pResolution/2.);
 				for(Point2 const& relative_pos:robot_neighbors_pos) {
