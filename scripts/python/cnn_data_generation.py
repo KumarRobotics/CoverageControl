@@ -12,8 +12,8 @@ params_ = pyCoverageControl.Parameters('params/parameters.yaml')
 
 num_gaussians = 100
 num_robots = 20
-env = CoverageSystem(params_, num_gaussians, num_robots)
 
+count = 0
 robot_id = 0
 
 # We use the function StepDataGenerationLocal to drive the robots around in the world
@@ -29,14 +29,18 @@ robot_id = 0
 def write_npz(iRobot):
     np.savez_compressed('../../data/cnn_data/data_' + f'{(iData * 200 + iter * 20 + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
 
-for iData in range(0, 500):
+while count < 1000000:
     num_steps = 10
-    print(iData)
+    print(str(count))
+    env = CoverageSystem(params_, num_gaussians, num_robots)
     for iter in range(0, round(params_.pEpisodeSteps/num_steps)):
         # returns true if the robots have converged
         cont_flag = env.StepDataGenerationLocal(num_steps)
         if(not cont_flag):
             break
-        positions = env.GetRobotPositions()
-        pool = Pool()
+        # positions = env.GetRobotPositions()
+        pool = Pool(num_robots)
         pool.map(write_npz, range(0, num_robots))
+        count = count + num_robots
+        if count >= 999999:
+            break
