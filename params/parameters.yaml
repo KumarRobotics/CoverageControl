@@ -9,6 +9,7 @@ pWorldMapSize: 1024
 # Could make it sparse if size becomes a problem
 pRobotMapSize: 1024
 pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
+pRobotMapUseUnknownImportance: false
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
@@ -20,6 +21,7 @@ pRobotInitDist: 100 # Distance from the origin within which to initialize the po
 # Set pUpdateRobotMap to false for centralized known world
 pUpdateRobotMap: true
 pUpdateSensorView: true
+pUpdateExplorationMap: true
 
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize

@@ -5,6 +5,19 @@ INSTALL_DIR=${WORKSPACE_DIR}/install
 
 mkdir -p ${WORKSPACE_DIR}/src
 
+InstallCGAL () {
+	echo "Setting up CGAL"
+	wget https://github.com/CGAL/cgal/releases/download/v5.5.1/CGAL-5.5.1-library.tar.xz -P ${WORKSPACE_DIR}/src
+	tar -xf ${WORKSPACE_DIR}/src/CGAL-5.5.1-library.tar.xz -C ${WORKSPACE_DIR}/src/
+	cmake -S ${WORKSPACE_DIR}/src/CGAL-5.5.1 -B ${BUILD_DIR}/cgal -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	cmake --install ${BUILD_DIR}/cgal
+	if [ $? -eq 0 ]; then
+		echo "cgal install succeeded"
+	else
+		echo "cgal install failed"
+		exit 1
+	fi
+}
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
@@ -77,6 +90,7 @@ UpdateCoverageControl () {
 	cmake --build ${BUILD_DIR}/CoverageControl
 	if [ $? -ne 0 ]; then
 		echo "CoverageControl build failed"
+		exit 1
 	fi
 	cmake --install ${BUILD_DIR}/CoverageControl
 	if [ $? -ne 0 ]; then
@@ -88,6 +102,7 @@ UpdateCoverageControl () {
 # InstallPybind11
 # InstallYamlCPP
 # InstallEigen3
+# InstallCGAL
 # InstallCoverageControl
 # Uncomment the line below to recompile CoverageControl (Comment the previous line)
 UpdateCoverageControl

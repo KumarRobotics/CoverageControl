@@ -78,6 +78,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotMap", &RobotModel::GetRobotMap, py::return_value_policy::reference_internal)
 		.def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap, py::return_value_policy::reference_internal)
 		.def("GetSensorView", &RobotModel::GetSensorView, py::return_value_policy::reference_internal)
+		.def("GetExplorationMap", &RobotModel::GetExplorationMap, py::return_value_policy::reference_internal)
 		;
 
 	py::class_<CoverageSystem>(m, "CoverageSystem")
@@ -104,6 +105,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetVoronoiCell", &CoverageSystem::GetVoronoiCell, py::return_value_policy::copy)
 		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
 		.def("GetRobotObstacleMap", &CoverageSystem::GetRobotObstacleMap, py::return_value_policy::copy)
+		.def("GetRobotExplorationMap", &CoverageSystem::GetRobotExplorationMap, py::return_value_policy::reference_internal)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

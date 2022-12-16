@@ -36,6 +36,7 @@ namespace CoverageControl {
 			// Could make it sparse if size becomes a problem
 			int pRobotMapSize = pWorldMapSize;
 			double pUnknownImportance = 0.01;
+			bool pRobotMapUseUnknownImportance = false;
 
 			// Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
@@ -45,6 +46,7 @@ namespace CoverageControl {
 
 			// Set pUpdateRobotMap to false for centralized known world
 			bool pUpdateRobotMap = false;
+			bool pUpdateExplorationMap = false;
 			bool pUpdateSensorView = false;
 
 			// Assuming square sensor FOV.

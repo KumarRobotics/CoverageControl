@@ -34,6 +34,7 @@ namespace CoverageControl {
 			MapType sensor_view_; // Stores the current sensor view of the robot
 			MapType local_map_; // Stores the local map of the robot
 			MapType obstacle_map_; // Stores the obstacle map
+			MapTypeBool local_exploration_map_; // Binary map: true for unexplored locations
 			MapTypeBool exploration_map_; // Binary map: true for unexplored locations
 			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
 
@@ -52,6 +53,15 @@ namespace CoverageControl {
 				robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = sensor_view_.block(offset.left, offset.bottom, offset.width, offset.height);
 			}
 
+			void UpdateExplorationMap() {
+				if(MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize)) {
+					return;
+				}
+				MapUtils::MapBounds index, offset;
+				MapUtils::ComputeOffsets(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize, index, offset);
+				exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapTypeBool::Zero(params_.pSensorSize, params_.pSensorSize);
+			}
+
 		public:
 
 			// Constructor: requires global_start_position_ and world_idf_
@@ -63,10 +73,10 @@ namespace CoverageControl {
 				sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				obstacle_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
-				if(params_.RobotMapUnknownImportance == true) {
+				if(params_.pRobotMapUseUnknownImportance == true) {
 					robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
 				} else {
-					robot_map_ = MapType::Zero(params_.pRobotMapSize, params_.pRobotMapSize);
+					robot_map_ = MapType::Ones(params_.pRobotMapSize, params_.pRobotMapSize);
 				}
 
 				local_start_position_ = Point2{0,0};
@@ -74,6 +84,7 @@ namespace CoverageControl {
 
 				if(params_.pUpdateExplorationMap == true) {
 					exploration_map_ = MapTypeBool::Constant(params_.pRobotMapSize, params_.pRobotMapSize, true);
+					local_exploration_map_ = MapTypeBool::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 					UpdateExplorationMap();
 				}
 				if(params_.pUpdateSensorView == true) {
@@ -127,6 +138,9 @@ namespace CoverageControl {
 				if(params_.pUpdateRobotMap == true) {
 					UpdateRobotMap();
 				}
+				if(params_.pUpdateExplorationMap == true) {
+					UpdateExplorationMap();
+				}
 			}
 
 			Point2 GetGlobalStartPosition() const { return global_start_position_; }
@@ -141,6 +155,14 @@ namespace CoverageControl {
 					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, robot_map_, local_map_);
 				}
 				return local_map_;
+			}
+
+			const MapTypeBool& GetExplorationMap() {
+				local_exploration_map_ = MapTypeBool::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
+					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, exploration_map_, local_exploration_map_);
+				}
+				return local_exploration_map_;
 			}
 
 			const MapType& GetObstacleMap() {
