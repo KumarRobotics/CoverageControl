@@ -158,7 +158,7 @@ namespace CoverageControl {
 			}
 
 			const MapTypeBool& GetExplorationMap() {
-				local_exploration_map_ = MapTypeBool::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				local_exploration_map_ = MapTypeBool::Constant(params_.pLocalMapSize, params_.pLocalMapSize, true);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
 					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, exploration_map_, local_exploration_map_);
 				}

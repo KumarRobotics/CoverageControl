@@ -13,7 +13,7 @@ pRobotMapUseUnknownImportance: false
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
-pLocalMapSize: 256
+pLocalMapSize: 512
 # Radius of communication (in meters)
 pCommunicationRange: 256
 pRobotInitDist: 100 # Distance from the origin within which to initialize the position of the robots
