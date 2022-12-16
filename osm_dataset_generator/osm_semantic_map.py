@@ -121,9 +121,10 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
         traffic_signal_query = 'node[highway~"^(traffic_signals)$"]' + bounds_str + out_str
         traffic_signals = overpass.query(traffic_signal_query)
 
-    for node in traffic_signals.nodes():
-        feature = geojson.Feature(geometry=geojson.Point((node.lon(), node.lat())), id=node.id(), properties={"type": "traffic_signal", "osmtype": "node"})
-        feature_collection.features.append(feature)
+    if traffic_signals.nodes():
+        for node in traffic_signals.nodes():
+            feature = geojson.Feature(geometry=geojson.Point((node.lon(), node.lat())), id=node.id(), properties={"type": "traffic_signal", "osmtype": "node"})
+            feature_collection.features.append(feature)
 
     for relation in amenity.relations():
         geom = relation.geometry()
@@ -150,8 +151,9 @@ if __name__ == '__main__':
     with open(params_filename, 'r') as file:
         params = yaml.safe_load(file)
 
-    origin = {'lat': 39.945827951386065, 'lon': -75.2047706396303} # UPenn
-    # origin = {'lat': 40.74050005471615, 'lon': -74.1759877275644}# New York
+    # origin = {'lat': 39.945827951386065, 'lon': -75.2047706396303} # UPenn
+    origin = {'lat': 40.74050005471615, 'lon': -74.1759877275644} # New York
+    # origin = {'lat': 41.381775552849454, 'lon': -73.96846537685275} # West Point
 
     semantic_data_filename = 'leaflet_geojson_viz/data/semantic_data.json'
     OverpassOSMQuery(params, origin, semantic_data_filename)

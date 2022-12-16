@@ -166,6 +166,7 @@ namespace CoverageControl {
 			MapType const& GetOracleMap() {
 				return oracle_map_;
 			}
+
 			MapType const& GetRobotSensorView(size_t const id) {
 				if(id < num_robots_) {
 					return robots_[id].GetSensorView();

@@ -34,6 +34,7 @@ namespace CoverageControl {
 			MapType sensor_view_; // Stores the current sensor view of the robot
 			MapType local_map_; // Stores the local map of the robot
 			MapType obstacle_map_; // Stores the obstacle map
+			MapTypeBool exploration_map_; // Binary map: true for unexplored locations
 			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
 
 			// Gets the sensor data from world IDF at the global_current_position_ and updates robot_map_
@@ -44,6 +45,7 @@ namespace CoverageControl {
 				}
 				world_idf_->GetSubWorldMap(global_current_position_, params_.pSensorSize, sensor_view_);
 			}
+
 			void UpdateRobotMap() {
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize, index, offset);
@@ -61,9 +63,19 @@ namespace CoverageControl {
 				sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				obstacle_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				if(params_.RobotMapUnknownImportance == true) {
+					robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
+				} else {
+					robot_map_ = MapType::Zero(params_.pRobotMapSize, params_.pRobotMapSize);
+				}
+
 				local_start_position_ = Point2{0,0};
 				local_current_position_ = local_start_position_;
-				robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
+
+				if(params_.pUpdateExplorationMap == true) {
+					exploration_map_ = MapTypeBool::Constant(params_.pRobotMapSize, params_.pRobotMapSize, true);
+					UpdateExplorationMap();
+				}
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();
 				}
