@@ -76,7 +76,7 @@ namespace CoverageControl {
 				if(params_.pRobotMapUseUnknownImportance == true) {
 					robot_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, params_.pUnknownImportance * params_.pNorm);
 				} else {
-					robot_map_ = MapType::Ones(params_.pRobotMapSize, params_.pRobotMapSize);
+					robot_map_ = MapType::Zero(params_.pRobotMapSize, params_.pRobotMapSize);
 				}
 
 				local_start_position_ = Point2{0,0};
@@ -84,7 +84,7 @@ namespace CoverageControl {
 
 				if(params_.pUpdateExplorationMap == true) {
 					exploration_map_ = MapTypeBool::Constant(params_.pRobotMapSize, params_.pRobotMapSize, true);
-					local_exploration_map_ = MapTypeBool::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+					local_exploration_map_ = MapTypeBool::Constant(params_.pRobotMapSize, params_.pRobotMapSize, true);
 					UpdateExplorationMap();
 				}
 				if(params_.pUpdateSensorView == true) {
