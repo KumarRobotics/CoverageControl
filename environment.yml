@@ -1,0 +1,10 @@
+name: CoverageControl
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - numpy
+  - matplotlib
+  - pytz
