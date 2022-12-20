@@ -27,7 +27,8 @@ mkdir -p ${WORKSPACE_DIR}/src
 git clone git@github.com:AgarwalSaurav/CoverageControl.git ${WORKSPACE_DIR}/src/CoverageControl
 ```
 
-Install external packages:
+Install external packages:  
+Inside `${WORKSPACE_DIR}/src/CoverageControl`
 ```bash
 bash setup.sh -i
 ```
