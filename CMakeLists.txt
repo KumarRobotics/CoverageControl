@@ -51,6 +51,7 @@ pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.c
 target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
 target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
+target_compile_definitions(pyCoverageControl PRIVATE VERSION_INFO=${COVERAGECONTROL_VERSION_INFO})
 install(TARGETS pyCoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 ###########

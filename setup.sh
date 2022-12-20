@@ -99,10 +99,10 @@ UpdateCoverageControl () {
 }
 
 # Uncomment the following commands to install from source
-# InstallPybind11
-# InstallYamlCPP
-# InstallEigen3
-# InstallCGAL
+InstallPybind11
+InstallYamlCPP
+InstallEigen3
+InstallCGAL
 # InstallCoverageControl
 # Uncomment the line below to recompile CoverageControl (Comment the previous line)
-UpdateCoverageControl
+# UpdateCoverageControl
