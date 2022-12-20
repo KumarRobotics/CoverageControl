@@ -36,23 +36,23 @@ git clone git@github.com:AgarwalSaurav/CoverageControl.git ${COVERAGECONTROL_WS}
 
 Install external packages:  
 ```bash
-cd ${COVERAGECONTROL_WS}/src/CoverageControl
+cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
 bash setup.sh -i
 ```
 
 
 Install python API (can be done within `conda` environment):
 ```bash
-cd ${COVERAGECONTROL_WS}/src/CoverageControl
+cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
 pip install .
 ```
 
-Go to `CoverageControl/scripts/python` and check if the file `coverage.py` works. It contains minimal examples.
+Go to `CoverageControl/core/scripts/python` and check if the file `coverage.py` works. It contains minimal examples.
 
 ## Update
 When the backend C++ code updates:
 ```bash
-cd ${COVERAGECONTROL_WS}/src/CoverageControl
+cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
 git pull
 bash setup.sh -u
 pip install .
