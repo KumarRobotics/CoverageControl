@@ -8,8 +8,9 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 
 include(CheckCXXCompilerFlag)
+include(GNUInstallDirs)
 
-list(APPEND CMAKE_PREFIX_PATH $ENV{COVERAGECONTROL_PATH})
+list(APPEND CMAKE_PREFIX_PATH $ENV{COVERAGECONTROL_WS}/install)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -26,6 +27,21 @@ add_library(CoverageControl STATIC src/generate_world_map.cu src/parameters.cpp 
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+
+install(TARGETS CoverageControl EXPORT CoverageControl-targets
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(DIRECTORY
+	${PROJECT_SOURCE_DIR}/include/
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(TARGETS CoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(EXPORT CoverageControl-targets
+	FILE CoverageControl-targets.cmake
+	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControl")
 
 ##################################
 ## CoverageControl python binds ##
