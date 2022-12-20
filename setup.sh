@@ -19,6 +19,21 @@ InstallCGAL () {
 	fi
 }
 
+InstallGeoGraphicLib () {
+	echo "Setting up geographiclib"
+	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.1.2.tar.gz -P ${WORKSPACE_DIR}/src
+	tar -xf ${WORKSPACE_DIR}/src/v2.1.2.tar.gz -C ${WORKSPACE_DIR}/src/
+	cmake -S ${WORKSPACE_DIR}/src/geographiclib-2.1.2 -B ${BUILD_DIR}/geographiclib -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	cmake --build ${BUILD_DIR}/geographiclib
+	cmake --install ${BUILD_DIR}/geographiclib
+	if [ $? -eq 0 ]; then
+		echo "geographiclib install succeeded"
+	else
+		echo "geographiclib install failed"
+		exit 1
+	fi
+}
+
 InstallPybind11 () {
 	echo "Setting up pybind11"
 	git clone git@github.com:pybind/pybind11.git ${WORKSPACE_DIR}/src/pybind11
@@ -99,10 +114,11 @@ UpdateCoverageControl () {
 }
 
 # Uncomment the following commands to install from source
+InstallEigen3
 InstallPybind11
 InstallYamlCPP
-InstallEigen3
 InstallCGAL
+InstallGeoGraphicLib
 # InstallCoverageControl
 # Uncomment the line below to recompile CoverageControl (Comment the previous line)
 # UpdateCoverageControl
