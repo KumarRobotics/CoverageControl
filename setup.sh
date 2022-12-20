@@ -132,7 +132,6 @@ then
 	InstallYamlCPP
 	InstallCGAL
 	InstallGeoGraphicLib
-	InstallCoverageControl
 fi
 
 if [[ ${UPDATE} ]]

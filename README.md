@@ -3,39 +3,52 @@
 Provides environment for Coverage Control problem.
 
 ## Dependencies
+System packages:
 ```bash
 - CUDA nvcc
 - Boost
 - OpenMP
 ```
 
-Helper bash functions are provided in the file `setup.sh`.
+Python packages:
+```bash
+- pip
+- numpy
+- matplotlib
+- pytz
+```
 
 ## Installation
 
-Copy the `setup.sh` file. It will clone the repository and install.   
-Workspace directory: `${HOME}/CoverageControl_ws`.  See `setup.sh` file.  
-It has installations for `pybind11` , `yaml-cpp`, and `eigen3` as well, which can be commented out if it has already been installed. See end of the file.
+Workspace directory: `${HOME}/CoverageControl_ws`. Change as necessary.
+```bash
+export WORKSPACE_DIR=${HOME}/CoverageControl_ws
+mkdir -p ${WORKSPACE_DIR}/src
+git clone git@github.com:AgarwalSaurav/CoverageControl.git ${WORKSPACE_DIR}/src/CoverageControl
+```
 
+Install external packages:
 ```bash
 bash setup.sh -i
 ```
-Add the following lines to your `.bashrc` file and then `source ~/.bashrc` so that Python can find the libraries:
+
+Add the following lines to your `.bashrc` file and then `source ~/.bashrc` or relogin:
 ```bash
-export COVERAGECONTROL_PATH="${HOME}/CoverageControl_ws/install/lib"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${HOME}/CoverageControl_ws/install/lib"
-export PYTHONPATH="${PYTHONPATH}:${HOME}/CoverageControl_ws/install/lib"
+export COVERAGECONTROL_PATH="${WORKSPACE_DIR}/install/"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${WORKSPACE_DIR}/install/lib/"
+export PYTHONPATH="${PYTHONPATH}:${WORKSPACE_DIR}/install/lib/"
 ```
 
 Install python API:
 ```bash
-pip install ${HOME}/CoverageControl_ws/src/CoverageControl
+export WORKSPACE_DIR=${HOME}/CoverageControl_ws
+pip install ${WORKSPACE_DIR}/src/CoverageControl
 ```
 
 Go to `CoverageControl/scripts/python` and check if the file `coverage.py` works. It contains minimal examples.
 
 ## Update
-Inside `${HOME}/CoverageControl_ws/src/CoverageControl`
+Inside `${WORKSPACE_DIR}/src/CoverageControl`
 
 ```bash
 bash setup.sh -u
