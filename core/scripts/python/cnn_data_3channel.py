@@ -8,7 +8,7 @@ from pyCoverageControl import PointVector # for defining list of points
 from pyCoverageControl import CoverageSystem
 from multiprocessing import Pool
 
-params_ = pyCoverageControl.Parameters('/home/saurav/CoverageControl_ws/src/CoverageControl/params/parameters.yaml')
+params_ = pyCoverageControl.Parameters('/home/saurav/CoverageControl_ws/src/CoverageControl/core/params/parameters.yaml')
 
 num_gaussians = 100
 num_robots = 20

@@ -103,7 +103,7 @@ InstallEigen3 () {
 UpdateCoverageControl () {
 	# Run the following commands to update after a change in the repository
 	# The CoverageControl repository is located in ${COVERAGECONTROL_WS}/src/CoverageControl
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/core -B ${BUILD_DIR}/CoverageControl -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/CoverageControl
 	if [ $? -ne 0 ]; then
 		echo "CoverageControl build failed"
