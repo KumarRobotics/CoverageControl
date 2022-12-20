@@ -1,4 +1,17 @@
 #!/bin/bash
+print_usage() {
+	printf "bash $0 [-u (for update)] [-i (for install)]\n"
+}
+
+while getopts 'ui' flag; do
+	case "${flag}" in
+		u) UPDATE=true;;
+		i) INSTALL=true;;
+		*) print_usage
+			exit 1 ;;
+esac
+done
+
 WORKSPACE_DIR=${HOME}/CoverageControl_ws
 BUILD_DIR=${WORKSPACE_DIR}/build
 INSTALL_DIR=${WORKSPACE_DIR}/install
@@ -36,8 +49,9 @@ InstallGeoGraphicLib () {
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
-	git clone git@github.com:pybind/pybind11.git ${WORKSPACE_DIR}/src/pybind11
-	cmake -S ${WORKSPACE_DIR}/src/pybind11 -B ${BUILD_DIR}/pybind11 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.1.tar.gz -P ${WORKSPACE_DIR}/src
+	tar -xf ${WORKSPACE_DIR}/src/v2.10.1.tar.gz -C ${WORKSPACE_DIR}/src/
+	cmake -S ${WORKSPACE_DIR}/src/pybind11-2.10.1 -B ${BUILD_DIR}/pybind11 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
 	cmake --install ${BUILD_DIR}/pybind11
 	if [ $? -eq 0 ]; then
 		echo "pybind11 install succeeded"
@@ -66,12 +80,9 @@ InstallYamlCPP () {
 
 InstallEigen3 () {
 	echo "Setting up eigen3"
-	git clone https://gitlab.com/libeigen/eigen.git ${WORKSPACE_DIR}/src/eigen3
-	cmake -S ${WORKSPACE_DIR}/src/eigen3 -B ${BUILD_DIR}/eigen3 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
-	cmake --build ${BUILD_DIR}/eigen3 -j4
-	if [ $? -ne 0 ]; then
-		echo "Eigen build failed"
-	fi
+	wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz -P ${WORKSPACE_DIR}/src
+	tar -xf ${WORKSPACE_DIR}/src/eigen-3.4.0.tar.gz -C ${WORKSPACE_DIR}/src/
+	cmake -S ${WORKSPACE_DIR}/src/eigen-3.4.0 -B ${BUILD_DIR}/eigen3 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
 	cmake --install ${BUILD_DIR}/eigen3
 	if [ $? -eq 0 ]; then
 		echo "eigen3 install succeeded"
@@ -113,12 +124,19 @@ UpdateCoverageControl () {
 	fi
 }
 
-# Uncomment the following commands to install from source
-InstallEigen3
-InstallPybind11
-InstallYamlCPP
-InstallCGAL
-InstallGeoGraphicLib
-# InstallCoverageControl
-# Uncomment the line below to recompile CoverageControl (Comment the previous line)
-# UpdateCoverageControl
+if [[ ${INSTALL} ]]
+then
+	echo "Installing all dependencies"
+	InstallEigen3
+	InstallPybind11
+	InstallYamlCPP
+	InstallCGAL
+	InstallGeoGraphicLib
+	InstallCoverageControl
+fi
+
+if [[ ${UPDATE} ]]
+then
+	echo "Updating Coverage Control"
+	UpdateCoverageControl
+fi
