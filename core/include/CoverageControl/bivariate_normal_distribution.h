@@ -4,11 +4,12 @@
  *
  **/
 
-#ifndef _COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_
-#define _COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_
+#ifndef COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_
+#define COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_
 
 #include <cmath>
 #include <iostream>
+
 #include "constants.h"
 #include "parameters.h"
 #include "typedefs.h"
@@ -82,4 +83,4 @@ namespace CoverageControl {
 	};
 
 } /* namespace CoverageControl */
-#endif /* _COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_ */
+#endif /* COVERAGECONTROL_BIVARIATENORMALDISTRIBUTION_H_ */

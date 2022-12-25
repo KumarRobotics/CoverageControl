@@ -4,8 +4,8 @@
  * TODO: Add functionalities for importance features that are expressed as rectangles, simple polygons, and circles
  **/
 
-#ifndef _COVERAGECONTROL_WORLDIDF_H_
-#define _COVERAGECONTROL_WORLDIDF_H_
+#ifndef COVERAGECONTROL_WORLDIDF_H_
+#define COVERAGECONTROL_WORLDIDF_H_
 
 #include <vector>
 #include <fstream>
@@ -173,4 +173,4 @@ namespace CoverageControl {
 	};
 
 } /* namespace CoverageControl */
-#endif /* _COVERAGECONTROL_WORLDIDF_H_ */
+#endif /* COVERAGECONTROL_WORLDIDF_H_ */

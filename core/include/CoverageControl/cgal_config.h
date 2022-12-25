@@ -1,5 +1,5 @@
-#ifndef _COVERAGECONTROL_CGAL_CONFIG_H_
-#define _COVERAGECONTROL_CGAL_CONFIG_H_
+#ifndef COVERAGECONTROL_CGAL_CONFIG_H_
+#define COVERAGECONTROL_CGAL_CONFIG_H_
 
 #include <iterator>
 #include <CGAL/Polygon_with_holes_2.h>
@@ -24,4 +24,4 @@ typedef CGAL::Arr_linear_traits_2<K> Traits_2;
 typedef CGAL::Arrangement_2<Traits_2> Arrangement_2;
 typedef CGAL::Arr_walk_along_line_point_location<Arrangement_2> CGAL_pl;
 
-#endif /* _COVERAGECONTROL_CGAL_CONFIG_H_ */
+#endif /* COVERAGECONTROL_CGAL_CONFIG_H_ */

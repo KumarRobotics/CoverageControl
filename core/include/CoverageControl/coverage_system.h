@@ -444,4 +444,4 @@ namespace CoverageControl {
 	};
 
 } /* namespace CoverageControl */
-#endif /* _COVERAGECONTROL_COVERAGE_SYSTEM_H_ */
+#endif /*_COVERAGECONTROL_COVERAGE_SYSTEM_H_ */

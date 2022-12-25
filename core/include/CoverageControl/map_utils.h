@@ -6,7 +6,7 @@
 #define COVERAGECONTROL_MAP_UTILS_H_
 
 #include <cmath>
-#include <CoverageControl/parameters.h>
+#include "parameters.h"
 
 namespace CoverageControl {
 	namespace MapUtils {

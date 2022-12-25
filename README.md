@@ -24,11 +24,11 @@ Workspace directory: `${HOME}/CoverageControl_ws`. Assumes that the directory do
 Add the following lines to your `.bashrc` file and then `source ~/.bashrc` or open a new terminal:
 ```bash
 export COVERAGECONTROL_WS="${HOME}/CoverageControl_ws/"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${COVERAGECONTROL_WS}/install/lib/"
 ```
 
 May need to add the following as well if not using `pip` to install `python` package:
 ```bash
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${COVERAGECONTROL_WS}/install/lib/"
 export PYTHONPATH="${PYTHONPATH}:${COVERAGECONTROL_WS}/install/lib/"
 ```
 

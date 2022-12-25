@@ -1,12 +1,12 @@
-#ifndef _COVERAGECONTROL_CGAL_UTILITIES_H_
-#define _COVERAGECONTROL_CGAL_UTILITIES_H_
+#ifndef COVERAGECONTROL_CGAL_UTILITIES_H_
+#define COVERAGECONTROL_CGAL_UTILITIES_H_
 
 #include <list>
 #include <omp.h>
-#include <CoverageControl/typedefs.h>
-#include <CoverageControl/cgal_config.h>
 #include <CGAL/Boolean_set_operations_2.h>
 #include <CGAL/Polygon_2_algorithms.h>
+#include "typedefs.h"
+#include "cgal_config.h"
 
 namespace CoverageControl {
 
@@ -71,4 +71,4 @@ namespace CoverageControl {
 	}
 
 } /* namespace CoverageControl */
-#endif /* _COVERAGECONTROL_CGAL_UTILITIES_H_ */
+#endif /* COVERAGECONTROL_CGAL_UTILITIES_H_ */

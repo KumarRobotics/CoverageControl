@@ -5,8 +5,8 @@
 #ifndef COVERAGECONTROL_GEOGRAPHICLIB_WRAPPER_H_
 #define COVERAGECONTROL_GEOGRAPHICLIB_WRAPPER_H_
 
-#include "typedefs.h"
 #include <GeographicLib/LocalCartesian.hpp>
+#include "typedefs.h"
 
 namespace CoverageControl {
 

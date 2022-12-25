@@ -2,15 +2,15 @@
  * Contains class for computing Voronoi cells
  **/
 
-#ifndef _COVERAGECONTROL_VORONOI_H_
-#define _COVERAGECONTROL_VORONOI_H_
+#ifndef COVERAGECONTROL_VORONOI_H_
+#define COVERAGECONTROL_VORONOI_H_
 
 #include <cmath>
 #include <utility>
 #include <iostream>
 #include <memory>
-#include <CoverageControl/constants.h>
-#include <CoverageControl/typedefs.h>
+#include "constants.h"
+#include "typedefs.h"
 
 namespace CoverageControl {
 
@@ -86,5 +86,5 @@ namespace CoverageControl {
 	};
 
 } /* namespace CoverageControl */
-#endif /* _COVERAGECONTROL_VORONOI_H_ */
+#endif /* COVERAGECONTROL_VORONOI_H_ */
 
