@@ -18,6 +18,7 @@ find_package(pybind11 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(CGAL REQUIRED)
+find_package(GeographicLib REQUIRED)
 
 #############################
 ## CoverageControl library ##
@@ -25,7 +26,7 @@ find_package(CGAL REQUIRED)
 
 add_library(CoverageControl STATIC src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
+target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES})
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 
 install(TARGETS CoverageControl EXPORT CoverageControl-targets
@@ -48,7 +49,7 @@ install(EXPORT CoverageControl-targets
 ##################################
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
 target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread)
+target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES})
 target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
 
 ###########
@@ -64,6 +65,11 @@ add_executable(oracle ${PROJECT_SOURCE_DIR}/test/oracle.cpp)
 target_include_directories(oracle PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(oracle PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
 install(TARGETS oracle DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)
+target_include_directories(geo_transforms PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(geo_transforms PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX ${GeographicLib_LIBRARIES})
+install(TARGETS geo_transforms DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
 # target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)

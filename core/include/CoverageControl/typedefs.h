@@ -15,6 +15,7 @@ namespace CoverageControl {
 		Edge(double const x1_in, double const y1_in, double const x2_in, double const y2_in) : x1{x1_in}, y1{y1_in}, x2{x2_in}, y2{y2_in} {}
 	};
 	typedef Eigen::Vector2d Point2;
+	typedef Eigen::Vector3d Point3;
 	typedef std::vector<Point2> PointVector;
 	typedef Eigen::MatrixXd MapTypeDbl;
 	typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MapType;

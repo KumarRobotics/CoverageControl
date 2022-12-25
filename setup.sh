@@ -68,7 +68,7 @@ InstallPybind11 () {
 
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
-	git clone git@github.com:jbeder/yaml-cpp.git ${COVERAGECONTROL_WS}/src/yaml-cpp
+	git clone https://github.com/jbeder/yaml-cpp.git ${COVERAGECONTROL_WS}/src/yaml-cpp
 	cmake -S ${COVERAGECONTROL_WS}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 	cmake --build ${BUILD_DIR}/yaml-cpp -j4
 	if [ $? -ne 0 ]; then

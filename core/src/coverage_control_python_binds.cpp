@@ -12,6 +12,7 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/voronoi.h>
+#include <CoverageControl/geographiclib_wrapper.h>
 
 
 using namespace CoverageControl;
@@ -133,6 +134,13 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
 		.def_readonly("pLloydNumTries", &Parameters::pLloydNumTries)
 		.def_readonly("pLloydMaxIterations", &Parameters::pLloydMaxIterations)
+		;
+
+	py::class_<GeoLocalTransform>(m, "GeoLocalTransform")
+		.def(py::init<double, double, double>())
+		.def("Reset", &GeoLocalTransform::Reset)
+		.def("Forward", &GeoLocalTransform::Forward)
+		.def("Reverse", &GeoLocalTransform::Reverse)
 		;
 
 }
