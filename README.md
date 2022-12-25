@@ -24,6 +24,9 @@ Workspace directory: `${HOME}/CoverageControl_ws`. Assumes that the directory do
 Add the following lines to your `.bashrc` file and then `source ~/.bashrc` or open a new terminal:
 ```bash
 export COVERAGECONTROL_WS="${HOME}/CoverageControl_ws/"
+```
+May need to add the following as well if not using `pip` to install `python` package:
+```bash
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${COVERAGECONTROL_WS}/install/lib/"
 export PYTHONPATH="${PYTHONPATH}:${COVERAGECONTROL_WS}/install/lib/"
 ```
@@ -34,7 +37,7 @@ mkdir -p ${COVERAGECONTROL_WS}/src
 git clone git@github.com:AgarwalSaurav/CoverageControl.git ${COVERAGECONTROL_WS}/src/CoverageControl
 ```
 
-Install external packages:  
+Install `C++` packages:  
 ```bash
 cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
 bash setup.sh -i
