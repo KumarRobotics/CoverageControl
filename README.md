@@ -25,6 +25,7 @@ Add the following lines to your `.bashrc` file and then `source ~/.bashrc` or op
 ```bash
 export COVERAGECONTROL_WS="${HOME}/CoverageControl_ws/"
 ```
+
 May need to add the following as well if not using `pip` to install `python` package:
 ```bash
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${COVERAGECONTROL_WS}/install/lib/"
@@ -39,14 +40,14 @@ git clone git@github.com:AgarwalSaurav/CoverageControl.git ${COVERAGECONTROL_WS}
 
 Install `C++` packages:  
 ```bash
-cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
+cd ${COVERAGECONTROL_WS}/src/CoverageControl/
 bash setup.sh -i
 ```
 
 
 Install python API (can be done within `conda` environment):
 ```bash
-cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
+cd ${COVERAGECONTROL_WS}/src/CoverageControl
 pip install .
 ```
 
@@ -55,8 +56,15 @@ Go to `CoverageControl/core/scripts/python` and check if the file `coverage.py` 
 ## Update
 When the backend C++ code updates:
 ```bash
-cd ${COVERAGECONTROL_WS}/src/CoverageControl/core
+cd ${COVERAGECONTROL_WS}/src/CoverageControl
 git pull
 bash setup.sh -u
 pip install .
+```
+
+
+## Uninstall
+```bash
+pip uninstall pyCoverageControl
+rm -r ${COVERAGECONTROL_WS}/
 ```

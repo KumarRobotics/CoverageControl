@@ -16,7 +16,7 @@
 using namespace CoverageControl;
 
 int main(int argc, char** argv) {
-	Parameters params("/home/saurav/CoverageControl_ws/src/CoverageControl/params/parameters.yaml");
+	Parameters params("/home/saurav/CoverageControl_ws/src/CoverageControl/core/params/parameters.yaml");
 	for(int j = 0; j < 100; ++j) {
 		CoverageSystem env(params, 100, 20);
 		std::cout << "Env created" << std::endl;
