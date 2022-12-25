@@ -25,7 +25,7 @@ namespace CoverageControl {
 	class WorldIDF {
 		private:
 			std::vector <BivariateNormalDistribution> normal_distributions_;
-			std::vector <PointVector> polygons_;
+			std::vector <PolygonFeature> polygon_features_;
 			MapType world_map_;
 			Parameters params_;
 			double normalization_factor_ = 0;
@@ -39,8 +39,8 @@ namespace CoverageControl {
 			}
 
 			/** Add a uniform distribution over a polygon to world IDF **/
-			void AddUniformDistributionPolygon(PointVector const &poly) {
-				polygons_.push_back(poly);
+			void AddUniformDistributionPolygon(PolygonFeature const &poly_feature) {
+				polygon_features_.push_back(poly_feature);
 			}
 
 			/** Add Normal distribution to world IDF **/
@@ -115,34 +115,46 @@ namespace CoverageControl {
 					host_dists[i].scale = (float)(normal_distributions_[i].GetScale());
 				}
 				
-				int sz = 0;
-				for (auto const &poly:polygons_) {
-					sz += poly.size();
+				int num_pts = 0;
+				for (auto const &poly_feature:polygon_features_) {
+					num_pts += poly_feature.size;
 				}
 
+				int num_polygons = polygon_features_.size();
 				Polygons_Cuda host_polygons;
-				for (auto const &poly:polygons_) {
-					sz += poly.size();
-				}
-				host_polygons.x = new float[sz];
-				host_polygons.y = new float[sz];
-				host_polygons.sz = new int[polygons_.size()];
-				host_polygons.num_pts = sz;
-				host_polygons.num_polygons = polygons_.size();
+				host_polygons.x = new float[num_pts];
+				host_polygons.x = new float[num_pts];
+				host_polygons.y = new float[num_pts];
+				host_polygons.imp = new float[num_polygons];
+				host_polygons.sz = new int[num_polygons];
+				host_polygons.bounds = new Bounds[num_polygons];
+				host_polygons.num_pts = num_pts;
+				host_polygons.num_polygons = num_polygons;
+
 				int pt_count = 0, poly_count = 0;;
-				for (auto const &poly:polygons_) {
-					for(auto const &pt:poly) {
-						assert(pt_count < sz);
+				for (auto const &poly_feature:polygon_features_) {
+					Bounds bounds;
+					for(auto const &pt:poly_feature.poly) {
+						assert(pt_count < num_pts);
 						host_polygons.x[pt_count] = pt.x();
 						host_polygons.y[pt_count] = pt.y();
+						if(pt.x() < bounds.xmin) { bounds.xmin = pt.x(); }
+						if(pt.y() < bounds.ymin) { bounds.ymin = pt.y(); }
+						if(pt.x() > bounds.xmax) { bounds.xmax = pt.x(); }
+						if(pt.y() > bounds.ymax) { bounds.ymax = pt.y(); }
 						++pt_count;
 					}
-					host_polygons.sz[poly_count] = poly.size();
+					std::cout << "Bounds host: " << bounds.xmin << " " << bounds.xmax << " " << bounds.ymin << " " << bounds.ymax << std::endl;
+					host_polygons.bounds[poly_count] = bounds;
+					host_polygons.imp[poly_count] = poly_feature.imp;
+					host_polygons.sz[poly_count] = poly_feature.size;
 					++poly_count;
 				}
 
 				float f_norm = 0;
+				std::cout << "Creating cuda map"<< std::endl;
 				generate_world_map_cuda(host_dists, host_polygons, num_dists, map_size, resolution, truncation, params_.pNorm, world_map_.data(), f_norm);
+				std::cout << "Done cuda map"<< std::endl;
 				normalization_factor_ = static_cast<double>(f_norm);
 				/* GenerateMap(); */
 				/* normalization_factor_ = params_.pNorm / max; */
@@ -151,6 +163,7 @@ namespace CoverageControl {
 				delete [] host_polygons.x;
 				delete [] host_polygons.y;
 				delete [] host_polygons.sz;
+				delete [] host_polygons.bounds;
 			}
 
 			/** Write the world map to a file **/

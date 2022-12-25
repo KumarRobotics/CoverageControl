@@ -16,10 +16,18 @@ namespace CoverageControl {
 	};
 	typedef Eigen::Vector2d Point2;
 	typedef Eigen::Vector3d Point3;
-	typedef std::vector<Point2> PointVector;
 	typedef Eigen::MatrixXd MapTypeDbl;
 	typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MapType;
 	typedef Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MapTypeBool;
+
+	typedef std::vector<Point2> PointVector;
+	struct PolygonFeature {
+		PointVector poly;
+		float imp = 0;
+		int size = 0;
+		PolygonFeature() {  }
+		PolygonFeature(PointVector const &p, float const i) : poly{p}, imp{i} { size = poly.size(); }
+	};
 
 } /* namespace CoverageControl */
 #endif /* COVERAGECONTROL_TYPEDEFS_H_ */

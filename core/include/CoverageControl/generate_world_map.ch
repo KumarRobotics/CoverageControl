@@ -9,18 +9,25 @@
 #include <iostream>
 #include <vector>
 
+float const kFloatMax = std::numeric_limits<float>::max();
+float const kFloatMin = std::numeric_limits<float>::min();
+
 struct BND_Cuda {
 	float mean_x, mean_y;
 	float sigma_x, sigma_y;
 	float scale, rho;
 };
 
+struct Bounds { float xmin = kFloatMax; float xmax = kFloatMin; float ymin = kFloatMax; float ymax = kFloatMin; };
+
 struct Polygons_Cuda {
-	float *x;
-	float *y;
-	int *sz;
-	int num_pts;
-	int num_polygons;
+	float *x = nullptr;
+	float *y = nullptr;
+	float *imp = nullptr;
+	int *sz = nullptr;
+	Bounds *bounds = nullptr;
+	int num_pts = 0;
+	int num_polygons = 0;
 };
 
 void generate_world_map_cuda(BND_Cuda *, Polygons_Cuda const &, int const, int const, float const, float const, float const, float *importance_vec, float &);

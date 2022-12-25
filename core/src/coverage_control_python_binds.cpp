@@ -1,4 +1,3 @@
-
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
 #include <pybind11/eigen.h>
@@ -30,7 +29,15 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
 
 	py::bind_vector<PointVector>(m, "PointVector");
-	py::bind_vector<std::vector<PointVector>>(m, "PolygonVector");
+
+	py::class_<PolygonFeature>(m, "PolygonFeature")
+		.def(py::init<>())
+		.def(py::init<PointVector const &, float const>())
+		.def_readwrite("poly", &PolygonFeature::poly)
+		.def_readwrite("imp", &PolygonFeature::imp)
+		.def_readwrite("size", &PolygonFeature::size)
+		;
+	py::bind_vector<std::vector<PolygonFeature>>(m, "PolygonVector");
 
 	py::class_<Edge>(m, "Edge")
 		.def(py::init<double const, double const, double const, double const>())

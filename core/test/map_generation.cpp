@@ -13,13 +13,14 @@ using namespace CoverageControl;
 
 int main(int argc, char** argv) {
 	std::cout << "Coverage Control" << std::endl;
+	Parameters params("/home/saurav/CoverageControl_ws/src/CoverageControl/core/params/parameters.yaml");
 	std::srand(0);
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
 	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-	std::uniform_real_distribution<> distrib(0, pWorldMapSize * pResolution);
+	std::uniform_real_distribution<> distrib(0, params.pWorldMapSize * params.pResolution);
 	std::uniform_real_distribution<> distrib_var(2,10);
 	std::ofstream dists_file("data/dists.dat");
-	WorldIDF world;
+	WorldIDF world(params);
 	for(size_t i = 0; i < 100; ++i) {
 		Point2 mean(distrib(gen), distrib(gen));
 		/* Point2 mean(i * 100, i * 100); */
@@ -29,6 +30,11 @@ int main(int argc, char** argv) {
 		BivariateNormalDistribution dist(mean, var, peak);
 		world.AddNormalDistribution(dist);
 	}
+	
+	PointVector poly{Point2(100,100), Point2(200,100), Point2(200, 25), Point2(250, 250)};
+	PolygonFeature pf{poly, 0.5};
+	world.AddUniformDistributionPolygon(pf);
+
 	/* world.GenerateMap(); */
 	world.GenerateMapCuda();
 	/* world.WriteMap("data/map.dat"); */
