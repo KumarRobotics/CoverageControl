@@ -15,6 +15,11 @@ void PolygonYMonotonePartition(PointVector const &poly, std::vector <PointVector
 		cgal_poly.push_back(Partition_traits_2::Point_2(pt.x(), pt.y()));
 	}
 
+	/* std::cout << "Is simple: " << cgal_poly.is_simple() << std::endl; */
+	/* std::cout << "Is orientation: " << cgal_poly.orientation() << std::endl; */
+	if(cgal_poly.orientation() == CGAL::CLOCKWISE) {
+		cgal_poly.reverse_orientation();
+	}
 	// Obtain partition //
 	std::list<Partition_traits_2::Polygon_2> partition_polys;
 	CGAL::y_monotone_partition_2(cgal_poly.begin(), cgal_poly.end(), std::back_inserter(partition_polys));

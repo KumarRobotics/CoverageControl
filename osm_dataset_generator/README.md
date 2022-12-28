@@ -1,4 +1,4 @@
-See the python script `osm_semantic_map.py`.  
+See the python script `generate_osm_map.py`.  
 The function OverpassOSMQuery requires a params file, an origin, and a filename to save data.  
 The origin is the bottom left corner of the bounding box.  
 The semantic data is stored in the geoJSON format.  

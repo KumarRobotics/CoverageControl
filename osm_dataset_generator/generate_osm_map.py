@@ -145,14 +145,14 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
     
 
 if __name__ == '__main__':
-    params_filename = 'params.yaml'
+    params_filename = 'semantic_objects.yaml'
     if len(sys.argv) > 1:
         params_filename = sys.argv[1]
     with open(params_filename, 'r') as file:
         params = yaml.safe_load(file)
 
-    # origin = {'lat': 39.945827951386065, 'lon': -75.2047706396303} # UPenn
-    origin = {'lat': 40.74050005471615, 'lon': -74.1759877275644} # New York
+    origin = {'lat': 39.945827951386065, 'lon': -75.2047706396303} # UPenn
+    # origin = {'lat': 40.74050005471615, 'lon': -74.1759877275644} # New York
     # origin = {'lat': 41.381775552849454, 'lon': -73.96846537685275} # West Point
 
     semantic_data_filename = 'leaflet_geojson_viz/data/semantic_data.json'
