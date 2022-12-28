@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 
+namespace CoverageControl {
 float const kFloatMax = std::numeric_limits<float>::max();
 float const kFloatMin = std::numeric_limits<float>::min();
 
@@ -20,6 +21,16 @@ struct BND_Cuda {
 
 struct Bounds { float xmin = kFloatMax; float xmax = kFloatMin; float ymin = kFloatMax; float ymax = kFloatMin; };
 
+struct Polygons_Cuda_Host {
+	std::vector <float> x;
+	std::vector <float> y;
+	std::vector <float> imp;
+	std::vector <int> sz;
+	std::vector <Bounds> bounds;
+	int num_pts = 0;
+	int num_polygons = 0;
+};
+
 struct Polygons_Cuda {
 	float *x = nullptr;
 	float *y = nullptr;
@@ -30,7 +41,8 @@ struct Polygons_Cuda {
 	int num_polygons = 0;
 };
 
-void generate_world_map_cuda(BND_Cuda *, Polygons_Cuda const &, int const, int const, float const, float const, float const, float *importance_vec, float &);
+void generate_world_map_cuda(BND_Cuda *, Polygons_Cuda_Host const &, int const, int const, float const, float const, float const, float *importance_vec, float &);
+} /* namespace CoverageControl */
 
 #endif /* COVERAGECONTROL_GENERATE_WORLD_MAP_H_ */
 

@@ -19,6 +19,7 @@
 #include "bivariate_normal_distribution.h"
 #include "generate_world_map.ch"
 #include "map_utils.h"
+#include "cgal/polygon_utils.h"
 
 namespace CoverageControl {
 
@@ -114,56 +115,36 @@ namespace CoverageControl {
 					host_dists[i].rho = (float)(normal_distributions_[i].GetRho());
 					host_dists[i].scale = (float)(normal_distributions_[i].GetScale());
 				}
-				
-				int num_pts = 0;
-				for (auto const &poly_feature:polygon_features_) {
-					num_pts += poly_feature.size;
-				}
 
-				int num_polygons = polygon_features_.size();
-				Polygons_Cuda host_polygons;
-				host_polygons.x = new float[num_pts];
-				host_polygons.x = new float[num_pts];
-				host_polygons.y = new float[num_pts];
-				host_polygons.imp = new float[num_polygons];
-				host_polygons.sz = new int[num_polygons];
-				host_polygons.bounds = new Bounds[num_polygons];
-				host_polygons.num_pts = num_pts;
-				host_polygons.num_polygons = num_polygons;
-
-				int pt_count = 0, poly_count = 0;;
+				Polygons_Cuda_Host host_polygons;
 				for (auto const &poly_feature:polygon_features_) {
-					Bounds bounds;
-					for(auto const &pt:poly_feature.poly) {
-						assert(pt_count < num_pts);
-						host_polygons.x[pt_count] = pt.x();
-						host_polygons.y[pt_count] = pt.y();
-						if(pt.x() < bounds.xmin) { bounds.xmin = pt.x(); }
-						if(pt.y() < bounds.ymin) { bounds.ymin = pt.y(); }
-						if(pt.x() > bounds.xmax) { bounds.xmax = pt.x(); }
-						if(pt.y() > bounds.ymax) { bounds.ymax = pt.y(); }
-						++pt_count;
+					std::vector <PointVector> partition_polys;
+					PolygonYMonotonePartition(poly_feature.poly, partition_polys);
+					for(auto const &poly:partition_polys) {
+						Bounds bounds;
+						for(auto const &pt:poly) {
+							float x = static_cast<float>(pt.x());
+							float y = static_cast<float>(pt.y());
+							host_polygons.x.push_back(x);
+							host_polygons.y.push_back(y);
+							if(x < bounds.xmin) { bounds.xmin = x; }
+							if(y < bounds.ymin) { bounds.ymin = y; }
+							if(x > bounds.xmax) { bounds.xmax = x; }
+							if(y > bounds.ymax) { bounds.ymax = y; }
+						}
+						host_polygons.imp.push_back(poly_feature.imp);
+						host_polygons.sz.push_back(poly.size());
+						host_polygons.bounds.push_back(bounds);
 					}
-					std::cout << "Bounds host: " << bounds.xmin << " " << bounds.xmax << " " << bounds.ymin << " " << bounds.ymax << std::endl;
-					host_polygons.bounds[poly_count] = bounds;
-					host_polygons.imp[poly_count] = poly_feature.imp;
-					host_polygons.sz[poly_count] = poly_feature.size;
-					++poly_count;
 				}
+
+				host_polygons.num_pts = host_polygons.x.size();
+				host_polygons.num_polygons = host_polygons.imp.size();
 
 				float f_norm = 0;
-				std::cout << "Creating cuda map"<< std::endl;
 				generate_world_map_cuda(host_dists, host_polygons, num_dists, map_size, resolution, truncation, params_.pNorm, world_map_.data(), f_norm);
-				std::cout << "Done cuda map"<< std::endl;
 				normalization_factor_ = static_cast<double>(f_norm);
 				/* GenerateMap(); */
-				/* normalization_factor_ = params_.pNorm / max; */
-				/* free(host_dists); */
-				delete [] host_dists;
-				delete [] host_polygons.x;
-				delete [] host_polygons.y;
-				delete [] host_polygons.sz;
-				delete [] host_polygons.bounds;
 			}
 
 			/** Write the world map to a file **/

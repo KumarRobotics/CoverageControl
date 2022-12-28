@@ -8,6 +8,8 @@
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
 #include <CGAL/Arr_walk_along_line_point_location.h>
+#include <CGAL/partition_2.h>
+#include <CGAL/Partition_traits_2.h>
 
 typedef CGAL::Exact_predicates_exact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point2;
@@ -23,5 +25,7 @@ typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;
 typedef CGAL::Arr_linear_traits_2<K> Traits_2;
 typedef CGAL::Arrangement_2<Traits_2> Arrangement_2;
 typedef CGAL::Arr_walk_along_line_point_location<Arrangement_2> CGAL_pl;
+
+typedef CGAL::Partition_traits_2<K> Partition_traits_2;
 
 #endif /* COVERAGECONTROL_CGAL_CONFIG_H_ */

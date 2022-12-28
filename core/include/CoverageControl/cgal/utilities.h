@@ -5,8 +5,8 @@
 #include <omp.h>
 #include <CGAL/Boolean_set_operations_2.h>
 #include <CGAL/Polygon_2_algorithms.h>
-#include "typedefs.h"
-#include "cgal_config.h"
+#include "../typedefs.h"
+#include "config.h"
 
 namespace CoverageControl {
 

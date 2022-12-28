@@ -24,7 +24,7 @@ find_package(GeographicLib REQUIRED)
 ## CoverageControl library ##
 #############################
 
-add_library(CoverageControl STATIC src/generate_world_map.cu src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
+add_library(CoverageControl STATIC src/generate_world_map.cu src/polygon_utils.cpp src/parameters.cpp src/voronoi.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
 target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES})
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)

@@ -1,8 +1,8 @@
 #include <list>
 #include <omp.h>
 #include <CoverageControl/voronoi.h>
-#include <CoverageControl/cgal_config.h>
-#include <CoverageControl/cgal_utilities.h>
+#include <CoverageControl/cgal/config.h>
+#include <CoverageControl/cgal/utilities.h>
 
 namespace CoverageControl {
 

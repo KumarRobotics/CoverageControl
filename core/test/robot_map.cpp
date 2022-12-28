@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 	dists_file.close();
 
 	std::string gnuplot_script = "CoverageControl/scripts/gnuplot/plot_map.gp";
-	std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + "data/map" + " " + std::to_string(world.GetMaxValue()) + " " + std::to_string(pResolution) + " " + std::to_string(pWorldMapSize * pResolution);
+	std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + "data/map" + " " + std::to_string(params.pNorm) + " " + std::to_string(pResolution) + " " + std::to_string(pWorldMapSize * pResolution);
 	std::system(gnuplot_command.c_str());
 
 	RobotModel robot(Point2(0,0), world);
@@ -52,9 +52,9 @@ int main(int argc, char** argv) {
 		std::string istr = std::to_string(i);
 		MapUtils::WriteMap(local_map, robot_map_filename + istr + ".dat");
 		MapUtils::WriteMap(sensor_view, sensor_filename + istr + ".dat");
-		gnuplot_command = "gnuplot -c " + gnuplot_script + " " + robot_map_filename + istr + " " + std::to_string(world.GetMaxValue()) + " " + std::to_string(pResolution) + " " + std::to_string(pLocalMapSize * pResolution);
+		gnuplot_command = "gnuplot -c " + gnuplot_script + " " + robot_map_filename + istr + " " + std::to_string(params.pNorm) + " " + std::to_string(pResolution) + " " + std::to_string(pLocalMapSize * pResolution);
 		std::system(gnuplot_command.c_str());
-		gnuplot_command = "gnuplot -c " + gnuplot_script + " " + sensor_filename + istr + " " + std::to_string(world.GetMaxValue()) + " " + std::to_string(pResolution) + " " + std::to_string(pSensorSize * pResolution);
+		gnuplot_command = "gnuplot -c " + gnuplot_script + " " + sensor_filename + istr + " " + std::to_string(params.pNorm) + " " + std::to_string(pResolution) + " " + std::to_string(pSensorSize * pResolution);
 		std::system(gnuplot_command.c_str());
 		robot.StepControl(Point2(sin(M_PI/4.), cos(M_PI/4.)), pMaxRobotSpeed);
 		auto robot_position = robot.GetGlobalCurrentPosition();
