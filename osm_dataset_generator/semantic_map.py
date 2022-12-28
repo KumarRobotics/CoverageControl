@@ -2,7 +2,7 @@ import numpy as np
 import math
 import pyCoverageControl # Main library
 from pyCoverageControl import BivariateNormalDistribution as BND # for defining bivariate normal distributions
-from pyCoverageControl import GeoLocalTransform as GeoTransform # for defining bivariate normal distributions
+from pyCoverageControl import GeoLocalTransform as GeoTransform
 
 import json
 import geojson
