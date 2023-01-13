@@ -40,6 +40,7 @@ namespace CoverageControl {
 			std::uniform_real_distribution<> distrib_pts_;
 			std::vector <std::vector<double>> cost_matrix_;
 			PointVector robot_global_positions_;
+			PointVector goals_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -289,29 +290,6 @@ namespace CoverageControl {
 				}
 			}
 
-			auto LloydOracle1(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res) {
-				auto sites = robot_global_positions_;
-				bool cont_flag = true;
-				Voronoi voronoi(sites, map, map_size, res);
-				std::vector<VoronoiCell> voronoi_cells = voronoi.GetVoronoiCells();
-				int iSteps = 0;
-				for(iSteps = 0; iSteps < max_iterations and cont_flag == true; ++iSteps) {
-					cont_flag = false;
-					voronoi_cells = voronoi.GetVoronoiCells();
-					for(int iSite = 0; iSite < num_sites; ++iSite) {
-						Point2 diff = voronoi_cells[iSite].centroid - voronoi_cells[iSite].site;
-						if(diff.norm() < res) {
-							continue;
-						}
-						cont_flag = true;
-						sites[iSite] = voronoi_cells[iSite].centroid;
-					}
-					voronoi.UpdateSites(sites);
-				}
-				/* std::cout << "No. of voronoi steps: " << iSteps << std::endl; */
-				return voronoi_cells;
-			}
-
 			auto LloydOracle(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res) {
 				std::vector <std::vector<VoronoiCell>> all_voronoi_cells;
 				all_voronoi_cells.resize(num_tries, std::vector<VoronoiCell>(num_sites));
@@ -362,6 +340,36 @@ namespace CoverageControl {
 
 			auto LloydOffline() {
 				return LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+			}
+
+			void OfflineOracle() {
+				voronoi_cells_ = LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+#pragma omp parallel for num_threads(num_robots_)
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					for(size_t jCentroid = 0; jCentroid < voronoi_cells_.size(); ++jCentroid) {
+						cost_matrix_[iRobot][jCentroid] = (robot_global_positions_[iRobot] - voronoi_cells_[jCentroid].centroid).norm();
+					}
+				}
+				HungarianAlgorithm HungAlgo;
+				std::vector<int> assignment;
+				HungAlgo.Solve(cost_matrix_, assignment);
+
+				goals_.reserve(num_robots_);
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					goals_[iRobot] = voronoi_cells_[assignment[iRobot]].centroid;
+				}
+			}
+
+			auto StepOfflineOracle() {
+				bool cont_flag = true;
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					cont_flag = false;
+					if((goals_[iRobot] - robot_global_positions_[iRobot]).squaredNorm() > params_.pResolution * params_.pResolution) {
+						StepRobotToPoint(iRobot, goals_[iRobot]);
+						cont_flag = true;
+					}
+				}
+				return cont_flag;
 			}
 
 			bool StepOracleN(int const num_steps) {
