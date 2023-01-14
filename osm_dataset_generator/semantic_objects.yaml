@@ -4,6 +4,9 @@ semantic_objects:
 
   traffic_signals: true
 
+  leisure:
+    - 'park'
+
   amenity: # https://wiki.openstreetmap.org/wiki/Key:amenity
     - 'fuel'
     - 'hospital'
