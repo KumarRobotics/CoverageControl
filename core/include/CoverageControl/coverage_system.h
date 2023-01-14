@@ -40,7 +40,6 @@ namespace CoverageControl {
 			std::uniform_real_distribution<> distrib_pts_;
 			std::vector <std::vector<double>> cost_matrix_;
 			PointVector robot_global_positions_;
-			PointVector goals_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -116,18 +115,27 @@ namespace CoverageControl {
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 			}
 
-			void StepControl(std::vector<Point2> const &directions, std::vector<double> speeds) {
-				if((directions.size() != num_robots_) and (speeds.size() != num_robots_)) {
-					throw std::length_error{"The size of the vectors don't match with the number of robots"};
-				}
-				for(size_t i = 0; i < num_robots_; ++i) {
-					if(robots_[i].StepControl(directions[i], speeds[i])) {
+			bool StepControl(size_t robot_id, Point2 const &direction, double const speed) {
+				if(robots_[robot_id].StepControl(direction, speed)) {
 						std::cerr << "Control incorrect\n";
-					}
-					robot_global_positions_[i] = robots_[i].GetGlobalCurrentPosition();
-
+						return 1;
 				}
+				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
+				return 0;
 			}
+
+			/* void StepControl(std::vector<Point2> const &directions, std::vector<double> speeds) { */
+			/* 	if((directions.size() != num_robots_) and (speeds.size() != num_robots_)) { */
+			/* 		throw std::length_error{"The size of the vectors don't match with the number of robots"}; */
+			/* 	} */
+			/* 	for(size_t i = 0; i < num_robots_; ++i) { */
+			/* 		if(robots_[i].StepControl(directions[i], speeds[i])) { */
+			/* 			std::cerr << "Control incorrect\n"; */
+			/* 		} */
+			/* 		robot_global_positions_[i] = robots_[i].GetGlobalCurrentPosition(); */
+
+			/* 	} */
+			/* } */
 
 			void UpdateRobotPositions(std::vector<Point2> const &positions) {
 				if(positions.size() != num_robots_) {
@@ -297,7 +305,7 @@ namespace CoverageControl {
 				obj_values.resize(num_tries, 0);
 				std::uniform_real_distribution<> distrib_pts(0, map_size * res);
 
-/* #pragma omp parallel for */
+#pragma omp parallel for
 				for(int iter = 0; iter < num_tries; ++iter) {
 					PointVector sites;
 					sites.resize(num_sites);
@@ -340,36 +348,6 @@ namespace CoverageControl {
 
 			auto LloydOffline() {
 				return LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
-			}
-
-			void OfflineOracle() {
-				voronoi_cells_ = LloydOracle(params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
-#pragma omp parallel for num_threads(num_robots_)
-				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					for(size_t jCentroid = 0; jCentroid < voronoi_cells_.size(); ++jCentroid) {
-						cost_matrix_[iRobot][jCentroid] = (robot_global_positions_[iRobot] - voronoi_cells_[jCentroid].centroid).norm();
-					}
-				}
-				HungarianAlgorithm HungAlgo;
-				std::vector<int> assignment;
-				HungAlgo.Solve(cost_matrix_, assignment);
-
-				goals_.reserve(num_robots_);
-				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					goals_[iRobot] = voronoi_cells_[assignment[iRobot]].centroid;
-				}
-			}
-
-			auto StepOfflineOracle() {
-				bool cont_flag = true;
-				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					cont_flag = false;
-					if((goals_[iRobot] - robot_global_positions_[iRobot]).squaredNorm() > params_.pResolution * params_.pResolution) {
-						StepRobotToPoint(iRobot, goals_[iRobot]);
-						cont_flag = true;
-					}
-				}
-				return cont_flag;
 			}
 
 			bool StepOracleN(int const num_steps) {

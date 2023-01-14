@@ -10,6 +10,7 @@
 #include <CoverageControl/world_idf.h>
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
+#include <CoverageControl/oracle_global_offline.h>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/geographiclib_wrapper.h>
 
@@ -114,6 +115,12 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
 		.def("GetRobotObstacleMap", &CoverageSystem::GetRobotObstacleMap, py::return_value_policy::copy)
 		.def("GetRobotExplorationMap", &CoverageSystem::GetRobotExplorationMap, py::return_value_policy::reference_internal)
+		;
+	
+	py::class_<OracleGlobalOffline>(m, "OracleGlobalOffline")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &OracleGlobalOffline::Step)
+		.def("GetActions", &OracleGlobalOffline::GetActions)
 		;
 
 	py::class_<Parameters>(m, "Parameters")

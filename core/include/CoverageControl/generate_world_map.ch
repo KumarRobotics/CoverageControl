@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <limits>
 
 namespace CoverageControl {
 float const kFloatMax = std::numeric_limits<float>::max();
