@@ -3,6 +3,7 @@ build/
 osm_dataset_generator/cache/
 osm_dataset_generator/leaflet_geojson_viz/data/
 *.egg-info/
+__pycache__
 
 # Prerequisites
 *.d
