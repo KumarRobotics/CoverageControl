@@ -21,24 +21,24 @@ robot_id = 0
 
 # Need to modify this function
 def write_npz(iRobot):
-    np.savez_compressed('../../data/gnn_data/data_' + f'{(count * num_robots + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
+    np.savez_compressed('../../../data/gnn_data/data_' + f'{(count * num_robots + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
 
-while count < 50000:
+dataset_count = 100
+while count < dataset_count:
     num_steps = 0
     env = CoverageSystem(params_, num_gaussians, num_robots)
 
     oracle = OracleGlobalOffline(params_, num_robots, env)
-    print("Init done")
 
     cont_flag = True
-    while num_steps < params_.pEpisodeSteps:
+    while num_steps < params_.pEpisodeSteps and count < dataset_count:
         cont_flag = oracle.Step()
         actions = oracle.GetActions()
+        local_features = env.GetLocalVoronoiFeatures()
         if(not cont_flag):
             break
-        # positions = env.GetRobotPositions()
+        positions = env.GetRobotPositions()
         # pool = Pool(num_robots)
         # pool.map(write_npz, range(0, num_robots))
         num_steps = num_steps + 1
-    print(str(count), str(num_steps))
-    count = count + 1
+        count = count + 1

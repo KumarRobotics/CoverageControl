@@ -30,6 +30,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
 
 	py::bind_vector<PointVector>(m, "PointVector");
+	py::bind_vector<std::vector<Point3>>(m, "Point3Vector");
 
 	py::class_<PolygonFeature>(m, "PolygonFeature")
 		.def(py::init<>())
@@ -106,14 +107,15 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::copy)
 		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
 		.def("StepLloyd", &CoverageSystem::StepLloyd)
-		.def("Lloyd", &CoverageSystem::Lloyd)
-		.def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy)
+		/* .def("Lloyd", &CoverageSystem::Lloyd) */
+		/* .def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy) */
 		.def("StepOracle", &CoverageSystem::StepOracle)
 		.def("StepOracleN", &CoverageSystem::StepOracleN)
 		.def("GetOracleMap", &CoverageSystem::GetOracleMap, py::return_value_policy::reference_internal)
 		.def("GetVoronoiCell", &CoverageSystem::GetVoronoiCell, py::return_value_policy::copy)
 		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
 		.def("GetRobotObstacleMap", &CoverageSystem::GetRobotObstacleMap, py::return_value_policy::copy)
+		.def("GetLocalVoronoiFeatures", &CoverageSystem::GetLocalVoronoiFeatures, py::return_value_policy::copy)
 		.def("GetRobotExplorationMap", &CoverageSystem::GetRobotExplorationMap, py::return_value_policy::reference_internal)
 		;
 	
@@ -121,7 +123,12 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
 		.def("Step", &OracleGlobalOffline::Step)
 		.def("GetActions", &OracleGlobalOffline::GetActions)
+		.def("ComputeGoals", &OracleGlobalOffline::ComputeGoals)
+		.def("SetGoals", &OracleGlobalOffline::SetGoals)
+		.def("GetGoals", &OracleGlobalOffline::GetGoals)
+		.def("GetVoronoiCells", &OracleGlobalOffline::GetVoronoiCells, py::return_value_policy::copy)
 		;
+
 
 	py::class_<Parameters>(m, "Parameters")
 		.def(py::init<>())
