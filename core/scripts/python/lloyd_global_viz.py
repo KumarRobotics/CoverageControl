@@ -25,10 +25,6 @@ num_robots = 20
 count = 0
 robot_id = 0
 
-# Need to modify this function
-def write_npz(iRobot):
-    np.savez_compressed('../../../data/gnn_data/data_' + f'{(count * num_robots + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
-
 num_steps = 0
 env = CoverageSystem(params_, num_gaussians, num_robots)
 

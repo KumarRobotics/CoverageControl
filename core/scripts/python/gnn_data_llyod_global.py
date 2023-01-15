@@ -20,11 +20,21 @@ count = 0
 robot_id = 0
 
 # Need to modify this function
-def write_npz(iRobot):
-    np.savez_compressed('../../../data/gnn_data/data_' + f'{(count * num_robots + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
+def write_npz():
+    local_maps = []
+    communication_maps = []
+    exploration_maps = []
+    for i in range(0, num_robots):
+        local_maps.append(env.GetRobotLocalMap(i))
+        communication_maps.append(env.GetCommunicationMap(i))
+        exploration_maps.append(env.GetRobotExplorationMap(i))
 
-dataset_count = 100
+    local_features = env.GetLocalVoronoiFeatures()
+    np.savez_compressed('../../../data/gnn_data/data_' + f'{(count):07d}' + '.npz', local_maps = local_maps, communication_maps = communication_maps, features=env.GetLocalVoronoiFeatures(), labels=oracle.GetActions())
+
+dataset_count = 1000
 while count < dataset_count:
+    print("New environment")
     num_steps = 0
     env = CoverageSystem(params_, num_gaussians, num_robots)
 
@@ -33,12 +43,14 @@ while count < dataset_count:
     cont_flag = True
     while num_steps < params_.pEpisodeSteps and count < dataset_count:
         cont_flag = oracle.Step()
-        actions = oracle.GetActions()
-        local_features = env.GetLocalVoronoiFeatures()
+        # actions = oracle.GetActions()
+        # local_features = env.GetLocalVoronoiFeatures()
         if(not cont_flag):
             break
         positions = env.GetRobotPositions()
         # pool = Pool(num_robots)
         # pool.map(write_npz, range(0, num_robots))
+        write_npz()
         num_steps = num_steps + 1
         count = count + 1
+        print(str(count))
