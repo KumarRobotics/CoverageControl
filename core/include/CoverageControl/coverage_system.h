@@ -237,7 +237,8 @@ namespace CoverageControl {
 			}
 
 			void ComputeVoronoiCells() {
-				voronoi_ = Voronoi(robot_global_positions_, world_idf_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution);
+				GetRobotPositions();
+				voronoi_ = Voronoi(robot_global_positions_, GetWorldIDF(), params_.pWorldMapSize, params_.pResolution);
 				voronoi_cells_ = voronoi_.GetVoronoiCells();
 			}
 
@@ -364,6 +365,15 @@ namespace CoverageControl {
 					/* std::cout << centroid.x() << " " << centroid.y() << std::endl; */
 				}
 				return cont_flag;
+			}
+
+			auto GetObjectiveValue() {
+				ComputeVoronoiCells();
+				double obj = 0;
+				for(auto const &vcell:voronoi_cells_) {
+					obj += vcell.obj;
+				}
+				return obj;
 			}
 
 			auto GetLocalVoronoiFeatures() {

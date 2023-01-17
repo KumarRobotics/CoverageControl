@@ -117,6 +117,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotObstacleMap", &CoverageSystem::GetRobotObstacleMap, py::return_value_policy::copy)
 		.def("GetLocalVoronoiFeatures", &CoverageSystem::GetLocalVoronoiFeatures, py::return_value_policy::copy)
 		.def("GetRobotExplorationMap", &CoverageSystem::GetRobotExplorationMap, py::return_value_policy::reference_internal)
+		.def("GetObjectiveValue", &CoverageSystem::GetObjectiveValue)
 		;
 	
 	py::class_<OracleGlobalOffline>(m, "OracleGlobalOffline")

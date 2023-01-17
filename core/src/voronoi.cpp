@@ -182,8 +182,8 @@ namespace CoverageControl {
 		if(compute_single_ == true) {
 			auto pt = CGAL_sites[robot_id_];
 			Polygon_2 polygon;
-			auto obj = cgal_pl.locate(pt);
-			auto f = boost::get<Arrangement_2::Face_const_handle>(&obj);
+			auto pt_obj = cgal_pl.locate(pt);
+			auto f = boost::get<Arrangement_2::Face_const_handle>(&pt_obj);
 			CGAL_CCBTraversal<Arrangement_2> ((*f)->outer_ccb(), polygon);
 			if(not polygon.is_counterclockwise_oriented()) {
 				polygon.reverse_orientation();
@@ -207,8 +207,8 @@ namespace CoverageControl {
 #pragma omp parallel for num_threads(num_sites_)
 		for(int iSite = 0; iSite < num_sites_; ++iSite) {
 			auto pt = CGAL_sites[iSite];
-			auto obj = cgal_pl.locate(pt);
-			auto* f = boost::get<Arrangement_2::Face_const_handle>(&obj);
+			auto pt_obj = cgal_pl.locate(pt);
+			auto* f = boost::get<Arrangement_2::Face_const_handle>(&pt_obj);
 			if(not f) {
 				throw std::runtime_error{"Could not find a face for the robot"};
 			}
