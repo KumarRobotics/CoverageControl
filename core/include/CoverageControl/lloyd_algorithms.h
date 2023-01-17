@@ -32,7 +32,7 @@ namespace CoverageControl {
 		obj_values.resize(num_tries, 0);
 		std::uniform_real_distribution<> distrib_pts(0, map_size * res);
 
-/* #pragma omp parallel for */
+#pragma omp parallel for
 		for(int iter = 0; iter < num_tries; ++iter) {
 			PointVector sites;
 			sites.resize(num_sites);

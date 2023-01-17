@@ -369,11 +369,7 @@ namespace CoverageControl {
 
 			auto GetObjectiveValue() {
 				ComputeVoronoiCells();
-				double obj = 0;
-				for(auto const &vcell:voronoi_cells_) {
-					obj += vcell.obj;
-				}
-				return obj;
+				return voronoi_.GetObjValue();
 			}
 
 			auto GetLocalVoronoiFeatures() {
