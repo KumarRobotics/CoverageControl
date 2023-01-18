@@ -132,19 +132,6 @@ namespace CoverageControl {
 				return 0;
 			}
 
-			/* void StepControl(std::vector<Point2> const &directions, std::vector<double> speeds) { */
-			/* 	if((directions.size() != num_robots_) and (speeds.size() != num_robots_)) { */
-			/* 		throw std::length_error{"The size of the vectors don't match with the number of robots"}; */
-			/* 	} */
-			/* 	for(size_t i = 0; i < num_robots_; ++i) { */
-			/* 		if(robots_[i].StepControl(directions[i], speeds[i])) { */
-			/* 			std::cerr << "Control incorrect\n"; */
-			/* 		} */
-			/* 		robot_global_positions_[i] = robots_[i].GetGlobalCurrentPosition(); */
-
-			/* 	} */
-			/* } */
-
 			void UpdateRobotPositions(std::vector<Point2> const &positions) {
 				if(positions.size() != num_robots_) {
 					throw std::length_error{"The size of the positions don't match with the number of robots"};
@@ -193,22 +180,19 @@ namespace CoverageControl {
 
 			// Get robots within a square communication range
 			auto GetRobotsInCommunication(size_t const id) const {
+				CheckRobotID(id);
 				PointVector robot_neighbors_pos;
-				if(id < num_robots_) {
-					for(size_t i = 0; i < num_robots_; ++i) {
-						if(id == i) {
-							continue;
-						}
-						Point2 relative_pos = robot_global_positions_[i] - robot_global_positions_[id];
-						if(relative_pos.x() < params_.pCommunicationRange and
-								relative_pos.x() > -params_.pCommunicationRange and
-								relative_pos.y() < params_.pCommunicationRange and
-								relative_pos.y() > -params_.pCommunicationRange) {
-							robot_neighbors_pos.push_back(relative_pos);
-						}
+				for(size_t i = 0; i < num_robots_; ++i) {
+					if(id == i) {
+						continue;
 					}
-				} else {
-					throw std::out_of_range{"Robot index more than the number of robots"};
+					Point2 relative_pos = robot_global_positions_[i] - robot_global_positions_[id];
+					if(relative_pos.x() < params_.pCommunicationRange and
+							relative_pos.x() > -params_.pCommunicationRange and
+							relative_pos.y() < params_.pCommunicationRange and
+							relative_pos.y() > -params_.pCommunicationRange) {
+						robot_neighbors_pos.push_back(relative_pos);
+					}
 				}
 				return robot_neighbors_pos;
 			}
