@@ -11,6 +11,7 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/oracle_global_offline.h>
+#include <CoverageControl/oracle_cnn_data.h>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/geographiclib_wrapper.h>
 
@@ -97,6 +98,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def(py::init<Parameters const &, BNDVector const &, PointVector const &>())
 		.def("GetWorldIDF", &CoverageSystem::GetWorldIDF, py::return_value_policy::reference_internal)
 		.def("StepControl", &CoverageSystem::StepControl)
+		.def("StepAction", &CoverageSystem::StepAction)
 		.def("UpdateRobotPositions", &CoverageSystem::UpdateRobotPositions)
 		.def("GetRobotPositions", &CoverageSystem::GetRobotPositions)
 		.def("GetRobotPosition", &CoverageSystem::GetRobotPosition)
@@ -105,15 +107,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)
 		.def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells, py::return_value_policy::reference_internal)
 		.def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells, py::return_value_policy::copy)
-		/* .def("GetVoronoiEdges", &CoverageSystem::GetVoronoiEdges) */
-		.def("StepLloyd", &CoverageSystem::StepLloyd)
-		/* .def("Lloyd", &CoverageSystem::Lloyd) */
-		/* .def("LloydOffline", &CoverageSystem::LloydOffline, py::return_value_policy::copy) */
-		.def("StepOracle", &CoverageSystem::StepOracle)
-		.def("StepOracleN", &CoverageSystem::StepOracleN)
-		.def("GetOracleMap", &CoverageSystem::GetOracleMap, py::return_value_policy::reference_internal)
 		.def("GetVoronoiCell", &CoverageSystem::GetVoronoiCell, py::return_value_policy::copy)
-		.def("StepDataGenerationLocal", &CoverageSystem::StepDataGenerationLocal, py::return_value_policy::copy)
 		.def("GetRobotObstacleMap", &CoverageSystem::GetRobotObstacleMap, py::return_value_policy::copy)
 		.def("GetLocalVoronoiFeatures", &CoverageSystem::GetLocalVoronoiFeatures, py::return_value_policy::copy)
 		.def("GetRobotExplorationMap", &CoverageSystem::GetRobotExplorationMap, py::return_value_policy::reference_internal)
@@ -128,6 +122,17 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("SetGoals", &OracleGlobalOffline::SetGoals)
 		.def("GetGoals", &OracleGlobalOffline::GetGoals)
 		.def("GetVoronoiCells", &OracleGlobalOffline::GetVoronoiCells, py::return_value_policy::copy)
+		;
+
+	py::class_<OracleCNNData>(m, "OracleCNNData")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &OracleCNNData::Step)
+		.def("GetActions", &OracleCNNData::GetActions)
+		.def("ComputeGoals", &OracleCNNData::ComputeGoals)
+		.def("SetGoals", &OracleCNNData::SetGoals)
+		.def("GetGoals", &OracleCNNData::GetGoals)
+		.def("GetVoronoiCells", &OracleCNNData::GetVoronoiCells, py::return_value_policy::copy)
+		.def("GetOracleMap", &OracleCNNData::GetOracleMap, py::return_value_policy::reference_internal)
 		;
 
 

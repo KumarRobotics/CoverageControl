@@ -16,7 +16,6 @@
 #include "typedefs.h"
 #include "world_idf.h"
 #include "map_utils.h"
-#include "voronoi.h"
 
 namespace CoverageControl {
 
