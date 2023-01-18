@@ -31,7 +31,7 @@ namespace CoverageControl {
 			WorldIDF world_idf_;
 			size_t num_robots_ = 0;
 			std::vector <RobotModel> robots_;
-			MapType communication_map_;
+			std::vector <MapType> communication_maps_;
 			double normalization_factor_ = 0;
 			Voronoi voronoi_;
 			std::vector <VoronoiCell> voronoi_cells_;
@@ -112,7 +112,7 @@ namespace CoverageControl {
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 			}
 
-			bool StepAction(size_t robot_id, Point2 const &action) {
+			bool StepAction(size_t const robot_id, Point2 const &action) {
 				double speed = action.norm();
 				Point2 direction = action.normalized();
 				if(robots_[robot_id].StepControl(direction, speed)) {
@@ -161,44 +161,38 @@ namespace CoverageControl {
 				return robot_global_positions_;
 			}
 
-			Point2 GetRobotPosition(int const robot_id) { return robots_[robot_id].GetGlobalCurrentPosition(); }
+			Point2 GetRobotPosition(int const robot_id) const { return robots_[robot_id].GetGlobalCurrentPosition(); }
 
 			MapType const& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
 
-			MapType const& GetRobotLocalMap(size_t const id) {
-				if(id < num_robots_) {
-					return robots_[id].GetRobotLocalMap();
-				} else {
+			void CheckRobotID(size_t const id) {
+				if(id >= num_robots_) {
 					throw std::out_of_range{"Robot index more than the number of robots"};
 				}
+			}
+
+			MapType const& GetRobotLocalMap(size_t const id) {
+				CheckRobotID(id);
+				return robots_[id].GetRobotLocalMap();
 			}
 
 			MapTypeBool const& GetRobotExplorationMap(size_t const id) {
-				if(id < num_robots_) {
-					return robots_[id].GetExplorationMap();
-				} else {
-					throw std::out_of_range{"Robot index more than the number of robots"};
-				}
+				CheckRobotID(id);
+				return robots_[id].GetExplorationMap();
 			}
 
 			MapType const& GetRobotObstacleMap(size_t const id) {
-				if(id < num_robots_) {
-					return robots_[id].GetObstacleMap();
-				} else {
-					throw std::out_of_range{"Robot index more than the number of robots"};
-				}
+				CheckRobotID(id);
+				return robots_[id].GetObstacleMap();
 			}
 
 			MapType const& GetRobotSensorView(size_t const id) {
-				if(id < num_robots_) {
-					return robots_[id].GetSensorView();
-				} else {
-					throw std::out_of_range{"Robot index more than the number of robots"};
-				}
+				CheckRobotID(id);
+				return robots_[id].GetSensorView();
 			}
 
 			// Get robots within a square communication range
-			auto GetRobotsInCommunication(size_t const id) {
+			auto GetRobotsInCommunication(size_t const id) const {
 				PointVector robot_neighbors_pos;
 				if(id < num_robots_) {
 					for(size_t i = 0; i < num_robots_; ++i) {
@@ -220,7 +214,7 @@ namespace CoverageControl {
 			}
 
 			MapType const& GetCommunicationMap(size_t const id) {
-				communication_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+				communication_maps_[id] = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				auto robot_neighbors_pos = GetRobotsInCommunication(id);
 				double comm_scale = (params_.pCommunicationRange * 2.) / params_.pLocalMapSize;
 				Point2 map_translation(params_.pLocalMapSize * comm_scale * params_.pResolution/2., params_.pLocalMapSize * comm_scale * params_.pResolution/2.);
@@ -229,10 +223,10 @@ namespace CoverageControl {
 					int pos_idx, pos_idy;
 					MapUtils::GetClosestGridCoordinate(params_.pResolution * comm_scale, map_pos, pos_idx, pos_idy);
 					if(pos_idx < params_.pLocalMapSize and pos_idy < params_.pLocalMapSize and pos_idx >= 0 and pos_idy >= 0) {
-						communication_map_(pos_idx, pos_idy) = 1;
+						communication_maps_[id](pos_idx, pos_idy) = 1;
 					}
 				}
-				return communication_map_;
+				return communication_maps_[id];
 			}
 
 			void ComputeVoronoiCells() {
