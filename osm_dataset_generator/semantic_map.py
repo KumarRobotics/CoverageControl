@@ -36,7 +36,8 @@ params_ = pyCoverageControl.Parameters('../core/params/parameters.yaml')
 from pyCoverageControl import WorldIDF # for defining world idf
 world_idf = WorldIDF(params_)
 
-with open("leaflet_geojson_viz/data/semantic_data.json") as file_:
+with open("../../../data/osm_city_data/7441/semantic_data.json") as file_:
+# with open("leaflet_geojson_viz/data/semantic_data.json") as file_:
     semantic_data = geojson.load(file_)
 
 [origin_lon, origin_lat] = semantic_data.bbox[0:2]
@@ -49,7 +50,8 @@ traffic_signals_scale = 2 * math.pi * traffic_signals_sigma * traffic_signals_si
 
 # Uniform density polygon
 hostpital_importance = 0.9
-parking_importance = 0.7
+parking_importance = 0.6
+park_importance = 0.8
 
 flag = True
 for feature in semantic_data.features:
@@ -58,6 +60,17 @@ for feature in semantic_data.features:
         mean = geo_transform.Forward(coords[1], coords[0], origin_alt)
         dist = BND(mean[0:2], traffic_signals_sigma, traffic_signals_scale) # circular gaussian
         world_idf.AddNormalDistribution(dist)
+
+    if(feature['properties']['type'] == "leisure" and feature['geometry']['type'] == "Polygon"):
+        for coords_list in feature['geometry']['coordinates']:
+            polygon_feature = pyCoverageControl.PolygonFeature()
+            if(feature['properties']['subtype'] == "park"):
+                polygon_feature.imp = park_importance
+            for pt in coords_list[:-1]:
+                cartesian_pt = geo_transform.Forward(pt[1], pt[0], origin_alt)
+                polygon_feature.poly.append(cartesian_pt[0:2])
+            world_idf.AddUniformDistributionPolygon(polygon_feature)
+
     if(feature['properties']['type'] == "amenity" and feature['geometry']['type'] == "Polygon"):
         for coords_list in feature['geometry']['coordinates']:
             polygon_feature = pyCoverageControl.PolygonFeature()

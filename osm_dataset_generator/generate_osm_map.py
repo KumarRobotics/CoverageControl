@@ -21,6 +21,9 @@ from OSMPythonTools.api import Api as OSMApi
 from OSMPythonTools.nominatim import Nominatim
 from OSMPythonTools.overpass import Overpass, overpassQueryBuilder
 from OSMPythonTools.data import Data, dictRangeYears, ALL
+from OSMPythonTools.cachingStrategy import CachingStrategy, JSON, Pickle
+from CachingNone import CachingNone
+
 
 def ClipWay(bbox, way):
     polyline = LineString(way)
@@ -44,6 +47,9 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
 
     osmApi = OSMApi()
     overpass = Overpass()
+    # osmApi = OSMApi("http://localhost:12346/api/")
+    # overpass = Overpass("http://localhost:12346/api/")
+    CachingStrategy.use(CachingNone)
     geod = Geodesic.WGS84
 
     feature_collection = geojson.FeatureCollection([])
@@ -157,7 +163,11 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
     if amenity.relations():
         contains_data = True
         for relation in amenity.relations():
-            geom = relation.geometry()
+            try:
+                geom = relation.geometry()
+            except:
+                continue
+            contains_data = True
             tags = relation.tags()
             if tags == None or 'amenity' not in tags:
                 continue

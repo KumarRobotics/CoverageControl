@@ -17,8 +17,10 @@ with open(path_to_dataset, 'rb') as file:
 
 print("No. of points: ", len(city_origin_points))
 count = 0
-for origin in city_origin_points:
-    print(count, " lat: ", origin['lat'], " lon: ", origin['lon'])
+data_count = 0
+for i in range(data_count, len(city_origin_points)):
+    origin = city_origin_points[i]
+    print(i, " lat: ", origin['lat'], " lon: ", origin['lon'])
     data_path = dataset_base_dir + str(count)
     semantic_data_filename = data_path + '/semantic_data.json'
     if not os.path.exists(data_path):
@@ -26,3 +28,4 @@ for origin in city_origin_points:
     if(generate_osm_map.OverpassOSMQuery(params, origin, semantic_data_filename) == False):
         continue
     count = count + 1
+    print(str(count))
