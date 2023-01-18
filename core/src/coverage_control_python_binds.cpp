@@ -10,10 +10,10 @@
 #include <CoverageControl/world_idf.h>
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
-#include <CoverageControl/oracle_global_offline.h>
-#include <CoverageControl/oracle_cnn_data.h>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/geographiclib_wrapper.h>
+#include <CoverageControl/oracles/oracle_global_offline.h>
+#include <CoverageControl/oracles/oracle_cnn_data.h>
 
 
 using namespace CoverageControl;

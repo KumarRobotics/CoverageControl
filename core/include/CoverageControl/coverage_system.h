@@ -152,7 +152,7 @@ namespace CoverageControl {
 
 			MapType const& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
 
-			void CheckRobotID(size_t const id) {
+			void CheckRobotID(size_t const id) const {
 				if(id >= num_robots_) {
 					throw std::out_of_range{"Robot index more than the number of robots"};
 				}
