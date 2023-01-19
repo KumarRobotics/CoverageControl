@@ -29,10 +29,16 @@ def write_npz():
         communication_maps.append(env.GetCommunicationMap(i))
         exploration_maps.append(env.GetRobotExplorationMap(i))
 
-    local_features = env.GetLocalVoronoiFeatures()
-    np.savez_compressed('../../../data/gnn_data/data_' + f'{(count):07d}' + '.npz', local_maps = local_maps, communication_maps = communication_maps, features=env.GetLocalVoronoiFeatures(), labels=oracle.GetActions())
+    np.savez_compressed('../../../data/gnn_data/data_' + f'{(count):07d}' + '.npz',
+            robot_positions=env.GetRobotPositions(),
+            local_maps = local_maps,
+            communication_maps = communication_maps,
+            features=env.GetLocalVoronoiFeatures(),
+            labels=oracle.GetActions(),
+            objective_value=env.GetObjectiveValue()
+            )
 
-dataset_count = 1000
+dataset_count = 200000
 while count < dataset_count:
     print("New environment")
     num_steps = 0

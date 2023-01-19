@@ -47,6 +47,7 @@ namespace CoverageControl {
 
 				robot_global_positions_ = env_.GetRobotPositions();
 				actions_.resize(num_robots_);
+				goals_.resize(num_robots_);
 
 				// The oracle map is designed to store the pixels seen by any robot
 				oracle_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, params_.pUnknownImportance * params_.pNorm);
@@ -85,7 +86,6 @@ namespace CoverageControl {
 				std::vector<int> assignment;
 				HungAlgo.Solve(cost_matrix_, assignment);
 
-				goals_.resize(num_robots_);
 				auto ordered_voronoi_cells = voronoi_cells_;
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					goals_[iRobot] = voronoi_cells_[assignment[iRobot]].centroid;
@@ -94,7 +94,7 @@ namespace CoverageControl {
 				voronoi_cells_ = ordered_voronoi_cells;
 			}
 
-			bool Step(int const num_steps) {
+			bool Step(int const num_steps = 0) {
 #pragma omp parallel for num_threads(num_robots_)
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					auto robot_local_map = env_.GetRobotLocalMap(iRobot);
@@ -109,6 +109,7 @@ namespace CoverageControl {
 					}
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					voronoi_cells_[iRobot] = voronoi.GetVoronoiCell();
+					voronoi_cells_[iRobot].centroid += robot_global_positions_[iRobot];
 				}
 				ComputeGoals();
 				bool cont_flag = true;
