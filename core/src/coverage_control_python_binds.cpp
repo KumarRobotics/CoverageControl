@@ -13,7 +13,7 @@
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/geographiclib_wrapper.h>
 #include <CoverageControl/oracles/oracle_global_offline.h>
-#include <CoverageControl/oracles/oracle_cnn_data.h>
+#include <CoverageControl/oracles/lloyd_local_voronoi.h>
 
 
 using namespace CoverageControl;
@@ -124,15 +124,15 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetVoronoiCells", &OracleGlobalOffline::GetVoronoiCells, py::return_value_policy::copy)
 		;
 
-	py::class_<OracleCNNData>(m, "OracleCNNData")
+	py::class_<LloydLocalVoronoi>(m, "LloydLocalVoronoi")
 		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-		.def("Step", &OracleCNNData::Step)
-		.def("GetActions", &OracleCNNData::GetActions)
-		.def("ComputeGoals", &OracleCNNData::ComputeGoals)
-		.def("SetGoals", &OracleCNNData::SetGoals)
-		.def("GetGoals", &OracleCNNData::GetGoals)
-		.def("GetVoronoiCells", &OracleCNNData::GetVoronoiCells, py::return_value_policy::copy)
-		.def("GetOracleMap", &OracleCNNData::GetOracleMap, py::return_value_policy::reference_internal)
+		.def("Step", &LloydLocalVoronoi::Step)
+		.def("GetActions", &LloydLocalVoronoi::GetActions)
+		.def("ComputeGoals", &LloydLocalVoronoi::ComputeGoals)
+		.def("SetGoals", &LloydLocalVoronoi::SetGoals)
+		.def("GetGoals", &LloydLocalVoronoi::GetGoals)
+		.def("GetVoronoiCells", &LloydLocalVoronoi::GetVoronoiCells, py::return_value_policy::copy)
+		.def("GetOracleMap", &LloydLocalVoronoi::GetOracleMap, py::return_value_policy::reference_internal)
 		;
 
 

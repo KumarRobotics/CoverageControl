@@ -9,7 +9,7 @@ pWorldMapSize: 1024
 # Could make it sparse if size becomes a problem
 pRobotMapSize: 1024
 pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
-pRobotMapUseUnknownImportance: false
+pRobotMapUseUnknownImportance: true
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.

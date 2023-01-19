@@ -2,8 +2,8 @@
  *
  **/
 
-#ifndef COVERAGECONTROL_ORACLE_CNN_DATA_H_
-#define COVERAGECONTROL_ORACLE_CNN_DATA_H_
+#ifndef COVERAGECONTROL_LLOYD_LOCAL_VORONOI_H_
+#define COVERAGECONTROL_LLOYD_LOCAL_VORONOI_H_
 
 #include <vector>
 #include <fstream>
@@ -21,7 +21,7 @@
 
 namespace CoverageControl {
 
-	class OracleCNNData {
+	class LloydLocalVoronoi {
 		private:
 			Parameters const params_;
 			size_t num_robots_ = 0;
@@ -34,7 +34,7 @@ namespace CoverageControl {
 			MapType oracle_map_;
 
 		public:
-			OracleCNNData(
+			LloydLocalVoronoi(
 					Parameters const &params,
 					size_t const &num_robots,
 					CoverageSystem &env) :
@@ -109,9 +109,8 @@ namespace CoverageControl {
 					}
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					voronoi_cells_[iRobot] = voronoi.GetVoronoiCell();
-					voronoi_cells_[iRobot].centroid += robot_global_positions_[iRobot];
+					goals_[iRobot] = voronoi_cells_[iRobot].centroid + robot_global_positions_[iRobot] - map_translation;
 				}
-				ComputeGoals();
 				bool cont_flag = true;
 				for(int i = 0; i < num_steps; ++i) {
 					cont_flag = env_.StepRobotsToGoals(goals_, actions_);
@@ -126,4 +125,4 @@ namespace CoverageControl {
 	};
 
 } /* namespace CoverageControl */
-#endif /* COVERAGECONTROL_ORACLE_CNN_DATA_H_ */
+#endif /* COVERAGECONTROL_LLOYD_LOCAL_VORONOI_H_ */
