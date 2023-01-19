@@ -31,7 +31,6 @@ env = CoverageSystem(params_, num_gaussians, num_robots)
 
 # oracle = LloydLocalVoronoi(params_, num_robots, env)
 oracle = OracleExploreExploit(params_, num_robots, env)
-oracle.Step(1)
 voronoi_cells = oracle.GetVoronoiCells()
 robot_positions = env.GetRobotPositions()
 # map = env.GetWorldIDF()
@@ -80,7 +79,7 @@ for i in range(1, num_robots):
 
 def animate(i):
     print(str(i))
-    cont_flag = oracle.Step(10)
+    cont_flag = oracle.Step()
     actions = oracle.GetActions()
     robot_positions = env.GetRobotPositions()
     sns.heatmap(oracle.GetOracleMap().transpose(), vmax=params_.pNorm, cmap=colormap, square=True, ax=ax, cbar_ax = cbar_ax)
@@ -109,9 +108,11 @@ def animate_local(i):
 # ani2 = animation.FuncAnimation(fig_local, animate_local, interval=100, blit=False)
 
 
-for i in range(0, 100):
+for i in range(0, 20000):
     print(i)
-    cont_flag = oracle.Step(10)
+    cont_flag = oracle.Step()
+    if cont_flag == False:
+        break
 
 animate(0)
 plt.show()

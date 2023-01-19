@@ -138,7 +138,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")
 		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-		.def("Step", py::overload_cast<int>(&OracleExploreExploit::Step))
+		.def("Step", &OracleExploreExploit::Step)
 		.def("GetActions", &OracleExploreExploit::GetActions)
 		.def("SetGoals", &OracleExploreExploit::SetGoals)
 		.def("GetGoals", &OracleExploreExploit::GetGoals)

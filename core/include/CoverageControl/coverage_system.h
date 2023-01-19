@@ -242,7 +242,7 @@ namespace CoverageControl {
 			bool StepRobotsToGoals(PointVector const &goals, PointVector &actions) {
 				bool cont_flag = false;
 				GetRobotPositions();
-#pragma omp parallel for num_threads(num_robots_)
+/* #pragma omp parallel for num_threads(num_robots_) */
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					actions[iRobot] = Point2(0, 0);
 					Point2 diff = goals[iRobot];
