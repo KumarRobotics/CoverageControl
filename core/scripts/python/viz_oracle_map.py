@@ -8,7 +8,7 @@ import pyCoverageControl # Main library
 from pyCoverageControl import Point2 # for defining points
 from pyCoverageControl import PointVector # for defining list of points
 from pyCoverageControl import CoverageSystem
-from pyCoverageControl import LloydLocalVoronoi
+from pyCoverageControl import LloydLocalVoronoi, OracleExploreExploit
 from multiprocessing import Pool
 
 # We can visualize the map in python
@@ -20,7 +20,7 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 
 params_ = pyCoverageControl.Parameters('params/parameters.yaml')
 
-num_gaussians = 100
+num_gaussians = 20
 num_robots = 20
 
 count = 0
@@ -29,7 +29,8 @@ robot_id = 0
 num_steps = 0
 env = CoverageSystem(params_, num_gaussians, num_robots)
 
-oracle = LloydLocalVoronoi(params_, num_robots, env)
+# oracle = LloydLocalVoronoi(params_, num_robots, env)
+oracle = OracleExploreExploit(params_, num_robots, env)
 oracle.Step(1)
 voronoi_cells = oracle.GetVoronoiCells()
 robot_positions = env.GetRobotPositions()
@@ -79,7 +80,7 @@ for i in range(1, num_robots):
 
 def animate(i):
     print(str(i))
-    cont_flag = oracle.Step(1)
+    cont_flag = oracle.Step(10)
     actions = oracle.GetActions()
     robot_positions = env.GetRobotPositions()
     sns.heatmap(oracle.GetOracleMap().transpose(), vmax=params_.pNorm, cmap=colormap, square=True, ax=ax, cbar_ax = cbar_ax)
@@ -104,7 +105,13 @@ def animate_local(i):
     local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id][0], 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id][1], 2))
     sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
 
-ani = animation.FuncAnimation(fig, animate, interval=100, blit=True)
+# ani = animation.FuncAnimation(fig, animate, interval=0, blit=True)
 # ani2 = animation.FuncAnimation(fig_local, animate_local, interval=100, blit=False)
 
+
+for i in range(0, 100):
+    print(i)
+    cont_flag = oracle.Step(10)
+
+animate(0)
 plt.show()

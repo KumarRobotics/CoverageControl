@@ -29,9 +29,9 @@ pUpdateExplorationMap: true
 # Make it even so that I don't have to deal with substracting by half-resolution.
 # Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
 # Positive integer. NOTE: Needs to be even
-pSensorSize: 24
+pSensorSize: 32
 
-# Each time step corresponds to 0.1s, i.e., 10Hz
+# Each time step corresponds to pTimeStep in seconds
 pTimeStep: 1
 # in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
 pMaxRobotSpeed: 10
@@ -48,10 +48,10 @@ pTruncationBND: 4
 pNorm: 1
 
 # These settings are only required if the IDF is generated using random gaussians
-pMinSigma: 6
-pMaxSigma: 10
-pMinPeak: 0.2
-pMaxPeak: 1
+pMinSigma: 15
+pMaxSigma: 20
+pMinPeak: 6
+pMaxPeak: 10
 
 
 # Settings for Lloyd offline algorithm

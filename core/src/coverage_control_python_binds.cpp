@@ -14,6 +14,7 @@
 #include <CoverageControl/geographiclib_wrapper.h>
 #include <CoverageControl/oracles/oracle_global_offline.h>
 #include <CoverageControl/oracles/lloyd_local_voronoi.h>
+#include <CoverageControl/oracles/oracle_explore_exploit.h>
 
 
 using namespace CoverageControl;
@@ -133,6 +134,16 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetGoals", &LloydLocalVoronoi::GetGoals)
 		.def("GetVoronoiCells", &LloydLocalVoronoi::GetVoronoiCells, py::return_value_policy::copy)
 		.def("GetOracleMap", &LloydLocalVoronoi::GetOracleMap, py::return_value_policy::reference_internal)
+		;
+
+	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", py::overload_cast<int>(&OracleExploreExploit::Step))
+		.def("GetActions", &OracleExploreExploit::GetActions)
+		.def("SetGoals", &OracleExploreExploit::SetGoals)
+		.def("GetGoals", &OracleExploreExploit::GetGoals)
+		.def("GetVoronoiCells", &OracleExploreExploit::GetVoronoiCells, py::return_value_policy::copy)
+		.def("GetOracleMap", &OracleExploreExploit::GetOracleMap, py::return_value_policy::reference_internal)
 		;
 
 

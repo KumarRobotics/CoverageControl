@@ -301,6 +301,20 @@ namespace CoverageControl {
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 				return normalization_factor_;
 			}
+
+			inline int WriteRobotPositions(std::string const &file_name) {
+				std::ofstream file_obj(file_name);
+				if(!file_obj) {
+					std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
+					return 1;
+				}
+				GetRobotPositions();
+				for(auto const &pos:robot_global_positions_) {
+					file_obj << pos[0] << " " << pos[1] << std::endl;
+				}
+				file_obj.close();
+				return 0;
+			}
 	};
 
 } /* namespace CoverageControl */

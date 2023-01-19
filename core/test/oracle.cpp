@@ -3,6 +3,8 @@
 #include <random>
 #include <string>
 #include <cstdlib>
+#include <fstream>
+#include <chrono>
 
 #include <CoverageControl/constants.h>
 #include <CoverageControl/parameters.h>
@@ -12,19 +14,52 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/generate_world_map.ch>
 #include <CoverageControl/coverage_system.h>
+#include <CoverageControl/oracles/oracle_explore_exploit.h>
 
 using namespace CoverageControl;
 
 int main(int argc, char** argv) {
 	Parameters params("/home/saurav/CoverageControl_ws/src/CoverageControl/core/params/parameters.yaml");
-	for(int j = 0; j < 100; ++j) {
-		CoverageSystem env(params, 100, 20);
-		std::cout << "Env created" << std::endl;
-		/* for(int i = 0; i < params.pEpisodeSteps; ++i) { */
-		/* 	/1* std::cout << "steps: " << i << std::endl; *1/ */
-		/* 	env.StepOracle(); */
-		/* } */
-	}
+	int num_robots = 20;
+	int num_dists = 20;
+	int jump_steps = 1;
+	CoverageSystem env(params, num_dists, num_robots);
+	OracleExploreExploit oracle(params, num_robots, env);
 
-	return 0;
+	std::string map_filename = "data/oracle/oracle_map";
+	std::string pos_filename = "data/oracle/pos";
+	std::string gnuplot_script = "src/CoverageControl/core/scripts/gnuplot/plot_map.gp";
+
+	auto start = std::chrono::steady_clock::now();
+	bool cont_flag = false;
+	int count = 0;
+		for(int i = 0; i < params.pEpisodeSteps; ++i) {
+			std::cout << "iter: " << i << std::endl;
+			auto oracle_map = oracle.GetOracleMap();
+			std::stringstream ss;
+			ss << std::setw(4) << std::setfill('0') << i;
+			std::string s = ss.str();
+			std::string imap_name = map_filename + s;
+			MapUtils::WriteMap(oracle_map, imap_name + ".dat");
+			env.WriteRobotPositions(pos_filename);
+			std::string gnuplot_command = "gnuplot -c " + gnuplot_script + " " + imap_name + " " + pos_filename + " 1 " + std::to_string(params.pResolution) + " " + std::to_string(params.pWorldMapSize * params.pResolution);
+			std::system(gnuplot_command.c_str());
+			int exploration_factor = ceil(-12.5 * oracle.GetExplorationRatio() + 22.5);
+			if(count == exploration_factor or cont_flag == false) {
+				count = 0;
+				cont_flag = oracle.Step(jump_steps, true);
+			} else {
+				cont_flag = oracle.Step(jump_steps, false);
+			}
+			++count;
+			if(oracle.GetExplorationRatio() < .10 and cont_flag == false) {
+				break;
+			}
+			std::cout << "exp: " << exploration_factor << std::endl;
+		}
+
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsed_seconds = end-start;
+		std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+		return 0;
 }
