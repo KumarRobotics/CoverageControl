@@ -13,6 +13,7 @@ from multiprocessing import Pool
 
 # We can visualize the map in python
 import matplotlib.pylab as plt
+import matplotlib.animation as animation
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 
@@ -35,7 +36,6 @@ voronoi_cells = oracle.GetVoronoiCells()
 robot_positions = env.GetRobotPositions()
 map = env.GetWorldIDF()
 
-plt.ion()
 fig = plt.figure("Environment")
 ax = sns.heatmap(map.transpose(), vmax=params_.pNorm, cmap=colormap, square=True)
 ax.invert_yaxis()
@@ -74,44 +74,22 @@ plot_centroids, = ax.plot(centroid_x, centroid_y, 'r+')
 curr_pos = np.array([plot_pos_x, plot_pos_y]).transpose()
 centroid_pos = np.array([centroid_x, centroid_y]).transpose()
 
-fig_local = plt.figure("Local Map of Robot" + str(robot_id))
-local_map = env.GetRobotLocalMap(robot_id)
-local_ax = sns.heatmap(data=np.flip(local_map.transpose(),0), vmax=params_.pNorm, cmap=colormap, square=True)
-cbar_ax = fig_local.axes[-1]# retrieve previous cbar_ax (if exists)
-
-cont_flag = True
-prev_robot_pos = robot_positions
-
 ax.plot([curr_pos[0][0], centroid_pos[0][0]], [curr_pos[0][1], centroid_pos[0][1]], 'r')
 for i in range(1, num_robots):
     ax.plot([curr_pos[i][0], centroid_pos[i][0]], [curr_pos[i][1], centroid_pos[i][1]])
-plt.show()
-while num_steps < params_.pEpisodeSteps:
-    print(num_steps)
+
+def animate(i):
     cont_flag = oracle.Step()
-    actions = oracle.GetActions()
-    if(not cont_flag):
-        break
     robot_positions = env.GetRobotPositions()
-    local_features = env.GetLocalVoronoiFeatures()
-    print(local_features[0])
-    # pool = Pool(num_robots)
-    # pool.map(write_npz, range(0, num_robots))
-    num_steps = num_steps + 1
 
     for i in range(0, num_robots):
-        plot_pos_x[i] =  prev_robot_pos[i][0] / params_.pResolution
-        plot_pos_y[i] =  prev_robot_pos[i][1] / params_.pResolution
+        plot_pos_x[i] =  robot_positions[i][0] / params_.pResolution
+        plot_pos_y[i] =  robot_positions[i][1] / params_.pResolution
 
-    local_map = env.GetRobotLocalMap(robot_id)
-    sns.heatmap(ax=local_ax,data=np.flip(local_map.transpose(), 0), vmax=params_.pNorm, cmap=colormap, square=True, cbar_ax=cbar_ax, xticklabels=[],yticklabels=[])
-    local_ax.set_title("Robot [" + str(robot_id) + "] position: " + "{:.{}f}".format(robot_positions[robot_id][0], 2) + ", " +  "{:.{}f}".format(robot_positions[robot_id][1], 2))
-
-    prev_robot_pos = robot_positions
     plot_robots.set_xdata(plot_pos_x)
     plot_robots.set_ydata(plot_pos_y)
-    fig.canvas.draw()
-    fig.canvas.flush_events()
-    fig_local.canvas.draw()
-    fig_local.canvas.flush_events()
+    return [plot_robots]
 
+ani = animation.FuncAnimation(fig, animate, interval=100, blit=True)
+
+plt.show()

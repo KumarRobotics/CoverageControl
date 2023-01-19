@@ -16,7 +16,7 @@ pRobotMapUseUnknownImportance: false
 pLocalMapSize: 512
 # Radius of communication (in meters)
 pCommunicationRange: 256
-pRobotInitDist: 100 # Distance from the origin within which to initialize the position of the robots
+pRobotInitDist: 1024 # Distance from the origin within which to initialize the position of the robots
 
 # Set pUpdateRobotMap to false for centralized known world
 pUpdateRobotMap: true
@@ -56,4 +56,4 @@ pMaxPeak: 1
 
 # Settings for Lloyd offline algorithm
 pLloydMaxIterations: 100
-pLloydNumTries: 1
+pLloydNumTries: 10
