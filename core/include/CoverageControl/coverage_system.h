@@ -78,6 +78,7 @@ namespace CoverageControl {
 
 				cost_matrix_.resize(num_robots_, std::vector<double>(num_robots_));
 				voronoi_cells_.resize(num_robots_);
+				communication_maps_.resize(num_robots_);
 
 				robot_global_positions_.resize(num_robots_);
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
