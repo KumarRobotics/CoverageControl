@@ -74,7 +74,7 @@ float ComputeImportanceBND (BND_Cuda const *device_dists, float2 const &bottom_l
 			mid_pt.y = (mid_pt_cell.y - bnd.mean_y)/bnd.sigma_y;
 			mid_pt.x = (mid_pt.x - bnd.rho * mid_pt.y)/(sqrt(1 - bnd.rho*bnd.rho));
 		}
-		if(mid_pt.x * mid_pt.x + mid_pt.y * mid_pt.y > cu_truncation * cu_truncation + cu_resolution * cu_resolution) {
+		if(mid_pt.x * mid_pt.x + mid_pt.y * mid_pt.y > cu_truncation * cu_truncation) {
 			continue;
 		}
 		total_importance += IntegrateQuarterPlane(bnd, bottom_left);

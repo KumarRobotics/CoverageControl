@@ -28,7 +28,7 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
+params_ = pyCoverageControl.Parameters('params/parameters.yaml')
 
 ############
 ## Point2 ##
@@ -51,9 +51,9 @@ point_list.append(pt1)
 from pyCoverageControl import BivariateNormalDistribution as BND # for defining bivariate normal distributions
 dist1 = BND() # zero-mean, sigma = 1, circular
 
-mean = Point2(10, 1000)
-sigma = 5
-peak_val = 3
+mean = Point2(512, 512)
+sigma = 20
+peak_val = 200
 dist2 = BND(mean, sigma, peak_val) # circular gaussian
 
 mean3 = Point2(900,100)
@@ -72,7 +72,7 @@ world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
 print("Calling CUDA")
 world_idf.GenerateMapCuda() # Generate map, use GenerateMap() for cpu version
 world_idf.PrintMapSize()
-world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
+# world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
 map = world_idf.GetWorldMap(); # Get the world map as numpy nd-array. You can only "view", i.e., flags.writeable = False, flags.owndata = False
 normalization_factor = world_idf.GetNormalizationFactor();
 print(map.dtype)

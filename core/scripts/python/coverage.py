@@ -28,7 +28,7 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters('../../params/parameters.yaml')
+params_ = pyCoverageControl.Parameters('params/parameters.yaml')
 
 ####################
 ## CoverageSystem ##
@@ -50,7 +50,8 @@ control_directions.append(np.array([math.sin(math.pi/6), math.cos(math.pi/6)]))
 speeds = pyCoverageControl.DblVector()
 speeds.append(1)
 speeds.append(1)
-env.StepControl(control_directions, speeds)
+env.StepControl(0, control_directions[0], speeds[0])
+env.StepControl(1, control_directions[1], speeds[1])
 
 # Update the local position of the robots
 new_robot_positions = PointVector()
