@@ -58,9 +58,9 @@ namespace CoverageControl {
 				std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
 				for(int i = 0; i < num_gaussians; ++i) {
 					Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
-					double var(distrib_var(gen_));
+					double sigma(distrib_var(gen_));
 					double peak(distrib_peak(gen_));
-					BivariateNormalDistribution dist(mean, var, peak);
+					BivariateNormalDistribution dist(mean, sigma, peak);
 					world_idf_.AddNormalDistribution(dist);
 				}
 

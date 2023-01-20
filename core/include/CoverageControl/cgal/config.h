@@ -10,6 +10,7 @@
 #include <CGAL/Arr_walk_along_line_point_location.h>
 #include <CGAL/partition_2.h>
 #include <CGAL/Partition_traits_2.h>
+#include <CGAL/centroid.h>
 
 typedef CGAL::Exact_predicates_exact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point2;

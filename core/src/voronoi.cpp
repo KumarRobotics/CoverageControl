@@ -89,7 +89,13 @@ namespace CoverageControl {
 		}
 		/* std::cout << "Computed vcell" << std::endl; */
 		if(vcell.mass < kEps) {
-			vcell.centroid = vcell.site;
+			/* vcell.centroid = vcell.site; */
+			Polygon_2 polygon;
+			for(auto const &p:vcell.cell) {
+				polygon.push_back(CGAL_Point2{p[0], p[1]});
+			}
+			auto centroid = CGAL::centroid(polygon.begin(), polygon.end());
+			vcell.centroid = CGALtoCC(centroid);
 		} else {
 			vcell.centroid = vcell.centroid / vcell.mass;
 		}

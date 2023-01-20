@@ -20,7 +20,7 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 
 params_ = pyCoverageControl.Parameters('params/parameters.yaml')
 
-num_gaussians = 1
+num_gaussians = 100
 num_robots = 20
 
 count = 0
