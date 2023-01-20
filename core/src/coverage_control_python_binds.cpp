@@ -15,6 +15,7 @@
 #include <CoverageControl/oracles/oracle_global_offline.h>
 #include <CoverageControl/oracles/lloyd_local_voronoi.h>
 #include <CoverageControl/oracles/oracle_explore_exploit.h>
+#include <CoverageControl/oracles/oracle_bang_explore_exploit.h>
 
 
 using namespace CoverageControl;
