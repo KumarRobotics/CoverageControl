@@ -123,11 +123,12 @@ namespace CoverageControl {
 
 			void UpdateRobotPosition(Point2 const &pos) {
 				Point2 new_global_pos = pos + global_start_position_;
-				if(new_global_pos.x() < 0) { new_global_pos[0] = 0; }
-				if(new_global_pos.y() < 0) { new_global_pos[1] = 0; }
+				double eps = 0.0001;
+				if(new_global_pos.x() < 0) { new_global_pos[0] = 0 + eps; }
+				if(new_global_pos.y() < 0) { new_global_pos[1] = 0 + eps; }
 				double max_xy = params_.pWorldMapSize * params_.pResolution;
-				if(new_global_pos.x() > max_xy) { new_global_pos[0] = max_xy; }
-				if(new_global_pos.y() > max_xy) { new_global_pos[1] = max_xy; }
+				if(new_global_pos.x() > max_xy) { new_global_pos[0] = max_xy - eps; }
+				if(new_global_pos.y() > max_xy) { new_global_pos[1] = max_xy - eps; }
 
 				local_current_position_ = new_global_pos - global_start_position_;
 				global_current_position_ = new_global_pos;
@@ -157,7 +158,7 @@ namespace CoverageControl {
 			}
 
 			const MapTypeBool& GetExplorationMap() {
-				local_exploration_map_ = MapTypeBool::Constant(params_.pLocalMapSize, params_.pLocalMapSize, true);
+				local_exploration_map_ = MapTypeBool::Constant(params_.pLocalMapSize, params_.pLocalMapSize, false);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
 					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, exploration_map_, local_exploration_map_);
 				}

@@ -245,23 +245,20 @@ namespace CoverageControl {
 /* #pragma omp parallel for num_threads(num_robots_) */
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					actions[iRobot] = Point2(0, 0);
-					Point2 diff = goals[iRobot];
-					diff = diff - robot_global_positions_[iRobot];
-					if(diff.squaredNorm() > params_.pResolution * params_.pResolution) {
-						double dist = diff.norm();
-						double speed = dist / params_.pTimeStep;
-						if(speed <= kEps) {
-							continue;
-						}
-						speed = std::min(params_.pMaxRobotSpeed, speed);
-						Point2 direction(diff);
-						direction.normalize();
-						actions[iRobot] = speed * direction;
-						if(StepControl(iRobot, direction, speed)) {
-							std::cerr << "Control incorrect\n";
-						}
-						cont_flag = true;
+					Point2 diff = goals[iRobot] - robot_global_positions_[iRobot];
+					double dist = diff.norm();
+					double speed = dist / params_.pTimeStep;
+					if(speed <= kEps) {
+						continue;
 					}
+					speed = std::min(params_.pMaxRobotSpeed, speed);
+					Point2 direction(diff);
+					direction.normalize();
+					actions[iRobot] = speed * direction;
+					if(StepControl(iRobot, direction, speed)) {
+						std::cerr << "Control incorrect\n";
+					}
+					cont_flag = true;
 				}
 				return cont_flag;
 			}
@@ -310,6 +307,20 @@ namespace CoverageControl {
 				}
 				GetRobotPositions();
 				for(auto const &pos:robot_global_positions_) {
+					file_obj << pos[0] << " " << pos[1] << std::endl;
+				}
+				file_obj.close();
+				return 0;
+			}
+
+			inline int WriteRobotPositions(std::string const &file_name, PointVector const &positions) {
+				std::ofstream file_obj(file_name);
+				if(!file_obj) {
+					std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
+					return 1;
+				}
+				GetRobotPositions();
+				for(auto const &pos:positions) {
 					file_obj << pos[0] << " " << pos[1] << std::endl;
 				}
 				file_obj.close();

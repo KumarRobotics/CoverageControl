@@ -147,6 +147,16 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetOracleMap", &OracleExploreExploit::GetOracleMap, py::return_value_policy::reference_internal)
 		;
 
+	py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &OracleBangExploreExploit::Step)
+		.def("GetActions", &OracleBangExploreExploit::GetActions)
+		.def("SetGoals", &OracleBangExploreExploit::SetGoals)
+		.def("GetGoals", &OracleBangExploreExploit::GetGoals)
+		.def("GetVoronoiCells", &OracleBangExploreExploit::GetVoronoiCells, py::return_value_policy::copy)
+		.def("GetOracleMap", &OracleBangExploreExploit::GetOracleMap, py::return_value_policy::reference_internal)
+		;
+
 
 	py::class_<Parameters>(m, "Parameters")
 		.def(py::init<>())

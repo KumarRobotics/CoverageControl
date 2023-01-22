@@ -216,6 +216,7 @@ namespace CoverageControl {
 			auto pt_obj = cgal_pl.locate(pt);
 			auto* f = boost::get<Arrangement_2::Face_const_handle>(&pt_obj);
 			if(not f) {
+				std::cout << pt << std::endl;
 				throw std::runtime_error{"Could not find a face for the robot"};
 			}
 			/* CGAL_CCBTraversal<Arrangement_2> ((*f)->outer_ccb(), polygon); */

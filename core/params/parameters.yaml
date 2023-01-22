@@ -9,11 +9,11 @@ pWorldMapSize: 1024
 # Could make it sparse if size becomes a problem
 pRobotMapSize: 1024
 pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
-pRobotMapUseUnknownImportance: true
+pRobotMapUseUnknownImportance: false
 
 # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 # Should be greater than pCommunicationRange so that they can form different channels of the same image.
-pLocalMapSize: 512
+pLocalMapSize: 256
 # Radius of communication (in meters)
 pCommunicationRange: 256
 pRobotInitDist: 1024 # Distance from the origin within which to initialize the position of the robots
@@ -34,7 +34,7 @@ pSensorSize: 32
 # Each time step corresponds to pTimeStep in seconds
 pTimeStep: 1
 # in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
-pMaxRobotSpeed: 10
+pMaxRobotSpeed: 5
 # Total time is pEpisodeSteps * pTimeStep
 # This is not cause a hard constraint, but helpful for initializing vectors
 pEpisodeSteps: 1000
@@ -42,14 +42,14 @@ pEpisodeSteps: 1000
 # Bivariate Normal Distribution truncated after pTruncationBND * sigma
 # Helps in reducing the number of erfc evaluations
 # Needs testing to be sure that the probability masses are not significantly off
-pTruncationBND: 4
+pTruncationBND: 2
 
 # Used to normalize map. Max value will be scaled to pNorm.
 pNorm: 1
 
 # These settings are only required if the IDF is generated using random gaussians
-pMinSigma: 15
-pMaxSigma: 20
+pMinSigma: 40
+pMaxSigma: 50
 pMinPeak: 6
 pMaxPeak: 10
 

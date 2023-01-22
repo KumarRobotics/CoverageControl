@@ -73,5 +73,30 @@ namespace CoverageControl {
 		return all_voronoi_cells[best_vornoi_idx];
 	}
 
+	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions) {
+
+		auto voronoi = LloydOffline(num_tries, max_iterations, num_sites, map, map_size, res);
+		auto voronoi_cells = voronoi.GetVoronoiCells();
+		std::vector <std::vector<double>> cost_matrix;
+		cost_matrix.resize(num_sites, std::vector<double>(num_sites));
+#pragma omp parallel for num_threads(num_sites)
+		for(int iRobot = 0; iRobot < num_sites; ++iRobot) {
+			for(int jCentroid = 0; jCentroid < num_sites; ++jCentroid) {
+				cost_matrix[iRobot][jCentroid] = (positions[iRobot] - voronoi_cells[jCentroid].centroid).norm();
+			}
+		}
+		HungarianAlgorithm HungAlgo;
+		std::vector<int> assignment;
+		HungAlgo.Solve(cost_matrix, assignment);
+
+		PointVector goals;
+		goals.resize(num_sites);
+		for(int iRobot = 0; iRobot < num_sites; ++iRobot) {
+			goals[iRobot] = voronoi_cells[assignment[iRobot]].centroid;
+		}
+
+		return goals;
+	}
+
 } /* namespace CoverageControl */
 #endif /* COVERAGECONTROL_LLOYD_ALGORITHMS_H_ */

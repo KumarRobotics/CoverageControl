@@ -8,7 +8,7 @@ import pyCoverageControl # Main library
 from pyCoverageControl import Point2 # for defining points
 from pyCoverageControl import PointVector # for defining list of points
 from pyCoverageControl import CoverageSystem
-from pyCoverageControl import LloydLocalVoronoi, OracleExploreExploit
+from pyCoverageControl import LloydLocalVoronoi, OracleExploreExploit, OracleBangExploreExploit
 from multiprocessing import Pool
 
 # We can visualize the map in python
@@ -20,8 +20,8 @@ colormap = sns.color_palette("light:b", as_cmap=True)
 
 params_ = pyCoverageControl.Parameters('params/parameters.yaml')
 
-num_gaussians = 20
-num_robots = 20
+num_gaussians = 5
+num_robots = 15
 
 count = 0
 robot_id = 0
@@ -30,7 +30,9 @@ num_steps = 0
 env = CoverageSystem(params_, num_gaussians, num_robots)
 
 # oracle = LloydLocalVoronoi(params_, num_robots, env)
-oracle = OracleExploreExploit(params_, num_robots, env)
+# oracle = OracleExploreExploit(params_, num_robots, env)
+oracle = OracleBangExploreExploit(params_, num_robots, env)
+
 voronoi_cells = oracle.GetVoronoiCells()
 robot_positions = env.GetRobotPositions()
 # map = env.GetWorldIDF()
@@ -79,7 +81,8 @@ for i in range(1, num_robots):
 
 def animate(i):
     print(str(i))
-    cont_flag = oracle.Step()
+    for j in range(0, 100):
+        cont_flag = oracle.Step()
     actions = oracle.GetActions()
     robot_positions = env.GetRobotPositions()
     sns.heatmap(oracle.GetOracleMap().transpose(), vmax=params_.pNorm, cmap=colormap, square=True, ax=ax, cbar_ax = cbar_ax)
@@ -108,11 +111,11 @@ def animate_local(i):
 # ani2 = animation.FuncAnimation(fig_local, animate_local, interval=100, blit=False)
 
 
-for i in range(0, 20000):
+for i in range(0, 1000):
     print(i)
     cont_flag = oracle.Step()
     if cont_flag == False:
         break
-
 animate(0)
+
 plt.show()
