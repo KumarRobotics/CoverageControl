@@ -28,6 +28,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	m.doc() = "CoverageControl library";
 
 	py::bind_vector<std::vector<double>>(m, "DblVector");
+	py::bind_vector<std::vector<int>>(m, "intVector");
 
 	m.def("Point2", []() {return Point2(0, 0);});
 	m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
