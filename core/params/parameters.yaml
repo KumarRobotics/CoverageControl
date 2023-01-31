@@ -23,6 +23,8 @@ pUpdateRobotMap: true
 pUpdateSensorView: true
 pUpdateExplorationMap: true
 
+pUpdateSystemMap: true
+
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize
 # Robot is placed at the center of FOV

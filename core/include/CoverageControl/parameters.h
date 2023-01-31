@@ -35,29 +35,31 @@ namespace CoverageControl {
 			// Robot map saves what the robot has seen
 			// Could make it sparse if size becomes a problem
 			int pRobotMapSize = pWorldMapSize;
-			double pUnknownImportance = 0.01;
+			double pUnknownImportance = 0.5;
 			bool pRobotMapUseUnknownImportance = false;
 
 			// Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
-			int pLocalMapSize = 64;
-			double pCommunicationRange = 64; // Radius of communication (in meters)
-			double pRobotInitDist = 100; // Distance from the origin within which to initialize the position of the robots
+			int pLocalMapSize = 256;
+			double pCommunicationRange = 256; // Radius of communication (in meters)
+			double pRobotInitDist = 1024; // Distance from the origin within which to initialize the position of the robots
 
 			// Set pUpdateRobotMap to false for centralized known world
-			bool pUpdateRobotMap = false;
-			bool pUpdateExplorationMap = false;
-			bool pUpdateSensorView = false;
+			bool pUpdateRobotMap = true;
+			bool pUpdateExplorationMap = true;
+			bool pUpdateSensorView = true;
+
+			bool pUpdateSystemMap = true;
 
 			// Assuming square sensor FOV.
 			// Actual FOV: square with side pResolution * pSensorSize
 			// Robot is placed at the center of FOV
 			// Make it even so that I don't have to deal with substracting by half-resolution.
 			// Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
-			int pSensorSize = 12; // Positive integer. NOTE: Needs to be even
+			int pSensorSize = 32; // Positive integer. NOTE: Needs to be even
 
 			// Each time step corresponds to 0.1s, i.e., 10Hz
-			double pTimeStep = 0.1;
+			double pTimeStep = 1;
 			// in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
 			double pMaxRobotSpeed = 5;
 			// This is not cause a hard constraint, but helpful for initializing vectors
@@ -67,15 +69,15 @@ namespace CoverageControl {
 			// Bivariate Normal Distribution truncated after pTruncationBND * sigma
 			// Helps in reducing the number of erfc evaluations
 			// Needs testing to be sure that the probability masses are not significantly off
-			double pTruncationBND = 4;
+			double pTruncationBND = 2;
 
 			// Used to normalize map. Max value will be scaled to pNorm. 255 for images
-			double pNorm = 255;
+			double pNorm = 1;
 
 			// These settings are only required if the IDF is generated using random gaussians
-			double pMinSigma = 1;
-			double pMaxSigma = 10;
-			double pMinPeak = 5;
+			double pMinSigma = 40;
+			double pMaxSigma = 50;
+			double pMinPeak = 6;
 			double pMaxPeak = 10;
 
 			int pLloydMaxIterations = 100;

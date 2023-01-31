@@ -40,6 +40,9 @@ namespace CoverageControl {
 			std::uniform_real_distribution<> distrib_pts_;
 			std::vector <std::vector<double>> cost_matrix_;
 			PointVector robot_global_positions_;
+			MapType system_map_; // Map with exploration and coverage
+			MapType exploration_map_; // Binary map: true for unexplored locations
+			MapType explored_idf_map_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -84,6 +87,10 @@ namespace CoverageControl {
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					robot_global_positions_[iRobot] = robots_[iRobot].GetGlobalCurrentPosition();
 				}
+				system_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+				exploration_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 1);
+				explored_idf_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+				PostStepCommands();
 			}
 
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
@@ -109,18 +116,35 @@ namespace CoverageControl {
 
 			}
 
+			void UpdateSystemMap() {
+				for(size_t i = 0; i < num_robots_; ++i) {
+					MapUtils::MapBounds index, offset;
+					MapUtils::ComputeOffsets(params_.pResolution, robot_global_positions_[i], params_.pSensorSize, params_.pWorldMapSize, index, offset);
+					explored_idf_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = GetRobotSensorView(i).block(offset.left, offset.bottom, offset.width, offset.height);
+					exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
+				}
+				system_map_ = explored_idf_map_ + exploration_map_;
+			}
+
+			void PostStepCommands() {
+				UpdateRobotPositions();
+				if(params_.pUpdateSystemMap) {
+					UpdateSystemMap();
+				}
+			}
+
 			void SetWorldIDF(WorldIDF const &world_idf) { world_idf_ = world_idf;
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 			}
 
-			bool StepAction(size_t const robot_id, Point2 const &action) {
+			bool StepAction(size_t const robot_id, Point2 const action) {
 				double speed = action.norm();
 				Point2 direction = action.normalized();
 				if(robots_[robot_id].StepControl(direction, speed)) {
 						std::cerr << "Control incorrect\n";
 						return 1;
 				}
-				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
+				PostStepCommands();
 				return 0;
 			}
 
@@ -129,29 +153,38 @@ namespace CoverageControl {
 						std::cerr << "Control incorrect\n";
 						return 1;
 				}
-				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
+				PostStepCommands();
 				return 0;
 			}
 
-			void UpdateRobotPositions(std::vector<Point2> const &positions) {
+			void SetRobotPositions(std::vector<Point2> const &positions) {
 				if(positions.size() != num_robots_) {
 					throw std::length_error{"The size of the positions don't match with the number of robots"};
 				}
 				for(size_t i = 0; i < num_robots_; ++i) {
-					robots_[i].UpdateRobotPosition(positions[i]);
+					std::cout << positions[i].x() << " " << positions[i].y() << "\n";
+					robots_[i].SetRobotPosition(positions[i]);
+				}
+				std::cout << "Robot positions updated\n";
+				PostStepCommands();
+			}
+
+			void UpdateRobotPositions() {
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					robot_global_positions_[iRobot] = robots_[iRobot].GetGlobalCurrentPosition();
 				}
 			}
 
 			PointVector GetRobotPositions() {
-				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					robot_global_positions_[iRobot] = robots_[iRobot].GetGlobalCurrentPosition();
-				}
+				UpdateRobotPositions();
 				return robot_global_positions_;
 			}
 
 			Point2 GetRobotPosition(int const robot_id) const { return robots_[robot_id].GetGlobalCurrentPosition(); }
 
 			MapType const& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
+
+			MapType const& GetSystemMap() const { return system_map_; }
 
 			void CheckRobotID(size_t const id) const {
 				if(id >= num_robots_) {
@@ -215,7 +248,7 @@ namespace CoverageControl {
 			}
 
 			void ComputeVoronoiCells() {
-				GetRobotPositions();
+				UpdateRobotPositions();
 				voronoi_ = Voronoi(robot_global_positions_, GetWorldIDF(), params_.pWorldMapSize, params_.pResolution);
 				voronoi_cells_ = voronoi_.GetVoronoiCells();
 			}
@@ -235,13 +268,13 @@ namespace CoverageControl {
 					std::cerr << "Control incorrect\n";
 					return 1;
 				}
-				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
+				PostStepCommands();
 				return 0;
 			}
 
 			bool StepRobotsToGoals(PointVector const &goals, PointVector &actions) {
 				bool cont_flag = false;
-				GetRobotPositions();
+				UpdateRobotPositions();
 /* #pragma omp parallel for num_threads(num_robots_) */
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					actions[iRobot] = Point2(0, 0);
@@ -260,6 +293,7 @@ namespace CoverageControl {
 					}
 					cont_flag = true;
 				}
+				PostStepCommands();
 				return cont_flag;
 			}
 
@@ -305,7 +339,7 @@ namespace CoverageControl {
 					std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
 					return 1;
 				}
-				GetRobotPositions();
+				UpdateRobotPositions();
 				for(auto const &pos:robot_global_positions_) {
 					file_obj << pos[0] << " " << pos[1] << std::endl;
 				}
@@ -319,7 +353,6 @@ namespace CoverageControl {
 					std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
 					return 1;
 				}
-				GetRobotPositions();
 				for(auto const &pos:positions) {
 					file_obj << pos[0] << " " << pos[1] << std::endl;
 				}

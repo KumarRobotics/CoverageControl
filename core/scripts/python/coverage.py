@@ -57,7 +57,7 @@ env.StepControl(1, control_directions[1], speeds[1])
 new_robot_positions = PointVector()
 new_robot_positions.append(np.array([10, 10]))
 new_robot_positions.append(np.array([11, 11]))
-env.UpdateRobotPositions(new_robot_positions)
+env.SetRobotPositions(new_robot_positions)
 
 # Get current global robot positions
 robot_positions = env.GetRobotPositions()
@@ -148,7 +148,7 @@ speed = 5 # m/s
 robot.StepControl(control_dir, speed)
 # Second way: directly update pos of robot
 new_pos = Point2(512, 512)
-robot.UpdateRobotPosition(new_pos)
+robot.SetRobotPosition(new_pos)
 
 # Get the current global position of the robot
 robot_pos = robot.GetGlobalCurrentPosition()

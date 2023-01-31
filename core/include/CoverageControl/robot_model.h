@@ -117,18 +117,18 @@ namespace CoverageControl {
 				if(sp > kEps) {
 					new_pos = local_current_position_ + dir * sp * params_.pTimeStep;
 				}
-				UpdateRobotPosition(new_pos);
+				SetRobotPosition(new_pos);
 				return 0;
 			}
 
-			void UpdateRobotPosition(Point2 const &pos) {
+			void SetRobotPosition(Point2 const &pos) {
 				Point2 new_global_pos = pos + global_start_position_;
 				double eps = 0.0001;
-				if(new_global_pos.x() < 0) { new_global_pos[0] = 0 + eps; }
-				if(new_global_pos.y() < 0) { new_global_pos[1] = 0 + eps; }
+				if(new_global_pos.x() <= 0) { new_global_pos[0] = 0 + eps; }
+				if(new_global_pos.y() <= 0) { new_global_pos[1] = 0 + eps; }
 				double max_xy = params_.pWorldMapSize * params_.pResolution;
-				if(new_global_pos.x() > max_xy) { new_global_pos[0] = max_xy - eps; }
-				if(new_global_pos.y() > max_xy) { new_global_pos[1] = max_xy - eps; }
+				if(new_global_pos.x() >= max_xy) { new_global_pos[0] = max_xy - eps; }
+				if(new_global_pos.y() >= max_xy) { new_global_pos[1] = max_xy - eps; }
 
 				local_current_position_ = new_global_pos - global_start_position_;
 				global_current_position_ = new_global_pos;
@@ -141,6 +141,7 @@ namespace CoverageControl {
 				if(params_.pUpdateExplorationMap == true) {
 					UpdateExplorationMap();
 				}
+				std::cout << "Robot positions: " << global_current_position_.x() << " " << global_current_position_.y() << std::endl;
 			}
 
 			Point2 GetGlobalStartPosition() const { return global_start_position_; }
