@@ -3,10 +3,11 @@ print_usage() {
 	printf "bash $0 [-u (for update)] [-i (for install)]\n"
 }
 
-while getopts 'ui' flag; do
+while getopts 'uic' flag; do
 	case "${flag}" in
 		u) UPDATE=true;;
 		i) INSTALL=true;;
+		c) CLEAN=true;;
 		*) print_usage
 			exit 1 ;;
 esac
@@ -100,6 +101,13 @@ InstallEigen3 () {
 	rm -rf ${COVERAGECONTROL_WS}/src/eigen-3.4.0
 }
 
+CleanBuild () {
+	rm -rf ${BUILD_DIR}
+	rm -rf ${INSTALL_DIR}
+	rm -rf ${COVERAGECONTROL_WS}/src/CoverageControl/build
+	rm -rf ${COVERAGECONTROL_WS}/src/CoverageControl/pyCoverageControl.egg-info
+}
+
 UpdateCoverageControl () {
 	# Run the following commands to update after a change in the repository
 	# The CoverageControl repository is located in ${COVERAGECONTROL_WS}/src/CoverageControl
@@ -130,4 +138,10 @@ if [[ ${UPDATE} ]]
 then
 	echo "Updating Coverage Control"
 	UpdateCoverageControl
+fi
+
+if [[ ${CLEAN} ]]
+then
+	echo "Cleaning build and install directories"
+	CleanBuild
 fi
