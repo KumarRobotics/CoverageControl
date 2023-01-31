@@ -141,7 +141,6 @@ namespace CoverageControl {
 				if(params_.pUpdateExplorationMap == true) {
 					UpdateExplorationMap();
 				}
-				std::cout << "Robot positions: " << global_current_position_.x() << " " << global_current_position_.y() << std::endl;
 			}
 
 			Point2 GetGlobalStartPosition() const { return global_start_position_; }

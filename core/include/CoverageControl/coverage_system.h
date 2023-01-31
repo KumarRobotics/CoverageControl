@@ -157,12 +157,12 @@ namespace CoverageControl {
 				return 0;
 			}
 
+			// Sets positions of all robots with respect to the local start position
 			void SetRobotPositions(std::vector<Point2> const &positions) {
 				if(positions.size() != num_robots_) {
 					throw std::length_error{"The size of the positions don't match with the number of robots"};
 				}
 				for(size_t i = 0; i < num_robots_; ++i) {
-					std::cout << positions[i].x() << " " << positions[i].y() << "\n";
 					robots_[i].SetRobotPosition(positions[i]);
 				}
 				std::cout << "Robot positions updated\n";
