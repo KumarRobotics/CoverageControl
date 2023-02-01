@@ -20,7 +20,12 @@
 using namespace CoverageControl;
 
 int main(int argc, char** argv) {
-	Parameters params("/home/saurav/CoverageControl_ws/data/oracle/parameters.yaml");
+	Parameters params;
+	if (argc == 2) {
+		std::string parameter_file = argv[1];
+		params = Parameters(parameter_file);
+	}
+
 	int num_robots = 15;
 	int num_dists = 10;
 	CoverageSystem env(params, num_dists, num_robots);

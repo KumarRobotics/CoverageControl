@@ -3,7 +3,6 @@ dataname=ARG1.'.dat'
 posfilename=ARG2
 goalfilename=ARG3
 MAXVAL=ARG4
-MAXVAL=ARG4
 RES=ARG5
 RANGE=ARG6
 

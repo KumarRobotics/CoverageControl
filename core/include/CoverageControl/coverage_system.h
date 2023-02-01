@@ -18,6 +18,8 @@
 #include "parameters.h"
 #include "typedefs.h"
 #include "bivariate_normal_distribution.h"
+#include "world_idf.h"
+#include "robot_model.h"
 #include "map_utils.h"
 #include "voronoi.h"
 #include "lloyd_algorithms.h"
@@ -43,6 +45,7 @@ namespace CoverageControl {
 			MapType system_map_; // Map with exploration and coverage
 			MapType exploration_map_; // Binary map: true for unexplored locations
 			MapType explored_idf_map_;
+			std::vector <std::list<Point2>> robot_positions_history_;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -78,6 +81,7 @@ namespace CoverageControl {
 					robots_.push_back(RobotModel(params_, start_pos, world_idf_));
 				}
 				num_robots_ = robots_.size();
+				robot_positions_history_.resize(num_robots_);
 
 				cost_matrix_.resize(num_robots_, std::vector<double>(num_robots_));
 				voronoi_cells_.resize(num_robots_);
@@ -123,13 +127,21 @@ namespace CoverageControl {
 					explored_idf_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = GetRobotSensorView(i).block(offset.left, offset.bottom, offset.width, offset.height);
 					exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 				}
-				system_map_ = explored_idf_map_ + exploration_map_;
+				system_map_ = explored_idf_map_ - exploration_map_;
 			}
 
 			void PostStepCommands() {
 				UpdateRobotPositions();
 				if(params_.pUpdateSystemMap) {
 					UpdateSystemMap();
+				}
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					auto &history = robot_positions_history_[iRobot];
+					if(history.size() > 0 and history.size() == size_t(params_.pRobotPosHistorySize)) {
+						history.pop_front();
+					} else {
+						history.push_back(robot_global_positions_[iRobot]);
+					}
 				}
 			}
 
@@ -141,8 +153,8 @@ namespace CoverageControl {
 				double speed = action.norm();
 				Point2 direction = action.normalized();
 				if(robots_[robot_id].StepControl(direction, speed)) {
-						std::cerr << "Control incorrect\n";
-						return 1;
+					std::cerr << "Control incorrect\n";
+					return 1;
 				}
 				PostStepCommands();
 				return 0;
@@ -150,8 +162,8 @@ namespace CoverageControl {
 
 			bool StepControl(size_t robot_id, Point2 const &direction, double const speed) {
 				if(robots_[robot_id].StepControl(direction, speed)) {
-						std::cerr << "Control incorrect\n";
-						return 1;
+					std::cerr << "Control incorrect\n";
+					return 1;
 				}
 				PostStepCommands();
 				return 0;
@@ -333,13 +345,12 @@ namespace CoverageControl {
 				return normalization_factor_;
 			}
 
-			inline int WriteRobotPositions(std::string const &file_name) {
+			inline int WriteRobotPositions(std::string const &file_name) const {
 				std::ofstream file_obj(file_name);
 				if(!file_obj) {
 					std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
 					return 1;
 				}
-				UpdateRobotPositions();
 				for(auto const &pos:robot_global_positions_) {
 					file_obj << pos[0] << " " << pos[1] << std::endl;
 				}
@@ -359,6 +370,9 @@ namespace CoverageControl {
 				file_obj.close();
 				return 0;
 			}
+
+			void PlotSystemMap(std::string const &dir_name, int, std::vector <int> robot_status={}) const ;
+			void PlotWorldMap(std::string const &dir_name) const ;
 	};
 
 } /* namespace CoverageControl */

@@ -43,6 +43,7 @@ namespace CoverageControl {
 			int pLocalMapSize = 256;
 			double pCommunicationRange = 256; // Radius of communication (in meters)
 			double pRobotInitDist = 1024; // Distance from the origin within which to initialize the position of the robots
+			int pRobotPosHistorySize = 200; // Number of previous positions to store
 
 			// Set pUpdateRobotMap to false for centralized known world
 			bool pUpdateRobotMap = true;

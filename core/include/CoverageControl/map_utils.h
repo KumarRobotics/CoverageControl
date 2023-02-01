@@ -67,6 +67,24 @@ namespace CoverageControl {
 			return 0;
 		}
 
+		/** Write the world map to a file **/
+		inline int WriteMapSparse(MapType const &map, std::string const &file_name) {
+			std::ofstream file_obj(file_name);
+			if(!file_obj) {
+				std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
+				return 1;
+			}
+			for(int i = 0; i < map.rows(); ++i) {
+				for(int j = 0; j < map.cols(); ++j) {
+					if(map(i,j) >= 0) {
+						file_obj << i << " " << j << " " << map(i,j) << std::endl;
+					}
+				}
+			}
+			file_obj.close();
+			return 0;
+		}
+
 		inline int IsPointOutsideBoundary(double const resolution, Point2 const &pos, int const sensor_size, int const boundary) {
 			if (pos.x() <= -sensor_size * resolution/2.) { return 1; }
 			if (pos.y() <= -sensor_size * resolution/2.) { return 1; }

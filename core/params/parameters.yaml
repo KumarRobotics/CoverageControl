@@ -25,6 +25,8 @@ pUpdateExplorationMap: true
 
 pUpdateSystemMap: true
 
+pRobotPosHistorySize: 200
+
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize
 # Robot is placed at the center of FOV

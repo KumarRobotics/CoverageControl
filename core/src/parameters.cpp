@@ -18,6 +18,7 @@ namespace CoverageControl {
 		pLocalMapSize = yaml_config_["pLocalMapSize"].as<int>();
 		pCommunicationRange = yaml_config_["pCommunicationRange"].as<double>();
 		pRobotInitDist = yaml_config_["pRobotInitDist"].as<double>();
+		pRobotPosHistorySize = yaml_config_["pRobotPosHistorySize"].as<int>();
 		pUpdateRobotMap = yaml_config_["pUpdateRobotMap"].as<bool>();
 		pUpdateSystemMap = yaml_config_["pUpdateSystemMap"].as<bool>();
 		pUpdateExplorationMap = yaml_config_["pUpdateExplorationMap"].as<bool>();
