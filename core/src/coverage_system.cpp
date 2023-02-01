@@ -37,7 +37,7 @@ namespace CoverageControl {
 		}
 
 		Gnuplot gp;
-		gp << "set terminal pngcairo enhanced font 'Times,28' size 2048, 2048\n";
+		gp << "set terminal pngcairo enhanced font 'Times,14' size 1024, 1024\n";
 		gp << "set o '" << map_filename << ".png'\n";
 		gp << "set palette defined (-1 '#aeb6bf', 0 'white', 1 '#900C3F')\n";
 		gp << "set xrange [0:" << params_.pWorldMapSize * params_.pResolution << "]\n";
@@ -49,16 +49,16 @@ namespace CoverageControl {
 		gp << "plot '"<< data_filename << "' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 			if(robot_status[iRobot] == 0) {
-				gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw 4 lc rgb '#1b4f72' notitle";
+				gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw 2 lc rgb '#1b4f72' notitle";
 			} else {
-				gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw 4 lc rgb '#1b4f72' notitle";
+				gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw 2 lc rgb '#196f3d' notitle";
 			}
 		}
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 			if(robot_status[iRobot] == 0) {
-				gp << ",'-' with points pt 7 ps 4 lc rgb '#1b4f72' notitle";
+				gp << ",'-' with points pt 7 ps 2 lc rgb '#1b4f72' notitle";
 			} else {
-				gp << ",'-' with points pt 7 ps 4 lc rgb '#1b4f72' notitle";
+				gp << ",'-' with points pt 7 ps 2 lc rgb '#196f3d' notitle";
 				/* gp << ",'-' with points pt 7 ps 2 lc rgb '#196f3d' notitle"; */
 			}
 		}
@@ -88,7 +88,7 @@ namespace CoverageControl {
 		WriteRobotPositions(pos_filename);
 
 		Gnuplot gp;
-		gp << "set terminal pngcairo enhanced font 'Times,28' size 2048, 2048\n";
+		gp << "set terminal pngcairo enhanced font 'Times,14' size 1024, 1024\n";
 		gp << "set o '" << map_filename << ".png'\n";
 		gp << "set palette defined (-1 '#aeb6bf', 0 'white', 1 '#900C3F')\n";
 		gp << "set xrange [0:" << params_.pWorldMapSize * params_.pResolution << "]\n";
@@ -98,7 +98,7 @@ namespace CoverageControl {
 		gp << "unset colorbox\n";
 		std::string res = std::to_string(params_.pResolution);
 		gp << "plot '"<< data_filename << "' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
-		gp << ",'" << pos_filename << "' with points pt 7 ps 4 lc rgb '#1b4f72' notitle";
+		gp << ",'" << pos_filename << "' with points pt 7 ps 2 lc rgb '#1b4f72' notitle";
 		gp << "\n";
 	}
 }	// namespace CoverageControl

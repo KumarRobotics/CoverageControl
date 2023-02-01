@@ -117,6 +117,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetSystemMap", &CoverageSystem::GetSystemMap, py::return_value_policy::reference_internal)
 		.def("GetObjectiveValue", &CoverageSystem::GetObjectiveValue)
 		.def("PlotSystemMap", &CoverageSystem::PlotSystemMap)
+		.def("PlotWorldMap", &CoverageSystem::PlotWorldMap)
 		;
 	
 	py::class_<OracleGlobalOffline>(m, "OracleGlobalOffline")
