@@ -102,11 +102,12 @@ namespace CoverageControl {
 			int StepControl(Point2 const &direction, double const &speed) {
 				auto dir = direction;
 				auto sp = speed;
-				Point2 new_pos(0,0);
+				Point2 new_pos = local_current_position_;
 				if(sp > params_.pMaxRobotSpeed) { sp = params_.pMaxRobotSpeed; }
 				if(sp < 0 or (dir.norm() < kEps and sp >= kEps)) {
 					std::cout << sp << " " << dir.norm() << std::endl;
 					std::cerr << "Speed needs to be non-negative\n";
+					std::cerr << "Zero-vector direction cannot be given in control\n";
 					return 1;
 				}
 				/* if(dir.normalize() and sp > kEps) { */

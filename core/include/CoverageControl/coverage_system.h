@@ -46,6 +46,7 @@ namespace CoverageControl {
 			MapType exploration_map_; // Binary map: true for unexplored locations
 			MapType explored_idf_map_;
 			std::vector <std::list<Point2>> robot_positions_history_;
+			double exploration_ratio_ = 0;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -128,7 +129,10 @@ namespace CoverageControl {
 					exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 				}
 				system_map_ = explored_idf_map_ - exploration_map_;
+				exploration_ratio_ = 1.0 - (double)(exploration_map_.count())/(params_.pWorldMapSize * params_.pWorldMapSize);
 			}
+
+			inline double GetExplorationRatio() const { return exploration_ratio_; }
 
 			void PostStepCommands() {
 				UpdateRobotPositions();
@@ -195,8 +199,9 @@ namespace CoverageControl {
 			Point2 GetRobotPosition(int const robot_id) const { return robots_[robot_id].GetGlobalCurrentPosition(); }
 
 			MapType const& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
-
 			MapType const& GetSystemMap() const { return system_map_; }
+			MapType const& GetSystemExplorationMap() const { return exploration_map_; }
+			MapType const& GetSystemExploredIDFMap() const { return explored_idf_map_; }
 
 			void CheckRobotID(size_t const id) const {
 				if(id >= num_robots_) {

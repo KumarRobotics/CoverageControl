@@ -42,9 +42,8 @@ int main(int argc, char** argv) {
 		for(size_t iRobot = 0; iRobot < num_robots; ++iRobot) {
 			env.StepAction(iRobot, actions[iRobot]);
 		}
-		oracle.UpdateOracleMap();
 		auto robot_status = oracle.GetRobotStatus();
-		if(ii%1 == 0) {
+		if(ii%5 == 0) {
 			env.PlotSystemMap(dir, count, robot_status);
 			++count;
 		}
