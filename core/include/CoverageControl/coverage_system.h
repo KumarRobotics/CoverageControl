@@ -371,7 +371,11 @@ namespace CoverageControl {
 				return 0;
 			}
 
-			void PlotSystemMap(std::string const &dir_name, int, std::vector <int> robot_status={}) const ;
+			void PlotSystemMap(std::string const &dir_name, int const &step) const {
+				std::vector<int> robot_status(num_robots_, 0);
+				PlotSystemMap(dir_name, step, robot_status);
+			}
+			void PlotSystemMap(std::string const &, int const &, std::vector <int> const &) const ;
 			void PlotWorldMap(std::string const &dir_name) const ;
 	};
 

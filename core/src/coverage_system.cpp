@@ -5,10 +5,7 @@
 
 namespace CoverageControl {
 
-	void CoverageSystem::PlotSystemMap(std::string const &dir_name, int step, std::vector<int> robot_status) const {
-		if(robot_status.size() == 0) {
-			robot_status = std::vector<int>(num_robots_, 0);
-		}
+	void CoverageSystem::PlotSystemMap(std::string const &dir_name, int const &step, std::vector<int> const &robot_status) const {
 		std::filesystem::path path{dir_name};
 		if(not std::filesystem::exists(path)) {
 			std::cerr << "Directory does not exist" << std::endl;
@@ -20,7 +17,7 @@ namespace CoverageControl {
 		std::string s = ss.str();
 		std::string imap_name = "map" + s;
 		std::string map_filename {std::filesystem::absolute(path/imap_name)};
-		std::cout << map_filename << std::endl;
+		/* std::cout << map_filename << std::endl; */
 
 		std::string data_filename {std::filesystem::absolute(path/"data")};
 		std::string pos_filename {std::filesystem::absolute(path/"pos")};
