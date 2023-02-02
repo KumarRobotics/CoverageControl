@@ -39,6 +39,7 @@ from pyCoverageControl import CoverageSystem
 num_gaussians = 100
 num_robots = 2
 env = CoverageSystem(params_, num_gaussians, num_robots)
+env.PlotWorldMap(".")
 map = env.GetWorldIDF()
 plot_map(map)
 
