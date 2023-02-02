@@ -104,7 +104,7 @@ namespace CoverageControl {
 				auto sp = speed;
 				Point2 new_pos(0,0);
 				if(sp > params_.pMaxRobotSpeed) { sp = params_.pMaxRobotSpeed; }
-				if(sp < 0 or dir.norm() < kEps) {
+				if(sp < 0 or (dir.norm() < kEps and sp >= kEps)) {
 					std::cout << sp << " " << dir.norm() << std::endl;
 					std::cerr << "Speed needs to be non-negative\n";
 					return 1;
