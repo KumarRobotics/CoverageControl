@@ -319,6 +319,7 @@ namespace CoverageControl {
 				return voronoi_.GetObjValue();
 			}
 
+			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
 			auto GetLocalVoronoiFeatures(int const robot_id) { 
 					auto robot_local_map = robots_[robot_id].GetRobotLocalMap();
 					auto robot_neighbors_pos = GetRobotsInCommunication(robot_id);
@@ -332,7 +333,7 @@ namespace CoverageControl {
 					}
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					auto vcell = voronoi.GetVoronoiCell();
-					vcell.centroid -= map_translation;
+					/* vcell.centroid -= map_translation; */
 					Point3 feature(vcell.centroid.x(), vcell.centroid.y(), vcell.mass);
 					return feature;
 			}

@@ -16,6 +16,7 @@
 #include <CoverageControl/oracles/lloyd_local_voronoi.h>
 #include <CoverageControl/oracles/oracle_explore_exploit.h>
 #include <CoverageControl/oracles/oracle_bang_explore_exploit.h>
+#include <CoverageControl/oracles/simul_explore_exploit.h>
 
 
 using namespace CoverageControl;
@@ -150,6 +151,15 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetGoals", &OracleExploreExploit::GetGoals)
 		.def("GetVoronoiCells", &OracleExploreExploit::GetVoronoiCells, py::return_value_policy::copy)
 		.def("GetOracleMap", &OracleExploreExploit::GetOracleMap, py::return_value_policy::reference_internal)
+		;
+
+	py::class_<OracleSimulExploreExploit>(m, "OracleSimulExploreExploit")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &OracleSimulExploreExploit::Step)
+		.def("GetActions", &OracleSimulExploreExploit::GetActions)
+		.def("GetRobotStatus", &OracleSimulExploreExploit::GetRobotStatus)
+		.def("SetGoals", &OracleSimulExploreExploit::SetGoals)
+		.def("GetGoals", &OracleSimulExploreExploit::GetGoals)
 		;
 
 	py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")
