@@ -319,12 +319,9 @@ namespace CoverageControl {
 				return voronoi_.GetObjValue();
 			}
 
-			auto GetLocalVoronoiFeatures() {
-				std::vector <Point3> features(num_robots_);
-#pragma omp parallel for num_threads(num_robots_)
-				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					auto robot_local_map = robots_[iRobot].GetRobotLocalMap();
-					auto robot_neighbors_pos = GetRobotsInCommunication(iRobot);
+			auto GetLocalVoronoiFeatures(int const robot_id) { 
+					auto robot_local_map = robots_[robot_id].GetRobotLocalMap();
+					auto robot_neighbors_pos = GetRobotsInCommunication(robot_id);
 					PointVector robot_positions(robot_neighbors_pos.size() + 1);
 					Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
 					robot_positions[0] = map_translation;
@@ -336,7 +333,14 @@ namespace CoverageControl {
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					auto vcell = voronoi.GetVoronoiCell();
 					Point3 feature(vcell.centroid.x(), vcell.centroid.y(), vcell.mass);
-					features[iRobot] = feature;
+					return feature;
+			}
+
+			auto GetLocalVoronoiFeatures() {
+				std::vector <Point3> features(num_robots_);
+#pragma omp parallel for num_threads(num_robots_)
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					features[iRobot] = GetLocalVoronoiFeatures(iRobot);
 				}
 				return features;
 			}

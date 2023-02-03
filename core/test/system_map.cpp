@@ -16,6 +16,7 @@
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/oracles/oracle_explore_exploit.h>
 #include <CoverageControl/oracles/oracle_bang_explore_exploit.h>
+#include <CoverageControl/oracles/simul_explore_exploit.h>
 
 using namespace CoverageControl;
 
@@ -30,7 +31,7 @@ int main(int argc, char** argv) {
 	int num_robots = 15;
 	int num_dists = 10;
 	CoverageSystem env(params, num_dists, num_robots);
-	OracleBangExploreExploit oracle(params, num_robots, env);
+	OracleSimulExploreExploit oracle(params, num_robots, env);
 
 	std::string dir = "data/test/";
 	env.PlotWorldMap(dir);
