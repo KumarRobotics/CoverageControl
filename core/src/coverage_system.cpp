@@ -31,21 +31,6 @@ namespace CoverageControl {
 		std::string s = ss.str();
 		std::string imap_name = "map" + s;
 		std::string map_filename {std::filesystem::absolute(path/imap_name)};
-		/* std::cout << map_filename << std::endl; */
-
-		std::string data_filename {std::filesystem::absolute(path/"data")};
-		std::string pos_filename {std::filesystem::absolute(path/"pos")};
-
-		MapUtils::WriteMap(system_map_, data_filename);
-		WriteRobotPositions(pos_filename);
-
-		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-			std::ofstream file_obj(pos_filename + std::to_string(iRobot));
-			for(auto const &pos : robot_positions_history_[iRobot]) {
-				file_obj << pos[0] << " " << pos[1] << std::endl;
-			}
-			file_obj.close();
-		}
 
 		Gnuplot gp;
 		std::string marker_sz;
@@ -54,12 +39,12 @@ namespace CoverageControl {
 		gp << "set o '" << map_filename << ".png'\n";
 
 		std::string res = std::to_string(params_.pResolution);
-		gp << "plot '"<< data_filename << "' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
+		gp << "plot '-' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle";
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 			if(robot_status[iRobot] == 0) {
-				gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw " << marker_sz << " lc rgb '#1b4f72' notitle";
+				gp << ", '-' with line lw " << marker_sz << " lc rgb '#1b4f72' notitle";
 			} else {
-				gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw " << marker_sz << " lc rgb '#196f3d' notitle";
+				gp << ", '-' with line lw " << marker_sz << " lc rgb '#196f3d' notitle";
 			}
 		}
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -71,11 +56,24 @@ namespace CoverageControl {
 			}
 		}
 		gp << "\n";
+		for(long int i = 0; i < system_map_.rows(); ++i) {
+			for(long int j = 0; j < system_map_.cols(); ++j) {
+				gp << system_map_(i, j) << " ";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-			gp << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
-			gp << "e\n";;
+			for(auto const &pos : robot_positions_history_[iRobot]) {
+				gp << pos[0] << " " << pos[1] << std::endl;
+			}
+			gp << "e\n";
 		}
 
+		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+			gp << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
+			gp << "e\n";
+		}
 	}
 
 	void CoverageSystem::PlotWorldMap(std::string const &dir_name) const {
@@ -89,21 +87,27 @@ namespace CoverageControl {
 		std::string map_filename {std::filesystem::absolute(path/imap_name)};
 		std::cout << map_filename << std::endl;
 
-		std::string data_filename {std::filesystem::absolute(path/"data")};
-		std::string pos_filename {std::filesystem::absolute(path/"pos")};
-
-		MapUtils::WriteMap(GetWorldIDF(), data_filename);
-		WriteRobotPositions(pos_filename);
-
 		Gnuplot gp;
 		std::string marker_sz;
 		GnuplotCommands(gp, params_.pWorldMapSize * params_.pResolution, marker_sz);
 
 		gp << "set o '" << map_filename << ".png'\n";
 		std::string res = std::to_string(params_.pResolution);
-		gp << "plot '"<< data_filename << "' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
-		gp << ",'" << pos_filename << "' with points pt 7 ps " << marker_sz << " lc rgb '#1b4f72' notitle";
+		gp << "plot '-' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
+		gp << ",'-' with points pt 7 ps " << marker_sz << " lc rgb '#1b4f72' notitle";
 		gp << "\n";
+		auto world_map = GetWorldIDF();
+		for(long int i = 0; i < world_map.rows(); ++i) {
+			for(long int j = 0; j < world_map.cols(); ++j) {
+				gp << world_map(i, j) << " ";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
+		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+			gp << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
+		}
+		gp << "e\n";
 	}
 
 	void CoverageSystem::PlotFrontiers(std::string const &dir_name, int const &step, PointVector const &frontiers) const {
@@ -118,21 +122,6 @@ namespace CoverageControl {
 		std::string s = ss.str();
 		std::string imap_name = "map" + s;
 		std::string map_filename {std::filesystem::absolute(path/imap_name)};
-		/* std::cout << map_filename << std::endl; */
-
-		std::string data_filename {std::filesystem::absolute(path/"data")};
-		std::string pos_filename {std::filesystem::absolute(path/"pos")};
-
-		MapUtils::WriteMap(system_map_, data_filename);
-		WriteRobotPositions(pos_filename);
-
-		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-			std::ofstream file_obj(pos_filename + std::to_string(iRobot));
-			for(auto const &pos : robot_positions_history_[iRobot]) {
-				file_obj << pos[0] << " " << pos[1] << std::endl;
-			}
-			file_obj.close();
-		}
 
 		Gnuplot gp;
 		std::string marker_sz;
@@ -141,15 +130,32 @@ namespace CoverageControl {
 		gp << "set o '" << map_filename << ".png'\n";
 
 		std::string res = std::to_string(params_.pResolution);
-		gp << "plot '"<< data_filename << "' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
-		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-			gp << ", '" << pos_filename << std::to_string(iRobot) << "' with line lw " << marker_sz << " lc rgb '#1b4f72' notitle";
-		}
+		gp << "plot '-' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle ";
+		// Plot trajectory trails
+		gp << ", '-' with line lw " << marker_sz << " lc rgb '#1b4f72' notitle";
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 			gp << ",'-' with points pt 7 ps " << marker_sz << " lc rgb '#1b4f72' notitle";
 		}
 			gp << ",'-' with points pt 1 ps " << marker_sz << " lc rgb 'red' notitle";
 		gp << "\n";
+		for(long int i = 0; i < system_map_.rows(); ++i) {
+			for(long int j = 0; j < system_map_.cols(); ++j) {
+				gp << system_map_(i, j) << " ";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
+		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+			for(auto const &pos : robot_positions_history_[iRobot]) {
+				gp << pos[0] << " " << pos[1] << std::endl;
+			}
+			if(iRobot < num_robots_ - 1) {
+				gp << "\n";;
+			} else {
+				gp << "e\n";;
+			}
+		}
+
 		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 			gp << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
 			gp << "e\n";;

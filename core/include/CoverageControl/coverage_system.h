@@ -332,6 +332,7 @@ namespace CoverageControl {
 					}
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					auto vcell = voronoi.GetVoronoiCell();
+					vcell.centroid -= map_translation;
 					Point3 feature(vcell.centroid.x(), vcell.centroid.y(), vcell.mass);
 					return feature;
 			}

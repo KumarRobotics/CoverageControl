@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 			env.StepAction(iRobot, actions[iRobot]);
 		}
 		auto robot_status = oracle.GetRobotStatus();
-		if(ii%5 == 0) {
+		if(ii%1 == 0) {
 			env.PlotSystemMap(dir, count, robot_status);
 			++count;
 		}
