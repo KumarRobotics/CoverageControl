@@ -120,18 +120,9 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetObjectiveValue", &CoverageSystem::GetObjectiveValue)
 		.def("PlotSystemMap", py::overload_cast<std::string const &, int const &>(&CoverageSystem::PlotSystemMap, py::const_))
 		.def("PlotWorldMap", &CoverageSystem::PlotWorldMap)
+		.def("PlotMapVoronoi", &CoverageSystem::PlotMapVoronoi)
 		;
 	
-	py::class_<OracleGlobalOffline>(m, "OracleGlobalOffline")
-		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-		.def("Step", &OracleGlobalOffline::Step)
-		.def("GetActions", &OracleGlobalOffline::GetActions)
-		.def("ComputeGoals", &OracleGlobalOffline::ComputeGoals)
-		.def("SetGoals", &OracleGlobalOffline::SetGoals)
-		.def("GetGoals", &OracleGlobalOffline::GetGoals)
-		.def("GetVoronoiCells", &OracleGlobalOffline::GetVoronoiCells, py::return_value_policy::copy)
-		;
-
 	py::class_<LloydLocalVoronoi>(m, "LloydLocalVoronoi")
 		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
 		.def("Step", &LloydLocalVoronoi::Step)
@@ -160,6 +151,14 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetRobotStatus", &OracleSimulExploreExploit::GetRobotStatus)
 		.def("SetGoals", &OracleSimulExploreExploit::SetGoals)
 		.def("GetGoals", &OracleSimulExploreExploit::GetGoals)
+		;
+
+	py::class_<OracleGlobalOffline>(m, "OracleGlobalOffline")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &OracleGlobalOffline::Step)
+		.def("GetActions", &OracleGlobalOffline::GetActions)
+		.def("GetGoals", &OracleGlobalOffline::GetGoals)
+		.def("GetVoronoi", &OracleGlobalOffline::GetVoronoi)
 		;
 
 	py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")

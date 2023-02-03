@@ -73,9 +73,9 @@ namespace CoverageControl {
 		return all_voronoi_cells[best_vornoi_idx];
 	}
 
-	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions) {
+	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions, Voronoi &voronoi) {
 
-		auto voronoi = LloydOffline(num_tries, max_iterations, num_sites, map, map_size, res);
+		voronoi = LloydOffline(num_tries, max_iterations, num_sites, map, map_size, res);
 		auto voronoi_cells = voronoi.GetVoronoiCells();
 		std::vector <std::vector<double>> cost_matrix;
 		cost_matrix.resize(num_sites, std::vector<double>(num_sites));
@@ -96,6 +96,11 @@ namespace CoverageControl {
 		}
 
 		return goals;
+	}
+
+	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions) {
+		Voronoi voronoi;
+		return LloydOffline(num_tries, max_iterations, num_sites, map, map_size, res, positions, voronoi);
 	}
 
 } /* namespace CoverageControl */

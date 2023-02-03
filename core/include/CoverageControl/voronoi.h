@@ -72,7 +72,7 @@ namespace CoverageControl {
 			}
 
 			void ComputeVoronoiCells();
-			auto GetVoronoiCells() {return voronoi_cells_;}
+			auto GetVoronoiCells() const {return voronoi_cells_;}
 			auto GetVoronoiCell() {return voronoi_cell_;}
 
 			double GetObjValue() {

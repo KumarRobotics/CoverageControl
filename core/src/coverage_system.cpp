@@ -110,6 +110,68 @@ namespace CoverageControl {
 		gp << "e\n";
 	}
 
+	void CoverageSystem::PlotMapVoronoi(std::string const &dir_name, int const &step, Voronoi const &voronoi, PointVector const &goals) const {
+		std::filesystem::path path{dir_name};
+		if(not std::filesystem::exists(path)) {
+			std::cerr << "Directory does not exist" << std::endl;
+			throw std::runtime_error{"Directory does not exist"};
+		}
+
+		std::stringstream ss;
+		ss << std::setw(4) << std::setfill('0') << step;
+		std::string s = ss.str();
+		std::string imap_name = "map" + s;
+		std::string map_filename {std::filesystem::absolute(path/imap_name)};
+
+		Gnuplot gp;
+		std::string marker_sz;
+		GnuplotCommands(gp, params_.pWorldMapSize * params_.pResolution, marker_sz);
+
+		gp << "set o '" << map_filename << ".png'\n";
+		std::string res = std::to_string(params_.pResolution);
+		gp << "plot '-' matrix using ($2*" << res << "):($1*" << res << "):3 with image notitle "; // IDF
+		gp << ",'-' with line lw 1 lc rgb '#196f3d' notitle"; // voronoi
+		gp << ",'-' with line lw 1 lc rgb '#2e4053' notitle"; // goals path
+		gp << ",'-' with points pt 28 ps 1 lc rgb '#2e4053' notitle"; // goals
+		gp << ",'-' with points pt 7 ps " << marker_sz << " lc rgb '#1b4f72' notitle"; // robots
+		gp << "\n";
+		auto world_map = GetWorldIDF();
+		for(long int i = 0; i < world_map.rows(); ++i) {
+			for(long int j = 0; j < world_map.cols(); ++j) {
+				gp << world_map(i, j) << " ";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		auto voronoi_cells = voronoi.GetVoronoiCells();
+		for(auto const &vcell : voronoi_cells) {
+			for(auto const &pos : vcell.cell) {
+				gp << pos[0] << " " << pos[1] << std::endl;
+			}
+			auto const &pos = vcell.cell.front();
+			gp << pos[0] << " " << pos[1] << std::endl;
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+			gp << goals[iRobot][0] << " " << goals[iRobot][1] << std::endl;
+			gp << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+			gp << goals[iRobot][0] << " " << goals[iRobot][1] << std::endl;
+		}
+		gp << "e\n";
+
+		for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+			gp << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
+		}
+		gp << "e\n";
+	}
 	void CoverageSystem::PlotFrontiers(std::string const &dir_name, int const &step, PointVector const &frontiers) const {
 		std::filesystem::path path{dir_name};
 		if(not std::filesystem::exists(path)) {
