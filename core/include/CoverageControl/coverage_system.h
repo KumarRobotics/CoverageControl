@@ -214,11 +214,15 @@ namespace CoverageControl {
 				return robots_[id].GetRobotLocalMap();
 			}
 
-			MapTypeBool const& GetRobotExplorationMap(size_t const id) {
+			MapType const& GetRobotExplorationMap(size_t const id) {
 				CheckRobotID(id);
 				return robots_[id].GetExplorationMap();
 			}
 
+			MapType const& GetRobotSystemMap(size_t const id) {
+				CheckRobotID(id);
+				return robots_[id].GetRobotSystemMap();
+			}
 			MapType const& GetRobotObstacleMap(size_t const id) {
 				CheckRobotID(id);
 				return robots_[id].GetObstacleMap();
@@ -387,9 +391,14 @@ namespace CoverageControl {
 				std::vector<int> robot_status(num_robots_, 0);
 				PlotSystemMap(dir_name, step, robot_status);
 			}
-			void PlotSystemMap(std::string const &, int const &, std::vector <int> const &) const ;
-			void PlotMapVoronoi(std::string const &, int const &, Voronoi const &, PointVector const &) const ;
-			void PlotWorldMap(std::string const &dir_name) const ;
+			void PlotSystemMap(std::string const &, int const &, std::vector <int> const &) const;
+			void PlotMapVoronoi(std::string const &, int const &, Voronoi const &, PointVector const &) const;
+			void PlotWorldMap(std::string const &) const;
+			void PlotRobotLocalMap(std::string const &, int const &) const;
+			void PlotRobotSystemMap(std::string const &, int const &, int const &);
+			void PlotRobotIDFMap(std::string const &, int const &, int const &);
+			void PlotRobotExplorationMap(std::string const &, int const &, int const &);
+			void PlotRobotSensorView(std::string const &, int const &, int const &);
 	};
 
 } /* namespace CoverageControl */

@@ -33,8 +33,9 @@ namespace CoverageControl {
 			MapType sensor_view_; // Stores the current sensor view of the robot
 			MapType local_map_; // Stores the local map of the robot
 			MapType obstacle_map_; // Stores the obstacle map
-			MapTypeBool local_exploration_map_; // Binary map: true for unexplored locations
-			MapTypeBool exploration_map_; // Binary map: true for unexplored locations
+			MapType system_map_; // Stores the obstacle map
+			MapType local_exploration_map_; // Binary map: true for unexplored locations
+			MapType exploration_map_; // Binary map: true for unexplored locations
 			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
 
 			// Gets the sensor data from world IDF at the global_current_position_ and updates robot_map_
@@ -58,7 +59,7 @@ namespace CoverageControl {
 				}
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize, index, offset);
-				exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapTypeBool::Zero(params_.pSensorSize, params_.pSensorSize);
+				exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
 			}
 
 		public:
@@ -82,8 +83,8 @@ namespace CoverageControl {
 				local_current_position_ = local_start_position_;
 
 				if(params_.pUpdateExplorationMap == true) {
-					exploration_map_ = MapTypeBool::Constant(params_.pRobotMapSize, params_.pRobotMapSize, true);
-					local_exploration_map_ = MapTypeBool::Constant(params_.pRobotMapSize, params_.pRobotMapSize, true);
+					exploration_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 1);
+					local_exploration_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 1);
 					UpdateExplorationMap();
 				}
 				if(params_.pUpdateSensorView == true) {
@@ -150,6 +151,13 @@ namespace CoverageControl {
 			const MapType& GetRobotMap() const { return robot_map_; }
 			const MapType& GetSensorView() const { return sensor_view_; }
 
+			const MapType& GetRobotSystemMap() {
+				GetRobotLocalMap();
+				GetExplorationMap();
+				system_map_ = local_map_ - local_exploration_map_;
+				return system_map_;
+			}
+
 			const MapType& GetRobotLocalMap() {
 				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
@@ -158,8 +166,8 @@ namespace CoverageControl {
 				return local_map_;
 			}
 
-			const MapTypeBool& GetExplorationMap() {
-				local_exploration_map_ = MapTypeBool::Constant(params_.pLocalMapSize, params_.pLocalMapSize, false);
+			const MapType& GetExplorationMap() {
+				local_exploration_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
 					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, exploration_map_, local_exploration_map_);
 				}

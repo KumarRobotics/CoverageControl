@@ -36,11 +36,11 @@ int main(int argc, char** argv) {
 	auto voronoi = oracle.GetVoronoi();
 	auto goals = oracle.GetGoals();
 	int count = 0;
-	for(int ii = 0; ii < 2000; ++ii) {
+	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
 		auto actions = oracle.GetActions();
-		for(size_t iRobot = 0; iRobot < num_robots; ++iRobot) {
+		for(int iRobot = 0; iRobot < num_robots; ++iRobot) {
 			env.StepAction(iRobot, actions[iRobot]);
 		}
 		if(ii%1 == 0) {
