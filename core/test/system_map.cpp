@@ -46,8 +46,7 @@ int main(int argc, char** argv) {
 		}
 		auto robot_status = oracle.GetRobotStatus();
 		if(ii%1 == 0) {
-			env.PlotRobotSystemMap(dir, 0, count);
-			/* env.PlotSystemMap(dir, count, robot_status); */
+			env.PlotSystemMap(dir, count, robot_status);
 			++count;
 		}
 		if(cont_flag == false) {

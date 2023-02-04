@@ -1,5 +1,5 @@
 #include <CoverageControl/coverage_system.h>
-#include <CoverageControl/plot_functions.h>
+#include <CoverageControl/plotter.h>
 
 
 namespace CoverageControl {

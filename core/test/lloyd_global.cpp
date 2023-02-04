@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 		}
 		if(ii%1 == 0) {
 			env.PlotMapVoronoi(dir, count, voronoi, goals);
+			/* env.PlotRobotIDFMap(dir, 0, count); */
 			++count;
 		}
 		if(cont_flag == false) {
