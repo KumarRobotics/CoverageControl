@@ -41,7 +41,7 @@ namespace CoverageControl {
 			}
 			bool cont_flag = true;
 			/* std::cout << "voronoi start" << std::endl; */
-			Voronoi voronoi(sites, map, map_size, res);
+			Voronoi voronoi(sites, map, Point2(map_size, map_size), res);
 			/* std::cout << "voronoi end" << std::endl; */
 			auto voronoi_cells = voronoi.GetVoronoiCells();
 			int iSteps = 0;

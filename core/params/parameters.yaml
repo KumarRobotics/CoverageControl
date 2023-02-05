@@ -41,7 +41,7 @@ pTimeStep: 1
 pMaxRobotSpeed: 5
 # Total time is pEpisodeSteps * pTimeStep
 # This is not cause a hard constraint, but helpful for initializing vectors
-pEpisodeSteps: 1000
+pEpisodeSteps: 2000
 
 # Bivariate Normal Distribution truncated after pTruncationBND * sigma
 # Helps in reducing the number of erfc evaluations

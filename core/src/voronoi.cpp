@@ -28,7 +28,7 @@ namespace CoverageControl {
 		min_i = min_i < 0 ? 0 : min_i;
 
 		int max_i = std::round(cell[right_id].x()/resolution_);
-		max_i = max_i > map_size_ ? map_size_ : max_i;
+		max_i = max_i > map_size_.x() ? map_size_.x() : max_i;
 
 		auto next_id = [=](int const id) { return (id + 1)%n; };
 		auto prev_id = [=](int const id) { return id == 0 ? (n - 1) : (id - 1); };
@@ -76,7 +76,7 @@ namespace CoverageControl {
 			min_j = min_j < 0 ? 0 : min_j;
 
 			int max_j = std::round(y_upper/resolution_);
-			max_j = max_j > map_size_ ? map_size_ : max_j;
+			max_j = max_j > map_size_.y() ? map_size_.y() : max_j;
 
 			for(int j = min_j; j < max_j; ++j) {
 				double y = j * resolution_ + resolution_/2.;
@@ -117,11 +117,11 @@ namespace CoverageControl {
 		int min_i = std::floor(CGAL::to_double(cgal_poly.left_vertex()->x())/resolution_);
 		min_i = min_i < 0 ? 0 : min_i;
 		int max_i = std::ceil(CGAL::to_double(cgal_poly.right_vertex()->x())/resolution_);
-		max_i = max_i > map_size_ ? map_size_ : max_i;
+		max_i = max_i > map_size_.x() ? map_size_.x() : max_i;
 		int min_j = std::floor(CGAL::to_double(cgal_poly.bottom_vertex()->y())/resolution_);
 		min_j = min_j < 0 ? 0 : min_j;
 		int max_j = std::ceil(CGAL::to_double(cgal_poly.top_vertex()->y())/resolution_);
-		max_j = max_j > map_size_ ? map_size_ : max_j;
+		max_j = max_j > map_size_.y() ? map_size_.y() : max_j;
 
 		for(int i = min_i; i < max_i; ++i) {
 			for(int j = min_j; j < max_j; ++j) {
@@ -148,8 +148,7 @@ namespace CoverageControl {
 		if(num_sites_ == 1) {
 			VoronoiCell vcell;
 			vcell.site = sites_[0];
-			double sz = map_size_;
-			vcell.cell = PointVector{Point2{0,0}, Point2{sz,0}, Point2{sz, sz}, Point2{0,sz}};
+			vcell.cell = PointVector{Point2{0,0}, Point2{map_size_.x(),0}, Point2{map_size_.x(), map_size_.y()}, Point2{0,map_size_.y()}};
 			ComputeMassCentroid(vcell);
 			if(compute_single_ == true) {
 				voronoi_cell_ = vcell;
@@ -173,10 +172,10 @@ namespace CoverageControl {
 		dt2.draw_dual(vor);
 		/* std::cout << "d2 end" << std::endl; */
 
-		vor.segments_.push_back(Segment_2(CGAL_Point2(0,0), CGAL_Point2(map_size_,0)));
-		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_,0), CGAL_Point2(map_size_, map_size_)));
-		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_, map_size_), CGAL_Point2(0, map_size_)));
-		vor.segments_.push_back(Segment_2(CGAL_Point2(0, map_size_), CGAL_Point2(0, 0)));
+		vor.segments_.push_back(Segment_2(CGAL_Point2(0,0), CGAL_Point2(map_size_.x(),0)));
+		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_.x(),0), CGAL_Point2(map_size_.x(), map_size_.y())));
+		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_.x(), map_size_.y()), CGAL_Point2(0, map_size_.y())));
+		vor.segments_.push_back(Segment_2(CGAL_Point2(0, map_size_.y()), CGAL_Point2(0, 0)));
 
 		Arrangement_2 arr;
 		CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end());

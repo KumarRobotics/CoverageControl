@@ -26,7 +26,7 @@ namespace CoverageControl {
 		private:
 			PointVector sites_;
 			std::shared_ptr <const MapType> map_ = nullptr;
-			int map_size_;
+			Point2 map_size_;
 			double resolution_ = 0;
 
 			// compute_single_ is used to determine if the voronoi mass and centroid needs to be computed for only a single site, given by robot_id_. This is useful for distributed voronoi computation
@@ -46,7 +46,7 @@ namespace CoverageControl {
 			Voronoi(
 					PointVector const &sites,
 					MapType const &map,
-					int const map_size,
+					Point2 map_size,
 					double const &resolution,
 					bool const compute_single = false,
 					int const robot_id = 0) :
@@ -56,13 +56,14 @@ namespace CoverageControl {
 				compute_single_{compute_single},
 				robot_id_{robot_id} {
 
-				map_ = std::make_shared<const MapType>(map);
-				num_sites_ = sites_.size();
-				if(compute_single_ == false) {
-					voronoi_cells_.resize(num_sites_);
+
+					map_ = std::make_shared<const MapType>(map);
+					num_sites_ = sites_.size();
+					if(compute_single_ == false) {
+						voronoi_cells_.resize(num_sites_);
+					}
+					ComputeVoronoiCells();
 				}
-				ComputeVoronoiCells();
-			}
 
 			// Update the cites and recompute the voronoi
 			void UpdateSites(PointVector const &sites) {

@@ -45,15 +45,18 @@ namespace CoverageControl {
 		}
 
 		template<typename T = MapType>
-		inline void GetSubMap(double const resolution, Point2 const &pos, int const submap_size, int const map_size, T const &map, T &submap) {
+		inline void GetSubMap(double const resolution, Point2 const &pos, int const map_size, T const &map, int const submap_size, T &submap) {
 			MapBounds index, offset;
 			ComputeOffsets(resolution, pos, submap_size, map_size, index, offset);
 			submap.block(offset.left, offset.bottom, offset.width, offset.height) = map.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
 		}
 
-		/* inline void GetSubMap(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapType const &map, MapType &submap) { */
-		/* 	GetSubMap<> (resolution, pos, submap_size, map_size, map, submap); */
-		/* } */
+		template<typename T = MapType>
+		inline auto GetSubMap(double const resolution, Point2 const &pos, int const map_size, T const &map, int const submap_size) {
+			MapBounds index, offset;
+			ComputeOffsets(resolution, pos, submap_size, map_size, index, offset);
+			return map.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
+		}
 
 		/** Write the world map to a file **/
 		inline int WriteMap(MapType const &map, std::string const &file_name) {

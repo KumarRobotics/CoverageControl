@@ -34,8 +34,8 @@ int main(int argc, char** argv) {
 	OracleSimulExploreExploit oracle(params, num_robots, env);
 
 	std::string dir = "data/test/";
-	env.PlotWorldMap(dir);
-	env.PlotSystemMap(dir, 0);
+	/* env.PlotWorldMap(dir); */
+	/* env.PlotSystemMap(dir, 0); */
 	int count = 1;
 	for(int ii = 1; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
@@ -45,17 +45,18 @@ int main(int argc, char** argv) {
 			env.StepAction(iRobot, actions[iRobot]);
 		}
 		auto robot_status = oracle.GetRobotStatus();
-		if(ii%1 == 0) {
-			env.PlotSystemMap(dir, count, robot_status);
+		if(ii%10 == 0) {
+			/* env.PlotSystemMap(dir, count, robot_status); */
 			++count;
 		}
 		if(cont_flag == false) {
 			break;
 		}
 	}
+	std::cout << "Converged" << std::endl;
 	auto robot_status = oracle.GetRobotStatus();
 	for(int ii = 0; ii < 20; ++ii) {
-		env.PlotSystemMap(dir, count, robot_status);
+		/* env.PlotSystemMap(dir, count, robot_status); */
 		++count;
 	}
 

@@ -153,7 +153,7 @@ namespace CoverageControl {
 			}
 
 			void GetSubWorldMap(Point2 const &pos, int const sensor_size, MapType &submap) const {
-				MapUtils::GetSubMap(params_.pResolution, pos, sensor_size, params_.pWorldMapSize, world_map_, submap);
+				MapUtils::GetSubMap(params_.pResolution, pos, params_.pWorldMapSize, world_map_, sensor_size, submap);
 			}
 
 			void PrintMapSize() const {

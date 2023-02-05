@@ -125,7 +125,7 @@ class CMakeBuild(build_ext):
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
     name="pyCoverageControl",
-    version="0.2.0",
+    version="0.3.0",
     author="Saurav Agarwal",
     author_email="SauravAg@UPenn.edu",
     description="Project for Coverage Control",
@@ -133,6 +133,5 @@ setup(
     ext_modules=[CMakeExtension("pyCoverageControl")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
-    extras_require={"test": ["pytest>=6.0"]},
-    python_requires=">=3.7",
+    python_requires=">=3.10",
 )

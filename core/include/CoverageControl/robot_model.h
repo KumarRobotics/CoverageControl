@@ -59,7 +59,7 @@ namespace CoverageControl {
 				}
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, global_current_position_, params_.pSensorSize, params_.pWorldMapSize, index, offset);
-				exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
+				exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(offset.width, offset.height);
 			}
 
 		public:
@@ -86,7 +86,11 @@ namespace CoverageControl {
 					exploration_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 1);
 					local_exploration_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 1);
 					UpdateExplorationMap();
+				} else {
+					exploration_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 0);
+					local_exploration_map_ = MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 0);
 				}
+
 				if(params_.pUpdateSensorView == true) {
 					UpdateSensorView();
 				}
@@ -161,7 +165,7 @@ namespace CoverageControl {
 			const MapType& GetRobotLocalMap() {
 				local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
-					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, robot_map_, local_map_);
+					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pRobotMapSize, robot_map_, params_.pLocalMapSize, local_map_);
 				}
 				return local_map_;
 			}
@@ -169,7 +173,7 @@ namespace CoverageControl {
 			const MapType& GetExplorationMap() {
 				local_exploration_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
-					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pRobotMapSize, exploration_map_, local_exploration_map_);
+					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pRobotMapSize, exploration_map_, params_.pLocalMapSize, local_exploration_map_);
 				}
 				return local_exploration_map_;
 			}

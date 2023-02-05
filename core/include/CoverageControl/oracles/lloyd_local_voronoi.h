@@ -100,16 +100,18 @@ namespace CoverageControl {
 					auto robot_local_map = env_.GetRobotLocalMap(iRobot);
 					auto robot_neighbors_pos = env_.GetRobotsInCommunication(iRobot);
 					PointVector robot_positions(robot_neighbors_pos.size() + 1);
-					Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.);
-					robot_positions[0] = map_translation;
+					/* Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.); */
+					Point2 map_translation((index.left + offset.left) * params_.pResolution, (index.bottom + offset.bottom) * params_.pResolution);
+					robot_positions[0] = robot_global_positions_[iRobot] - map_translation;
 					int count = 1;
 					for(auto const &pos:robot_neighbors_pos) {
-						robot_positions[count] = pos + map_translation;
+						robot_positions[count] = pos - map_translation;
 						++count;
 					}
 					Voronoi voronoi(robot_positions, robot_local_map, params_.pLocalMapSize, params_.pResolution, true, 0);
 					voronoi_cells_[iRobot] = voronoi.GetVoronoiCell();
-					goals_[iRobot] = voronoi_cells_[iRobot].centroid + robot_global_positions_[iRobot] - map_translation;
+					/* goals_[iRobot] = voronoi_cells_[iRobot].centroid + robot_global_positions_[iRobot] + map_translation; */
+					goals_[iRobot] = vcell.centroid + map_translation;
 				}
 				bool cont_flag = true;
 				for(int i = 0; i < num_steps; ++i) {

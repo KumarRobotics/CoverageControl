@@ -65,7 +65,7 @@ namespace CoverageControl {
 			double pMaxRobotSpeed = 5;
 			// This is not cause a hard constraint, but helpful for initializing vectors
 
-			int pEpisodeSteps = 1000; // Total time is pEpisodeSteps * pTimeStep
+			int pEpisodeSteps = 2000; // Total time is pEpisodeSteps * pTimeStep
 
 			// Bivariate Normal Distribution truncated after pTruncationBND * sigma
 			// Helps in reducing the number of erfc evaluations
