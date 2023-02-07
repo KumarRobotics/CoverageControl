@@ -8,19 +8,14 @@ System packages:
 - CUDA nvcc
 - Boost
 - OpenMP
+- gnuplot-nox
 ```
 
-Python packages:
-```bash
-- pip
-- numpy
-- matplotlib
-- pytz
-```
+Python packages: See environment.yml
 
 ## Installation
 
-Workspace directory: `${HOME}/CoverageControl_ws`. Assumes that the directory does not exist.  
+Workspace directory: `${HOME}/CoverageControl_ws`.
 Add the following lines to your `.bashrc` file and then `source ~/.bashrc` or open a new terminal:
 ```bash
 export COVERAGECONTROL_WS="${HOME}/CoverageControl_ws/"
