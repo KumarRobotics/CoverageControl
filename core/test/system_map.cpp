@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <chrono>
+#include <thread>
+
 
 #include <CoverageControl/constants.h>
 #include <CoverageControl/parameters.h>
@@ -27,6 +29,7 @@ int main(int argc, char** argv) {
 		std::string parameter_file = argv[1];
 		params = Parameters(parameter_file);
 	}
+	std::cout << "Processor count: " << std::thread::hardware_concurrency() << std::endl;
 
 	int num_robots = 15;
 	int num_dists = 10;
