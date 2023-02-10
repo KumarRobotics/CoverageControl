@@ -225,20 +225,24 @@ namespace CoverageControl {
 				gp << "e\n";
 			}
 
-			void PlotMap(MapType_t const &map, PointVector const &positions, PointVector const &frontiers) {
+			void PlotMap(MapType_t const &map, PointVector const &positions, std::vector <std::list<Point2>> const &trajectories, PointVector const &frontiers) {
 
 				Gnuplot gp;
 				GnuplotCommands(gp);
-				PlotMap(gp);
 
-				PlotPoints(gp, 28, half_marker_sz, color_robot, false); // frontiers
-				PlotPoints(gp, 7, marker_sz, color_robot, false); // robots
+				PlotMap(gp);
+				PlotLine(gp, marker_sz, color_robot);
+				PlotPoints(gp, 7, marker_sz, color_robot);
+				PlotPoints(gp, 1, half_marker_sz, color_robot);
+
 				gp << "\n";
 
 				StreamMap(gp, map);
-
-				for(auto const &pos : frontiers) {
-					gp << pos[0] << " " << pos[1] << std::endl;
+				for(auto const &trajectory : trajectories) {
+					for(auto const &pos : trajectory) {
+						gp << pos[0] << " " << pos[1] << std::endl;
+					}
+					gp << "\n";
 				}
 				gp << "e\n";
 
@@ -246,6 +250,12 @@ namespace CoverageControl {
 					gp << pos[0] << " " << pos[1] << std::endl;
 				}
 				gp << "e\n";
+
+				for(auto const &pos : frontiers) {
+					gp << pos[0] << " " << pos[1] << std::endl;
+				}
+				gp << "e\n";
+
 			}
 
 		};

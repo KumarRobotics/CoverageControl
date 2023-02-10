@@ -26,6 +26,7 @@ namespace CoverageControl {
 
 	void CoverageSystem::PlotFrontiers(std::string const &dir_name, int const &step, PointVector const &frontiers) const {
 		Plotter<MapType> plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetScale(2);
 		plotter.SetPlotName("map", step);
 		plotter.PlotMap(system_map_, robot_global_positions_, robot_positions_history_, frontiers);
 	}

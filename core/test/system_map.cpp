@@ -25,12 +25,14 @@ using namespace CoverageControl;
 int main(int argc, char** argv) {
 	Parameters params;
 	/* params.pSensorSize = 16; */
+	/* params.pMaxRobotSpeed = 10; */
 	if (argc == 2) {
 		std::string parameter_file = argv[1];
 		params = Parameters(parameter_file);
 	}
 	std::cout << "Processor count: " << std::thread::hardware_concurrency() << std::endl;
 
+	PointVector frontiers;
 	int num_robots = 15;
 	int num_dists = 10;
 	CoverageSystem env(params, num_dists, num_robots);
@@ -49,6 +51,8 @@ int main(int argc, char** argv) {
 		}
 		auto robot_status = oracle.GetRobotStatus();
 		if(ii%1 == 0) {
+			frontiers = oracle.GetFrontiers();
+			/* env.PlotFrontiers(dir, count, frontiers); */
 			env.PlotSystemMap(dir, count, robot_status);
 			++count;
 		}
