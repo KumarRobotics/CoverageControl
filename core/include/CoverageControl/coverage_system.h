@@ -22,7 +22,6 @@
 #include "robot_model.h"
 #include "map_utils.h"
 #include "voronoi.h"
-#include "lloyd_algorithms.h"
 #include <lsap/Hungarian.h>
 
 namespace CoverageControl {
@@ -221,6 +220,11 @@ namespace CoverageControl {
 			MapType const& GetRobotLocalMap(size_t const id) {
 				CheckRobotID(id);
 				return robots_[id].GetRobotLocalMap();
+			}
+
+			MapType const& GetRobotMap(size_t const id) {
+				CheckRobotID(id);
+				return robots_[id].GetRobotMap();
 			}
 
 			MapType const& GetRobotExplorationMap(size_t const id) {

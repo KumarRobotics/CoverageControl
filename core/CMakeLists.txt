@@ -61,10 +61,10 @@ target_include_directories(system_map PRIVATE ${PROJECT_SOURCE_DIR}/include ${PR
 target_link_libraries(system_map PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX boost_iostreams boost_system boost_filesystem)
 install(TARGETS system_map DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-add_executable(lloyd_global ${PROJECT_SOURCE_DIR}/test/lloyd_global.cpp)
-target_include_directories(lloyd_global PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(lloyd_global PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
-install(TARGETS lloyd_global DESTINATION ${CMAKE_INSTALL_BINDIR})
+add_executable(lloyd_local ${PROJECT_SOURCE_DIR}/test/lloyd_local.cpp)
+target_include_directories(lloyd_local PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
+target_link_libraries(lloyd_local PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
+install(TARGETS lloyd_local DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)
 # target_include_directories(geo_transforms PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)

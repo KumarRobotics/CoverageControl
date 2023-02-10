@@ -2,8 +2,8 @@
  *
  **/
 
-#ifndef COVERAGECONTROL_LLOYD_ALGORITHMS_H_
-#define COVERAGECONTROL_LLOYD_ALGORITHMS_H_
+#ifndef COVERAGECONTROL_ALGORITHMS_LLOYD_ALGORITHMS_H_
+#define COVERAGECONTROL_ALGORITHMS_LLOYD_ALGORITHMS_H_
 
 #include <vector>
 #include <fstream>
@@ -14,8 +14,8 @@
 #define EIGEN_NO_CUDA // Don't use eigen's cuda facility
 #include <Eigen/Dense> // Eigen is used for maps
 
-#include "parameters.h"
-#include "typedefs.h"
+#include "../parameters.h"
+#include "../typedefs.h"
 #include <lsap/Hungarian.h>
 
 namespace CoverageControl {
@@ -104,4 +104,4 @@ namespace CoverageControl {
 	}
 
 } /* namespace CoverageControl */
-#endif /* COVERAGECONTROL_LLOYD_ALGORITHMS_H_ */
+#endif /* COVERAGECONTROL_ALGORITHMS_LLOYD_ALGORITHMS_H_ */

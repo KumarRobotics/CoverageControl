@@ -12,11 +12,12 @@
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/geographiclib_wrapper.h>
-#include <CoverageControl/oracles/oracle_global_offline.h>
-/* #include <CoverageControl/oracles/lloyd_local_voronoi.h> */
-#include <CoverageControl/oracles/oracle_explore_exploit.h>
-#include <CoverageControl/oracles/oracle_bang_explore_exploit.h>
-#include <CoverageControl/oracles/simul_explore_exploit.h>
+#include <CoverageControl/algorithms/oracle_global_offline.h>
+#include <CoverageControl/algorithms/lloyd_local_voronoi.h>
+#include <CoverageControl/algorithms/oracle_explore_exploit.h>
+#include <CoverageControl/algorithms/oracle_bang_explore_exploit.h>
+#include <CoverageControl/algorithms/simul_explore_exploit.h>
+#include <CoverageControl/algorithms/lloyd_global_online.h>
 
 
 using namespace CoverageControl;
@@ -124,17 +125,6 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("PlotMapVoronoi", &CoverageSystem::PlotMapVoronoi)
 		;
 	
-	/* py::class_<LloydLocalVoronoi>(m, "LloydLocalVoronoi") */
-	/* 	.def(py::init<Parameters const &, size_t const &, CoverageSystem &>()) */
-	/* 	.def("Step", &LloydLocalVoronoi::Step) */
-	/* 	.def("GetActions", &LloydLocalVoronoi::GetActions) */
-	/* 	.def("ComputeGoals", &LloydLocalVoronoi::ComputeGoals) */
-	/* 	.def("SetGoals", &LloydLocalVoronoi::SetGoals) */
-	/* 	.def("GetGoals", &LloydLocalVoronoi::GetGoals) */
-	/* 	.def("GetVoronoiCells", &LloydLocalVoronoi::GetVoronoiCells, py::return_value_policy::copy) */
-	/* 	.def("GetOracleMap", &LloydLocalVoronoi::GetOracleMap, py::return_value_policy::reference_internal) */
-	/* 	; */
-
 	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")
 		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
 		.def("Step", &OracleExploreExploit::Step)
@@ -160,6 +150,22 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetActions", &OracleGlobalOffline::GetActions)
 		.def("GetGoals", &OracleGlobalOffline::GetGoals)
 		.def("GetVoronoi", &OracleGlobalOffline::GetVoronoi)
+		;
+
+	py::class_<LloydGlobalOnline>(m, "LloydGlobalOnline")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &LloydGlobalOnline::Step)
+		.def("GetActions", &LloydGlobalOnline::GetActions)
+		.def("GetGoals", &LloydGlobalOnline::GetGoals)
+		.def("GetVoronoi", &LloydGlobalOnline::GetVoronoi)
+		;
+
+	py::class_<LloydLocalVoronoi>(m, "LloydLocalVoronoi")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &LloydLocalVoronoi::Step)
+		.def("GetActions", &LloydLocalVoronoi::GetActions)
+		.def("GetGoals", &LloydLocalVoronoi::GetGoals)
+		.def("GetVoronoi", &LloydLocalVoronoi::GetVoronoi)
 		;
 
 	py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")

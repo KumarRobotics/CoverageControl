@@ -1,5 +1,8 @@
 /**
- *
+ * Global offline oracle: has complete information about the environment.
+ * Use full communication between robots.
+ * Tries multiple random sites for initial locations.
+ * Uses Hungarian algorithm to assign robots to goal positions.
  **/
 
 #ifndef COVERAGECONTROL_ORACLE_GLOBAL_OFFLINE_H_
@@ -17,8 +20,8 @@
 #include "../parameters.h"
 #include "../typedefs.h"
 #include "../coverage_system.h"
-#include "../lloyd_algorithms.h"
 #include "../map_utils.h"
+#include "lloyd_algorithms.h"
 #include <lsap/Hungarian.h>
 
 namespace CoverageControl {

@@ -16,9 +16,7 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/generate_world_map.ch>
 #include <CoverageControl/coverage_system.h>
-#include <CoverageControl/algorithms/oracle_explore_exploit.h>
-#include <CoverageControl/algorithms/oracle_bang_explore_exploit.h>
-#include <CoverageControl/algorithms/simul_explore_exploit.h>
+#include <CoverageControl/algorithms/lloyd_global_online.h>
 
 using namespace CoverageControl;
 
@@ -34,9 +32,9 @@ int main(int argc, char** argv) {
 	int num_robots = 15;
 	int num_dists = 10;
 	CoverageSystem env(params, num_dists, num_robots);
-	OracleSimulExploreExploit oracle(params, num_robots, env);
+	LloydGlobalOnline oracle(params, num_robots, env);
 
-	std::string dir = "data/oracle/";
+	std::string dir = "data/test/";
 	env.PlotWorldMap(dir);
 	env.PlotSystemMap(dir, 0);
 	int count = 1;
@@ -47,9 +45,8 @@ int main(int argc, char** argv) {
 		for(int iRobot = 0; iRobot < num_robots; ++iRobot) {
 			env.StepAction(iRobot, actions[iRobot]);
 		}
-		auto robot_status = oracle.GetRobotStatus();
 		if(ii%1 == 0) {
-			env.PlotSystemMap(dir, count, robot_status);
+			env.PlotSystemMap(dir, count);
 			++count;
 		}
 		if(cont_flag == false) {
@@ -57,9 +54,8 @@ int main(int argc, char** argv) {
 		}
 	}
 	std::cout << "Converged" << std::endl;
-	auto robot_status = oracle.GetRobotStatus();
 	for(int ii = 0; ii < 20; ++ii) {
-		env.PlotSystemMap(dir, count, robot_status);
+		env.PlotSystemMap(dir, count);
 		++count;
 	}
 
