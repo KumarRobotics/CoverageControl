@@ -18,11 +18,13 @@ INSTALL_DIR=${COVERAGECONTROL_WS}/install
 
 mkdir -p ${COVERAGECONTROL_WS}/src
 
+CMAKE_END_FLAGS="-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release"
+
 InstallCGAL () {
 	echo "Setting up CGAL"
 	wget https://github.com/CGAL/cgal/releases/download/v5.5.1/CGAL-5.5.1-library.tar.xz -P ${COVERAGECONTROL_WS}/src
 	tar -xf ${COVERAGECONTROL_WS}/src/CGAL-5.5.1-library.tar.xz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/CGAL-5.5.1 -B ${BUILD_DIR}/cgal -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	cmake -S ${COVERAGECONTROL_WS}/src/CGAL-5.5.1 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS}
 	cmake --install ${BUILD_DIR}/cgal
 	if [ $? -eq 0 ]; then
 		echo "cgal install succeeded"
@@ -38,8 +40,8 @@ InstallGeoGraphicLib () {
 	echo "Setting up geographiclib"
 	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.1.2.tar.gz -P ${COVERAGECONTROL_WS}/src
 	tar -xf ${COVERAGECONTROL_WS}/src/v2.1.2.tar.gz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/geographiclib-2.1.2 -B ${BUILD_DIR}/geographiclib -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
-	cmake --build ${BUILD_DIR}/geographiclib
+	cmake -S ${COVERAGECONTROL_WS}/src/geographiclib-2.1.2 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/geographiclib -j$(nproc)
 	cmake --install ${BUILD_DIR}/geographiclib
 	if [ $? -eq 0 ]; then
 		echo "geographiclib install succeeded"
@@ -53,9 +55,10 @@ InstallGeoGraphicLib () {
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
-	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.1.tar.gz -P ${COVERAGECONTROL_WS}/src
-	tar -xf ${COVERAGECONTROL_WS}/src/v2.10.1.tar.gz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/pybind11-2.10.1 -B ${BUILD_DIR}/pybind11 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.3.tar.gz -P ${COVERAGECONTROL_WS}/src
+	tar -xf ${COVERAGECONTROL_WS}/src/v2.10.3.tar.gz -C ${COVERAGECONTROL_WS}/src/
+	cmake -S ${COVERAGECONTROL_WS}/src/pybind11-2.10.3 -B ${BUILD_DIR}/pybind11 ${CMAKE_END_FLAGS} -DPYBIND11_TEST=OFF
+	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
 	cmake --install ${BUILD_DIR}/pybind11
 	if [ $? -eq 0 ]; then
 		echo "pybind11 install succeeded"
@@ -63,15 +66,15 @@ InstallPybind11 () {
 		echo "pybind11 install failed"
 		exit 1
 	fi
-	rm ${COVERAGECONTROL_WS}/src/v2.10.1.tar.gz
-	rm -rf ${COVERAGECONTROL_WS}/src/pybind11-2.10.1
+	rm ${COVERAGECONTROL_WS}/src/v2.10.3.tar.gz
+	rm -rf ${COVERAGECONTROL_WS}/src/pybind11-2.10.3
 }
 
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
 	git clone https://github.com/jbeder/yaml-cpp.git ${COVERAGECONTROL_WS}/src/yaml-cpp
-	cmake -S ${COVERAGECONTROL_WS}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
-	cmake --build ${BUILD_DIR}/yaml-cpp -j4
+	cmake -S ${COVERAGECONTROL_WS}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "YAML build failed"
 	fi
@@ -89,7 +92,8 @@ InstallEigen3 () {
 	echo "Setting up eigen3"
 	wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz -P ${COVERAGECONTROL_WS}/src
 	tar -xf ${COVERAGECONTROL_WS}/src/eigen-3.4.0.tar.gz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/eigen-3.4.0 -B ${BUILD_DIR}/eigen3 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
+	cmake -S ${COVERAGECONTROL_WS}/src/eigen-3.4.0 -B ${BUILD_DIR}/eigen3 ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/eigen3
 	cmake --install ${BUILD_DIR}/eigen3
 	if [ $? -eq 0 ]; then
 		echo "eigen3 install succeeded"
@@ -111,8 +115,8 @@ CleanBuild () {
 UpdateCoverageControl () {
 	# Run the following commands to update after a change in the repository
 	# The CoverageControl repository is located in ${COVERAGECONTROL_WS}/src/CoverageControl
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Release
-	cmake --build ${BUILD_DIR}/CoverageControl
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/CoverageControl -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControl build failed"
 		exit 1

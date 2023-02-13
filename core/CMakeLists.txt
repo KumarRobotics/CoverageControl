@@ -12,6 +12,11 @@ include(GNUInstallDirs)
 
 list(APPEND CMAKE_PREFIX_PATH $ENV{COVERAGECONTROL_WS}/install)
 
+if(NOT DEFINED CMAKE_CUDA_STANDARD)
+    set(CMAKE_CUDA_STANDARD 17)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+endif()
+
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(pybind11 REQUIRED)
