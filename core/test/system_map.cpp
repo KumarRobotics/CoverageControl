@@ -59,8 +59,12 @@ int main(int argc, char** argv) {
 		}
 	}
 	std::cout << "Converged" << std::endl;
+	std::cout << "Exploration ratio: " << env.GetExplorationRatio() << " Weighted: " << env.GetWeightedExplorationRatio() << std::endl;
+
 	auto robot_status = oracle.GetRobotStatus();
 	for(int ii = 0; ii < 20; ++ii) {
+		auto actions = oracle.GetActions();
+		env.StepActions(actions);
 		env.PlotSystemMap(dir, count, robot_status);
 		++count;
 	}
