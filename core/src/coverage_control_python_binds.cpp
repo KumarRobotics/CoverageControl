@@ -123,6 +123,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("PlotSystemMap", py::overload_cast<std::string const &, int const &>(&CoverageSystem::PlotSystemMap, py::const_))
 		.def("PlotWorldMap", &CoverageSystem::PlotWorldMap)
 		.def("PlotMapVoronoi", &CoverageSystem::PlotMapVoronoi)
+		.def("GetExplorationRatio", &CoverageSystem::GetExplorationRatio)
+		.def("GetWeightedExplorationRatio", &CoverageSystem::GetWeightedExplorationRatio)
 		;
 	
 	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")

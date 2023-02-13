@@ -46,11 +46,9 @@ int main(int argc, char** argv) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
 		auto actions = oracle.GetActions();
-		for(int iRobot = 0; iRobot < num_robots; ++iRobot) {
-			env.StepAction(iRobot, actions[iRobot]);
-		}
+		env.StepActions(actions);
 		auto robot_status = oracle.GetRobotStatus();
-		if(ii%1 == 0) {
+		if(ii%10 == 0) {
 			frontiers = oracle.GetFrontiers();
 			/* env.PlotFrontiers(dir, count, frontiers); */
 			env.PlotSystemMap(dir, count, robot_status);

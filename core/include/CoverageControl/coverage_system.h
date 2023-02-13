@@ -46,6 +46,8 @@ namespace CoverageControl {
 			MapType explored_idf_map_;
 			std::vector <std::list<Point2>> robot_positions_history_;
 			double exploration_ratio_ = 0;
+			double weighted_exploration_ratio_ = 0;
+			double total_idf_weight_ = 0;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -94,6 +96,7 @@ namespace CoverageControl {
 					system_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
 					exploration_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 1);
 					explored_idf_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+					total_idf_weight_ = GetWorldIDF().sum();
 					PostStepCommands();
 				}
 
@@ -129,9 +132,12 @@ namespace CoverageControl {
 				}
 				system_map_ = explored_idf_map_ - exploration_map_;
 				exploration_ratio_ = 1.0 - (double)(exploration_map_.count())/(params_.pWorldMapSize * params_.pWorldMapSize);
+				weighted_exploration_ratio_ = (double)(explored_idf_map_.sum())/(total_idf_weight_);
+				/* std::cout << "Exploration: " << exploration_ratio_ << " Weighted: " << weighted_exploration_ratio_ << std::endl; */
 			}
 
 			inline double GetExplorationRatio() const { return exploration_ratio_; }
+			inline double GetWeightedExplorationRatio() const { return weighted_exploration_ratio_; }
 
 			void PostStepCommands() {
 				UpdateRobotPositions();
@@ -154,10 +160,15 @@ namespace CoverageControl {
 
 			bool StepActions(PointVector const &actions) {
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					if(StepAction(iRobot, actions[iRobot])) {
+					Point2 action = actions[iRobot];
+					double speed = action.norm();
+					Point2 direction = action.normalized();
+					if(robots_[iRobot].StepControl(direction, speed)) {
+						std::cerr << "Control incorrect\n";
 						return 1;
 					}
 				}
+				PostStepCommands();
 				return 0;
 			}
 
