@@ -219,6 +219,7 @@ namespace CoverageControl {
 
 			Point2 GetRobotPosition(int const robot_id) const { return robots_[robot_id].GetGlobalCurrentPosition(); }
 
+			auto const& GetWorldIDFObject() const { return world_idf_; }
 			MapType const& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
 			MapType const& GetSystemMap() const { return system_map_; }
 			MapType const& GetSystemExplorationMap() const { return exploration_map_; }

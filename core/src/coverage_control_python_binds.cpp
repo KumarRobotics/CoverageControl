@@ -103,6 +103,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def(py::init<Parameters const &, WorldIDF const &, PointVector const &>())
 		.def(py::init<Parameters const &, BNDVector const &, PointVector const &>())
 		.def("GetWorldIDF", &CoverageSystem::GetWorldIDF, py::return_value_policy::reference_internal)
+		.def("GetWorldIDFObject", &CoverageSystem::GetWorldIDFObject, py::return_value_policy::reference_internal)
 		.def("StepControl", &CoverageSystem::StepControl)
 		.def("StepAction", &CoverageSystem::StepAction)
 		.def("StepActions", &CoverageSystem::StepActions)
