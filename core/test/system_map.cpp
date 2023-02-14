@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 		auto actions = oracle.GetActions();
 		env.StepActions(actions);
 		auto robot_status = oracle.GetRobotStatus();
-		if(ii%10 == 0) {
+		if(ii%2 == 0) {
 			frontiers = oracle.GetFrontiers();
 			/* env.PlotFrontiers(dir, count, frontiers); */
 			env.PlotSystemMap(dir, count, robot_status);

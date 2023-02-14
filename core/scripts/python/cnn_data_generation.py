@@ -2,45 +2,93 @@ import sys
 import math
 import time
 import numpy as np
+from sklearn.metrics import pairwise_distances as pwdist
+from scipy.optimize import linear_sum_assignment
 import pyCoverageControl # Main library
 from pyCoverageControl import Point2 # for defining points
 from pyCoverageControl import PointVector # for defining list of points
 from pyCoverageControl import CoverageSystem
+from pyCoverageControl import OracleSimulExploreExploit
 from multiprocessing import Pool
+from torchvision.transforms import Resize
+import torch
+import cv2
+from scipy.ndimage import gaussian_filter
+import matplotlib.pylab as plt
+import seaborn as sns
+resize = Resize((128,128))
 
-params_ = pyCoverageControl.Parameters('params/parameters.yaml')
+params_ = pyCoverageControl.Parameters()
 
-num_gaussians = 100
-num_robots = 20
+num_gaussians = 10
+num_robots = 15
 
 count = 0
 robot_id = 0
 
-# We use the function StepDataGenerationLocal to drive the robots around in the world
-# The CoverageSystem maintains an oracle_map_ which has the information of the world_idf_ at the locations visited by any of the robots. For locations that haven't been visited yet, the importance is set to a Parameters::pUnknownImportance
-# The StepDataGenerationLocal uses an Oracle which decides where the robots should move based on the oracle_map_ described above. It performs a Voronoi Tessalation will ALL the robots, then computes the centroid, solves the assignment problem, and then steps the robots towards their respective assigned centroids.
-# The difference from standard methods is that this Oracle does not assume that the entire map is known. It uses only the information that is make available by the robots.
-# The StepDataGenerationLocal function has an input num_steps. This allows us to step several times before exchanging data in order to get sufficiently varying data.
-# Thus we can simulate several times on the same environment to get different dataset.
-# For the training of the CNN, each robot is a unique data
-# For each environment, lets say we can simulate upto pEpisodeSteps=1000, as after that the robots might either converge or just osscilate and no new data is generated.
-# So for an environment, we take num_steps=10 for pEpisodeSteps/num_steps times. So we will end up with a dataset of num_robots * pEpisodeSteps/num_steps unique data
+cnn_voronoi_count = 0
+cnn_explore_count = 0
 
-def write_npz(iRobot):
-    np.savez_compressed('../../data/cnn_data_scaled/data_' + f'{(count * num_robots + iRobot):07d}' + '.npz', local_map = env.GetRobotLocalMap(iRobot), communication_map = env.GetCommunicationMap(iRobot), label=np.concatenate((env.GetVoronoiCell(iRobot).centroid, [env.GetVoronoiCell(iRobot).mass])))
+def Step():
+    global env, oracle
+    cont_flag = oracle.Step();
+    actions = oracle.GetActions()
+    positions = env.GetRobotPositions()
+    error_flag = env.StepActions(actions)
+    return cont_flag, error_flag
 
-while count < 50000:
-    num_steps = 10
-    print(str(count))
+def StepSave():
+    global env, oracle
+    global count
+    global cnn_voronoi_count
+    global cnn_explore_count
+    global resize
+    global kernel
+    local_maps = []
+    communication_maps = []
+    exploration_maps = []
+    for i in range(0, num_robots):
+        lmap = cv2.resize(env.GetRobotLocalMap(i), dsize=(128,128), interpolation=cv2.INTER_AREA)
+        local_maps.append(lmap)
+
+        explmap = env.GetRobotExplorationMap(i).astype(np.float32)
+        explmap = cv2.resize(explmap, dsize=(128,128), interpolation=cv2.INTER_AREA)
+        exploration_maps.append(explmap)
+
+    voronoi_features = env.GetRobotVoronoiFeatures()
+    exploration_features = env.GetRobotExplorationFeatures()
+
+    robot_positions=env.GetRobotPositions()
+
+    [cont_flag, error_flag] = Step()
+
+    goals = oracle.GetGoals()
+    actions = oracle.GetActions()
+    robot_status = oracle.GetRobotStatus()
+
+    count = count + 1
+    return cont_flag
+
+dataset_count = 200000
+batch_size = 5
+while count < dataset_count:
+    print("New environment")
+    num_steps = 0
     env = CoverageSystem(params_, num_gaussians, num_robots)
-    for iter in range(0, round(params_.pEpisodeSteps/num_steps)):
-        # returns true if the robots have converged
-        cont_flag = env.StepDataGenerationLocal(num_steps)
-        if(not cont_flag):
-            break
-        # positions = env.GetRobotPositions()
-        pool = Pool(num_robots)
-        pool.map(write_npz, range(0, num_robots))
-        count = count + 1
-        if count * num_robots >= 999999:
-            break
+    oracle = OracleSimulExploreExploit(params_, num_robots, env)
+
+    cont_flag = True
+    while num_steps < math.floor(params_.pEpisodeSteps/batch_size):
+        for i in range(0, batch_size - 1):
+            [cont_flag, error_flag] = Step()
+            if cont_flag == False:
+                break;
+        if cont_flag == False:
+            break;
+
+        cont_flag = StepSave()
+
+        num_steps = num_steps + 1
+        print(str(count), str(num_steps))
+    for i in range(0, 10):
+        [cont_flag, error_flag] = Step()

@@ -39,7 +39,6 @@ namespace CoverageControl {
 			std::random_device rd_;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen_;
 			std::uniform_real_distribution<> distrib_pts_;
-			std::vector <std::vector<double>> cost_matrix_;
 			PointVector robot_global_positions_;
 			MapType system_map_; // Map with exploration and coverage
 			MapType exploration_map_; // Binary map: true for unexplored locations
@@ -48,66 +47,48 @@ namespace CoverageControl {
 			double exploration_ratio_ = 0;
 			double weighted_exploration_ratio_ = 0;
 			double total_idf_weight_ = 0;
+			double time_step_dist_ = 0;
+			double sensor_area_ = 0;
+			size_t num_frontiers_ = 10;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
 			// Initialize num_robots with random start positions
-			CoverageSystem(
-					Parameters const &params,
-					int const num_gaussians,
-					int const num_robots) :
-				params_{params},
-				world_idf_{WorldIDF(params_)}{
-					// Generate Bivariate Normal Distribution from random numbers
-					std::srand(0);
-					gen_ = std::mt19937(rd_()); //Standard mersenne_twister_engine seeded with rd_()
-					distrib_pts_ = std::uniform_real_distribution<>(0, params_.pWorldMapSize * params_.pResolution);
-					std::uniform_real_distribution<> distrib_var(params_.pMinSigma, params_.pMaxSigma);
-					std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
-					for(int i = 0; i < num_gaussians; ++i) {
-						Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
-						double sigma(distrib_var(gen_));
-						double peak(distrib_peak(gen_));
-						BivariateNormalDistribution dist(mean, sigma, peak);
-						world_idf_.AddNormalDistribution(dist);
-					}
-
-					// Generate the world map using Cuda
-					world_idf_.GenerateMapCuda();
-					normalization_factor_ = world_idf_.GetNormalizationFactor();
-
-					std::uniform_real_distribution<> robot_pos_dist (0, params_.pRobotInitDist);
-					robots_.reserve(num_robots);
-					for(int i = 0; i < num_robots; ++i) {
-						Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));
-						robots_.push_back(RobotModel(params_, start_pos, world_idf_));
-					}
-					num_robots_ = robots_.size();
-					robot_positions_history_.resize(num_robots_);
-
-					cost_matrix_.resize(num_robots_, std::vector<double>(num_robots_));
-					voronoi_cells_.resize(num_robots_);
-					communication_maps_.resize(num_robots_);
-
-					robot_global_positions_.resize(num_robots_);
-					for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-						robot_global_positions_[iRobot] = robots_[iRobot].GetGlobalCurrentPosition();
-					}
-					system_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
-					exploration_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 1);
-					explored_idf_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
-					total_idf_weight_ = GetWorldIDF().sum();
-					PostStepCommands();
+			CoverageSystem( Parameters const &params, int const num_gaussians, int const num_robots) : params_{params}, world_idf_{WorldIDF(params_)}{
+				// Generate Bivariate Normal Distribution from random numbers
+				std::srand(0);
+				gen_ = std::mt19937(rd_()); //Standard mersenne_twister_engine seeded with rd_()
+				distrib_pts_ = std::uniform_real_distribution<>(0, params_.pWorldMapSize * params_.pResolution);
+				std::uniform_real_distribution<> distrib_var(params_.pMinSigma, params_.pMaxSigma);
+				std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
+				for(int i = 0; i < num_gaussians; ++i) {
+					Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
+					double sigma(distrib_var(gen_));
+					double peak(distrib_peak(gen_));
+					BivariateNormalDistribution dist(mean, sigma, peak);
+					world_idf_.AddNormalDistribution(dist);
 				}
+
+				// Generate the world map using Cuda
+				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
+
+				std::uniform_real_distribution<> robot_pos_dist (0, params_.pRobotInitDist);
+				robots_.reserve(num_robots);
+				for(int i = 0; i < num_robots; ++i) {
+					Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));
+					robots_.push_back(RobotModel(params_, start_pos, world_idf_));
+				}
+				InitSetup();
+			}
 
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				SetWorldIDF(world_idf);
-				normalization_factor_ = world_idf_.GetNormalizationFactor();
 				robots_.reserve(robot_positions.size());
 				for(auto const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
 				}
-				num_robots_ = robots_.size();
+				InitSetup();
 			}
 
 			CoverageSystem(Parameters const &params, std::vector <BivariateNormalDistribution> const &dists, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
@@ -119,8 +100,28 @@ namespace CoverageControl {
 				for(auto const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
 				}
-				num_robots_ = robots_.size();
+				InitSetup();
+			}
 
+			void InitSetup() {
+				num_robots_ = robots_.size();
+				robot_positions_history_.resize(num_robots_);
+
+				time_step_dist_ = params_.pMaxRobotSpeed * params_.pTimeStep * params_.pResolution;
+				sensor_area_ = params_.pSensorSize * params_.pSensorSize;
+
+				voronoi_cells_.resize(num_robots_);
+				communication_maps_.resize(num_robots_);
+
+				robot_global_positions_.resize(num_robots_);
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					robot_global_positions_[iRobot] = robots_[iRobot].GetGlobalCurrentPosition();
+				}
+				system_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+				exploration_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 1);
+				explored_idf_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+				total_idf_weight_ = GetWorldIDF().sum();
+				PostStepCommands();
 			}
 
 			void UpdateSystemMap() {
@@ -131,9 +132,10 @@ namespace CoverageControl {
 					exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(offset.width, offset.height);
 				}
 				system_map_ = explored_idf_map_ - exploration_map_;
-				exploration_ratio_ = 1.0 - (double)(exploration_map_.count())/(params_.pWorldMapSize * params_.pWorldMapSize);
+				exploration_ratio_ = 1.0 - (double)(exploration_map_.sum())/(params_.pWorldMapSize * params_.pWorldMapSize);
 				weighted_exploration_ratio_ = (double)(explored_idf_map_.sum())/(total_idf_weight_);
 				/* std::cout << "Exploration: " << exploration_ratio_ << " Weighted: " << weighted_exploration_ratio_ << std::endl; */
+				/* std::cout << "Diff: " << (exploration_map_.count() - exploration_map_.sum()) << std::endl; */
 			}
 
 			inline double GetExplorationRatio() const { return exploration_ratio_; }
@@ -155,6 +157,7 @@ namespace CoverageControl {
 			}
 
 			void SetWorldIDF(WorldIDF const &world_idf) { world_idf_ = world_idf;
+				world_idf_.GenerateMapCuda();
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 			}
 
@@ -347,7 +350,90 @@ namespace CoverageControl {
 				return voronoi_.GetObjValue();
 			}
 
+			auto GetRobotExplorationFeatures(int const robot_id) {
+				double eps = 0.0001;
+				queue_t frontiers;
+				Point2 const &pos = robot_global_positions_[robot_id];
+				double factor = 4;
+				double pos_x_lim = std::min(pos[0] + factor * time_step_dist_, double(params_.pWorldMapSize));
+				double pos_y_lim = std::min(pos[1] + factor * time_step_dist_, double(params_.pWorldMapSize));
+				for(double pos_x = std::max(pos[0] - factor * time_step_dist_, eps); pos_x < pos_x_lim;  pos_x += 1 * params_.pResolution ) {
+					for(double pos_y = std::max(pos[1] - factor * time_step_dist_, eps); pos_y < pos_y_lim; pos_y += 1 * params_.pResolution ) {
+						Point2 qpos{ pos_x, pos_y };
+						double dist = (qpos - pos).norm();
+						/* if(dist < 2 * params_.pResolution) { continue; } */
+						dist = std::max(dist, time_step_dist_);
+						MapUtils::MapBounds index, offset;
+						MapUtils::ComputeOffsets(params_.pResolution, qpos, params_.pSensorSize, params_.pWorldMapSize, index, offset);
+						double unexplored = exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height).count();
+						double benefit = unexplored;
+						if(unexplored > 0.1 * sensor_area_) {
+							double idf_value = explored_idf_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height).count();
+							benefit += 2 * idf_value;
+						}
+						double bcr = benefit/dist;
+
+						if(frontiers.size() < num_frontiers_) {
+							frontiers.push(Frontier(qpos, bcr));
+						} else {
+							auto worst_frontier = frontiers.top();
+							if(worst_frontier.value < bcr) {
+								frontiers.pop();
+								frontiers.push(Frontier(qpos, bcr));
+							}
+						}
+					}
+				}
+				std::vector <double> frontier_features(num_frontiers_ * 2);
+				while(!frontiers.empty()) {
+					auto point = frontiers.top();
+					frontiers.pop();
+					frontier_features.push_back(point.pt[0]);
+					frontier_features.push_back(point.pt[1]);
+				}
+				return frontier_features;
+			}
+
+			auto GetRobotExplorationFeatures() {
+				std::vector <std::vector<double>> features(num_robots_);
+#pragma omp parallel for num_threads(num_robots_)
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					features[iRobot] = GetRobotExplorationFeatures(iRobot);
+				}
+				return features;
+			}
+
 			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
+			/* Only the local map is considered for the computation of the centroid. */
+			auto GetRobotVoronoiFeatures(int const robot_id) { 
+				auto const &pos = robot_global_positions_[robot_id];
+				auto robot_local_map = robots_[robot_id].GetRobotLocalMap();
+				MapUtils::MapBounds index, offset;
+				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
+				Point2 map_size(offset.width, offset.height);
+
+				Point2 map_translation((index.left + offset.left) * params_.pResolution, (index.bottom + offset.bottom) * params_.pResolution);
+
+				PointVector robot_positions(1);
+				robot_positions[0] = pos - map_translation;
+				Voronoi voronoi(robot_positions, robot_local_map, map_size, params_.pResolution, true, 0);
+				auto vcell = voronoi.GetVoronoiCell();
+				/* vcell.centroid -= map_translation; */
+				Point3 feature(vcell.centroid.x(), vcell.centroid.y(), vcell.mass);
+				return feature;
+			}
+
+			auto GetRobotVoronoiFeatures() {
+				std::vector <Point3> features(num_robots_);
+#pragma omp parallel for num_threads(num_robots_)
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					features[iRobot] = GetRobotVoronoiFeatures(iRobot);
+				}
+				return features;
+			}
+
+			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
+			/* Uses neighboring robots' positions to compute the centroid. */
 			auto GetLocalVoronoiFeatures(int const robot_id) { 
 				auto const &pos = robot_global_positions_[robot_id];
 				auto robot_local_map = robots_[robot_id].GetRobotLocalMap();
@@ -355,9 +441,7 @@ namespace CoverageControl {
 				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
 				Point2 map_size(offset.width, offset.height);
 
-				/* Point2 map_translation(params_.pLocalMapSize * params_.pResolution/2., params_.pLocalMapSize * params_.pResolution/2.); */
 				Point2 map_translation((index.left + offset.left) * params_.pResolution, (index.bottom + offset.bottom) * params_.pResolution);
-				/* map_translation -= Point2(offset.left, offset.bottom) * params_.pResolution; */
 
 				auto robot_neighbors_pos = GetRobotsInCommunication(robot_id);
 				PointVector robot_positions(robot_neighbors_pos.size() + 1);
