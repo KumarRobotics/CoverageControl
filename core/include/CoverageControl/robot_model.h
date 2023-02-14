@@ -32,6 +32,7 @@ namespace CoverageControl {
 			MapType robot_map_; // Stores what the robot has seen. Has the same reference as world map.
 			MapType sensor_view_; // Stores the current sensor view of the robot
 			MapType local_map_; // Stores the local map of the robot
+			MapType trimmed_local_map_; // Stores the local map of the robot
 			MapType obstacle_map_; // Stores the obstacle map
 			MapType system_map_; // Stores the obstacle map
 			MapType local_exploration_map_; // Binary map: true for unexplored locations
@@ -160,6 +161,19 @@ namespace CoverageControl {
 				GetExplorationMap();
 				system_map_ = local_map_ - local_exploration_map_;
 				return system_map_;
+			}
+
+			const MapType& GetTrimmedRobotLocalMap() {
+				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
+
+					Point2 const &pos = global_current_position_;
+					MapUtils::MapBounds index, offset;
+					MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
+					trimmed_local_map_ = robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
+				} else {
+					trimmed_local_map_ = MapType::Constant(0, 0, 0);
+				}
+				return trimmed_local_map_;
 			}
 
 			const MapType& GetRobotLocalMap() {

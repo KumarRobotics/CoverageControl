@@ -403,15 +403,16 @@ namespace CoverageControl {
 				return features;
 			}
 
+
 			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
 			/* Only the local map is considered for the computation of the centroid. */
 			auto GetRobotVoronoiFeatures(int const robot_id) { 
 				auto const &pos = robot_global_positions_[robot_id];
-				auto robot_local_map = robots_[robot_id].GetRobotLocalMap();
+				auto robot_local_map = robots_[robot_id].GetTrimmedRobotLocalMap();
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
-				Point2 map_size(offset.width, offset.height);
 
+				Point2 map_size(offset.width, offset.height);
 				Point2 map_translation((index.left + offset.left) * params_.pResolution, (index.bottom + offset.bottom) * params_.pResolution);
 
 				PointVector robot_positions(1);
@@ -436,7 +437,7 @@ namespace CoverageControl {
 			/* Uses neighboring robots' positions to compute the centroid. */
 			auto GetLocalVoronoiFeatures(int const robot_id) { 
 				auto const &pos = robot_global_positions_[robot_id];
-				auto robot_local_map = robots_[robot_id].GetRobotLocalMap();
+				auto robot_local_map = robots_[robot_id].GetTrimmedRobotLocalMap();
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
 				Point2 map_size(offset.width, offset.height);
