@@ -129,6 +129,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("PlotMapVoronoi", &CoverageSystem::PlotMapVoronoi)
 		.def("GetExplorationRatio", &CoverageSystem::GetExplorationRatio)
 		.def("GetWeightedExplorationRatio", &CoverageSystem::GetWeightedExplorationRatio)
+		.def("RecordPlotData", py::overload_cast<>(&CoverageSystem::RecordPlotData))
+		.def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
 		;
 	
 	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")
