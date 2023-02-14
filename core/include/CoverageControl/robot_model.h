@@ -16,6 +16,7 @@
 #include "typedefs.h"
 #include "world_idf.h"
 #include "map_utils.h"
+#include "voronoi.h"
 
 namespace CoverageControl {
 
@@ -32,12 +33,13 @@ namespace CoverageControl {
 			MapType robot_map_; // Stores what the robot has seen. Has the same reference as world map.
 			MapType sensor_view_; // Stores the current sensor view of the robot
 			MapType local_map_; // Stores the local map of the robot
-			MapType trimmed_local_map_; // Stores the local map of the robot
 			MapType obstacle_map_; // Stores the obstacle map
 			MapType system_map_; // Stores the obstacle map
 			MapType local_exploration_map_; // Binary map: true for unexplored locations
 			MapType exploration_map_; // Binary map: true for unexplored locations
 			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
+			double time_step_dist_ = 0;
+			double sensor_area_ = 0;
 
 			// Gets the sensor data from world IDF at the global_current_position_ and updates robot_map_
 			void UpdateSensorView() {
@@ -100,6 +102,10 @@ namespace CoverageControl {
 				} else {
 					UpdateRobotMap();
 				}
+
+				time_step_dist_ = params_.pMaxRobotSpeed * params_.pTimeStep * params_.pResolution;
+				sensor_area_ = params_.pSensorSize * params_.pSensorSize;
+
 			}
 
 			// Time step robot with the given control direction and speed
@@ -163,19 +169,6 @@ namespace CoverageControl {
 				return system_map_;
 			}
 
-			const MapType& GetTrimmedRobotLocalMap() {
-				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
-
-					Point2 const &pos = global_current_position_;
-					MapUtils::MapBounds index, offset;
-					MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
-					trimmed_local_map_ = robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
-				} else {
-					trimmed_local_map_ = MapType::Constant(0, 0, 0);
-				}
-				return trimmed_local_map_;
-			}
-
 			const MapType& GetRobotLocalMap() {
 				local_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, -1.0);
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
@@ -199,6 +192,72 @@ namespace CoverageControl {
 				obstacle_map_.block(offset.left, offset.bottom, offset.width, offset.height) = MapType::Zero(offset.width, offset.height);
 				return obstacle_map_;
 			}
+
+			auto GetExplorationFeatures() {
+				double eps = 0.0001;
+				queue_t frontiers;
+				Point2 const &pos = global_current_position_;
+
+				double factor = 4;
+				double pos_x_lim = std::min(pos[0] + factor * time_step_dist_, double(params_.pWorldMapSize));
+				double pos_y_lim = std::min(pos[1] + factor * time_step_dist_, double(params_.pWorldMapSize));
+				for(double pos_x = std::max(pos[0] - factor * time_step_dist_, eps); pos_x < pos_x_lim;  pos_x += 1 * params_.pResolution ) {
+					for(double pos_y = std::max(pos[1] - factor * time_step_dist_, eps); pos_y < pos_y_lim; pos_y += 1 * params_.pResolution ) {
+						Point2 qpos{ pos_x, pos_y };
+						double dist = (qpos - pos).norm();
+						dist = std::max(dist, time_step_dist_);
+						MapUtils::MapBounds index, offset;
+						MapUtils::ComputeOffsets(params_.pResolution, qpos, params_.pSensorSize, params_.pWorldMapSize, index, offset);
+						double unexplored = exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height).sum();
+						double benefit = unexplored;
+						if(unexplored > 0.1 * sensor_area_) {
+							double idf_value = robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height).count();
+							benefit += 2 * idf_value;
+						}
+						double bcr = benefit/dist;
+
+						if(frontiers.size() < size_t(params_.pNumFrontiers)) {
+							frontiers.push(Frontier(qpos, bcr));
+						} else {
+							auto worst_frontier = frontiers.top();
+							if(worst_frontier.value < bcr) {
+								frontiers.pop();
+								frontiers.push(Frontier(qpos, bcr));
+							}
+						}
+					}
+				}
+				std::vector <double> frontier_features(params_.pNumFrontiers * 2);
+				int count = 0;
+				while(!frontiers.empty()) {
+					auto point = frontiers.top();
+					frontier_features[count++] = point.pt[0] - pos[0];
+					frontier_features[count++] = point.pt[1] - pos[1];
+					frontiers.pop();
+				}
+				return frontier_features;
+			}
+
+			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
+			/* Only the local map is considered for the computation of the centroid. */
+			auto GetVoronoiFeatures() { 
+				auto const &pos = global_current_position_;
+				MapUtils::MapBounds index, offset;
+				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
+				auto trimmed_local_map = robot_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
+
+				Point2 map_size(offset.width, offset.height);
+				Point2 map_translation((index.left + offset.left) * params_.pResolution, (index.bottom + offset.bottom) * params_.pResolution);
+
+				PointVector robot_positions(1);
+				robot_positions[0] = pos - map_translation;
+				Voronoi voronoi(robot_positions, trimmed_local_map, map_size, params_.pResolution, true, 0);
+				auto vcell = voronoi.GetVoronoiCell();
+				/* vcell.centroid -= map_translation; */
+				Point3 feature(vcell.centroid.x(), vcell.centroid.y(), vcell.mass);
+				return feature;
+			}
+
 	};
 
 } /* namespace CoverageControl */

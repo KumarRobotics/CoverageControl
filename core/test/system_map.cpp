@@ -40,19 +40,16 @@ int main(int argc, char** argv) {
 
 	std::string dir = "data/oracle/";
 	env.PlotWorldMap(dir);
-	env.PlotSystemMap(dir, 0);
-	int count = 1;
+	env.RecordPlotData();
 	for(int ii = 1; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
 		auto actions = oracle.GetActions();
 		env.StepActions(actions);
 		auto robot_status = oracle.GetRobotStatus();
-		if(ii%2 == 0) {
+		if(ii%1 == 0) {
 			frontiers = oracle.GetFrontiers();
-			/* env.PlotFrontiers(dir, count, frontiers); */
-			env.PlotSystemMap(dir, count, robot_status);
-			++count;
+			env.RecordPlotData(robot_status);
 		}
 		if(cont_flag == false) {
 			break;
@@ -65,9 +62,9 @@ int main(int argc, char** argv) {
 	for(int ii = 0; ii < 20; ++ii) {
 		auto actions = oracle.GetActions();
 		env.StepActions(actions);
-		env.PlotSystemMap(dir, count, robot_status);
-		++count;
+		env.RecordPlotData(robot_status);
 	}
+	env.RenderRecordedMap(dir, "CoverageControl_ExploreExploit.mp4");
 
 	return 0;
 }

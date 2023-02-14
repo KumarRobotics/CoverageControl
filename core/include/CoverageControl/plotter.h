@@ -11,6 +11,13 @@
 
 namespace CoverageControl {
 
+	struct PlotterData {
+		MapType map;
+		PointVector positions;
+		std::vector <std::list<Point2>> positions_history;
+		std::vector <int> robot_status;
+	};
+
 	template <typename MapType_t = MapType>
 		class Plotter {
 			std::string dir = "data/test/";
@@ -33,7 +40,7 @@ namespace CoverageControl {
 
 			public:
 			Plotter(std::string const &dir, int const &range_max, double const &resolution) {
-				this->dir = dir;
+				SetDir(dir);
 				this->range_max = range_max;
 				this->resolution = resolution;
 			}

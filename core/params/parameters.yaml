@@ -25,7 +25,7 @@ pUpdateExplorationMap: true
 
 pUpdateSystemMap: true
 
-pRobotPosHistorySize: 50
+pRobotPosHistorySize: 20
 
 # Assuming square sensor FOV.
 # Actual FOV: square with side pResolution * pSensorSize
