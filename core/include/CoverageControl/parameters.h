@@ -84,6 +84,8 @@ namespace CoverageControl {
 			int pLloydMaxIterations = 100;
 			int pLloydNumTries = 10;
 
+			int pNumFrontiers = 10; // Number of frontiers to be selected
+
 			Parameters() {}
 
 			Parameters (std::string const &config_file) : config_file_{config_file}{

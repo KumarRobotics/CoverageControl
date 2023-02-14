@@ -61,3 +61,5 @@ pMaxPeak: 10
 # Settings for Lloyd offline algorithm
 pLloydMaxIterations: 100
 pLloydNumTries: 10
+
+pNumFrontiers: 10

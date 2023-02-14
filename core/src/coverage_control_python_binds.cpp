@@ -30,6 +30,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	m.doc() = "CoverageControl library";
 
 	py::bind_vector<std::vector<double>>(m, "DblVector");
+	py::bind_vector<std::vector<std::vector<double>>>(m, "DblVectorVector");
 	py::bind_vector<std::vector<int>>(m, "intVector");
 
 	m.def("Point2", []() {return Point2(0, 0);});
@@ -210,6 +211,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def_readonly("pMaxPeak", &Parameters::pMaxPeak)
 		.def_readonly("pLloydNumTries", &Parameters::pLloydNumTries)
 		.def_readonly("pLloydMaxIterations", &Parameters::pLloydMaxIterations)
+		.def_readonly("pNumFrontiers", &Parameters::pNumFrontiers)
 		;
 
 	py::class_<GeoLocalTransform>(m, "GeoLocalTransform")

@@ -49,7 +49,6 @@ namespace CoverageControl {
 			double total_idf_weight_ = 0;
 			double time_step_dist_ = 0;
 			double sensor_area_ = 0;
-			size_t num_frontiers_ = 10;
 
 		public:
 			// Initialize IDF with num_gaussians distributions
@@ -373,7 +372,7 @@ namespace CoverageControl {
 						}
 						double bcr = benefit/dist;
 
-						if(frontiers.size() < num_frontiers_) {
+						if(frontiers.size() < size_t(params_.pNumFrontiers)) {
 							frontiers.push(Frontier(qpos, bcr));
 						} else {
 							auto worst_frontier = frontiers.top();
@@ -384,12 +383,13 @@ namespace CoverageControl {
 						}
 					}
 				}
-				std::vector <double> frontier_features(num_frontiers_ * 2);
+				std::vector <double> frontier_features(params_.pNumFrontiers * 2);
+				int count = 0;
 				while(!frontiers.empty()) {
 					auto point = frontiers.top();
+					frontier_features[count++] = point.pt[0];
+					frontier_features[count++] = point.pt[1];
 					frontiers.pop();
-					frontier_features.push_back(point.pt[0]);
-					frontier_features.push_back(point.pt[1]);
 				}
 				return frontier_features;
 			}

@@ -35,5 +35,8 @@ namespace CoverageControl {
 		pMaxPeak = yaml_config_["pMaxPeak"].as<double>();
 		pLloydMaxIterations = yaml_config_["pLloydMaxIterations"].as<int>();
 		pLloydNumTries = yaml_config_["pLloydNumTries"].as<int>();
+		if (yaml_config_["pNumFrontiers"]) {
+			pNumFrontiers = yaml_config_["pNumFrontiers"].as<int>();
+		}
 	}
 } /* namespace CoverageControl */
