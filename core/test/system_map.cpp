@@ -59,9 +59,10 @@ int main(int argc, char** argv) {
 	std::cout << "Exploration ratio: " << env.GetExplorationRatio() << " Weighted: " << env.GetWeightedExplorationRatio() << std::endl;
 
 	auto robot_status = oracle.GetRobotStatus();
+	auto zero_actions = PointVector(num_robots, Point2(0,0));
+	
 	for(int ii = 0; ii < 90; ++ii) {
-		auto actions = oracle.GetActions();
-		env.StepActions(actions);
+		env.StepActions(zero_actions);
 		env.RecordPlotData(robot_status);
 	}
 	env.RenderRecordedMap(dir, "CoverageControl_ExploreExploit.mp4");

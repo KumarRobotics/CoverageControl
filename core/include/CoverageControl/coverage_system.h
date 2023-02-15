@@ -225,9 +225,11 @@ namespace CoverageControl {
 			bool CheckOscillation(size_t const robot_id) {
 				auto const &history = robot_positions_history_[robot_id];
 				Point2 const last_pos = history.back();
-				auto it_end = std::next(history.crbegin(), 5);
+				auto it_end = std::next(history.crbegin(), 6);
 				bool flag = false;
-				std::for_each(history.crbegin(), it_end, [last_pos, &flag](Point2 const &pt) { if((pt - last_pos).norm() < kEps) { flag = true; }  });
+				int count = 0;
+				std::for_each(history.crbegin(), it_end, [last_pos, &count](Point2 const &pt) { if((pt - last_pos).norm() < kEps) { ++count; }  });
+				if(count > 2) { flag = true; }
 				return flag;
 			}
 
