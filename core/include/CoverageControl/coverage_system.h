@@ -68,10 +68,6 @@ namespace CoverageControl {
 					world_idf_.AddNormalDistribution(dist);
 				}
 
-				// Generate the world map using Cuda
-				world_idf_.GenerateMapCuda();
-				normalization_factor_ = world_idf_.GetNormalizationFactor();
-
 				std::uniform_real_distribution<> robot_pos_dist (0, params_.pRobotInitDist);
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
@@ -92,8 +88,6 @@ namespace CoverageControl {
 
 			CoverageSystem(Parameters const &params, std::vector <BivariateNormalDistribution> const &dists, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				world_idf_.AddNormalDistribution(dists);
-				world_idf_.GenerateMapCuda();
-				normalization_factor_ = world_idf_.GetNormalizationFactor();
 				num_robots_ = robot_positions.size();
 				robots_.reserve(num_robots_);
 				for(auto const &pos:robot_positions) {
@@ -103,6 +97,10 @@ namespace CoverageControl {
 			}
 
 			void InitSetup() {
+				// Generate the world map using Cuda
+				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
+
 				num_robots_ = robots_.size();
 				robot_positions_history_.resize(num_robots_);
 
