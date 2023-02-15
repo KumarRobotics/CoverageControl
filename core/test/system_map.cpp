@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 	std::cout << "Exploration ratio: " << env.GetExplorationRatio() << " Weighted: " << env.GetWeightedExplorationRatio() << std::endl;
 
 	auto robot_status = oracle.GetRobotStatus();
-	for(int ii = 0; ii < 20; ++ii) {
+	for(int ii = 0; ii < 90; ++ii) {
 		auto actions = oracle.GetActions();
 		env.StepActions(actions);
 		env.RecordPlotData(robot_status);

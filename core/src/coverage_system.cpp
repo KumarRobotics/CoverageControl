@@ -10,7 +10,7 @@ namespace CoverageControl {
 		std::filesystem::create_directory(frame_dir);
 		Plotter<MapType> plotter(frame_dir, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
 		plotter.SetScale(4);
-#pragma omp parallel for num_threads(std::thread::hardware_concurrency())
+#pragma omp parallel for num_threads(std::thread::hardware_concurrency()/2)
 		for(size_t i = 0; i < plotter_data_.size(); ++i) {
 			auto iPlotter = plotter;
 			iPlotter.SetPlotName("map", i);

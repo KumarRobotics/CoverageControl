@@ -222,6 +222,15 @@ namespace CoverageControl {
 			MapType const& GetSystemExplorationMap() const { return exploration_map_; }
 			MapType const& GetSystemExploredIDFMap() const { return explored_idf_map_; }
 
+			bool CheckOscillation(size_t const robot_id) {
+				auto const &history = robot_positions_history_[robot_id];
+				Point2 const last_pos = history.back();
+				auto it_end = std::next(history.crbegin(), 5);
+				bool flag = false;
+				std::for_each(history.crbegin(), it_end, [last_pos, &flag](Point2 const &pt) { if((pt - last_pos).norm() < kEps) { flag = true; }  });
+				return flag;
+			}
+
 			void CheckRobotID(size_t const id) const {
 				if(id >= num_robots_) {
 					throw std::out_of_range{"Robot index more than the number of robots"};
