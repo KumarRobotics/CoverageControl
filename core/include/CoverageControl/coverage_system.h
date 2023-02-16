@@ -291,6 +291,9 @@ namespace CoverageControl {
 						robot_neighbors_pos.push_back(relative_pos);
 					}
 				}
+				std::sort(robot_neighbors_pos.begin(), robot_neighbors_pos.end(), [](Point2 const &a, Point2 const &b) {
+						return a.norm() < b.norm();
+						});
 				return robot_neighbors_pos;
 			}
 
@@ -407,7 +410,7 @@ namespace CoverageControl {
 				Voronoi voronoi(robot_positions, trimmed_local_map, map_size, params_.pResolution, true, 0);
 				auto vcell = voronoi.GetVoronoiCell();
 				/* vcell.centroid -= map_translation; */
-				std::vector<double> feature{vcell.centroid.x(), vcell.centroid.y(), vcell.mass, vcell.sum_idf_site_dist_sqr, vcell.sum_idf_site_dist};
+				std::vector<double> feature{vcell.centroid.x(), vcell.centroid.y(), vcell.mass, vcell.sum_idf_site_dist_sqr, vcell.sum_idf_site_dist, vcell.sum_idf_goal_dist_sqr, vcell.sum_idf_goal_dist};
 				return feature;
 			}
 
