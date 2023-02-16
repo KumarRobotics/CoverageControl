@@ -60,7 +60,7 @@ namespace CoverageControl {
 			}
 			/* std::cout << "No. of voronoi steps: " << iSteps << std::endl; */
 			all_voronoi_cells[iter] = voronoi;
-			obj_values[iter] = voronoi.GetObjValue();
+			obj_values[iter] = voronoi.GetSumIDFGoalDistSqr();
 		}
 		int best_vornoi_idx = 0;
 		double min = obj_values[0];

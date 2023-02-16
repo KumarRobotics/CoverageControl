@@ -1,29 +1,22 @@
 #include <list>
 #include <omp.h>
+#include <functional>
+
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/cgal/config.h>
 #include <CoverageControl/cgal/utilities.h>
 
 namespace CoverageControl {
 
-	void Voronoi::ComputeMassCentroid(VoronoiCell &vcell) {
-		vcell.mass = 0; vcell.obj = 0;
-		vcell.centroid = Point2{0,0};
-		auto &cell = vcell.cell;
+	void Voronoi::CellNavigator(VoronoiCell const &vcell, std::function<void (double, Point2)> evaluator_func) {
+		auto const &cell = vcell.cell;
 		int n = cell.size();
-
-		int left_id = 0;
-		int right_id = 0;
+		int left_id = 0; int right_id = 0;
 		for(int i = 1; i < n; ++i) {
-			if(cell[i].x() < cell[left_id].x()) {
-				left_id = i;
-			}
-			if(cell[i].x() > cell[right_id].x()) {
-				right_id = i;
-			}
+			if(cell[i].x() < cell[left_id].x()) { left_id = i; }
+			if(cell[i].x() > cell[right_id].x()) { right_id = i; }
 		}
 
-		/* std::cout << "Found left vertex" << std::endl; */
 		int min_i = std::round(cell[left_id].x()/resolution_);
 		min_i = min_i < 0 ? 0 : min_i;
 
@@ -54,20 +47,16 @@ namespace CoverageControl {
 
 			auto prev_pt = cell[prev_id(cc_pt_id)];
 			auto cc_pt = cell[cc_pt_id];
-			auto x1 = prev_pt.x();
-			auto y1 = prev_pt.y();
-			auto x2 = cc_pt.x();
-			auto y2 = cc_pt.y();
+			auto x1 = prev_pt.x(); auto y1 = prev_pt.y();
+			auto x2 = cc_pt.x(); auto y2 = cc_pt.y();
 
 			if((x2 - x1) < kEps) { throw std::runtime_error{"Unexpected error!"}; }
 			auto y_lower = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
 
 			auto next_pt = cell[next_id(c_pt_id)];
 			auto c_pt = cell[c_pt_id];
-			x1 = next_pt.x();
-			y1 = next_pt.y();
-			x2 = c_pt.x();
-			y2 = c_pt.y();
+			x1 = next_pt.x(); y1 = next_pt.y();
+			x2 = c_pt.x(); y2 = c_pt.y();
 
 			if((x2 - x1) < kEps) { throw std::runtime_error{"Unexpected error!"}; }
 			auto y_upper = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
@@ -82,14 +71,22 @@ namespace CoverageControl {
 				double y = j * resolution_ + resolution_/2.;
 				Point2 curr_pt(x, y);
 				auto map_val = map_->operator()(i, j);
-				vcell.mass += map_val;
-				vcell.centroid += curr_pt * map_val;
-				vcell.obj += (curr_pt - vcell.site).squaredNorm() * map_val;
+				evaluator_func(map_val, curr_pt);
 			}
 		}
-		/* std::cout << "Computed vcell" << std::endl; */
+	}
+
+	void Voronoi::ComputeMassCentroid(VoronoiCell &vcell) {
+		vcell.mass = 0; vcell.sum_idf_site_dist = 0;
+		vcell.sum_idf_site_dist_sqr = 0; vcell.sum_idf_goal_dist_sqr = 0;
+		vcell.centroid = Point2{0,0};
+
+		auto fp = std::bind(&VoronoiCell::MassCentroidFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
+		CellNavigator(vcell, fp);
+		auto fp1 = std::bind(&VoronoiCell::GoalObjFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
+		CellNavigator(vcell, fp1);
+
 		if(vcell.mass < kEps) {
-			/* vcell.centroid = vcell.site; */
 			Polygon_2 polygon;
 			for(auto const &p:vcell.cell) {
 				polygon.push_back(CGAL_Point2{p[0], p[1]});
@@ -99,49 +96,11 @@ namespace CoverageControl {
 		} else {
 			vcell.centroid = vcell.centroid / vcell.mass;
 		}
-		/* std::cout << "Exiting ComputeMassCentroid " << std::endl; */
-	}
-
-	// This is an older slightly conservative approach.
-	// It is less prone to errors as it uses existing functions from the library.
-	// Will have to stress test the above version.
-	// Initial tests seem to all pass
-	void Voronoi::ComputeMassCentroid2(VoronoiCell &vcell) {
-		vcell.mass = 0;
-		vcell.obj = 0;
-		vcell.centroid = Point2(0,0);
-		Polygon_2 cgal_poly;
-		for(auto const &p:vcell.cell) {
-			cgal_poly.push_back(CGAL_Point2(p.x(), p.y()));
-		}
-		int min_i = std::floor(CGAL::to_double(cgal_poly.left_vertex()->x())/resolution_);
-		min_i = min_i < 0 ? 0 : min_i;
-		int max_i = std::ceil(CGAL::to_double(cgal_poly.right_vertex()->x())/resolution_);
-		max_i = max_i > map_size_.x() ? map_size_.x() : max_i;
-		int min_j = std::floor(CGAL::to_double(cgal_poly.bottom_vertex()->y())/resolution_);
-		min_j = min_j < 0 ? 0 : min_j;
-		int max_j = std::ceil(CGAL::to_double(cgal_poly.top_vertex()->y())/resolution_);
-		max_j = max_j > map_size_.y() ? map_size_.y() : max_j;
-
-		for(int i = min_i; i < max_i; ++i) {
-			for(int j = min_j; j < max_j; ++j) {
-				double x = i * resolution_ + resolution_/2.;
-				double y = j * resolution_ + resolution_/2.;
-				CGAL_Point2 pt(x, y);
-				if(CGAL::bounded_side_2(cgal_poly.begin(), cgal_poly.end(), pt, K()) == CGAL::ON_UNBOUNDED_SIDE) {
-					continue;
-				} else {
-					vcell.mass += (*map_)(i, j);
-					vcell.centroid = vcell.centroid + Point2(x, y) * (*map_)(i, j);
-					vcell.obj += Point2(x - vcell.site.x(), y - vcell.site.y()).squaredNorm() * (*map_)(i, j);
-				}
-			}
-		}
-		if(vcell.mass < kEps) {
-			vcell.centroid = vcell.site;
-		} else {
-			vcell.centroid = vcell.centroid / vcell.mass;
-		}
+		/* std::cout << "mass: " << vcell.mass << std::endl; */
+		/* std::cout << "centroid: " << vcell.centroid << std::endl; */
+		/* std::cout << "sum_idf_site_dist: " << vcell.sum_idf_site_dist << std::endl; */
+		/* std::cout << "sum_idf_site_dist_sqr: " << vcell.sum_idf_site_dist_sqr << std::endl; */
+		/* std::cout << "sum_idf_goal_dist_sqr: " << vcell.sum_idf_goal_dist_sqr << std::endl; */
 	}
 
 	void Voronoi::ComputeVoronoiCells() {

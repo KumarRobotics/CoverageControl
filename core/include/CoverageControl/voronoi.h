@@ -19,7 +19,21 @@ namespace CoverageControl {
 		PointVector cell;
 		double mass = 0;
 		Point2 centroid;
-		double obj = 0;
+		double sum_idf_site_dist_sqr = 0;
+		double sum_idf_goal_dist_sqr = 0;
+		double sum_idf_site_dist = 0;
+		double sum_idf_goal_dist = 0;
+
+		void MassCentroidFunctional(double const &map_val, Point2 const &pt) {
+			mass += map_val;
+			centroid += pt * map_val;
+			sum_idf_site_dist += (pt - site).norm() * map_val;
+			sum_idf_site_dist_sqr += (pt - site).squaredNorm() * map_val;
+		}
+		void GoalObjFunctional(double const &map_val, Point2 const &pt) {
+			sum_idf_goal_dist_sqr += (pt - centroid).squaredNorm() * map_val;
+			sum_idf_goal_dist += (pt - centroid).norm() * map_val;
+		}
 	};
 
 	class Voronoi {
@@ -39,6 +53,8 @@ namespace CoverageControl {
 			std::vector <VoronoiCell> voronoi_cells_;
 			void ComputeMassCentroid(VoronoiCell &);
 			void ComputeMassCentroid2(VoronoiCell &);
+			void MassCentroidFunctional(VoronoiCell &vcell, double const &map_val, Point2 const &pt);
+			void CellNavigator(VoronoiCell const &, std::function<void (double, Point2 )>);
 
 			/* std::vector <Edge> voronoi_edges_; */
 		public:
@@ -76,10 +92,17 @@ namespace CoverageControl {
 			auto GetVoronoiCells() const {return voronoi_cells_;}
 			auto GetVoronoiCell() {return voronoi_cell_;}
 
-			double GetObjValue() {
+			double GetSumIDFSiteDistSqr() {
 				double obj = 0;
 				for(auto const &cell:voronoi_cells_) {
-					obj = obj + cell.obj;
+					obj = obj + cell.sum_idf_site_dist_sqr;
+				}
+				return obj;
+			}
+			double GetSumIDFGoalDistSqr() {
+				double obj = 0;
+				for(auto const &cell:voronoi_cells_) {
+					obj = obj + cell.sum_idf_goal_dist_sqr;
 				}
 				return obj;
 			}
