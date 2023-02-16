@@ -68,6 +68,10 @@ namespace CoverageControl {
 					world_idf_.AddNormalDistribution(dist);
 				}
 
+				// Generate the world map using Cuda
+				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
+
 				std::uniform_real_distribution<> robot_pos_dist (0, params_.pRobotInitDist);
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
@@ -79,6 +83,11 @@ namespace CoverageControl {
 
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				SetWorldIDF(world_idf);
+
+				// Generate the world map using Cuda
+				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
+
 				robots_.reserve(robot_positions.size());
 				for(auto const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
@@ -89,6 +98,11 @@ namespace CoverageControl {
 			CoverageSystem(Parameters const &params, std::vector <BivariateNormalDistribution> const &dists, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				world_idf_.AddNormalDistribution(dists);
 				num_robots_ = robot_positions.size();
+
+				// Generate the world map using Cuda
+				world_idf_.GenerateMapCuda();
+				normalization_factor_ = world_idf_.GetNormalizationFactor();
+
 				robots_.reserve(num_robots_);
 				for(auto const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
@@ -97,10 +111,6 @@ namespace CoverageControl {
 			}
 
 			void InitSetup() {
-				// Generate the world map using Cuda
-				world_idf_.GenerateMapCuda();
-				normalization_factor_ = world_idf_.GetNormalizationFactor();
-
 				num_robots_ = robots_.size();
 				robot_positions_history_.resize(num_robots_);
 
@@ -197,7 +207,6 @@ namespace CoverageControl {
 				for(size_t i = 0; i < num_robots_; ++i) {
 					robots_[i].SetRobotPosition(positions[i]);
 				}
-				std::cout << "Robot positions updated\n";
 				PostStepCommands();
 			}
 
@@ -376,7 +385,7 @@ namespace CoverageControl {
 
 			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
 			/* Uses neighboring robots' positions to compute the centroid. */
-			auto GetLocalVoronoiFeatures(int const robot_id) { 
+			auto GetLocalVoronoiFeatures(int const robot_id) {
 				auto const &pos = robot_global_positions_[robot_id];
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);
