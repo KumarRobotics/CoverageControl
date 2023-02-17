@@ -114,6 +114,14 @@ class SparseGNNDataGeneration:
         torch.save(self.normalized_torch_actions[start_idx:end_idx].clone(), dir_name + '/actions.pt')
 
     def SaveDataset(self, dir_name='gnn'):
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+        if not os.path.exists(dir_name + '/train'):
+            os.makedirs(dir_name + '/train')
+        if not os.path.exists(dir_name + '/val'):
+            os.makedirs(dir_name + '/val')
+        if not os.path.exists(dir_name + '/test'):
+            os.makedirs(dir_name + '/test')
 
         coverage_features_mean, coverage_features_std, self.normalized_torch_coverage_features = self.NormalizeTensor(self.torch_coverage_features)
         torch.save(coverage_features_mean, dir_name + '/coverage_features_mean.pt')
@@ -131,11 +139,13 @@ class SparseGNNDataGeneration:
 
 if __name__ == '__main__':
     params_filename = 'parameters.yaml'
-    dataset_count = 1000
-    num_gaussians = 5
-    num_robots = 15
+    num_datasets = 5
+    for i in range(0, num_datasets):
+        dataset_count = 1000
+        num_gaussians = 5
+        num_robots = 15
 
-    gen = SparseGNNDataGeneration(params_filename, dataset_count, num_gaussians, num_robots)
-    gen.GenerateDataset()
-    gen.SaveDataset('gnn')
+        gen = SparseGNNDataGeneration(params_filename, dataset_count, num_gaussians, num_robots)
+        gen.GenerateDataset()
+        gen.SaveDataset('gnn/' + str(i) + '/')
 
