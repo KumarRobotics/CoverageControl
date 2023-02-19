@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <chrono>
+#include <thread>
 
 #include <CoverageControl/constants.h>
 #include <CoverageControl/parameters.h>
@@ -14,9 +15,17 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/generate_world_map.ch>
 #include <CoverageControl/coverage_system.h>
-#include <CoverageControl/oracles/oracle_global_offline.h>
+#include <CoverageControl/algorithms/lloyd_global_online.h>
+#include <CoverageControl/algorithms/simul_explore_exploit.h>
+#include <CoverageControl/algorithms/lloyd_local_voronoi.h>
+#include <CoverageControl/algorithms/oracle_global_offline.h>
 
 using namespace CoverageControl;
+
+/* typedef LloydGlobalOnline CoverageAlgorithm; */
+/* typedef LloydLocalVoronoi CoverageAlgorithm; */
+typedef OracleGlobalOffline CoverageAlgorithm;
+/* typedef OracleSimulExploreExploit CoverageAlgorithm; */
 
 int main(int argc, char** argv) {
 	Parameters params;
@@ -25,37 +34,38 @@ int main(int argc, char** argv) {
 		std::string parameter_file = argv[1];
 		params = Parameters(parameter_file);
 	}
+	std::cout << "Processor count: " << std::thread::hardware_concurrency() << std::endl;
 
 	int num_robots = 15;
 	int num_dists = 10;
 	CoverageSystem env(params, num_dists, num_robots);
-	OracleGlobalOffline oracle(params, num_robots, env);
+	CoverageAlgorithm oracle(params, num_robots, env);
 
 	std::string dir = "data/test/";
 	env.PlotWorldMap(dir);
-	auto voronoi = oracle.GetVoronoi();
 	auto goals = oracle.GetGoals();
-	int count = 0;
 	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
 		auto actions = oracle.GetActions();
-		for(int iRobot = 0; iRobot < num_robots; ++iRobot) {
-			env.StepAction(iRobot, actions[iRobot]);
-		}
+		env.StepActions(actions);
 		if(ii%1 == 0) {
-			env.PlotMapVoronoi(dir, count, voronoi, goals);
-			/* env.PlotRobotIDFMap(dir, 0, count); */
-			++count;
+			env.RecordPlotData();
 		}
 		if(cont_flag == false) {
 			break;
 		}
 	}
-	for(int ii = 0; ii < 20; ++ii) {
-		env.PlotMapVoronoi(dir, count, voronoi, goals);
-		++count;
+	std::cout << "Converged" << std::endl;
+	std::cout << "Exploration ratio: " << env.GetExplorationRatio() << " Weighted: " << env.GetWeightedExplorationRatio() << std::endl;
+	std::cout << "Coverage objective: " << env.GetObjectiveValue() << std::endl;
+	auto zero_actions = PointVector(num_robots, Point2(0,0));
+
+	for(int ii = 0; ii < 90; ++ii) {
+		env.StepActions(zero_actions);
+		env.RecordPlotData();
 	}
 
+	env.RenderRecordedMap(dir, "CoverageControl_ExploreExploit.mp4");
 	return 0;
 }
