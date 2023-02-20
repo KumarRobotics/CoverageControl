@@ -255,7 +255,7 @@ namespace CoverageControl {
 				robot_positions[0] = pos - map_translation;
 				Voronoi voronoi(robot_positions, trimmed_local_map, map_size, params_.pResolution, true, 0);
 				auto vcell = voronoi.GetVoronoiCell();
-				/* vcell.centroid -= map_translation; */
+				vcell.centroid += Point2(params_.pLocalMapSize / 2., params_.pLocalMapSize / 2.);
 				std::vector<double> feature{vcell.centroid.x(), vcell.centroid.y(), vcell.mass, vcell.sum_idf_site_dist_sqr, vcell.sum_idf_site_dist, vcell.sum_idf_goal_dist_sqr, vcell.sum_idf_goal_dist};
 				return feature;
 			}
