@@ -36,6 +36,7 @@ class DataGenerator:
         self.sparse_coverage_maps = []
 
         self.relative_positions = torch.empty(dataset_count, num_robots, self.num_neighbor_robots * 2) # Positions of robots (x, y) per robot
+        self.torch_robot_positions = torch.empty(self.dataset_count, self.num_robots, 2)
 
         self.torch_coverage_features = torch.empty(self.dataset_count, self.num_robots, 7)
         self.torch_actions = torch.empty(self.dataset_count, self.num_robots, 2)
@@ -51,6 +52,8 @@ class DataGenerator:
 
     def StepSave(self):
         robot_positions = self.env.GetRobotPositions()
+        for i in range(0, self.num_robots):
+            self.torch_robot_positions[self.coverage_count, i] = torch.tensor(robot_positions[i])
         voronoi_features = self.env.GetLocalVoronoiFeatures()
         data_coverage_maps = []
         data_comm_maps = []
@@ -114,7 +117,8 @@ class DataGenerator:
         return mean, std, normalized_tensor_data
 
     def SaveDatasetSubset(self, dir_name='gnn/train', start_idx=0, end_idx=0):
-        torch.save(self.sparse_coverage_maps[start_idx:end_idx], dir_name + '/sparse_coverage_maps.pt')
+        torch.save(self.sparse_coverage_maps[start_idx:end_idx].clone(), dir_name + '/sparse_coverage_maps.pt')
+        torch.save(self.torch_robot_positions[start_idx:end_idx].clone(), dir_name + '/robot_positions.pt')
         torch.save(self.relative_positions[start_idx:end_idx].clone(), dir_name + '/relative_positions.pt')
         torch.save(self.normalized_torch_coverage_features[start_idx:end_idx].clone(), dir_name + '/coverage_features.pt')
         torch.save(self.normalized_torch_actions[start_idx:end_idx].clone(), dir_name + '/actions.pt')
