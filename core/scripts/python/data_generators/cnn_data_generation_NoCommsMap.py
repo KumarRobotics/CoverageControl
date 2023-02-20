@@ -107,7 +107,7 @@ class DataGenerator:
         return mean, std, normalized_tensor_data
 
     def SaveDatasetSubset(self, dir_name='gnn/train', start_idx=0, end_idx=0):
-        torch.save(self.coverage_maps[start_idx:end_idx], dir_name + '/coverage_maps.pt')
+        torch.save(self.coverage_maps[start_idx:end_idx].clone(), dir_name + '/coverage_maps.pt')
         torch.save(self.relative_positions[start_idx:end_idx].clone(), dir_name + '/relative_positions.pt')
         torch.save(self.normalized_torch_coverage_features[start_idx:end_idx].clone(), dir_name + '/coverage_features.pt')
 
