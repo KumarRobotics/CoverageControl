@@ -18,7 +18,7 @@ from scipy.ndimage import gaussian_filter
 import matplotlib.pylab as plt
 import seaborn as sns
 
-class SparseGNNDataGeneration:
+class DataGenerator:
 
     def __init__(self, params_filename='parameters.yaml', dataset_count=2500, num_gaussians=5, num_robots=15, new_sz=128, num_steps_per_dataset=1, stable_dataset_count=10):
         self.params_ = pyCoverageControl.Parameters(params_filename)
@@ -33,8 +33,6 @@ class SparseGNNDataGeneration:
 
         self.coverage_count = 0
         self.coverage_maps = torch.empty(self.dataset_count, self.num_robots, 2, self.new_sz, self.new_sz)
-
-        self.sparse_comm_maps = []
 
         self.torch_coverage_features = torch.empty(self.dataset_count, self.num_robots, 7)
         self.torch_actions = torch.empty(self.dataset_count, self.num_robots, 2)
@@ -51,8 +49,6 @@ class SparseGNNDataGeneration:
     def StepSave(self):
         robot_positions = self.env.GetRobotPositions()
         voronoi_features = self.env.GetLocalVoronoiFeatures()
-        data_coverage_maps = []
-        data_comm_maps = []
         for i in range(0, self.num_robots):
             local_map = self.env.GetRobotLocalMap(i)
             lmap = cv2.resize(local_map, dsize=(self.new_sz,self.new_sz), interpolation=cv2.INTER_AREA)
@@ -66,7 +62,6 @@ class SparseGNNDataGeneration:
 
             self.torch_coverage_features[self.coverage_count, i] = torch.tensor(voronoi_features[i])
 
-        self.sparse_comm_maps.append(data_comm_maps)
 
         [cont_flag, error_flag] = self.Step()
         goals = self.oracle.GetGoals()
@@ -146,7 +141,7 @@ if __name__ == '__main__':
         num_gaussians = 5
         num_robots = 15
 
-        gen = SparseGNNDataGeneration(params_filename, dataset_count, num_gaussians, num_robots)
+        gen = DataGenerator(params_filename, dataset_count, num_gaussians, num_robots)
         gen.GenerateDataset()
         gen.SaveDataset('gnn/' + str(i) + '/')
 

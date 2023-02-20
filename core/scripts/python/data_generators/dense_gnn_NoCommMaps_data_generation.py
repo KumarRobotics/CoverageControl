@@ -18,7 +18,7 @@ from scipy.ndimage import gaussian_filter
 import matplotlib.pylab as plt
 import seaborn as sns
 
-class SparseGNN_NoComms:
+class DataGenerator:
 
     def __init__(self, params_filename='parameters.yaml', dataset_count=2500, num_gaussians=5, num_robots=15, new_sz=128, num_steps_per_dataset=1, stable_dataset_count=10, num_neighbor_robots=3):
         self.params_ = pyCoverageControl.Parameters(params_filename)
@@ -33,9 +33,9 @@ class SparseGNN_NoComms:
         self.compression_ratio = self.params_.pLocalMapSize/self.new_sz
 
         self.coverage_count = 0
-        self.coverage_maps = torch.empty(dataset_count, num_robots, self.new_sz, self.new_sz)
+        self.coverage_maps = torch.empty(self.dataset_count, self.num_robots, self.new_sz, self.new_sz)
 
-        self.relative_positions = torch.empty(dataset_count, num_robots, self.num_neighbor_robots * 2) # Positions of robots (x, y) per robot
+        self.relative_positions = torch.empty(self.dataset_count, self.num_robots, self.num_neighbor_robots * 2) # Positions of robots (x, y) per robot
 
         self.torch_coverage_features = torch.empty(self.dataset_count, self.num_robots, 7)
         self.torch_actions = torch.empty(self.dataset_count, self.num_robots, 2)
@@ -53,7 +53,6 @@ class SparseGNN_NoComms:
         robot_positions = self.env.GetRobotPositions()
         voronoi_features = self.env.GetLocalVoronoiFeatures()
         data_coverage_maps = []
-        data_comm_maps = []
         for i in range(0, self.num_robots):
             local_map = self.env.GetRobotLocalMap(i)
             lmap = cv2.resize(local_map, dsize=(self.new_sz,self.new_sz), interpolation=cv2.INTER_AREA)
@@ -154,7 +153,7 @@ if __name__ == '__main__':
         num_gaussians = 5
         num_robots = 15
 
-        gen = SparseGNN_NoComms(params_filename, dataset_count, num_gaussians, num_robots)
+        gen = DataGenerator(params_filename, dataset_count, num_gaussians, num_robots)
         gen.GenerateDataset()
         gen.SaveDataset('gnn_NoCommsMap/' + str(i) + '/')
 

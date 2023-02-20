@@ -18,7 +18,7 @@ from scipy.ndimage import gaussian_filter
 import matplotlib.pylab as plt
 import seaborn as sns
 
-class SparseGNNDataGeneration:
+class DataGenerator:
 
     def __init__(self, params_filename='parameters.yaml', dataset_count=2500, num_gaussians=5, num_robots=15, new_sz=128, num_steps_per_dataset=1, stable_dataset_count=10):
         self.params_ = pyCoverageControl.Parameters(params_filename)
@@ -147,7 +147,7 @@ if __name__ == '__main__':
         num_gaussians = 5
         num_robots = 15
 
-        gen = SparseGNNDataGeneration(params_filename, dataset_count, num_gaussians, num_robots)
+        gen = DataGenerator(params_filename, dataset_count, num_gaussians, num_robots)
         gen.GenerateDataset()
         gen.SaveDataset('gnn/' + str(i) + '/')
 
