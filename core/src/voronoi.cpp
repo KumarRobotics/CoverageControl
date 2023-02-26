@@ -8,6 +8,20 @@
 
 namespace CoverageControl {
 
+	void VoronoiCell::ComputeFinalCentroid() {
+		if(mass_ < kEps) {
+			Polygon_2 polygon;
+			for(auto const &p:cell) {
+				polygon.push_back(CGAL_Point2{p[0], p[1]});
+			}
+			auto cgal_centroid = CGAL::centroid(polygon.begin(), polygon.end());
+			centroid_ = CGALtoCC(cgal_centroid);
+			centroid_ += origin_shift;
+		} else {
+			centroid_ = centroid_ / mass_;
+		}
+	}
+
 	void Voronoi::CellNavigator(VoronoiCell const &vcell, std::function<void (double, Point2)> evaluator_func) {
 		auto const &cell = vcell.cell;
 		int n = cell.size();
@@ -77,30 +91,16 @@ namespace CoverageControl {
 	}
 
 	void Voronoi::ComputeMassCentroid(VoronoiCell &vcell) {
-		vcell.mass = 0; vcell.sum_idf_site_dist = 0;
-		vcell.sum_idf_site_dist_sqr = 0; vcell.sum_idf_goal_dist_sqr = 0;
-		vcell.centroid = Point2{0,0};
+		vcell.SetZero();
+		if(compute_single_ == true) {
+			vcell.origin_shift = origin_shift_;
+		}
 
 		auto fp = std::bind(&VoronoiCell::MassCentroidFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
 		CellNavigator(vcell, fp);
+		vcell.ComputeFinalCentroid();
 		auto fp1 = std::bind(&VoronoiCell::GoalObjFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
 		CellNavigator(vcell, fp1);
-
-		if(vcell.mass < kEps) {
-			Polygon_2 polygon;
-			for(auto const &p:vcell.cell) {
-				polygon.push_back(CGAL_Point2{p[0], p[1]});
-			}
-			auto centroid = CGAL::centroid(polygon.begin(), polygon.end());
-			vcell.centroid = CGALtoCC(centroid);
-		} else {
-			vcell.centroid = vcell.centroid / vcell.mass;
-		}
-		/* std::cout << "mass: " << vcell.mass << std::endl; */
-		/* std::cout << "centroid: " << vcell.centroid << std::endl; */
-		/* std::cout << "sum_idf_site_dist: " << vcell.sum_idf_site_dist << std::endl; */
-		/* std::cout << "sum_idf_site_dist_sqr: " << vcell.sum_idf_site_dist_sqr << std::endl; */
-		/* std::cout << "sum_idf_goal_dist_sqr: " << vcell.sum_idf_goal_dist_sqr << std::endl; */
 	}
 
 	void Voronoi::ComputeVoronoiCells() {

@@ -59,8 +59,8 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::class_<VoronoiCell>(m, "VoronoiCell")
 		.def_readonly("cell", &VoronoiCell::cell)
-		.def_readonly("mass", &VoronoiCell::mass)
-		.def_readonly("centroid", &VoronoiCell::centroid)
+		.def_property_readonly("mass", &VoronoiCell::mass)
+		.def_property_readonly("centroid", &VoronoiCell::centroid)
 		.def_readonly("site", &VoronoiCell::site)
 		;
 	py::bind_vector<std::vector<VoronoiCell>>(m, "VoronoiCells");

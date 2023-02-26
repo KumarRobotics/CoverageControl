@@ -23,8 +23,8 @@
 using namespace CoverageControl;
 
 /* typedef LloydGlobalOnline CoverageAlgorithm; */
-/* typedef LloydLocalVoronoi CoverageAlgorithm; */
-typedef OracleGlobalOffline CoverageAlgorithm;
+typedef LloydLocalVoronoi CoverageAlgorithm;
+/* typedef OracleGlobalOffline CoverageAlgorithm; */
 /* typedef OracleSimulExploreExploit CoverageAlgorithm; */
 
 int main(int argc, char** argv) {

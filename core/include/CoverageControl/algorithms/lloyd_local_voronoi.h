@@ -93,11 +93,11 @@ namespace CoverageControl {
 					Point2 map_size(offset.width, offset.height);
 					Voronoi voronoi(robot_positions, robot_local_map, map_size, params_.pResolution, true, 0);
 					auto vcell = voronoi.GetVoronoiCell();
-					goals_[iRobot] = vcell.centroid + map_translation;
+					goals_[iRobot] = vcell.centroid() + robot_positions[0] + map_translation;
 					if(goals_[iRobot][0] < 0 or goals_[iRobot][0] > params_.pWorldMapSize or goals_[iRobot][1] < 0 or goals_[iRobot][1] > params_.pWorldMapSize) {
 						std::cout << "Goal out of bounds: " << goals_[iRobot][0] << " " << goals_[iRobot][1] << std::endl;
 						std::cout << robot_global_positions_[iRobot][0] << " " << robot_global_positions_[iRobot][1] << std::endl;
-						std::cout << vcell.centroid[0] << " " << vcell.centroid[1] << std::endl;
+						std::cout << vcell.centroid()[0] << " " << vcell.centroid()[1] << std::endl;
 						std::cout << map_translation[0] << " " << map_translation[1] << std::endl;
 						std::cout << robot_local_map.sum() << std::endl;
 						throw std::runtime_error("Goal out of bounds: this should not have happened for convex environments");

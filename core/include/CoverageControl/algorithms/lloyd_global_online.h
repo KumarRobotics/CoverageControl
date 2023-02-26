@@ -63,7 +63,7 @@ namespace CoverageControl {
 				voronoi_.UpdateSites(robot_global_positions_);
 				auto voronoi_cells = voronoi_.GetVoronoiCells();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					goals_[iRobot] = voronoi_cells[iRobot].centroid;
+					goals_[iRobot] = voronoi_cells[iRobot].centroid();
 				}
 			}
 

@@ -49,12 +49,12 @@ namespace CoverageControl {
 				cont_flag = false;
 				voronoi_cells = voronoi.GetVoronoiCells();
 				for(int iSite = 0; iSite < num_sites; ++iSite) {
-					Point2 diff = voronoi_cells[iSite].centroid - voronoi_cells[iSite].site;
+					Point2 diff = voronoi_cells[iSite].centroid() - voronoi_cells[iSite].site;
 					if(diff.norm() < res) {
 						continue;
 					}
 					cont_flag = true;
-					sites[iSite] = voronoi_cells[iSite].centroid;
+					sites[iSite] = voronoi_cells[iSite].centroid();
 				}
 				voronoi.UpdateSites(sites);
 			}
@@ -82,7 +82,7 @@ namespace CoverageControl {
 #pragma omp parallel for num_threads(num_sites)
 		for(int iRobot = 0; iRobot < num_sites; ++iRobot) {
 			for(int jCentroid = 0; jCentroid < num_sites; ++jCentroid) {
-				cost_matrix[iRobot][jCentroid] = (positions[iRobot] - voronoi_cells[jCentroid].centroid).norm();
+				cost_matrix[iRobot][jCentroid] = (positions[iRobot] - voronoi_cells[jCentroid].centroid()).norm();
 			}
 		}
 		HungarianAlgorithm HungAlgo;
@@ -92,7 +92,7 @@ namespace CoverageControl {
 		PointVector goals;
 		goals.resize(num_sites);
 		for(int iRobot = 0; iRobot < num_sites; ++iRobot) {
-			goals[iRobot] = voronoi_cells[assignment[iRobot]].centroid;
+			goals[iRobot] = voronoi_cells[assignment[iRobot]].centroid();
 		}
 
 		return goals;
