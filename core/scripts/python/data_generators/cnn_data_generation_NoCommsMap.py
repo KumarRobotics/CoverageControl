@@ -101,8 +101,8 @@ class DataGenerator:
                 print(str(self.coverage_count), str(num_steps))
 
     def NormalizeTensor(self, tensor_data):
-        mean = tensor_data.mean(dim=0)
-        std = tensor_data.std(dim=0)
+        mean = tensor_data.mean(dim=(0,1))
+        std = tensor_data.std(dim=(0,1))
         normalized_tensor_data = (tensor_data - mean)/std
         return mean, std, normalized_tensor_data
 

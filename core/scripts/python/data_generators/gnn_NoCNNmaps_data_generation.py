@@ -53,6 +53,9 @@ class DataGenerator:
 
         voronoi_features = self.env.GetLocalVoronoiFeatures()
 
+        for i in range(0, self.num_robots):
+            self.torch_coverage_features[self.coverage_count, i] = torch.tensor(voronoi_features[i])
+
         [cont_flag, error_flag] = self.Step()
         goals = self.oracle.GetGoals()
         actions = self.oracle.GetActions()
@@ -66,7 +69,9 @@ class DataGenerator:
             print("New environment")
             num_steps = 0
             self.env = CoverageSystem(self.params_, self.num_gaussians, self.num_robots)
+            print("Environment created")
             self.oracle = OracleGlobalOffline(self.params_, self.num_robots, self.env)
+            print("Oracle initialized")
 
             cont_flag = True
             while num_steps < math.floor(self.params_.pEpisodeSteps/self.num_steps_per_dataset):
@@ -89,8 +94,8 @@ class DataGenerator:
                 cont_flag = self.StepSave()
 
     def NormalizeTensor(self, tensor_data):
-        mean = tensor_data.mean(dim=0)
-        std = tensor_data.std(dim=0)
+        mean = tensor_data.mean(dim=(0,1))
+        std = tensor_data.std(dim=(0,1))
         normalized_tensor_data = (tensor_data - mean)/std
         return mean, std, normalized_tensor_data
 
@@ -131,5 +136,5 @@ if __name__ == '__main__':
 
     gen = DataGenerator(params_filename, dataset_count, num_gaussians, num_robots)
     gen.GenerateDataset()
-    gen.SaveDataset('gnn_noCNNmaps/')
+    gen.SaveDataset('gnn_NoCNNmaps/')
 

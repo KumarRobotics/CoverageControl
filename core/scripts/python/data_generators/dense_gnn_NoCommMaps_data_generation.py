@@ -110,8 +110,8 @@ class DataGenerator:
                 cont_flag = self.StepSave()
 
     def NormalizeTensor(self, tensor_data):
-        mean = tensor_data.mean(dim=0)
-        std = tensor_data.std(dim=0)
+        mean = tensor_data.mean(dim=(0,1))
+        std = tensor_data.std(dim=(0,1))
         normalized_tensor_data = (tensor_data - mean)/std
         return mean, std, normalized_tensor_data
 
@@ -152,13 +152,11 @@ class DataGenerator:
 
 if __name__ == '__main__':
     params_filename = 'parameters.yaml'
-    num_datasets = 5
-    for i in range(0, num_datasets):
-        dataset_count = 1000
-        num_gaussians = 5
-        num_robots = 15
+    dataset_count = 1000
+    num_gaussians = 5
+    num_robots = 15
 
-        gen = DataGenerator(params_filename, dataset_count, num_gaussians, num_robots)
-        gen.GenerateDataset()
-        gen.SaveDataset('gnn_NoCommsMap/' + str(i) + '/')
+    gen = DataGenerator(params_filename, dataset_count, num_gaussians, num_robots)
+    gen.GenerateDataset()
+    gen.SaveDataset('gnn_NoCommsMap/')
 
