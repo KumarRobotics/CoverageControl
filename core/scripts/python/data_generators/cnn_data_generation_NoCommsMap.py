@@ -94,7 +94,6 @@ class DataGenerator:
                     break
 
                 cont_flag = self.StepSave()
-                self.coverage_count = self.coverage_count + 1
                 if not(self.coverage_count < self.dataset_count):
                     break
                 num_steps = num_steps + 1
