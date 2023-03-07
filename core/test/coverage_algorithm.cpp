@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 	CoverageAlgorithm oracle(params, num_robots, env);
 
 	std::string dir = "data/test/";
-	env.PlotWorldMap(dir);
+	env.PlotWorldMap(dir, "world_map");
 	auto goals = oracle.GetGoals();
 	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;

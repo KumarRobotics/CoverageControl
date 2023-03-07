@@ -51,6 +51,7 @@ namespace CoverageControl {
 			std::vector <PlotterData> plotter_data_;
 
 		public:
+
 			// Initialize IDF with num_gaussians distributions
 			// Initialize num_robots with random start positions
 			CoverageSystem( Parameters const &params, int const num_gaussians, int const num_robots) : params_{params}, world_idf_{WorldIDF(params_)}{
@@ -63,8 +64,8 @@ namespace CoverageControl {
 				for(int i = 0; i < num_gaussians; ++i) {
 					Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
 					double sigma(distrib_var(gen_));
-					double peak(distrib_peak(gen_));
-					BivariateNormalDistribution dist(mean, sigma, peak);
+					double scale(distrib_peak(gen_));
+					BivariateNormalDistribution dist(mean, sigma, scale);
 					world_idf_.AddNormalDistribution(dist);
 				}
 
@@ -81,14 +82,29 @@ namespace CoverageControl {
 				InitSetup();
 			}
 
+			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::string const &pos_file_name) : params_{params}, world_idf_{WorldIDF(params_)}{
+				SetWorldIDF(world_idf);
+
+				// Load initial positions
+				std::ifstream file_pos(pos_file_name);
+				if(!file_pos.is_open()) {
+					std::cout << "Error: Could not open file " << pos_file_name << std::endl;
+					exit(1);
+				}
+				std::vector <Point2> robot_positions;
+				while(!file_pos.eof()) {
+					double x, y;
+					file_pos >> x >> y;
+					robot_positions.push_back(Point2(x, y));
+				}
+				CoverageSystem(params_, world_idf, robot_positions);
+			}
+
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
 				SetWorldIDF(world_idf);
 
-				// Generate the world map using Cuda
-				world_idf_.GenerateMapCuda();
-				normalization_factor_ = world_idf_.GetNormalizationFactor();
-
 				robots_.reserve(robot_positions.size());
+				num_robots_ = robot_positions.size();
 				for(auto const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
 				}
@@ -469,12 +485,18 @@ namespace CoverageControl {
 			}
 			void PlotSystemMap(std::string const &, int const &, std::vector <int> const &) const;
 			void PlotMapVoronoi(std::string const &, int const &, Voronoi const &, PointVector const &) const;
-			void PlotWorldMap(std::string const &) const;
+			void PlotWorldMap(std::string const &, std::string const &) const;
 			void PlotRobotLocalMap(std::string const &, int const &) const;
 			void PlotRobotSystemMap(std::string const &, int const &, int const &);
 			void PlotRobotIDFMap(std::string const &, int const &, int const &);
 			void PlotRobotExplorationMap(std::string const &, int const &, int const &);
 			void PlotRobotSensorView(std::string const &, int const &, int const &);
+
+			inline int WriteEnvironment(std::string const &pos_filename, std::string const &env_filename) const {
+				WriteRobotPositions(pos_filename);
+				world_idf_.WriteDistributions(env_filename);
+				return 0;
+			}
 	};
 
 } /* namespace CoverageControl */

@@ -75,6 +75,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 
 	py::class_<WorldIDF>(m, "WorldIDF")
 		.def(py::init<Parameters const &>())
+		.def(py::init<Parameters const &, std::string const &>())
 		.def("AddUniformDistributionPolygon", &WorldIDF::AddUniformDistributionPolygon)
 		.def("AddNormalDistribution", py::overload_cast<BivariateNormalDistribution const &>(&WorldIDF::AddNormalDistribution))
 		.def("AddNormalDistribution", py::overload_cast<BNDVector const &>(&WorldIDF::AddNormalDistribution))
@@ -101,6 +102,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 	py::class_<CoverageSystem>(m, "CoverageSystem")
 		.def(py::init<Parameters const &, int const, int const>())
 		.def(py::init<Parameters const &, WorldIDF const &, PointVector const &>())
+		.def(py::init<Parameters const &, WorldIDF const &, std::string const &>())
 		.def(py::init<Parameters const &, BNDVector const &, PointVector const &>())
 		.def("GetWorldIDF", &CoverageSystem::GetWorldIDF, py::return_value_policy::reference_internal)
 		.def("GetWorldIDFObject", &CoverageSystem::GetWorldIDFObject, py::return_value_policy::reference_internal)
@@ -132,6 +134,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetWeightedExplorationRatio", &CoverageSystem::GetWeightedExplorationRatio)
 		.def("RecordPlotData", py::overload_cast<>(&CoverageSystem::RecordPlotData))
 		.def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
+		.def("WriteEnvironment", &CoverageSystem::WriteEnvironment)
 		;
 	
 	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")

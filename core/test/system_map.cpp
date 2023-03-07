@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 	OracleSimulExploreExploit oracle(params, num_robots, env);
 
 	std::string dir = "data/oracle/";
-	env.PlotWorldMap(dir);
+	env.PlotWorldMap(dir, "world_map");
 	env.RecordPlotData();
 	for(int ii = 1; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;

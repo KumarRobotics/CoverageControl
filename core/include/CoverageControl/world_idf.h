@@ -39,6 +39,47 @@ namespace CoverageControl {
 				world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
 			}
 
+			WorldIDF(Parameters const &params, std::string const &file_name): params_{params}{
+				world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
+
+				// Load Bivariate Normal Distribution from file
+				std::ifstream file(file_name);
+				if(!file.is_open()) {
+					std::cout << "Error: Could not open file " << file_name << std::endl;
+					exit(1);
+				}
+				std::string type;
+				while(file >> type) {
+					if(type == "BND") {
+						double x, y, sigma_x, sigma_y, rho, scale;
+						file >> x >> y >> sigma_x >> sigma_y >> rho >> scale;
+						AddNormalDistribution(BivariateNormalDistribution(Point2(x, y), Point2(sigma_x, sigma_y), rho, scale));
+					}
+					else if(type == "CircularBND") {
+						double x, y, sigma, scale;
+						file >> x >> y >> sigma >> scale;
+						AddNormalDistribution(BivariateNormalDistribution(Point2(x, y), sigma, scale));
+					}
+					else if(type == "Uniform") {
+						int num_vertices;
+						file >> num_vertices;
+						std::vector <Point2> vertices;
+						for(int i = 0; i < num_vertices; ++i) {
+							double x, y;
+							file >> x >> y;
+							vertices.push_back(Point2(x, y));
+						}
+						double importance;
+						file >> importance;
+						AddUniformDistributionPolygon(PolygonFeature(vertices, importance));
+					}
+					else {
+						std::cout << "Error: Unknown feature type " << type << std::endl;
+						exit(1);
+					}
+				}
+			}
+
 			/** Add a uniform distribution over a polygon to world IDF **/
 			void AddUniformDistributionPolygon(PolygonFeature const &poly_feature) {
 				polygon_features_.push_back(poly_feature);
@@ -164,6 +205,25 @@ namespace CoverageControl {
 
 			const MapType& GetWorldMap() const { return world_map_; }
 
+			inline int WriteDistributions(std::string const &file_name) const {
+				std::ofstream file(file_name);
+				if(!file.is_open()) {
+					std::cerr << "Could not open file: " << file_name << std::endl;
+					return -1;
+				}
+				for(auto const &dist:normal_distributions_) {
+					auto sigma = dist.GetSigma();
+					if(sigma.x() == sigma.y()) {
+						file << "CircularBND" << std::endl;
+						file << dist.GetMean().x() << " " << dist.GetMean().y() << " " << sigma.x() << " " << dist.GetScale() << std::endl;
+					} else {
+						file << "BND" << std::endl;
+						file << dist.GetMean().x() << " " << dist.GetMean().y() << " " << dist.GetSigma().x() << " " << dist.GetSigma().y() << " " << dist.GetRho() << " " << dist.GetScale() << std::endl;
+					}
+				}
+				file.close();
+				return 0;
+			}
 	};
 
 } /* namespace CoverageControl */

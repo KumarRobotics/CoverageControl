@@ -36,10 +36,10 @@ namespace CoverageControl {
 		plotter.PlotMap(system_map_, robot_global_positions_, robot_positions_history_, robot_status);
 	}
 
-	void CoverageSystem::PlotWorldMap(std::string const &dir_name) const {
+	void CoverageSystem::PlotWorldMap(std::string const &dir_name, std::string const &map_name) const {
 		Plotter<MapType> plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
 		plotter.SetScale(1);
-		plotter.SetPlotName("WorldMap");
+		plotter.SetPlotName(map_name);
 		plotter.PlotMap(GetWorldIDF());
 	}
 
