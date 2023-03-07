@@ -43,6 +43,13 @@ namespace CoverageControl {
 		plotter.PlotMap(GetWorldIDF());
 	}
 
+	void CoverageSystem::PlotInitMap(std::string const &dir_name, std::string const &map_name) const {
+		Plotter<MapType> plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetScale(1);
+		plotter.SetPlotName(map_name);
+		plotter.PlotMap(GetWorldIDF(), robot_global_positions_);
+	}
+
 	void CoverageSystem::PlotMapVoronoi(std::string const &dir_name, int const &step, Voronoi const &voronoi, PointVector const &goals) const {
 		Plotter<MapType> plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
 		plotter.SetPlotName("map", step);

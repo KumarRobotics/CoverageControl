@@ -136,15 +136,12 @@ namespace CoverageControl {
 
 			void SetRobotPosition(Point2 const &pos) {
 				Point2 new_global_pos = pos + global_start_position_;
-				std::cout << std::setprecision(5);
 				double eps = 0.0001;
 				if(new_global_pos.x() <= 0) { new_global_pos[0] = 0 + eps; }
 				if(new_global_pos.y() <= 0) { new_global_pos[1] = 0 + eps; }
 				double max_xy = params_.pWorldMapSize * params_.pResolution;
-				std::cout << new_global_pos.x() << " " << new_global_pos.y() << std::endl;
 				if(new_global_pos.x() >= max_xy) { new_global_pos[0] = max_xy - eps; }
 				if(new_global_pos.y() >= max_xy) { new_global_pos[1] = max_xy - eps; }
-				std::cout << std::setprecision(10) <<  new_global_pos.x() << " " << new_global_pos.y() << std::endl;
 
 				local_current_position_ = new_global_pos - global_start_position_;
 				global_current_position_ = new_global_pos;

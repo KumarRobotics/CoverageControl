@@ -129,6 +129,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetObjectiveValue", &CoverageSystem::GetObjectiveValue)
 		.def("PlotSystemMap", py::overload_cast<std::string const &, int const &>(&CoverageSystem::PlotSystemMap, py::const_))
 		.def("PlotWorldMap", &CoverageSystem::PlotWorldMap)
+		.def("PlotInitMap", &CoverageSystem::PlotInitMap)
 		.def("PlotMapVoronoi", &CoverageSystem::PlotMapVoronoi)
 		.def("GetExplorationRatio", &CoverageSystem::GetExplorationRatio)
 		.def("GetWeightedExplorationRatio", &CoverageSystem::GetWeightedExplorationRatio)
