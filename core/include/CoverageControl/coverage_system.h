@@ -92,12 +92,16 @@ namespace CoverageControl {
 					exit(1);
 				}
 				std::vector <Point2> robot_positions;
-				while(!file_pos.eof()) {
-					double x, y;
-					file_pos >> x >> y;
+				double x, y;
+				while(file_pos >> x >> y) {
 					robot_positions.push_back(Point2(x, y));
 				}
-				CoverageSystem(params_, world_idf, robot_positions);
+				robots_.reserve(robot_positions.size());
+				num_robots_ = robot_positions.size();
+				for(auto const &pos:robot_positions) {
+					robots_.push_back(RobotModel(params_, pos, world_idf_));
+				}
+				InitSetup();
 			}
 
 			CoverageSystem(Parameters const &params, WorldIDF const &world_idf, std::vector <Point2> const &robot_positions) : params_{params}, world_idf_{WorldIDF(params_)}{
@@ -452,6 +456,7 @@ namespace CoverageControl {
 					std::cerr << "[Error] Could not open " << file_name << " for writing." << std::endl;
 					return 1;
 				}
+				file_obj << std::setprecision(kMaxPrecision);
 				for(auto const &pos:robot_global_positions_) {
 					file_obj << pos[0] << " " << pos[1] << std::endl;
 				}

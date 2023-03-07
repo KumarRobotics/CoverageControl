@@ -26,4 +26,8 @@ env2 = CoverageSystem(params, world_idf, dir + "/env.pos")
 env2.PlotWorldMap(dir, "env2")
 map2 = env2.GetWorldIDF()
 
+# Check if the two maps are the same
+# maps are numpy two dimensional arrays
+print("Maps are the same: ", np.array_equal(map, map2))
+
 

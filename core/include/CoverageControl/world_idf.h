@@ -211,6 +211,7 @@ namespace CoverageControl {
 					std::cerr << "Could not open file: " << file_name << std::endl;
 					return -1;
 				}
+				file << std::setprecision(kMaxPrecision);
 				for(auto const &dist:normal_distributions_) {
 					auto sigma = dist.GetSigma();
 					if(sigma.x() == sigma.y()) {
