@@ -1,6 +1,7 @@
 #include <list>
 #include <omp.h>
 #include <functional>
+#include <iostream>
 
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/cgal/config.h>
@@ -131,17 +132,27 @@ namespace CoverageControl {
 		dt2.draw_dual(vor);
 		/* std::cout << "d2 end" << std::endl; */
 
+		/* std::cout << "map size" << std::endl; */
+		/* std::cout << map_size_.x() << " " << map_size_.y() << std::endl; */
 		vor.segments_.push_back(Segment_2(CGAL_Point2(0,0), CGAL_Point2(map_size_.x(),0)));
 		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_.x(),0), CGAL_Point2(map_size_.x(), map_size_.y())));
 		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_.x(), map_size_.y()), CGAL_Point2(0, map_size_.y())));
 		vor.segments_.push_back(Segment_2(CGAL_Point2(0, map_size_.y()), CGAL_Point2(0, 0)));
 
+		/* std::cout << "segments pushed" << std::endl; */
 		Arrangement_2 arr;
-		CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end());
+
+		/* CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end()); */
+		for(auto const &ray:vor.rays_) {
+			CGAL::insert(arr, ray);
+		}
+		/* std::cout << "rays inserted" << std::endl; */
 		CGAL::insert(arr, vor.lines_.begin(), vor.lines_.end());
+		/* std::cout << "lines inserted" << std::endl; */
 		CGAL::insert(arr, vor.segments_.begin(), vor.segments_.end());
-		CGAL_pl cgal_pl(arr);
 		/* std::cout << "arr end" << std::endl; */
+		CGAL_pl cgal_pl(arr);
+		/* std::cout << "cgal_pl end" << std::endl; */
 
 		if(compute_single_ == true) {
 			auto pt = CGAL_sites[robot_id_];
@@ -168,6 +179,7 @@ namespace CoverageControl {
 
 		/* PrunePolygons(polygon_list, map_size_); */
 		// Create voronoi_cells_ such that the correct cell is assigned to the robot
+		/* std::cout << "Before parallel for" << std::endl; */
 #pragma omp parallel for num_threads(num_sites_)
 		for(int iSite = 0; iSite < num_sites_; ++iSite) {
 			auto pt = CGAL_sites[iSite];
@@ -203,8 +215,9 @@ namespace CoverageControl {
 			ComputeMassCentroid(vcell);
 			voronoi_cells_[iSite] = vcell;
 		}
+		/* std::cout << "End parallel for" << std::endl; */
+		/* std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl; */
 	}
-	/* std::cout << "Voronoi Polygon generated: " << voronoi_cells_.size() << std::endl; */
 
 	// Compute mass and centroid of the cells
 	/* #pragma omp parallel for */
