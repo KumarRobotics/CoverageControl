@@ -21,7 +21,7 @@ namespace CoverageControl {
 
 			Point2 mean_; // Mean of the distribution
 			Point2 sigma_; // variance is sigma^2
-			double rho_; // Correlation coefficient
+			double rho_ = 0; // Correlation coefficient
 			double scale_ = 1; // Can be used to scale the distribution so that integration is scale_
 			bool is_circular_ = false;
 
