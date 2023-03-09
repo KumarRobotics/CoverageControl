@@ -22,9 +22,9 @@ CMAKE_END_FLAGS="-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_BUILD_TYPE=Releas
 
 InstallCGAL () {
 	echo "Setting up CGAL"
-	wget https://github.com/CGAL/cgal/releases/download/v5.5.1/CGAL-5.5.1-library.tar.xz -P ${COVERAGECONTROL_WS}/src
-	tar -xf ${COVERAGECONTROL_WS}/src/CGAL-5.5.1-library.tar.xz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/CGAL-5.5.1 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS}
+	wget https://github.com/CGAL/cgal/releases/download/v5.5.2/CGAL-5.5.2-library.tar.xz -P ${COVERAGECONTROL_WS}/src
+	tar -xf ${COVERAGECONTROL_WS}/src/CGAL-5.5.2-library.tar.xz -C ${COVERAGECONTROL_WS}/src/
+	cmake -S ${COVERAGECONTROL_WS}/src/CGAL-5.5.2 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS}
 	cmake --install ${BUILD_DIR}/cgal
 	if [ $? -eq 0 ]; then
 		echo "cgal install succeeded"
@@ -32,8 +32,8 @@ InstallCGAL () {
 		echo "cgal install failed"
 		exit 1
 	fi
-	rm ${COVERAGECONTROL_WS}/src/CGAL-5.5.1-library.tar.xz
-	rm -rf ${COVERAGECONTROL_WS}/src/CGAL-5.5.1
+	rm ${COVERAGECONTROL_WS}/src/CGAL-5.5.2-library.tar.xz
+	rm -rf ${COVERAGECONTROL_WS}/src/CGAL-5.5.2
 }
 
 InstallGeoGraphicLib () {
