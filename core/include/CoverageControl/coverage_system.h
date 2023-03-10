@@ -58,7 +58,7 @@ namespace CoverageControl {
 				// Generate Bivariate Normal Distribution from random numbers
 				std::srand(0);
 				gen_ = std::mt19937(rd_()); //Standard mersenne_twister_engine seeded with rd_()
-				distrib_pts_ = std::uniform_real_distribution<>(0, params_.pWorldMapSize * params_.pResolution);
+				distrib_pts_ = std::uniform_real_distribution<>(0.001, params_.pWorldMapSize * params_.pResolution-0.001);
 				std::uniform_real_distribution<> distrib_var(params_.pMinSigma, params_.pMaxSigma);
 				std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
 				for(int i = 0; i < num_gaussians; ++i) {
@@ -73,7 +73,7 @@ namespace CoverageControl {
 				world_idf_.GenerateMapCuda();
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 
-				std::uniform_real_distribution<> robot_pos_dist (0, params_.pRobotInitDist);
+				std::uniform_real_distribution<> robot_pos_dist (0.001, params_.pRobotInitDist-0.001);
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
 					Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));

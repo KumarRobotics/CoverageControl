@@ -30,7 +30,7 @@ namespace CoverageControl {
 		all_voronoi_cells.resize(num_tries);
 		std::vector <double> obj_values;
 		obj_values.resize(num_tries, 0);
-		std::uniform_real_distribution<> distrib_pts(0, map_size * res);
+		std::uniform_real_distribution<> distrib_pts(0.001, map_size * res-0.001);
 
 #pragma omp parallel for
 		for(int iter = 0; iter < num_tries; ++iter) {
