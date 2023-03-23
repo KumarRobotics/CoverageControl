@@ -6,6 +6,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <memory>
 
 #include <CoverageControl/constants.h>
 #include <CoverageControl/parameters.h>
@@ -23,49 +24,60 @@
 using namespace CoverageControl;
 
 /* typedef LloydGlobalOnline CoverageAlgorithm; */
-typedef LloydLocalVoronoi CoverageAlgorithm;
-/* typedef OracleGlobalOffline CoverageAlgorithm; */
+/* typedef LloydLocalVoronoi CoverageAlgorithm; */
+typedef OracleGlobalOffline CoverageAlgorithm;
 /* typedef OracleSimulExploreExploit CoverageAlgorithm; */
 
 int main(int argc, char** argv) {
+	std::cout << "Processor count: " << std::thread::hardware_concurrency() << std::endl;
 	Parameters params;
 	/* params.pSensorSize = 16; */
 	if (argc == 2) {
 		std::string parameter_file = argv[1];
 		params = Parameters(parameter_file);
 	}
-	std::cout << "Processor count: " << std::thread::hardware_concurrency() << std::endl;
-
 	int num_robots = 15;
 	int num_dists = 10;
-	CoverageSystem env(params, num_dists, num_robots);
-	CoverageAlgorithm oracle(params, num_robots, env);
+
+	std::unique_ptr <CoverageSystem> env;
+
+	if(argc == 4) {
+		std::string idf_file = argv[2];
+		std::string env_file = argv[3];
+		WorldIDF world_idf(params, idf_file);
+		env = std::make_unique<CoverageSystem> (params, world_idf, env_file);
+	}
+	else {
+		env = std::make_unique<CoverageSystem> (params, num_dists, num_robots);
+	}
+
+	CoverageAlgorithm oracle(params, num_robots, *env);
 
 	std::string dir = "data/test/";
-	env.PlotWorldMap(dir, "world_map");
+	env->PlotWorldMap(dir, "world_map");
 	auto goals = oracle.GetGoals();
 	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
 		auto actions = oracle.GetActions();
-		env.StepActions(actions);
+		env->StepActions(actions);
 		if(ii%1 == 0) {
-			env.RecordPlotData();
+			env->RecordPlotData();
 		}
 		if(cont_flag == false) {
 			break;
 		}
 	}
 	std::cout << "Converged" << std::endl;
-	std::cout << "Exploration ratio: " << env.GetExplorationRatio() << " Weighted: " << env.GetWeightedExplorationRatio() << std::endl;
-	std::cout << "Coverage objective: " << env.GetObjectiveValue() << std::endl;
+	std::cout << "Exploration ratio: " << env->GetExplorationRatio() << " Weighted: " << env->GetWeightedExplorationRatio() << std::endl;
+	std::cout << "Coverage objective: " << env->GetObjectiveValue() << std::endl;
 	auto zero_actions = PointVector(num_robots, Point2(0,0));
 
 	for(int ii = 0; ii < 90; ++ii) {
-		env.StepActions(zero_actions);
-		env.RecordPlotData();
+		env->StepActions(zero_actions);
+		env->RecordPlotData();
 	}
 
-	env.RenderRecordedMap(dir, "CoverageControl_ExploreExploit.mp4");
+	/* env.RenderRecordedMap(dir, "CoverageControl_ExploreExploit.mp4"); */
 	return 0;
 }
