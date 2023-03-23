@@ -136,6 +136,7 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("RecordPlotData", py::overload_cast<>(&CoverageSystem::RecordPlotData))
 		.def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
 		.def("WriteEnvironment", &CoverageSystem::WriteEnvironment)
+		.def("GetNumRobots", &CoverageSystem::GetNumRobots)
 		;
 	
 	py::class_<OracleExploreExploit>(m, "OracleExploreExploit")

@@ -503,6 +503,8 @@ namespace CoverageControl {
 				world_idf_.WriteDistributions(env_filename);
 				return 0;
 			}
+
+			inline auto GetNumRobots() { return num_robots_; }
 	};
 
 } /* namespace CoverageControl */

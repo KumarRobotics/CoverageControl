@@ -43,9 +43,10 @@ int main(int argc, char** argv) {
 
 	if(argc == 4) {
 		std::string idf_file = argv[2];
-		std::string env_file = argv[3];
+		std::string pos_file = argv[3];
 		WorldIDF world_idf(params, idf_file);
-		env = std::make_unique<CoverageSystem> (params, world_idf, env_file);
+		env = std::make_unique<CoverageSystem> (params, world_idf, pos_file);
+		num_robots = env->GetNumRobots();
 	}
 	else {
 		env = std::make_unique<CoverageSystem> (params, num_dists, num_robots);
