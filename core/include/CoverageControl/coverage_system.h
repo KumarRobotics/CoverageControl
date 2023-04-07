@@ -442,6 +442,7 @@ namespace CoverageControl {
 			}
 
 			auto GetVoronoiCells() { return voronoi_cells_; }
+			auto &GetVoronoi() { return voronoi_; }
 
 			auto GetVoronoiCell(int const robot_id) { return voronoi_cells_[robot_id]; }
 

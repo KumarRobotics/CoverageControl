@@ -36,8 +36,8 @@ int main(int argc, char** argv) {
 		std::string parameter_file = argv[1];
 		params = Parameters(parameter_file);
 	}
-	int num_robots = 15;
-	int num_dists = 10;
+	int num_robots = 50;
+	int num_dists = 30;
 
 	std::unique_ptr <CoverageSystem> env;
 
@@ -63,7 +63,8 @@ int main(int argc, char** argv) {
 		auto actions = oracle.GetActions();
 		env->StepActions(actions);
 		if(ii%1 == 0) {
-			env->RecordPlotData();
+			/* env->RecordPlotData(); */
+			env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
 		}
 		if(cont_flag == false) {
 			break;
@@ -76,9 +77,10 @@ int main(int argc, char** argv) {
 
 	for(int ii = 0; ii < 90; ++ii) {
 		env->StepActions(zero_actions);
-		env->RecordPlotData();
+		/* env->RecordPlotData(); */
+		env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
 	}
 
-	/* env.RenderRecordedMap(dir, "CoverageControl_ExploreExploit.mp4"); */
+	/* env->RenderRecordedMap(dir, "CoverageControl_oracle.mp4"); */
 	return 0;
 }
