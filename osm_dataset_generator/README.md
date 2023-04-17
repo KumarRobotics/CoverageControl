@@ -8,3 +8,6 @@ Check semantic data in `leaflet_geojson_viz/data/semantic_data.json`. Create the
 Then launch a local server inside `leaflet_geojson_viz` directory using `python -m http.server`  
 Open the link shown in the above step in a browser.
 
+The OSM planet data can be hosted on a local server:
+https://hub.docker.com/r/wiktorn/overpass-api
+
