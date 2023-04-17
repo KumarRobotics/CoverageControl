@@ -47,9 +47,9 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
 
     osmApi = OSMApi()
     overpass = Overpass()
-    # osmApi = OSMApi("http://localhost:12346/api/")
-    # overpass = Overpass("http://localhost:12346/api/")
-    CachingStrategy.use(CachingNone)
+    # osmApi = OSMApi(endpoint="http://localhost:12346/api/")
+    # overpass = Overpass(endpoint="http://localhost:12346/api/")
+    # CachingStrategy.use(CachingNone)
     geod = Geodesic.WGS84
 
     feature_collection = geojson.FeatureCollection([])
