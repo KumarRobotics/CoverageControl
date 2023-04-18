@@ -20,9 +20,13 @@ namespace CoverageControl {
 		std::filesystem::remove_all(frame_dir);
 	}
 
-	void CoverageSystem::RecordPlotData(std::vector <int> const &robot_status) {
+	void CoverageSystem::RecordPlotData(std::vector <int> const &robot_status, std::string const &map_name) {
 		PlotterData data;
-		data.map = system_map_;
+		if(map_name == "world") {
+			data.map = GetWorldIDF();
+		} else {
+			data.map = system_map_;
+		}
 		data.positions = robot_global_positions_;
 		data.positions_history = robot_positions_history_;
 		data.robot_status = robot_status;

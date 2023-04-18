@@ -479,7 +479,10 @@ namespace CoverageControl {
 			}
 
 			void RenderRecordedMap(std::string const &, std::string const &) const;
-			void RecordPlotData(std::vector <int> const &);
+			void RecordPlotData(std::vector <int> const &, std::string const &);
+			void RecordPlotData(std::vector <int> const &robot_status) {
+				RecordPlotData(robot_status, "system");
+			}
 			void RecordPlotData() {
 				std::vector<int> robot_status(num_robots_, 0);
 				RecordPlotData(robot_status);
