@@ -40,6 +40,14 @@ namespace CoverageControl {
 		plotter.PlotMap(system_map_, robot_global_positions_, robot_positions_history_, robot_status);
 	}
 
+	void CoverageSystem::PlotWorldMapRobots(std::string const &dir_name, std::string const &map_name) const {
+		Plotter<MapType> plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetScale(1);
+		plotter.SetPlotName(map_name);
+		std::vector<int> robot_status(num_robots_, 0);
+		plotter.PlotMap(GetWorldIDF(), robot_global_positions_, robot_positions_history_, robot_status);
+	}
+
 	void CoverageSystem::PlotWorldMap(std::string const &dir_name, std::string const &map_name) const {
 		Plotter<MapType> plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
 		plotter.SetScale(1);

@@ -499,6 +499,7 @@ namespace CoverageControl {
 			void PlotSystemMap(std::string const &, int const &, std::vector <int> const &) const;
 			void PlotMapVoronoi(std::string const &, int const &, Voronoi const &, PointVector const &) const;
 			void PlotWorldMap(std::string const &, std::string const &) const;
+			void PlotWorldMapRobots(std::string const &, std::string const &) const;
 			void PlotInitMap(std::string const &, std::string const &) const;
 			void PlotRobotLocalMap(std::string const &, int const &) const;
 			void PlotRobotSystemMap(std::string const &, int const &, int const &);
