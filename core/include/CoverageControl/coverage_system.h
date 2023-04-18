@@ -483,9 +483,13 @@ namespace CoverageControl {
 			void RecordPlotData(std::vector <int> const &robot_status) {
 				RecordPlotData(robot_status, "system");
 			}
+			void RecordPlotData(std::string const &map_name) {
+				std::vector<int> robot_status(num_robots_, 0);
+				RecordPlotData(robot_status, map_name);
+			}
 			void RecordPlotData() {
 				std::vector<int> robot_status(num_robots_, 0);
-				RecordPlotData(robot_status);
+				RecordPlotData(robot_status, "system");
 			}
 			void PlotFrontiers(std::string const &, int const &, PointVector const &) const;
 			void PlotSystemMap(std::string const &dir_name, int const &step) const {
