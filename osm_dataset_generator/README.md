@@ -11,3 +11,7 @@ Open the link shown in the above step in a browser.
 The OSM planet data can be hosted on a local server:
 https://hub.docker.com/r/wiktorn/overpass-api
 
+```bash
+docker run  -e OVERPASS_META=yes  -e OVERPASS_MODE=clone  -e OVERPASS_DIFF_URL=https://planet.openstreetmap.org/replication/minute/  -v /mnt/data/osm_overpass_db/:/db  -p 12346:80  -i -t  --name overpass_world  wiktorn/overpass-api  
+docker start overpass-api  
+```
