@@ -18,6 +18,7 @@
 #include <CoverageControl/algorithms/oracle_bang_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
 #include <CoverageControl/algorithms/lloyd_global_online.h>
+#include <CoverageControl/algorithms/lloyd_local_sensor_global_comm.h>
 
 
 using namespace CoverageControl;
@@ -181,6 +182,14 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("GetActions", &LloydLocalVoronoi::GetActions)
 		.def("GetGoals", &LloydLocalVoronoi::GetGoals)
 		.def("GetVoronoi", &LloydLocalVoronoi::GetVoronoi)
+		;
+
+	py::class_<LloydLocalSensorGlobalComm>(m, "LloydLocalSensorGlobalComm")
+		.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+		.def("Step", &LloydLocalSensorGlobalComm::Step)
+		.def("GetActions", &LloydLocalSensorGlobalComm::GetActions)
+		.def("GetGoals", &LloydLocalSensorGlobalComm::GetGoals)
+		.def("GetVoronoi", &LloydLocalSensorGlobalComm::GetVoronoi)
 		;
 
 	py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")

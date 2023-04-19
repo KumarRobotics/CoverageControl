@@ -304,10 +304,11 @@ namespace CoverageControl {
 						continue;
 					}
 					Point2 relative_pos = robot_global_positions_[i] - robot_global_positions_[id];
-					if(relative_pos.x() < params_.pCommunicationRange and
-							relative_pos.x() > -params_.pCommunicationRange and
-							relative_pos.y() < params_.pCommunicationRange and
-							relative_pos.y() > -params_.pCommunicationRange) {
+					/* if(relative_pos.x() < params_.pCommunicationRange and */
+					/* 		relative_pos.x() > -params_.pCommunicationRange and */
+					/* 		relative_pos.y() < params_.pCommunicationRange and */
+					/* 		relative_pos.y() > -params_.pCommunicationRange) { */
+					if(relative_pos.norm() < params_.pCommunicationRange) {
 						robot_neighbors_pos.push_back(relative_pos);
 					}
 				}
