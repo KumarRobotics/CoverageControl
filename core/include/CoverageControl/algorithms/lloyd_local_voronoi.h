@@ -31,7 +31,6 @@ namespace CoverageControl {
 			Parameters const params_;
 			size_t num_robots_ = 0;
 			CoverageSystem &env_;
-			Voronoi voronoi_;
 			PointVector robot_global_positions_;
 			PointVector goals_, actions_;
 
@@ -55,8 +54,6 @@ namespace CoverageControl {
 			PointVector GetActions() { return actions_; }
 
 			auto GetGoals() { return goals_; }
-
-			auto &GetVoronoi() { return voronoi_; }
 
 			void ComputeGoals() {
 #pragma omp parallel for num_threads(num_robots_)
@@ -109,11 +106,16 @@ namespace CoverageControl {
 			bool Step() {
 				continue_flag_ = false;
 				robot_global_positions_ = env_.GetRobotPositions();
+				ComputeGoals();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					actions_[iRobot] = Point2(0, 0);
 					Point2 diff = goals_[iRobot] - robot_global_positions_[iRobot];
 					double dist = diff.norm();
-					if(dist < kEps) {
+					/* std::cout << "Robot " << iRobot << " goal: " << goals_[iRobot][0] << " " << goals_[iRobot][1] << " " << dist << std::endl; */
+					if(dist < 0.1 * params_.pResolution) {
+						continue;
+					}
+					if(env_.CheckOscillation(iRobot)) {
 						continue;
 					}
 					double speed = dist / params_.pTimeStep;

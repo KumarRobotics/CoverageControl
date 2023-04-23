@@ -59,7 +59,6 @@ namespace CoverageControl {
 			auto &GetVoronoi() { return voronoi_; }
 
 			void ComputeGoals() {
-				robot_global_positions_ = env_.GetRobotPositions();
 				voronoi_.UpdateSites(robot_global_positions_);
 				auto voronoi_cells = voronoi_.GetVoronoiCells();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -70,11 +69,15 @@ namespace CoverageControl {
 			bool Step() {
 				continue_flag_ = false;
 				robot_global_positions_ = env_.GetRobotPositions();
+				ComputeGoals();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					actions_[iRobot] = Point2(0, 0);
 					Point2 diff = goals_[iRobot] - robot_global_positions_[iRobot];
 					double dist = diff.norm();
-					if(dist < kEps) {
+					if(dist < 0.1 * params_.pResolution) {
+						continue;
+					}
+					if(env_.CheckOscillation(iRobot)) {
 						continue;
 					}
 					double speed = dist / params_.pTimeStep;
