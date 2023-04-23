@@ -23,27 +23,27 @@
 
 using namespace CoverageControl;
 
-/* typedef LloydGlobalOnline CoverageAlgorithm; */
+typedef LloydGlobalOnline CoverageAlgorithm;
 /* typedef LloydLocalVoronoi CoverageAlgorithm; */
-typedef OracleGlobalOffline CoverageAlgorithm;
+/* typedef OracleGlobalOffline CoverageAlgorithm; */
 /* typedef OracleSimulExploreExploit CoverageAlgorithm; */
 
 int main(int argc, char** argv) {
 	std::cout << "Processor count: " << std::thread::hardware_concurrency() << std::endl;
 	Parameters params;
 	/* params.pSensorSize = 16; */
-	if (argc == 2) {
+	if (argc >= 2) {
 		std::string parameter_file = argv[1];
 		params = Parameters(parameter_file);
 	}
 	int num_robots = 50;
-	int num_dists = 30;
+	int num_dists = 50;
 
 	std::unique_ptr <CoverageSystem> env;
 
 	if(argc == 4) {
-		std::string idf_file = argv[2];
-		std::string pos_file = argv[3];
+		std::string pos_file = argv[2];
+		std::string idf_file = argv[3];
 		WorldIDF world_idf(params, idf_file);
 		env = std::make_unique<CoverageSystem> (params, world_idf, pos_file);
 		num_robots = env->GetNumRobots();
@@ -51,12 +51,14 @@ int main(int argc, char** argv) {
 	else {
 		env = std::make_unique<CoverageSystem> (params, num_dists, num_robots);
 	}
+	env->WriteEnvironment("data/test/pos", "data/test/idf");
 
 	CoverageAlgorithm oracle(params, num_robots, *env);
 
 	std::string dir = "data/test/";
-	env->PlotWorldMap(dir, "world_map");
+	env->PlotInitMap(dir, "init_map");
 	auto goals = oracle.GetGoals();
+	/* env->PlotMapVoronoi(dir, 0, oracle.GetVoronoi(), oracle.GetGoals()); */
 	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
@@ -64,7 +66,7 @@ int main(int argc, char** argv) {
 		env->StepActions(actions);
 		if(ii%1 == 0) {
 			/* env->RecordPlotData(); */
-			env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
+			/* env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals()); */
 		}
 		if(cont_flag == false) {
 			break;
@@ -78,9 +80,10 @@ int main(int argc, char** argv) {
 	for(int ii = 0; ii < 90; ++ii) {
 		env->StepActions(zero_actions);
 		/* env->RecordPlotData(); */
-		env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
+		/* env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals()); */
 	}
 
+	/* env->PlotMapVoronoi(dir, 1, oracle.GetVoronoi(), oracle.GetGoals()); */
 	/* env->RenderRecordedMap(dir, "CoverageControl_oracle.mp4"); */
 	return 0;
 }
