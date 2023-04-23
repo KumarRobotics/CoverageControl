@@ -250,7 +250,7 @@ namespace CoverageControl {
 			MapType const& GetSystemExploredIDFMap() const { return explored_idf_map_; }
 
 			bool CheckOscillation(size_t const robot_id) {
-				if(history_size_ < 2) { return false; }
+				if(robot_positions_history_[robot_id].size() < 2) { return false; }
 				auto const &history = robot_positions_history_[robot_id];
 				Point2 const last_pos = history.back();
 				auto it_end = std::next(history.crbegin(), std::max(6, int(history.size()) - 1));

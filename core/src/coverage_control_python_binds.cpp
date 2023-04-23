@@ -181,7 +181,6 @@ PYBIND11_MODULE(pyCoverageControl, m) {
 		.def("Step", &LloydLocalVoronoi::Step)
 		.def("GetActions", &LloydLocalVoronoi::GetActions)
 		.def("GetGoals", &LloydLocalVoronoi::GetGoals)
-		.def("GetVoronoi", &LloydLocalVoronoi::GetVoronoi)
 		;
 
 	py::class_<LloydLocalSensorGlobalComm>(m, "LloydLocalSensorGlobalComm")
