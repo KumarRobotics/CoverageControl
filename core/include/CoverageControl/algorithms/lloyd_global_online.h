@@ -33,6 +33,7 @@ namespace CoverageControl {
 			Voronoi voronoi_;
 			PointVector robot_global_positions_;
 			PointVector goals_, actions_;
+			std::vector <double> voronoi_mass_;
 
 			bool continue_flag_ = false;
 
@@ -48,6 +49,7 @@ namespace CoverageControl {
 					robot_global_positions_ = env_.GetRobotPositions();
 					actions_.resize(num_robots_);
 					goals_ = robot_global_positions_;
+					voronoi_mass_.resize(num_robots_, 0);
 					voronoi_ = Voronoi(robot_global_positions_, env_.GetWorldIDF(), Point2(params_.pWorldMapSize, params_.pWorldMapSize), params_.pResolution);
 					ComputeGoals();
 				}
@@ -63,6 +65,7 @@ namespace CoverageControl {
 				auto voronoi_cells = voronoi_.GetVoronoiCells();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					goals_[iRobot] = voronoi_cells[iRobot].centroid();
+					voronoi_mass_[iRobot] = voronoi_cells[iRobot].mass();
 				}
 			}
 
@@ -70,6 +73,7 @@ namespace CoverageControl {
 				continue_flag_ = false;
 				robot_global_positions_ = env_.GetRobotPositions();
 				ComputeGoals();
+				auto voronoi_cells = voronoi_.GetVoronoiCells();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					actions_[iRobot] = Point2(0, 0);
 					Point2 diff = goals_[iRobot] - robot_global_positions_[iRobot];
@@ -80,7 +84,8 @@ namespace CoverageControl {
 					if(env_.CheckOscillation(iRobot)) {
 						continue;
 					}
-					double speed = dist / params_.pTimeStep;
+					/* double speed = dist / params_.pTimeStep; */
+					double speed = 2 * dist * voronoi_mass_[iRobot];
 					speed = std::min(params_.pMaxRobotSpeed, speed);
 					Point2 direction(diff);
 					direction.normalize();
