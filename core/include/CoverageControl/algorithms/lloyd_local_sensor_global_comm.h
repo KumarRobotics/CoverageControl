@@ -111,14 +111,14 @@ namespace CoverageControl {
 					actions_[iRobot] = Point2(0, 0);
 					Point2 diff = goals_[iRobot] - robot_global_positions_[iRobot];
 					double dist = diff.norm();
-					if(dist < 0.1 * params_.pResolution) {
+					if(dist < kEps) {
 						continue;
 					}
 					if(env_.CheckOscillation(iRobot)) {
 						continue;
 					}
-					/* double speed = dist / params_.pTimeStep; */
-					double speed = 2 * dist * voronoi_mass_[iRobot];
+					double speed = dist / params_.pTimeStep;
+					/* double speed = 2 * dist * voronoi_mass_[iRobot]; */
 					speed = std::min(params_.pMaxRobotSpeed, speed);
 					Point2 direction(diff);
 					direction.normalize();

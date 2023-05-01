@@ -84,8 +84,8 @@ namespace CoverageControl {
 					if(env_.CheckOscillation(iRobot)) {
 						continue;
 					}
-					/* double speed = dist / params_.pTimeStep; */
-					double speed = 2 * dist * voronoi_mass_[iRobot];
+					double speed = dist / params_.pTimeStep;
+					/* double speed = 2 * dist * voronoi_mass_[iRobot]; */
 					speed = std::min(params_.pMaxRobotSpeed, speed);
 					Point2 direction(diff);
 					direction.normalize();
