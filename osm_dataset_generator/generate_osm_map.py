@@ -87,9 +87,10 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
         road_network_query += road_network_tags[iTag]
     road_network_query += ')$"]' + bounds_str + out_str
     road_network = overpass.query(road_network_query)
+    print(type(road_network))
 
     if road_network.ways():
-        # contains_data = True
+        contains_data = True
         for ways in road_network.ways():
             ways_coordinates = ways.geometry()["coordinates"]
             if ways.geometry()["type"] == "LineString":
@@ -106,79 +107,81 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
 
     leisure_query = 'nwr[leisure~"^('
     leisure_tags = semantic_objects['leisure']
-    for iTag in range(0, len(leisure_tags)):
-        if iTag > 0:
-            leisure_query += '|'
-        leisure_query += leisure_tags[iTag]
-    leisure_query += ')$"]' + bounds_str + out_str
-    leisure = overpass.query(leisure_query)
-    leisure_json = leisure.toJSON()
+    if leisure_tags != None:
+        for iTag in range(0, len(leisure_tags)):
+            if iTag > 0:
+                leisure_query += '|'
+            leisure_query += leisure_tags[iTag]
+        leisure_query += ')$"]' + bounds_str + out_str
+        leisure = overpass.query(leisure_query)
+        leisure_json = leisure.toJSON()
 
-    if leisure.ways():
-        contains_data = True
-        for way in leisure.ways():
-            tags = way.tags()
-            if tags == None or 'leisure' not in tags:
-                continue
-            leisure_tag = way.tags()['leisure']
-            if leisure_tag in semantic_objects['leisure']:
-                coords_list = way.geometry()["coordinates"]
-                poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "leisure", "subtype": leisure_tag, "osmtype": "way"})
-                feature_collection.features.append(poly_feature)
+        if leisure.ways():
+            contains_data = True
+            for way in leisure.ways():
+                tags = way.tags()
+                if tags == None or 'leisure' not in tags:
+                    continue
+                leisure_tag = way.tags()['leisure']
+                if leisure_tag in semantic_objects['leisure']:
+                    coords_list = way.geometry()["coordinates"]
+                    poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "leisure", "subtype": leisure_tag, "osmtype": "way"})
+                    feature_collection.features.append(poly_feature)
             
     amenity_query = 'nwr[amenity~"^('
     amenity_tags = semantic_objects['amenity']
-    for iTag in range(0, len(amenity_tags)):
-        if iTag > 0:
-            amenity_query += '|'
-        amenity_query += amenity_tags[iTag]
-    amenity_query += ')$"]' + bounds_str + out_str
-    amenity = overpass.query(amenity_query)
-    amenity_json = amenity.toJSON()
+    if amenity_tags != None:
+        for iTag in range(0, len(amenity_tags)):
+            if iTag > 0:
+                amenity_query += '|'
+            amenity_query += amenity_tags[iTag]
+        amenity_query += ')$"]' + bounds_str + out_str
+        amenity = overpass.query(amenity_query)
+        amenity_json = amenity.toJSON()
 
-    if amenity.ways():
-        contains_data = True
-        for way in amenity.ways():
-            tags = way.tags()
-            if tags == None or 'amenity' not in tags:
-                continue
-            amenity_tag = way.tags()['amenity']
-            if amenity_tag in semantic_objects['amenity']:
-                if 'parking' in tags and tags['parking'] == 'underground':
+        if amenity.ways():
+            contains_data = True
+            for way in amenity.ways():
+                tags = way.tags()
+                if tags == None or 'amenity' not in tags:
                     continue
-                coords_list = way.geometry()["coordinates"]
-                poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "way"})
-                feature_collection.features.append(poly_feature)
+                amenity_tag = way.tags()['amenity']
+                if amenity_tag in semantic_objects['amenity']:
+                    if 'parking' in tags and tags['parking'] == 'underground':
+                        continue
+                    coords_list = way.geometry()["coordinates"]
+                    poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "way"})
+                    feature_collection.features.append(poly_feature)
             
+        if amenity.relations():
+            contains_data = True
+            for relation in amenity.relations():
+                try:
+                    geom = relation.geometry()
+                except:
+                    continue
+                contains_data = True
+                tags = relation.tags()
+                if tags == None or 'amenity' not in tags:
+                    continue
+                amenity_tag = relation.tags()['amenity']
+                if amenity_tag in semantic_objects['amenity']:
+                    coords_list = geom["coordinates"]
+                    if geom["type"] == "Polygon":
+                        coords_list = [coords_list]
+                    for coords in coords_list:
+                        poly_feature = geojson.Feature(geometry = geojson.Polygon(coords), id = relation.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "relation"})
+                        feature_collection.features.append(poly_feature)
+
     if semantic_objects['traffic_signals'] == True:
         traffic_signal_query = 'node[highway~"^(traffic_signals)$"]' + bounds_str + out_str
         traffic_signals = overpass.query(traffic_signal_query)
 
-    if traffic_signals.nodes():
-        contains_data = True
-        for node in traffic_signals.nodes():
-            feature = geojson.Feature(geometry=geojson.Point((node.lon(), node.lat())), id=node.id(), properties={"type": "traffic_signal", "osmtype": "node"})
-            feature_collection.features.append(feature)
-
-    if amenity.relations():
-        contains_data = True
-        for relation in amenity.relations():
-            try:
-                geom = relation.geometry()
-            except:
-                continue
+        if traffic_signals.nodes():
             contains_data = True
-            tags = relation.tags()
-            if tags == None or 'amenity' not in tags:
-                continue
-            amenity_tag = relation.tags()['amenity']
-            if amenity_tag in semantic_objects['amenity']:
-                coords_list = geom["coordinates"]
-                if geom["type"] == "Polygon":
-                    coords_list = [coords_list]
-                for coords in coords_list:
-                    poly_feature = geojson.Feature(geometry = geojson.Polygon(coords), id = relation.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "relation"})
-                    feature_collection.features.append(poly_feature)
+            for node in traffic_signals.nodes():
+                feature = geojson.Feature(geometry=geojson.Point((node.lon(), node.lat())), id=node.id(), properties={"type": "traffic_signal", "osmtype": "node"})
+                feature_collection.features.append(feature)
 
     if contains_data == False:
         return False
