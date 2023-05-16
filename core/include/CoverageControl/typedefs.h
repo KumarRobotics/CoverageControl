@@ -17,7 +17,6 @@ namespace CoverageControl {
 	};
 	typedef Eigen::Vector2d Point2;
 	typedef Eigen::Vector3d Point3;
-	typedef Eigen::MatrixXd MapTypeDbl;
 	typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MapType;
 	typedef Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MapTypeBool;
 
