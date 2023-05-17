@@ -335,6 +335,14 @@ namespace CoverageControl {
 				return communication_maps_[id];
 			}
 
+			std::vector <MapType> const& GetCommunicationMaps() {
+#pragma omp parallel for num_threads(num_robots_)
+				for(size_t i = 0; i < num_robots_; ++i) {
+					GetCommunicationMap(i);
+				}
+				return communication_maps_;
+			}
+
 			void ComputeVoronoiCells() {
 				UpdateRobotPositions();
 				voronoi_ = Voronoi(robot_global_positions_, GetWorldIDF(), Point2 (params_.pWorldMapSize, params_.pWorldMapSize), params_.pResolution);
