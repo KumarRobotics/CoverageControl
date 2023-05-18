@@ -38,9 +38,9 @@ InstallCGAL () {
 
 InstallGeoGraphicLib () {
 	echo "Setting up geographiclib"
-	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.1.2.tar.gz -P ${COVERAGECONTROL_WS}/src
-	tar -xf ${COVERAGECONTROL_WS}/src/v2.1.2.tar.gz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/geographiclib-2.1.2 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS}
+	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.2.tar.gz -P ${COVERAGECONTROL_WS}/src
+	tar -xf ${COVERAGECONTROL_WS}/src/v2.2.tar.gz -C ${COVERAGECONTROL_WS}/src/
+	cmake -S ${COVERAGECONTROL_WS}/src/geographiclib-2.2 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/geographiclib -j$(nproc)
 	cmake --install ${BUILD_DIR}/geographiclib
 	if [ $? -eq 0 ]; then
@@ -49,15 +49,15 @@ InstallGeoGraphicLib () {
 		echo "geographiclib install failed"
 		exit 1
 	fi
-	rm ${COVERAGECONTROL_WS}/src/v2.1.2.tar.gz
-	rm -rf ${COVERAGECONTROL_WS}/src/geographiclib-2.1.2
+	rm ${COVERAGECONTROL_WS}/src/v2.2.tar.gz
+	rm -rf ${COVERAGECONTROL_WS}/src/geographiclib-2.2
 }
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
-	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.3.tar.gz -P ${COVERAGECONTROL_WS}/src
-	tar -xf ${COVERAGECONTROL_WS}/src/v2.10.3.tar.gz -C ${COVERAGECONTROL_WS}/src/
-	cmake -S ${COVERAGECONTROL_WS}/src/pybind11-2.10.3 -B ${BUILD_DIR}/pybind11 ${CMAKE_END_FLAGS} -DPYBIND11_TEST=OFF
+	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.4.tar.gz -P ${COVERAGECONTROL_WS}/src
+	tar -xf ${COVERAGECONTROL_WS}/src/v2.10.4.tar.gz -C ${COVERAGECONTROL_WS}/src/
+	cmake -S ${COVERAGECONTROL_WS}/src/pybind11-2.10.4 -B ${BUILD_DIR}/pybind11 ${CMAKE_END_FLAGS} -DPYBIND11_TEST=OFF
 	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
 	cmake --install ${BUILD_DIR}/pybind11
 	if [ $? -eq 0 ]; then
@@ -66,8 +66,8 @@ InstallPybind11 () {
 		echo "pybind11 install failed"
 		exit 1
 	fi
-	rm ${COVERAGECONTROL_WS}/src/v2.10.3.tar.gz
-	rm -rf ${COVERAGECONTROL_WS}/src/pybind11-2.10.3
+	rm ${COVERAGECONTROL_WS}/src/v2.10.4.tar.gz
+	rm -rf ${COVERAGECONTROL_WS}/src/pybind11-2.10.4
 }
 
 InstallYamlCPP () {
