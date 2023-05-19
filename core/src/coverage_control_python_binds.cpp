@@ -2,7 +2,6 @@
 #include <pybind11/stl_bind.h>
 #include <pybind11/eigen.h>
 
-#include <torch/extension.h>
 #include <vector>
 #include <CoverageControl/vec2d.h>
 #include <CoverageControl/typedefs.h>
