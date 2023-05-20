@@ -28,7 +28,7 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters('params/parameters.yaml')
+params_ = pyCoverageControl.Parameters()
 
 ####################
 ## CoverageSystem ##
