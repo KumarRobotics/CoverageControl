@@ -13,4 +13,3 @@ authors = [
 
 [tool.setuptools]
 include-package-data = true
-py-modules = []
