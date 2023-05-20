@@ -1,0 +1,18 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+wheel.packages = []
+
+[project]
+name = "pyCoverageControlTorch"
+version = "0.4.0"
+description="Project for Coverage Control"
+requires-python = ">=3.10"
+authors = [
+  {name = "Saurav Agarwal", email = "SauravAg@UPenn.edu" } # Optional
+]
+
+[tool.setuptools]
+include-package-data = true
