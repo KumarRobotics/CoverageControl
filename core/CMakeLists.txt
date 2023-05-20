@@ -1,16 +1,26 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 
-project(pyCoverageControl VERSION 0.3 LANGUAGES CUDA CXX)
+project(CoverageControl VERSION 0.3 LANGUAGES CUDA CXX)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
-# set(CMAKE_FIND_DEBUG_MODE 1)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 
-list(APPEND CMAKE_PREFIX_PATH $ENV{COVERAGECONTROL_WS}/install)
+configure_file(cmake/CoverageControlConfig.h.in CoverageControlConfig.h)
+
+add_library(CoverageControl_compiler_flags INTERFACE)
+target_compile_features(CoverageControl_compiler_flags INTERFACE cxx_std_17)
+
+set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
+set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
+target_compile_options(CoverageControl_compiler_flags INTERFACE
+	"$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-pedantic>>"
+	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
+)
+
+# list(APPEND CMAKE_PREFIX_PATH $ENV{COVERAGECONTROL_WS}/install)
 
 # if(NOT DEFINED CMAKE_CUDA_STANDARD)
 #     set(CMAKE_CUDA_STANDARD 17)
@@ -19,9 +29,7 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{COVERAGECONTROL_WS}/install)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(pybind11 REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(OpenMP REQUIRED)
 find_package(CGAL REQUIRED)
 find_package(GeographicLib REQUIRED)
 
@@ -29,60 +37,63 @@ find_package(GeographicLib REQUIRED)
 ## CoverageControl library ##
 #############################
 
-add_library(CoverageControl STATIC src/generate_world_map.cu src/polygon_utils.cpp src/parameters.cpp src/voronoi.cpp src/coverage_system.cpp ${PROJECT_SOURCE_DIR}/extern/lsap/Hungarian.cpp)
-target_include_directories(CoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(CoverageControl PRIVATE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem)
+set(coveragecontrol_sources
+	generate_world_map.cu
+	polygon_utils.cpp
+	parameters.cpp
+	voronoi.cpp
+	coverage_system.cpp
+	plotter.cpp
+	extern/Hungarian.cpp)
+list(TRANSFORM coveragecontrol_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
+
+set(CoverageControl_dependencies Eigen3::Eigen yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL ${GeographicLib_LIBRARIES})
+
+add_library(CoverageControl SHARED ${coveragecontrol_sources})
+
+target_include_directories(CoverageControl INTERFACE
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>)
+target_link_libraries(CoverageControl INTERFACE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem)
+
+target_include_directories(CoverageControl PRIVATE "${PROJECT_BINARY_DIR}")
+target_link_libraries(CoverageControl PRIVATE ${CoverageControl_dependencies} CoverageControl_compiler_flags)
 set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 
-install(TARGETS CoverageControl EXPORT CoverageControl-targets
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
 
-install(DIRECTORY
-	${PROJECT_SOURCE_DIR}/include/
-	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extern/ DESTINATION include)
 
-install(TARGETS CoverageControl LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS CoverageControl EXPORT CoverageControlTargets LIBRARY DESTINATION lib)
 
-install(EXPORT CoverageControl-targets
-	FILE CoverageControl-targets.cmake
-	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControl")
+install(EXPORT CoverageControlTargets FILE CoverageControlTargets.cmake DESTINATION lib/cmake/CoverageControl)
+
+include(CMakePackageConfigHelpers)
+# generate the config file that includes the exports
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+	"${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfig.cmake"
+	INSTALL_DESTINATION "lib/cmake/CoverageControl"
+	NO_SET_AND_CHECK_MACRO
+	NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+write_basic_package_version_file(
+	"${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfigVersion.cmake"
+	VERSION "${Tutorial_VERSION_MAJOR}.${Tutorial_VERSION_MINOR}"
+	COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES
+	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfig.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfigVersion.cmake
+	DESTINATION lib/cmake/CoverageControl
+)
 
 ##################################
 ## CoverageControl python binds ##
 ##################################
-pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem)
-target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
+# pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
+# target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${TORCH_INCLUDE_DIRS}})
+# target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem ${TORCH_LIBRARIES})
+# target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
 
-###########
-## Tests ##
-###########
-
-add_executable(system_map ${PROJECT_SOURCE_DIR}/test/system_map.cpp)
-target_include_directories(system_map PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(system_map PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX boost_iostreams boost_system boost_filesystem)
-install(TARGETS system_map DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-add_executable(coverage_algorithm ${PROJECT_SOURCE_DIR}/test/coverage_algorithm.cpp)
-target_include_directories(coverage_algorithm PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(coverage_algorithm PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
-install(TARGETS coverage_algorithm DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-# add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)
-# target_include_directories(geo_transforms PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-# target_link_libraries(geo_transforms PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX ${GeographicLib_LIBRARIES})
-# install(TARGETS geo_transforms DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-add_executable(map_generation ${PROJECT_SOURCE_DIR}/test/map_generation.cpp)
-target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_include_directories(map_generation PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-target_link_libraries(map_generation PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX)
-install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-# add_executable(robot_map ${PROJECT_SOURCE_DIR}/test/robot_map.cpp)
-# target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)
-# target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControl)
-# install(TARGETS robot_map DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -16,7 +16,6 @@
 #include <filesystem>
 #include <iostream>
 #include <cmath>
-#include <yaml-cpp/yaml.h>
 
 namespace CoverageControl {
 

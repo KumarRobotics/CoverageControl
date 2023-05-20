@@ -23,7 +23,7 @@
 #include "map_utils.h"
 #include "voronoi.h"
 #include "plotter.h"
-#include <lsap/Hungarian.h>
+#include "extern/lsap/Hungarian.h"
 
 namespace CoverageControl {
 

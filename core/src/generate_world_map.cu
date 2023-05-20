@@ -7,11 +7,11 @@
  * map: pWorldMapSize * pWorldMapSize
  **/
 
-#include <CoverageControl/generate_world_map.ch>
-#include <CoverageControl/geometry_utils.ch>
+#include "../include/CoverageControl/generate_world_map.ch"
+#include "../include/CoverageControl/geometry_utils.ch"
 #include <cuda_runtime.h>
 #include <cmath>
-#include <cuda_helpers/helper_cuda.h>
+#include "../include/CoverageControl/extern/cuda_helpers/helper_cuda.h"
 #include <thrust/extrema.h>
 #include <thrust/device_ptr.h>
 

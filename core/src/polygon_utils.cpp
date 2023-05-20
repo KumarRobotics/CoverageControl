@@ -1,7 +1,7 @@
 
-#include <CoverageControl/cgal/polygon_utils.h>
-#include <CoverageControl/cgal/config.h>
-#include <CoverageControl/cgal/utilities.h>
+#include "../include/CoverageControl/cgal/polygon_utils.h"
+#include "../include/CoverageControl/cgal/config.h"
+#include "../include/CoverageControl/cgal/utilities.h"
 
 #include <vector>
 #include <list>

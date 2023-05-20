@@ -22,7 +22,7 @@
 #include "../coverage_system.h"
 #include "../map_utils.h"
 #include "lloyd_algorithms.h"
-#include <lsap/Hungarian.h>
+#include "../extern/lsap/Hungarian.h"
 
 namespace CoverageControl {
 

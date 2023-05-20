@@ -1,5 +1,5 @@
-/* #include <torch/extension.h> */
-#include <pybind11/pybind11.h>
+#include <torch/extension.h>
+/* #include <pybind11/pybind11.h> */
 #include <pybind11/stl_bind.h>
 #include <pybind11/eigen.h>
 
@@ -28,15 +28,15 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-/* torch::Tensor d_sigmoid(torch::Tensor z) { */
-/*   auto s = torch::sigmoid(z); */
-/*   return (1 - s) * s; */
-/* } */
+torch::Tensor d_sigmoid(torch::Tensor z) {
+  auto s = torch::sigmoid(z);
+  return (1 - s) * s;
+}
 
-PYBIND11_MODULE(pyCoverageControl, m) {
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
 	m.doc() = "CoverageControl library";
 
-  /* m.def("d_sigmoid", &d_sigmoid, "dSigmoid"); */
+  m.def("d_sigmoid", &d_sigmoid, "dSigmoid");
 	m.def("Point2", []() {return Point2(0, 0);});
 	m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
 

@@ -115,7 +115,7 @@ CleanBuild () {
 UpdateCoverageControl () {
 	# Run the following commands to update after a change in the repository
 	# The CoverageControl repository is located in ${COVERAGECONTROL_WS}/src/CoverageControl
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl -B ${BUILD_DIR}/CoverageControl ${CMAKE_END_FLAGS}
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/core -B ${BUILD_DIR}/CoverageControl ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/CoverageControl -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControl build failed"

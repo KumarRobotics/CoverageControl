@@ -16,7 +16,7 @@
 
 #include "../parameters.h"
 #include "../typedefs.h"
-#include <lsap/Hungarian.h>
+#include "../extern/lsap/Hungarian.h"
 
 namespace CoverageControl {
 

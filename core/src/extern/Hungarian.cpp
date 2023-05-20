@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <cfloat> // for DBL_MAX
 #include <cmath>  // for fabs()
-#include "Hungarian.h"
+#include "../../include/CoverageControl/extern/lsap/Hungarian.h"
 
 
 HungarianAlgorithm::HungarianAlgorithm(){}

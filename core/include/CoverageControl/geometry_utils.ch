@@ -6,7 +6,7 @@
 #define COVERAGECONTROL_GEOMETRY_UTILS_CH_
 
 #include <cuda_runtime.h>
-#include <cuda_helpers/helper_cuda.h>
+#include "extern/cuda_helpers/helper_cuda.h"
 
 namespace CoverageControl {
 /*

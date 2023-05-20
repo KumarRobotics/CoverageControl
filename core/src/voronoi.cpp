@@ -3,9 +3,9 @@
 #include <functional>
 #include <iostream>
 
-#include <CoverageControl/voronoi.h>
-#include <CoverageControl/cgal/config.h>
-#include <CoverageControl/cgal/utilities.h>
+#include "../include/CoverageControl/voronoi.h"
+#include "../include/CoverageControl/cgal/config.h"
+#include "../include/CoverageControl/cgal/utilities.h"
 
 namespace CoverageControl {
 
