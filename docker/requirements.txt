@@ -6,7 +6,6 @@ torchvision
 torchaudio
 pytorch-lightning
 --find-links https://data.pyg.org/whl/torch-2.0.0+cu118.html
-pyg_lib
 torch_scatter
 torch_sparse
 torch_cluster

@@ -3,7 +3,7 @@
 MAIN_DIR=$1
 BUILD_DIR=${MAIN_DIR}/build
 
-CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC"
+CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
 InstallCGAL () {
 	echo "Setting up CGAL"
@@ -52,7 +52,7 @@ InstallPybind11 () {
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
 	git clone https://github.com/jbeder/yaml-cpp.git ${MAIN_DIR}/src/yaml-cpp
-	env CFLAGS='-fPIC' CXXFLAGS='-fPIC' cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS}
+	cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "YAML build failed"
@@ -82,7 +82,6 @@ InstallEigen3 () {
 }
 
 InstallEigen3
-InstallPybind11
 InstallYamlCPP
 InstallCGAL
 InstallGeoGraphicLib

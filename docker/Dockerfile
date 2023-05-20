@@ -1,5 +1,5 @@
 # Start with cuda image
-FROM nvidia/cuda:11.7.1-devel-ubuntu22.04
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
 CMD ["/bin/bash"]
 # Set the working directory to the user home (user is root).
@@ -66,7 +66,11 @@ COPY requirements.txt /root/requirements.txt
 RUN python -m venv /root/venv
 RUN /root/venv/bin/pip install --no-cache-dir -r /root/requirements.txt
 
-ENV LD_LIBRARY_PATH /usr/local/lib:/root/venv/lib/python3.10/site-packages/torch/lib/:${LD_LIBRARY_PATH}
+RUN mkdir download
+RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip -O download/libtorch.zip
+RUN unzip download/libtorch.zip -d /root/
+RUN rm -r download
+ENV LD_LIBRARY_PATH /usr/local/lib:/root/libtorch/lib:${LD_LIBRARY_PATH}
 
 RUN mkdir -p /root/dependencies/build
 RUN mkdir -p /root/dependencies/src
@@ -75,5 +79,6 @@ RUN /root/dependencies/install_dependencies.sh /root/dependencies
 RUN rm -r /root/dependencies
 
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
-RUN echo "export Torch_DIR=\`python -c 'import torch;print(torch.utils.cmake_prefix_path)'\`" >> /root/.bashrc
+RUN echo "export Torch_DIR=/root/libtorch/share/cmake/" >> /root/.bashrc
 RUN echo "export CoverageControl_DIR=${COVERAGECONTROL_WS}/install/lib/cmake/CoverageControl/" >> /root/.bashrc
+WORKDIR ${COVERAGECONTROL_WS}
