@@ -47,32 +47,31 @@ set(coveragecontrol_sources
 	extern/Hungarian.cpp)
 list(TRANSFORM coveragecontrol_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(CoverageControl_dependencies Eigen3::Eigen yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL ${GeographicLib_LIBRARIES})
+set(CoverageControl_dependencies Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem)
 
-add_library(CoverageControl SHARED ${coveragecontrol_sources})
+add_library(CoverageControl_core SHARED ${coveragecontrol_sources})
 
+add_library(CoverageControl INTERFACE)
 target_include_directories(CoverageControl INTERFACE
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>)
-target_link_libraries(CoverageControl INTERFACE Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem)
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_link_libraries(CoverageControl INTERFACE ${CoverageControl_dependencies} CoverageControl_core)
 
-target_include_directories(CoverageControl PRIVATE "${PROJECT_BINARY_DIR}")
-target_link_libraries(CoverageControl PRIVATE ${CoverageControl_dependencies} CoverageControl_compiler_flags)
-set_target_properties(CoverageControl PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
+target_link_libraries(CoverageControl_core PRIVATE ${CoverageControl_dependencies} CoverageControl_compiler_flags)
+set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/extern/ DESTINATION include)
+install(TARGETS CoverageControl_core CoverageControl EXPORT CoverageControlTargets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-install(TARGETS CoverageControl EXPORT CoverageControlTargets LIBRARY DESTINATION lib)
-
-install(EXPORT CoverageControlTargets FILE CoverageControlTargets.cmake DESTINATION lib/cmake/CoverageControl)
+set(CMAKEPACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControl)
 
 include(CMakePackageConfigHelpers)
 # generate the config file that includes the exports
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
-	"${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfig.cmake"
-	INSTALL_DESTINATION "lib/cmake/CoverageControl"
+	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfig.cmake
+	INSTALL_DESTINATION "${CMAKEPACKAGE_INSTALL_DIR}"
 	NO_SET_AND_CHECK_MACRO
 	NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
@@ -83,17 +82,11 @@ write_basic_package_version_file(
 	COMPATIBILITY AnyNewerVersion
 )
 
+export (PACKAGE CoverageControl)
+install(EXPORT CoverageControlTargets FILE CoverageControlTargets.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControl)
+
 install(FILES
 	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfig.cmake
 	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlConfigVersion.cmake
-	DESTINATION lib/cmake/CoverageControl
+	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR}
 )
-
-##################################
-## CoverageControl python binds ##
-##################################
-# pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-# target_include_directories(pyCoverageControl PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern ${pybind11_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${TORCH_INCLUDE_DIRS}})
-# target_link_libraries(pyCoverageControl PRIVATE CoverageControl ${PYTHON_LIBRARIES} Eigen3::Eigen m yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem ${TORCH_LIBRARIES})
-# target_link_directories(pyCoverageControl PRIVATE ${CMAKE_INSTALL_LIBDIR})
-

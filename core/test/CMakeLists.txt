@@ -20,7 +20,7 @@ find_package(CoverageControl REQUIRED)
 ###########
 
 add_executable(system_map system_map.cpp)
-target_link_libraries(system_map PRIVATE CoverageControl)
+target_link_libraries(system_map PUBLIC CoverageControl)
 install(TARGETS system_map DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_executable(coverage_algorithm coverage_algorithm.cpp)
