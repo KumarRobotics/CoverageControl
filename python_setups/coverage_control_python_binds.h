@@ -1,3 +1,5 @@
+#ifndef COVERAGECONTROL_PYTHON_BINDS_H_
+#define COVERAGECONTROL_PYTHON_BINDS_
 
 #include <vector>
 #include <CoverageControl/vec2d.h>
@@ -18,6 +20,7 @@
 #include <CoverageControl/algorithms/lloyd_local_sensor_global_comm.h>
 
 #include <iostream>
+
 
 using namespace CoverageControl;
 typedef std::vector<BivariateNormalDistribution> BNDVector;
@@ -238,3 +241,5 @@ void pyCoverageControl_core(py::module &m) {
 		.def("Reverse", &GeoLocalTransform::Reverse)
 		;
 }
+
+#endif

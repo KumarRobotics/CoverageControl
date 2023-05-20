@@ -76,3 +76,4 @@ RUN rm -r /root/dependencies
 
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
 RUN echo "export Torch_DIR=\`python -c 'import torch;print(torch.utils.cmake_prefix_path)'\`" >> /root/.bashrc
+RUN echo "export CoverageControl_DIR=${COVERAGECONTROL_WS}/install/lib/cmake/CoverageControl/" >> /root/.bashrc
