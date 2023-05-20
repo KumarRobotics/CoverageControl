@@ -1,4 +1,4 @@
-IMAGE_NAME=cc_gnn
+IMAGE_NAME=coverage_control_gnn
 COVERAGECONTROL_WS=${1}
 
 COVERAGECONTROL_VOLUME="--volume=${COVERAGECONTROL_WS}:/root/CoverageControl_ws:rw"
