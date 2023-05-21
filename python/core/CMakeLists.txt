@@ -14,9 +14,9 @@ find_package(yaml-cpp REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(CGAL REQUIRED)
 find_package(GeographicLib REQUIRED)
-find_package(CoverageControl REQUIRED)
+find_package(CoverageControlCore REQUIRED)
 
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-target_link_libraries(pyCoverageControl PUBLIC CoverageControl)
+target_link_libraries(pyCoverageControl PUBLIC CoverageControlCore)
 install(TARGETS pyCoverageControl LIBRARY DESTINATION .)
 
