@@ -70,6 +70,7 @@ RUN mkdir download
 RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip -O download/libtorch.zip
 RUN unzip download/libtorch.zip -d /root/
 RUN rm -r download
+
 ENV LD_LIBRARY_PATH /usr/local/lib:/root/libtorch/lib:${LD_LIBRARY_PATH}
 ENV Torch_DIR /root/libtorch/share/cmake/
 
@@ -79,6 +80,7 @@ COPY install_dependencies.sh /root/dependencies/install_dependencies.sh
 RUN /root/dependencies/install_dependencies.sh /root/dependencies
 RUN rm -r /root/dependencies
 
+ENV PATH ${COVERAGECONTROL_WS}/install/bin:${PATH}
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
-RUN echo "export Torch_DIR=/root/libtorch/share/cmake/" >> /root/.bashrc
+
 WORKDIR ${COVERAGECONTROL_WS}
