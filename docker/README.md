@@ -11,24 +11,25 @@ export LD_LIBRARY_PATH="${COVERAGECONTROL_WS}/install/lib/:${LD_LIBRARY_PATH}"
 3. Logout and login again 
 4. Go to your raid0 directory:  
 `cd ${RAID_HOME}`
-5. `mkdir -p CoverageControl_ws/src`
-6. Create directory for storing data  
-`mkdir CoverageControl_ws/data`
-7. Create directory for storing models  
-`mkdir CoverageControl_ws/models`
-8. `cd CoverageControl_ws/src`
-9. `git clone <CoverageControl>`
-10. `git clone <gnn_coverage_control>`
-11. If a docker image is not created already:  
+5. Create directories for src, data, and models
+```bash
+  mkdir -p ${COVERAGECONTROL_WS}/src
+  mkdir -p ${COVERAGECONTROL_WS}/data
+  mkdir -p ${COVERAGECONTROL_WS}/models
+  ```
+6. `cd CoverageControl_ws/src`
+7. `git clone <CoverageControl>`
+8. `git clone <gnn_coverage_control>`
+9. If a docker image is not created already:  
 ```bash
   cd ${COVERAGECONTROL_WS}/src/CoverageControl/docker
   docker build -t coverage_control_gnn .
   ```
-12. `bash ${COVERAGECONTROL_WS}/src/gnn_coverage_control/docker/create_gpu_container.sh ${COVERAGECONTROL_WS}`
-13. You should now be **inside the container** with a `bash` prompt
-14. `cd ${COVERAGECONTROL_WS}/src/CoverageControl`
-15. `bash setup.sh -i`
-16. You can exit the container with `ctrl+d`
+10. `bash ${COVERAGECONTROL_WS}/src/gnn_coverage_control/docker/create_gpu_container.sh ${COVERAGECONTROL_WS}`
+11. You should now be **inside the container** with a `bash` prompt
+12. `cd ${COVERAGECONTROL_WS}/src/CoverageControl`
+13. `bash setup.sh -i`
+14. You can exit the container with `ctrl+d`
 
 ### Run Docker and GNN
 1. Login to the server via `ssh`
