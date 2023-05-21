@@ -9,34 +9,50 @@ namespace CoverageControl {
 			std::cerr << "Could not find config file " << config_file_ << std::endl;
 			throw std::runtime_error("Could not open config file");
 		}
+
 		YAML::Node yaml_config_ = YAML::LoadFile(config_file_);
-		pResolution = yaml_config_["pResolution"].as<double>();
-		pWorldMapSize = yaml_config_["pWorldMapSize"].as<int>();
-		pRobotMapSize = yaml_config_["pRobotMapSize"].as<int>();
-		pUnknownImportance = yaml_config_["pUnknownImportance"].as<double>();
-		pRobotMapUseUnknownImportance = yaml_config_["pRobotMapUseUnknownImportance"].as<bool>();
-		pLocalMapSize = yaml_config_["pLocalMapSize"].as<int>();
-		pCommunicationRange = yaml_config_["pCommunicationRange"].as<double>();
-		pRobotInitDist = yaml_config_["pRobotInitDist"].as<double>();
-		pRobotPosHistorySize = yaml_config_["pRobotPosHistorySize"].as<int>();
-		pUpdateRobotMap = yaml_config_["pUpdateRobotMap"].as<bool>();
-		pUpdateSystemMap = yaml_config_["pUpdateSystemMap"].as<bool>();
-		pUpdateExplorationMap = yaml_config_["pUpdateExplorationMap"].as<bool>();
-		pUpdateSensorView = yaml_config_["pUpdateSensorView"].as<bool>();
-		pSensorSize = yaml_config_["pSensorSize"].as<int>();
-		pTimeStep = yaml_config_["pTimeStep"].as<double>();
-		pMaxRobotSpeed = yaml_config_["pMaxRobotSpeed"].as<double>();
-		pEpisodeSteps = yaml_config_["pEpisodeSteps"].as<int>();
-		pTruncationBND = yaml_config_["pTruncationBND"].as<double>();
-		pNorm = yaml_config_["pNorm"].as<double>();
-		pMinSigma = yaml_config_["pMinSigma"].as<double>();
-		pMaxSigma = yaml_config_["pMaxSigma"].as<double>();
-		pMinPeak = yaml_config_["pMinPeak"].as<double>();
-		pMaxPeak = yaml_config_["pMaxPeak"].as<double>();
-		pLloydMaxIterations = yaml_config_["pLloydMaxIterations"].as<int>();
-		pLloydNumTries = yaml_config_["pLloydNumTries"].as<int>();
-		if (yaml_config_["pNumFrontiers"]) {
-			pNumFrontiers = yaml_config_["pNumFrontiers"].as<int>();
-		}
+
+		auto env_maps_yaml = yaml_config_["EnvMaps"];
+
+		pResolution = env_maps_yaml["pResolution"].as<double>();
+		pWorldMapSize = env_maps_yaml["pWorldMapSize"].as<int>();
+		pRobotMapSize = env_maps_yaml["pRobotMapSize"].as<int>();
+		pLocalMapSize = env_maps_yaml["pLocalMapSize"].as<int>();
+		pCNNMapSize = env_maps_yaml["pCNNMapSize"].as<int>();
+
+		auto env_idf_yaml = yaml_config_["EnvIDF"];
+
+		pTruncationBND = env_idf_yaml["pTruncationBND"].as<double>();
+		pNorm = env_idf_yaml["pNorm"].as<double>();
+		pMinSigma = env_idf_yaml["pMinSigma"].as<double>();
+		pMaxSigma = env_idf_yaml["pMaxSigma"].as<double>();
+		pMinPeak = env_idf_yaml["pMinPeak"].as<double>();
+		pMaxPeak = env_idf_yaml["pMaxPeak"].as<double>();
+		pUnknownImportance = env_idf_yaml["pUnknownImportance"].as<double>();
+		pRobotMapUseUnknownImportance = env_idf_yaml["pRobotMapUseUnknownImportance"].as<bool>();
+
+		auto map_updates_yaml = yaml_config_["MapUpdates"];
+
+		pUpdateRobotMap = map_updates_yaml["pUpdateRobotMap"].as<bool>();
+		pUpdateSensorView = map_updates_yaml["pUpdateSensorView"].as<bool>();
+		pUpdateExplorationMap = map_updates_yaml["pUpdateExplorationMap"].as<bool>();
+		pUpdateSystemMap = map_updates_yaml["pUpdateSystemMap"].as<bool>();
+
+		auto robot_model_yaml = yaml_config_["RobotModel"];
+
+		pSensorSize = robot_model_yaml["pSensorSize"].as<int>();
+		pCommunicationRange = robot_model_yaml["pCommunicationRange"].as<double>();
+		pMaxRobotSpeed = robot_model_yaml["pMaxRobotSpeed"].as<double>();
+		pRobotInitDist = robot_model_yaml["pRobotInitDist"].as<double>();
+		pRobotPosHistorySize = robot_model_yaml["pRobotPosHistorySize"].as<int>();
+		pTimeStep = robot_model_yaml["pTimeStep"].as<double>();
+
+		auto algorithm_yaml = yaml_config_["Algorithm"];
+
+		pEpisodeSteps = algorithm_yaml["pEpisodeSteps"].as<int>();
+		pLloydMaxIterations = algorithm_yaml["pLloydMaxIterations"].as<int>();
+		pLloydNumTries = algorithm_yaml["pLloydNumTries"].as<int>();
+		pNumFrontiers = algorithm_yaml["pNumFrontiers"].as<int>();
+
 	}
 } /* namespace CoverageControl */

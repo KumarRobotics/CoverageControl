@@ -41,6 +41,11 @@ namespace CoverageControl {
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
 			int pLocalMapSize = 256;
 			double pCommunicationRange = 256; // Radius of communication (in meters)
+
+
+			// For CNN training we may reduce the size of the local map and communication map
+			int pCNNMapSize = 32;
+
 			double pRobotInitDist = 1024; // Distance from the origin within which to initialize the position of the robots
 			int pRobotPosHistorySize = 20; // Number of previous positions to store
 

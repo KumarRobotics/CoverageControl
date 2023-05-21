@@ -1,0 +1,76 @@
+
+EnvMaps:
+  # Assuming same resolution in both the directions. Pixel area = pResolution^2
+  pResolution: 1
+
+  # Actual size of maps is size * pResolution, e.g.,  pWorldMapSize * pResolution
+  # For ~1 km^2 actual environment, we have a 1024 grid world with each cell pResolution * pRobotMapSize=1 m^2
+  pWorldMapSize: 2048
+
+  # Robot map saves what the robot has seen
+  # Could make it sparse if size becomes a problem
+  pRobotMapSize: 2048
+
+  # Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
+  # Should be greater than pCommunicationRange so that they can form different channels of the same image.
+  pLocalMapSize: 256
+
+  # For CNN training we may reduce the size of the local map and communication map
+  pCNNMapSize: 32
+
+EnvIDF:
+  # Bivariate Normal Distribution truncated after pTruncationBND * sigma
+  # Helps in reducing the number of erfc evaluations
+  # Needs testing to be sure that the probability masses are not significantly off
+  pTruncationBND: 2
+
+  # Used to normalize map. Max value will be scaled to pNorm.
+  pNorm: 1
+
+  # These settings are only required if the IDF is generated using random gaussians
+  pMinSigma: 40
+  pMaxSigma: 50
+  pMinPeak: 6
+  pMaxPeak: 10
+
+  # Add importance to unknown regions
+  pUnknownImportance: 0.5 # fraction of the largest imaportance of a grid cell
+  pRobotMapUseUnknownImportance: false
+
+MapUpdates:
+  # Set pUpdateRobotMap to false for centralized known world
+  pUpdateRobotMap: true
+  pUpdateSensorView: true
+  pUpdateExplorationMap: true
+  pUpdateSystemMap: true
+
+RobotModel:
+  # Assuming square sensor FOV.
+  # Actual FOV: square with side pResolution * pSensorSize
+  # Robot is placed at the center of FOV
+  # Make it even so that I don't have to deal with substracting by half-resolution.
+  # Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
+  # Positive integer. NOTE: Needs to be even
+  pSensorSize: 64
+
+  # Radius of communication (in meters)
+  pCommunicationRange: 256
+  # in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
+  pMaxRobotSpeed: 5
+
+  pRobotInitDist: 2048 # Distance from the origin within which to initialize the position of the robots
+  pRobotPosHistorySize: 10 # For plotting and checking oscillations
+
+  # Each time step corresponds to pTimeStep in seconds
+  pTimeStep: 1
+
+Algorithm:
+  # Total time is pEpisodeSteps * pTimeStep
+  # This is not cause a hard constraint, but helpful for initializing vectors
+  pEpisodeSteps: 2000
+
+  # Settings for Lloyd offline algorithm
+  pLloydMaxIterations: 1000
+  pLloydNumTries: 20
+
+  pNumFrontiers: 10
