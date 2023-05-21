@@ -50,7 +50,7 @@ RUN apt-get -y install \
 											 dvipng texlive-fonts-recommended cm-super
 
 RUN apt-get -y install \
-											libeigen3-dev ninja-build
+											ninja-build libpng-dev libjpeg-dev
 
 # Remove cache to reduce image size
 RUN rm -rf /var/lib/apt/lists/*; \
@@ -71,6 +71,7 @@ RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-w
 RUN unzip download/libtorch.zip -d /root/
 RUN rm -r download
 ENV LD_LIBRARY_PATH /usr/local/lib:/root/libtorch/lib:${LD_LIBRARY_PATH}
+ENV Torch_DIR /root/libtorch/share/cmake/
 
 RUN mkdir -p /root/dependencies/build
 RUN mkdir -p /root/dependencies/src
@@ -80,5 +81,4 @@ RUN rm -r /root/dependencies
 
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
 RUN echo "export Torch_DIR=/root/libtorch/share/cmake/" >> /root/.bashrc
-RUN echo "export CoverageControl_DIR=${COVERAGECONTROL_WS}/install/lib/cmake/CoverageControl/" >> /root/.bashrc
 WORKDIR ${COVERAGECONTROL_WS}

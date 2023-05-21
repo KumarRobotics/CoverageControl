@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+include ( "${CMAKE_CURRENT_LIST_DIR}/CoverageControlCoreTargets.cmake" )
+
+get_filename_component(CoverageControlCore_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(CoverageControlCore_INCLUDE_DIR "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
+set(CoverageControlCore_LIB_DIR "@CMAKE_INSTALL_FULL_LIBDIR@")

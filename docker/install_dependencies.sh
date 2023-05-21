@@ -81,7 +81,24 @@ InstallEigen3 () {
 	fi
 }
 
+InstallTorchVision () {
+	echo "Setting up torchvision"
+	wget https://github.com/pytorch/vision/archive/refs/tags/v0.15.2.tar.gz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/v0.15.2.tar.gz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision ${CMAKE_END_FLAGS} -DWITH_CUDA=ON -DUSE_PYTHON=ON
+	cmake --build ${BUILD_DIR}/torchvision -j$(nproc)
+	cmake --install ${BUILD_DIR}/torchvision
+	if [ $? -eq 0 ]; then
+		echo "torchvision install succeeded"
+	else
+		echo "torchvision install failed"
+		exit 1
+	fi
+}
+
 InstallEigen3
-InstallYamlCPP
+InstallPybind11
 InstallCGAL
+InstallYamlCPP
 InstallGeoGraphicLib
+InstallTorchVision

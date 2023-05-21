@@ -1,0 +1,3 @@
+// the configured options and settings for CoverageControl
+#define CoverageControlTorch_VERSION_MAJOR @CoverageControlTorch_VERSION_MAJOR@
+#define CoverageControlTorch_VERSION_MINOR @CoverageControlTorch_VERSION_MINOR@

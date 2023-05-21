@@ -13,30 +13,30 @@ find_package(Eigen3 REQUIRED)
 find_package(GeographicLib REQUIRED)
 find_package(CGAL REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(CoverageControl REQUIRED)
+find_package(CoverageControlCore REQUIRED)
 
 ###########
 ## Tests ##
 ###########
 
 add_executable(system_map system_map.cpp)
-target_link_libraries(system_map PUBLIC CoverageControl)
+target_link_libraries(system_map PUBLIC CoverageControlCore)
 install(TARGETS system_map DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_executable(coverage_algorithm coverage_algorithm.cpp)
-target_link_libraries(coverage_algorithm PRIVATE CoverageControl)
+target_link_libraries(coverage_algorithm PRIVATE CoverageControlCore)
 install(TARGETS coverage_algorithm DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)
 # target_include_directories(geo_transforms PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-# target_link_libraries(geo_transforms PRIVATE Eigen3::Eigen CoverageControl yaml-cpp OpenMP::OpenMP_CXX ${GeographicLib_LIBRARIES})
+# target_link_libraries(geo_transforms PRIVATE Eigen3::Eigen CoverageControlCore yaml-cpp OpenMP::OpenMP_CXX ${GeographicLib_LIBRARIES})
 # install(TARGETS geo_transforms DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_executable(map_generation map_generation.cpp)
-target_link_libraries(map_generation PRIVATE CoverageControl)
+target_link_libraries(map_generation PRIVATE CoverageControlCore)
 install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(robot_map ${PROJECT_SOURCE_DIR}/test/robot_map.cpp)
 # target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)
-# target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControl)
+# target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControlCore)
 # install(TARGETS robot_map DESTINATION ${CMAKE_INSTALL_BINDIR})
