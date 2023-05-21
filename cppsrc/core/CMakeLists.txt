@@ -52,7 +52,8 @@ target_include_directories(CoverageControlCore INTERFACE
 target_link_libraries(CoverageControlCore INTERFACE ${dependencies_list} CoverageControl_core)
 
 target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
-target_link_libraries(CoverageControl_core PRIVATE ${dependencies_list} compiler_flags)
+target_link_libraries(CoverageControl_core PRIVATE compiler_flags)
+target_link_libraries(CoverageControl_core PUBLIC ${dependencies_list})
 set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

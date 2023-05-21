@@ -46,7 +46,8 @@ target_include_directories(CoverageControlTorch INTERFACE
 target_link_libraries(CoverageControlTorch INTERFACE ${dependencies_list} CoverageControlCore CoverageControl_torch)
 
 target_include_directories(CoverageControl_torch PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS})
-target_link_libraries(CoverageControl_torch PRIVATE ${dependencies_list} compiler_flags)
+target_link_libraries(CoverageControl_torch PRIVATE compiler_flags)
+target_link_libraries(CoverageControl_torch PUBLIC ${dependencies_list})
 set_target_properties(CoverageControl_torch PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

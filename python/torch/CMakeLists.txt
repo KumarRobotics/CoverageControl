@@ -15,13 +15,14 @@ find_package(Eigen3 REQUIRED)
 find_package(GeographicLib REQUIRED)
 find_package(CGAL REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(CoverageControl REQUIRED)
+find_package(CoverageControlCore REQUIRED)
+find_package(CoverageControlTorch REQUIRED)
 
 add_library(torch_custom SHARED IMPORTED GLOBAL)
 set_target_properties(torch_custom PROPERTIES IMPORTED_LOCATION /root/libtorch/lib/libtorch_python.so)
 
 pybind11_add_module(pyCoverageControlTorch MODULE src/coverage_control_torch_extension.cpp)
-target_include_directories(pyCoverageControlTorch PUBLIC ${TORCH_INCLUDE_DIRS})
-target_link_libraries(pyCoverageControlTorch PUBLIC torch_custom "${TORCH_LIBRARIES}" CoverageControl)
+target_include_directories(pyCoverageControlTorch PRIVATE ${TORCH_INCLUDE_DIRS})
+target_link_libraries(pyCoverageControlTorch PUBLIC torch_custom CoverageControlTorch "${TORCH_LIBRARIES}")
 install(TARGETS pyCoverageControlTorch LIBRARY DESTINATION .)
 
