@@ -43,7 +43,7 @@ add_library(CoverageControlTorch INTERFACE)
 target_include_directories(CoverageControlTorch INTERFACE
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_link_libraries(CoverageControlTorch INTERFACE ${dependencies_list} CoverageControl_torch)
+target_link_libraries(CoverageControlTorch INTERFACE ${dependencies_list} CoverageControlCore CoverageControl_torch)
 
 target_include_directories(CoverageControl_torch PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS})
 target_link_libraries(CoverageControl_torch PRIVATE ${dependencies_list} compiler_flags)

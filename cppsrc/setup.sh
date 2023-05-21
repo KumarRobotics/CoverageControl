@@ -13,7 +13,7 @@ esac
 done
 
 BUILD_DIR=${COVERAGECONTROL_WS}/build
-# INSTALL_DIR=${COVERAGECONTROL_WS}/install
+INSTALL_DIR=${COVERAGECONTROL_WS}/install
 
 CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
 
@@ -34,17 +34,6 @@ InstallCoverageControl () {
 		echo "CoverageControlCore install failed"
 	fi
 
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/tests -B ${BUILD_DIR}/CoverageControlTests ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/CoverageControlTests -j$(nproc)
-	if [ $? -ne 0 ]; then
-		echo "CoverageControlTests build failed"
-		exit 1
-	fi
-	cmake --install ${BUILD_DIR}/CoverageControlTests
-	if [ $? -ne 0 ]; then
-		echo "CoverageControlTests install failed"
-	fi
-
 	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/torch -B ${BUILD_DIR}/CoverageControlTorch ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/CoverageControlTorch -j$(nproc)
 	if [ $? -ne 0 ]; then
@@ -54,6 +43,17 @@ InstallCoverageControl () {
 	cmake --install ${BUILD_DIR}/CoverageControlTorch
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTorch install failed"
+	fi
+
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/tests -B ${BUILD_DIR}/CoverageControlTests ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+	cmake --build ${BUILD_DIR}/CoverageControlTests -j$(nproc)
+	if [ $? -ne 0 ]; then
+		echo "CoverageControlTests build failed"
+		exit 1
+	fi
+	cmake --install ${BUILD_DIR}/CoverageControlTests
+	if [ $? -ne 0 ]; then
+		echo "CoverageControlTests install failed"
 	fi
 }
 
