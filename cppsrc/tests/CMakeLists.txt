@@ -45,3 +45,7 @@ install(TARGETS torch_test DESTINATION ${CMAKE_INSTALL_BINDIR})
 # target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)
 # target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControlTorch)
 # install(TARGETS robot_map DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(torch_map_conversion torch_map_conversion.cpp)
+target_link_libraries(torch_map_conversion PRIVATE CoverageControlTorch)
+install(TARGETS torch_map_conversion DESTINATION ${CMAKE_INSTALL_BINDIR})

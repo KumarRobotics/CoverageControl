@@ -24,6 +24,9 @@ namespace CoverageControl {
 
 			std::string config_file_;
 
+			int pNumRobots = 10;
+			int pNumFeatures = 5;
+
 			// Assuming same resolution in both the directions. Pixel area = pResolution^2
 			double pResolution = 1;
 
@@ -34,42 +37,13 @@ namespace CoverageControl {
 			// Robot map saves what the robot has seen
 			// Could make it sparse if size becomes a problem
 			int pRobotMapSize = pWorldMapSize;
-			double pUnknownImportance = 0.5;
-			bool pRobotMapUseUnknownImportance = false;
 
 			// Local map is used for computing mass. Actual area would be pLocalMapSize * pResolution
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
 			int pLocalMapSize = 256;
-			double pCommunicationRange = 256; // Radius of communication (in meters)
-
 
 			// For CNN training we may reduce the size of the local map and communication map
 			int pCNNMapSize = 32;
-
-			double pRobotInitDist = 1024; // Distance from the origin within which to initialize the position of the robots
-			int pRobotPosHistorySize = 20; // Number of previous positions to store
-
-			// Set pUpdateRobotMap to false for centralized known world
-			bool pUpdateRobotMap = true;
-			bool pUpdateExplorationMap = true;
-			bool pUpdateSensorView = true;
-
-			bool pUpdateSystemMap = true;
-
-			// Assuming square sensor FOV.
-			// Actual FOV: square with side pResolution * pSensorSize
-			// Robot is placed at the center of FOV
-			// Make it even so that I don't have to deal with substracting by half-resolution.
-			// Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
-			int pSensorSize = 32; // Positive integer. NOTE: Needs to be even
-
-			// Each time step corresponds to 0.1s, i.e., 10Hz
-			double pTimeStep = 1;
-			// in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
-			double pMaxRobotSpeed = 5;
-			// This is not cause a hard constraint, but helpful for initializing vectors
-
-			int pEpisodeSteps = 2000; // Total time is pEpisodeSteps * pTimeStep
 
 			// Bivariate Normal Distribution truncated after pTruncationBND * sigma
 			// Helps in reducing the number of erfc evaluations
@@ -85,6 +59,32 @@ namespace CoverageControl {
 			double pMinPeak = 6;
 			double pMaxPeak = 10;
 
+
+			double pUnknownImportance = 0.5;
+			bool pRobotMapUseUnknownImportance = false;
+
+			// Set pUpdateRobotMap to false for centralized known world
+			bool pUpdateRobotMap = true;
+			bool pUpdateExplorationMap = true;
+			bool pUpdateSensorView = true;
+			bool pUpdateSystemMap = true;
+
+			// Assuming square sensor FOV.
+			// Actual FOV: square with side pResolution * pSensorSize
+			// Robot is placed at the center of FOV
+			// Make it even so that I don't have to deal with substracting by half-resolution.
+			// Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
+			int pSensorSize = 32; // Positive integer. NOTE: Needs to be even
+			double pCommunicationRange = 256; // Radius of communication (in meters)
+			// in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
+			double pMaxRobotSpeed = 5;
+			double pRobotInitDist = 1024; // Distance from the origin within which to initialize the position of the robots
+			int pRobotPosHistorySize = 20; // Number of previous positions to store
+			// Each time step corresponds to pTimeStep seconds
+			double pTimeStep = 1;
+
+			int pEpisodeSteps = 2000; // Total time is pEpisodeSteps * pTimeStep
+
 			int pLloydMaxIterations = 100;
 			int pLloydNumTries = 10;
 
@@ -93,21 +93,15 @@ namespace CoverageControl {
 			Parameters() {}
 
 			Parameters (std::string const &config_file) : config_file_{config_file}{
-				/* if(not std::filesystem::exists(config_file_)) { */
-				/* 	std::cerr << config_file_ << std::endl; */
-				/* 	throw std::runtime_error{"Config file not found"}; */
-				/* } */
 				ParseConfig();
 			}
 
 			void SetConfig (std::string const &config_file) {
 				config_file_ = config_file;
-				/* if(not std::filesystem::exists(config_file_)) { */
-				/* 	std::cerr << config_file_ << std::endl; */
-				/* 	throw std::runtime_error{"Config file not found"}; */
-				/* } */
 				ParseConfig();
 			}
+
+		private:
 			void ParseConfig();
 
 	};

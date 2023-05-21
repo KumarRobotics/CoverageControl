@@ -225,6 +225,8 @@ namespace CoverageControl {
 				file.close();
 				return 0;
 			}
+
+			auto GetNumFeatures() const { return normal_distributions_.size() + polygon_features_.size(); }
 	};
 
 } /* namespace CoverageControl */

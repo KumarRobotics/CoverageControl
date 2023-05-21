@@ -1,4 +1,7 @@
 
+pNumRobots: 10
+pNumFeatures: 5
+
 EnvMaps:
   # Assuming same resolution in both the directions. Pixel area = pResolution^2
   pResolution: 1

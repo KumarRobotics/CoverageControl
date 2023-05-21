@@ -12,6 +12,9 @@ namespace CoverageControl {
 
 		YAML::Node yaml_config_ = YAML::LoadFile(config_file_);
 
+		pNumRobots = yaml_config_["pNumRobots"].as<int>();
+		pNumFeatures = yaml_config_["pNumFeatures"].as<int>();
+
 		auto env_maps_yaml = yaml_config_["EnvMaps"];
 
 		pResolution = env_maps_yaml["pResolution"].as<double>();

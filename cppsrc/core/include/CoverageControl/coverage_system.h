@@ -523,7 +523,8 @@ namespace CoverageControl {
 				return 0;
 			}
 
-			inline auto GetNumRobots() { return num_robots_; }
+			inline auto GetNumRobots() const { return num_robots_; }
+			inline auto GetNumFeatures() const { return num_robots_; }
 	};
 
 } /* namespace CoverageControl */
