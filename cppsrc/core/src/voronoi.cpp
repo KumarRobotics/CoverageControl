@@ -193,7 +193,6 @@ namespace CoverageControl {
 			Polygon_2 polygon;
 			typename Arrangement_2::Ccb_halfedge_const_circulator circ = (*f)->outer_ccb();
 			typename Arrangement_2::Ccb_halfedge_const_circulator curr = circ;
-			typename Arrangement_2::Halfedge_const_handle he;
 			auto curr_pt = curr->source()->point();
 			do {
 				auto he = curr; curr_pt = he->target()->point();

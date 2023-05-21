@@ -38,18 +38,16 @@ namespace CoverageControl {
 			std::string color_unknown = "#aeb6bf";
 
 			public:
-			Plotter(std::string const &dir, int const &range_max, double const &resolution) {
-				SetDir(dir);
-				this->range_max = range_max;
-				this->resolution = resolution;
+			Plotter(std::string const &d, int const &r_max, double const &res) {
+				SetDir(d);
+				range_max = r_max;
+				resolution = res;
 			}
 
-			void SetDir(std::string const &dir) {
-				this->dir = dir;
-			}
+			inline void SetDir(std::string const &d) { dir = d; }
 
-			void SetScale(double const &scale) {
-				this->scale = scale;
+			inline void SetScale(double const &sc) {
+				scale = sc;
 				marker_sz = int(2 * scale);
 				half_marker_sz = int(1 * scale);
 				image_sz = int(1024 * scale);

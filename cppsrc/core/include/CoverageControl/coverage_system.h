@@ -433,8 +433,8 @@ namespace CoverageControl {
 
 				robot_positions[0] = pos - map_translation;
 				int count = 1;
-				for(auto const &pos:robot_neighbors_pos) {
-					robot_positions[count] = pos - map_translation;
+				for(auto const &neighbor_pos:robot_neighbors_pos) {
+					robot_positions[count] = neighbor_pos - map_translation;
 					++count;
 				}
 				Voronoi voronoi(robot_positions, trimmed_local_map, map_size, params_.pResolution, true, 0);

@@ -39,25 +39,24 @@ namespace CoverageControl {
 		gp << "'-' matrix using ($2*" << resolution << "):($1*" << resolution << "):3 with image notitle ";
 	}
 
-	void Plotter::PlotLine(Gnuplot &gp, int marker_sz, std::string color, bool begin) {
+	void Plotter::PlotLine(Gnuplot &gp, int marker_size, std::string color, bool begin) {
 		if(begin == true)
 			gp << "plot ";
 		else
 			gp << ", ";
-		gp << "'-' with line lw " << marker_sz << " lc rgb '" << color << "' notitle";
+		gp << "'-' with line lw " << marker_size << " lc rgb '" << color << "' notitle";
 	}
 
-	void Plotter::PlotPoints(Gnuplot &gp, int point_type, int marker_sz, std::string color, bool begin) {
+	void Plotter::PlotPoints(Gnuplot &gp, int point_type, int marker_size, std::string color, bool begin) {
 		if(begin == true)
 			gp << "plot ";
 		else
 			gp << ", ";
-		gp << "'-' with points pt " << point_type << " ps " << marker_sz << " lc rgb '" << color << "' notitle";
+		gp << "'-' with points pt " << point_type << " ps " << marker_size << " lc rgb '" << color << "' notitle";
 	}
 
 	void Plotter::PlotMap(MapType const &map) {
 		Gnuplot gp;
-		std::string marker_sz;
 		GnuplotCommands(gp);
 		PlotMap(gp);
 		gp << "\n";

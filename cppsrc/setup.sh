@@ -34,6 +34,8 @@ InstallCoverageControl () {
 		echo "CoverageControlCore install failed"
 	fi
 
+	echo "Successfully built and installed CoverageControlCore"
+
 	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/torch -B ${BUILD_DIR}/CoverageControlTorch ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/CoverageControlTorch -j$(nproc)
 	if [ $? -ne 0 ]; then
@@ -45,6 +47,8 @@ InstallCoverageControl () {
 		echo "CoverageControlTorch install failed"
 	fi
 
+	echo "Successfully built and installed CoverageControlTorch"
+
 	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/tests -B ${BUILD_DIR}/CoverageControlTests ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
 	cmake --build ${BUILD_DIR}/CoverageControlTests -j$(nproc)
 	if [ $? -ne 0 ]; then
@@ -55,6 +59,8 @@ InstallCoverageControl () {
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTests install failed"
 	fi
+
+	echo "Successfully built and installed CoverageControlTests"
 }
 
 if [[ ${INSTALL} ]]
