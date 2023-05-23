@@ -42,6 +42,7 @@ RUN apt-get -y install \
 											 python3-dev \
 											 python3-venv \
 											 python-is-python3 \
+											 python3-numpy \
 											 libgeos-dev \
 											 vim \
 											 tmux \
@@ -51,7 +52,7 @@ RUN apt-get -y install \
 											 dvipng texlive-fonts-recommended cm-super
 
 RUN apt-get -y install \
-											ninja-build libpng-dev libjpeg-dev
+											ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
 # Remove cache to reduce image size
 RUN rm -rf /var/lib/apt/lists/*; \
@@ -73,6 +74,7 @@ RUN unzip download/libtorch.zip -d /root/
 RUN rm -r download
 
 ENV LD_LIBRARY_PATH /usr/local/lib:/root/libtorch/lib:${LD_LIBRARY_PATH}
+ENV Torch_ROOT /root/libtorch/
 ENV Torch_DIR /root/libtorch/share/cmake/
 
 RUN mkdir -p /root/dependencies/build
@@ -81,7 +83,10 @@ COPY install_dependencies.sh /root/dependencies/install_dependencies.sh
 RUN /root/dependencies/install_dependencies.sh /root/dependencies
 RUN rm -r /root/dependencies
 
+ENV TorchVision_DIR /root/libtorch/share/cmake/
+
 ENV PATH ${COVERAGECONTROL_WS}/install/bin:${PATH}
+ENV LIBTORCH_PYTHON_PATH /root/libtorch/lib/libtorch_python.so
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
 
 WORKDIR ${COVERAGECONTROL_WS}

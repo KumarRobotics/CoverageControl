@@ -2,8 +2,8 @@
 
 MAIN_DIR=$1
 BUILD_DIR=${MAIN_DIR}/build
-
-CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
+CMAKE_END_FLAGS="-G Ninja -DCMAKE_BUILD_TYPE=Release"
+echo $CUDAARCHS
 
 InstallCGAL () {
 	echo "Setting up CGAL"
@@ -85,7 +85,7 @@ InstallTorchVision () {
 	echo "Setting up torchvision"
 	wget https://github.com/pytorch/vision/archive/refs/tags/v0.15.2.tar.gz -P ${MAIN_DIR}/src
 	tar -xf ${MAIN_DIR}/src/v0.15.2.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision ${CMAKE_END_FLAGS} -DWITH_CUDA=ON -DUSE_PYTHON=ON
+	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision ${CMAKE_END_FLAGS} -DWITH_CUDA=ON -DUSE_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT}/
 	cmake --build ${BUILD_DIR}/torchvision -j$(nproc)
 	cmake --install ${BUILD_DIR}/torchvision
 	if [ $? -eq 0 ]; then
@@ -96,9 +96,27 @@ InstallTorchVision () {
 	fi
 }
 
+InstallOpenCV () {
+	echo "Setting up opencv"
+	wget -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.7.0.tar.gz
+	wget -O ${MAIN_DIR}/src/opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.7.0.zip
+	tar -xf ${MAIN_DIR}/src/opencv.tar.gz -C ${MAIN_DIR}/src/
+	unzip ${MAIN_DIR}/src/opencv_contrib.zip -d ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/opencv-4.7.0 -B ${BUILD_DIR}/opencv ${CMAKE_END_FLAGS} -DWITH_CUDA=ON -DWITH_CUBLAS=ON -DWITH_CUDNN=ON -DWITH_FFMPEG=ON -DWITH_EIGEN=ON -DWITH_OPENMP=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DWITH_OPENJPEG=ON -DOPENCV_EXTRA_MODULES_PATH=${MAIN_DIR}/src/opencv_contrib-4.7.0/modules
+	cmake --build ${BUILD_DIR}/opencv -j$(nproc)
+	cmake --install ${BUILD_DIR}/opencv
+	if [ $? -eq 0 ]; then
+		echo "opencv install succeeded"
+	else
+		echo "opencv install failed"
+		exit 1
+	fi
+}
+
 InstallEigen3
-InstallPybind11
+# InstallPybind11
 InstallCGAL
 InstallYamlCPP
 InstallGeoGraphicLib
+# InstallOpenCV
 InstallTorchVision
