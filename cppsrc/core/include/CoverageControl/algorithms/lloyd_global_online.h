@@ -21,7 +21,6 @@
 #include "../coverage_system.h"
 #include "../map_utils.h"
 #include "lloyd_algorithms.h"
-#include "../extern/lsap/Hungarian.h"
 
 namespace CoverageControl {
 
@@ -78,7 +77,10 @@ namespace CoverageControl {
 					actions_[iRobot] = Point2(0, 0);
 					Point2 diff = goals_[iRobot] - robot_global_positions_[iRobot];
 					double dist = diff.norm();
-					if(dist < 0.1 * params_.pResolution) {
+					/* if(dist < 0.1 * params_.pResolution) { */
+					/* 	continue; */
+					/* } */
+					if(dist < kEps) {
 						continue;
 					}
 					if(env_.CheckOscillation(iRobot)) {

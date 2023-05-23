@@ -42,9 +42,6 @@ namespace CoverageControl {
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
 			int pLocalMapSize = 256;
 
-			// For CNN training we may reduce the size of the local map and communication map
-			int pCNNMapSize = 32;
-
 			// Bivariate Normal Distribution truncated after pTruncationBND * sigma
 			// Helps in reducing the number of erfc evaluations
 			// Needs testing to be sure that the probability masses are not significantly off

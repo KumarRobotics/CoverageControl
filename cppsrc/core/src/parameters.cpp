@@ -21,7 +21,6 @@ namespace CoverageControl {
 		pWorldMapSize = env_maps_yaml["pWorldMapSize"].as<int>();
 		pRobotMapSize = env_maps_yaml["pRobotMapSize"].as<int>();
 		pLocalMapSize = env_maps_yaml["pLocalMapSize"].as<int>();
-		pCNNMapSize = env_maps_yaml["pCNNMapSize"].as<int>();
 
 		auto env_idf_yaml = yaml_config_["EnvIDF"];
 

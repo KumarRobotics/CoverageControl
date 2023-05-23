@@ -28,7 +28,7 @@
 namespace CoverageControl {
 
 	class CoverageSystem {
-		private:
+		protected:
 			Parameters const params_;
 			WorldIDF world_idf_;
 			size_t num_robots_ = 0;
@@ -511,7 +511,7 @@ namespace CoverageControl {
 			void PlotWorldMap(std::string const &, std::string const &) const;
 			void PlotWorldMapRobots(std::string const &, std::string const &) const;
 			void PlotInitMap(std::string const &, std::string const &) const;
-			void PlotRobotLocalMap(std::string const &, int const &) const;
+			void PlotRobotLocalMap(std::string const &, int const &);
 			void PlotRobotSystemMap(std::string const &, int const &, int const &);
 			void PlotRobotIDFMap(std::string const &, int const &, int const &);
 			void PlotRobotExplorationMap(std::string const &, int const &, int const &);

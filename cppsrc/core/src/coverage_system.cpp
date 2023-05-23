@@ -94,8 +94,14 @@ namespace CoverageControl {
 	}
 
 	void CoverageSystem::PlotRobotSensorView(std::string const &dir_name, int const &robot_id, int const &step) {
-		Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution, params_.pResolution);
+		Plotter plotter(dir_name, params_.pSensorSize * params_.pResolution, params_.pResolution);
 		plotter.SetPlotName("robot_sensor_" + std::to_string(robot_id) + "_", step);
 		plotter.PlotMap(GetRobotSensorView(robot_id));
+	}
+
+	void CoverageSystem::PlotRobotLocalMap(std::string const &dir_name, int const &robot_id) {
+		Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetPlotName("robot_map_" + std::to_string(robot_id));
+		plotter.PlotMap(GetRobotLocalMap(robot_id));
 	}
 }	// namespace CoverageControl
