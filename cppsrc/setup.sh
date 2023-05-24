@@ -15,7 +15,7 @@ done
 BUILD_DIR=${COVERAGECONTROL_WS}/build
 INSTALL_DIR=${COVERAGECONTROL_WS}/install
 
-CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo -G Ninja"
 
 CleanBuild () {
 	rm -rf ${BUILD_DIR}
@@ -36,7 +36,7 @@ InstallCoverageControl () {
 
 	echo "Successfully built and installed CoverageControlCore"
 
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/torch -B ${BUILD_DIR}/CoverageControlTorch ${CMAKE_END_FLAGS}
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/torch -B ${BUILD_DIR}/CoverageControlTorch ${CMAKE_END_FLAGS} -DCMAKE_PREFIX_PATH=${Torch_DIR}
 	cmake --build ${BUILD_DIR}/CoverageControlTorch -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTorch build failed"
@@ -61,6 +61,19 @@ InstallCoverageControl () {
 	fi
 
 	echo "Successfully built and installed CoverageControlTests"
+
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/main -B ${BUILD_DIR}/CoverageControlMain ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+	cmake --build ${BUILD_DIR}/CoverageControlMain -j$(nproc)
+	if [ $? -ne 0 ]; then
+		echo "CoverageControlMain build failed"
+		exit 1
+	fi
+	cmake --install ${BUILD_DIR}/CoverageControlMain
+	if [ $? -ne 0 ]; then
+		echo "CoverageControlMain install failed"
+	fi
+
+	echo "Successfully built and installed CoverageControlMain"
 }
 
 if [[ ${INSTALL} ]]

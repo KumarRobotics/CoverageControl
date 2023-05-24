@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 find_package(Torch REQUIRED)
+find_package(TorchVision REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 find_package(OpenMP REQUIRED)

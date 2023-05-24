@@ -39,5 +39,11 @@ int main(int argc, char** argv) {
 
 	print(env_map_tensor[50][50]);
 
+	torch::save(env_map_tensor, "data/test/env_map.pt");
+
+	torch::Tensor env_map_tensor_loaded;
+	torch::load(env_map_tensor_loaded, "data/test/env_map.pt");
+	print(env_map_tensor_loaded[50][50]);
+
 	return 0;
 }
