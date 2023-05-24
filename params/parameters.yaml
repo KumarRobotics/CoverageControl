@@ -18,9 +18,6 @@ EnvMaps:
   # Should be greater than pCommunicationRange so that they can form different channels of the same image.
   pLocalMapSize: 256
 
-  # For CNN training we may reduce the size of the local map and communication map
-  pCNNMapSize: 32
-
 EnvIDF:
   # Bivariate Normal Distribution truncated after pTruncationBND * sigma
   # Helps in reducing the number of erfc evaluations
@@ -70,12 +67,10 @@ RobotModel:
 Algorithm:
   # Total time is pEpisodeSteps * pTimeStep
   # This is not cause a hard constraint, but helpful for initializing vectors
-  pEpisodeSteps: 2000
+  pEpisodeSteps: 500
 
   # Settings for Lloyd offline algorithm
   pLloydMaxIterations: 100
   pLloydNumTries: 10
 
   pNumFrontiers: 10
-
-

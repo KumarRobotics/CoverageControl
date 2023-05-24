@@ -1,5 +1,5 @@
 #ifndef COVERAGECONTROL_PYTHON_BINDS_H_
-#define COVERAGECONTROL_PYTHON_BINDS_
+#define COVERAGECONTROL_PYTHON_BINDS_H_
 
 #include <vector>
 #include <CoverageControl/vec2d.h>

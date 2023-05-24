@@ -1,15 +1,17 @@
+import sys
 import numpy as np
 import math
-import pyCoverageControl # Main library
+import pyCoverageControl as cct # Main library
 from pyCoverageControl import Point2 # for defining points
 from pyCoverageControl import PointVector # for defining list of points
+import torch
 
 # We can visualize the map in python
 import matplotlib.pylab as plt
 import seaborn as sns
 colormap = sns.color_palette("light:b", as_cmap=True)
 def plot_map(map):
-    ax = sns.heatmap(map.transpose(), vmax=1, cmap=colormap, square=True)
+    ax = sns.heatmap(torch.transpose(map, 0, 1), vmax=1, cmap=colormap, square=True)
     ax.invert_yaxis()
     nrow, ncol = map.shape
     if(nrow > 50 and nrow < 500):
@@ -18,7 +20,7 @@ def plot_map(map):
         septicks = 10 ** (math.floor(math.log(nrow, 10)) - 1)
     plt.xticks(np.arange(0, nrow, septicks), np.arange(0, nrow, septicks))
     plt.yticks(np.arange(0, ncol, septicks), np.arange(0, ncol, septicks))
-    plt.show()
+    plt.savefig("map.png")
 
 
 ################
@@ -28,7 +30,7 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters()
+params_ = cct.Parameters()
 
 ####################
 ## CoverageSystem ##
@@ -40,14 +42,14 @@ num_gaussians = 100
 num_robots = 2
 env = CoverageSystem(params_, num_gaussians, num_robots)
 map = env.GetWorldIDF()
-plot_map(map)
+# plot_map(map)
 
 # We can provide controls or update the positions directly
 # The size of these vectors should be the same as the number of robots
 control_directions = PointVector()
 control_directions.append(np.array([math.sin(math.pi/4), math.cos(math.pi/4)]))
 control_directions.append(np.array([math.sin(math.pi/6), math.cos(math.pi/6)]))
-speeds = pyCoverageControl.DblVector()
+speeds = cct.DblVector()
 speeds.append(1)
 speeds.append(1)
 env.StepControl(0, control_directions[0], speeds[0])
@@ -68,16 +70,16 @@ print(robot_positions[1])
 # Get local map of a robot
 robot_id = 0
 local_map = env.GetRobotLocalMap(robot_id)
-plot_map(local_map)
+# plot_map(local_map)
 
 # Get sensor view of a robot
 robot_id = 0
 sensor_view = env.GetRobotSensorView(robot_id)
-plot_map(sensor_view)
+# plot_map(sensor_view)
 
 # Get Communication Map
 comm_map = env.GetCommunicationMap(robot_id)
-plot_map(comm_map)
+# plot_map(comm_map)
 
 # Examples of each class
 
@@ -115,9 +117,13 @@ dist3 = BND(mean3, sigma_skewed, rho, peak_val) # general BND
 ##############
 from pyCoverageControl import WorldIDF # for defining world idf
 world_idf = WorldIDF(params_)
-world_idf.AddNormalDistribution(dist1); # Add a distribution to the idf
-world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
-world_idf.AddNormalDistribution(dist3); # Add a distribution to the idf
+mean = Point2(95, 95)
+sigma = 30
+dist0 = BND(mean, sigma, 1) # circular gaussian
+world_idf.AddNormalDistribution(dist0); # Add a distribution to the idf
+# world_idf.AddNormalDistribution(dist1); # Add a distribution to the idf
+# world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
+# world_idf.AddNormalDistribution(dist3); # Add a distribution to the idf
 world_idf.GenerateMapCuda() # Generate map, use GenerateMap() for cpu version
 world_idf.PrintMapSize()
 # world_idf.WriteWorldMap("map.dat"); # Writes the matrix to the file. Map should have been generated before writing
@@ -127,7 +133,7 @@ print(map.dtype)
 print(map.flags)
 print(type(map))
 print(map[0, 0])
-plot_map(map)
+# plot_map(map)
 
 ################
 ## RobotModel ##
@@ -155,24 +161,55 @@ robot_pos = robot.GetGlobalCurrentPosition()
 
 # Get the local map of the robot
 robot_map = robot.GetRobotLocalMap()
-plot_map(robot_map)
+# plot_map(robot_map)
 
 # Get the sensor view of the robot
 sensor_view = robot.GetSensorView()
-plot_map(sensor_view)
+# plot_map(sensor_view)
 
 ###############################
 ## Additional CoverageSystem ##
 ###############################
 
+params_ = cct.Parameters()
 # We can also give the start positions of the robots
 robot_positions = PointVector()
 robot_positions.append(Point2(100,100))
-robot_positions.append(Point2(150,150))
-env1 = CoverageSystem(params_, world_idf, robot_positions)
+robot_positions.append(Point2(100,10))
+robot_positions.append(Point2(10,70))
+world_idf1 = WorldIDF(params_)
+mean = Point2(95, 95)
+sigma = 10
+dist0 = BND(mean, sigma, 1) # circular gaussian
+world_idf1.AddNormalDistribution(dist0); # Add a distribution to the idf
+env1 = CoverageSystem(params_, world_idf1, robot_positions)
+
+robot_maps = torch.empty(env1.GetNumRobots(), params_.pLocalMapSize, params_.pLocalMapSize)
+for i in range(0, env1.GetNumRobots()):
+    local_map = env1.GetRobotLocalMap(i)
+    robot_maps[i] = torch.tensor(local_map).float()
+
+filename = sys.argv[1]
+# Load tensor from file
+tensor_model = torch.jit.load(filename)
+tensor = list(tensor_model.parameters())[0]
+print("==============")
+print(tensor.shape)
+print(torch.equal(tensor, robot_maps))
+print(torch.allclose(tensor, robot_maps))
+print(torch.allclose(tensor, robot_maps, atol=1))
+print(torch.sum(robot_maps))
+print(torch.sum(tensor))
+print(type(tensor))
+print(type(robot_maps))
+print(tensor[0,123:132,123:132])
+print(robot_maps[0,123:132,123:132])
+print((tensor - robot_maps).abs().sum(dim=(1,2)))
+plot_map(robot_maps[0])
+print("==============")
 
 # We can also specify distributions and robots
-bnd_list = pyCoverageControl.BNDVector()
+bnd_list = cct.BNDVector()
 bnd_list.append(dist1)
 bnd_list.append(dist2)
 bnd_list.append(dist3)
