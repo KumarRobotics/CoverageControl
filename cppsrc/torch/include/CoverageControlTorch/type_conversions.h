@@ -8,28 +8,54 @@
 #define COVERAGECONTROLTORCH_TYPE_CONVERSION_H_
 
 #include <vector>
-#include <Eigen/Dense> // Eigen is used for maps
-
-#include <CoverageControl/typedefs.h>
-
+#include <Eigen/Dense>
 #include <torch/torch.h>
 
-using namespace CoverageControl;
+typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMat;
 namespace CoverageControlTorch {
 
-		torch::Tensor EigenToLibTorch(MapType const &M) {
-			MapType M_copy = M;
+		torch::Tensor ToTensor(EigenMat const &M) {
+			EigenMat M_copy = M;
 			std::vector<int64_t> dims = {M_copy.rows(), M_copy.cols()};
-			auto T = torch::from_blob(M_copy.data(), dims).clone();
+			torch::Tensor T = torch::from_blob(M_copy.data(), dims).clone();
 			return T;
 		}
 
-		torch::Tensor PointsVectorToTensor(std::vector<Point2> const &vec) {
+		torch::Tensor ToTensor(double const &data) {
+			torch::Tensor T = torch::zeros(1);
+			T[0] = (float)data;
+			return T;
+		}
+
+		torch::Tensor ToTensor(Eigen::Vector2d const &p) {
+			torch::Tensor T = torch::zeros(2);
+			T[0] = (float)p[0];
+			T[1] = (float)p[1];
+			return T;
+		}
+
+		torch::Tensor ToTensor(std::vector<double> const &vec) {
+			torch::Tensor T = torch::zeros(vec.size());
+			for (int i = 0; i < vec.size(); ++i) {
+				T[i] = (float)vec[i];
+			}
+			return T;
+		}
+
+		torch::Tensor ToTensor(std::vector<std::vector<double>> const &vec) {
+			std::vector<int64_t> dims = {vec.size(), vec[0].size()};
+			torch::Tensor T = torch::zeros(dims);
+			for (int i = 0; i < vec.size(); ++i) {
+				T[i] = ToTensor(vec[i]);
+			}
+			return T;
+		}
+
+		torch::Tensor ToTensor(std::vector<Eigen::Vector2d> const &vec) {
 			std::vector<int64_t> dims = {vec.size(), 2};
 			torch::Tensor T = torch::zeros(dims);
-			for (int i = 0; i < vec.size(); i++) {
-				T[i][0] = (float)vec[i][0];
-				T[i][1] = (float)vec[i][1];
+			for (int i = 0; i < vec.size(); ++i) {
+				T[i] = ToTensor(vec[i]);
 			}
 			return T;
 		}

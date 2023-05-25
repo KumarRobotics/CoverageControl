@@ -8,7 +8,7 @@ class Resizer(torch.nn.Module):
     def __init__(self, size):
         super().__init__()
         self.size = size
-        self.T = T.Resize(size)
+        self.T = T.Resize(size, interpolation=T.InterpolationMode.BILINEAR, antialias=True)
 
     def forward(self, img):
         return self.T(img)
