@@ -103,7 +103,7 @@ namespace CoverageControlTorch {
 				auto end_time = std::chrono::system_clock::now();
 				std::chrono::duration<double> elapsed_seconds = end_time - start_time;
 				std::time_t end_time_t = std::chrono::system_clock::to_time_t(end_time);
-				file.open(data_dir_ + "/init.txt");
+				file.open(data_dir_ + "/init.txt", std::ios_base::app);
 				std::cout << "Finished computation at " << std::ctime(&end_time_t)
 					<< "elapsed time: " << elapsed_seconds.count() << "s"
 					<< std::endl;
