@@ -2,7 +2,6 @@
 FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
 CMD ["/bin/bash"]
-# Set the working directory to the user home (user is root).
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -32,10 +31,7 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 
 RUN apt-get -y install \
 											 kitware-archive-keyring \
-											 cmake
-
-# Install rest of the dependencies
-RUN apt-get -y install \
+											 cmake \
 											 libboost-dev \
 											 libboost-all-dev \
 											 libcgal-dev \
@@ -49,9 +45,7 @@ RUN apt-get -y install \
 											 ffmpeg \
 											 gnuplot-nox \
 											 texlive-base texlive-latex-extra texlive-science \
-											 dvipng texlive-fonts-recommended cm-super
-
-RUN apt-get -y install \
+											 dvipng texlive-fonts-recommended cm-super \
 											ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
 # Remove cache to reduce image size
@@ -63,25 +57,24 @@ RUN rm -rf /var/lib/apt/lists/*; \
 ENV COVERAGECONTROL_WS /root/CoverageControl_ws
 ENV LD_LIBRARY_PATH ${COVERAGECONTROL_WS}/install/lib:${LD_LIBRARY_PATH}
 
-ENV VIRTUAL_ENV /root/venv
 COPY requirements.txt /root/requirements.txt
 RUN python -m venv /root/venv
 RUN /root/venv/bin/pip install --no-cache-dir -r /root/requirements.txt
 
-RUN mkdir download
-RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip -O download/libtorch.zip
-RUN unzip download/libtorch.zip -d /root/
-RUN rm -r download
+RUN mkdir download; \
+		wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip -O download/libtorch.zip; \
+		unzip download/libtorch.zip -d /root/; \
+		rm -r download
 
 ENV LD_LIBRARY_PATH /usr/local/lib:/root/libtorch/lib:${LD_LIBRARY_PATH}
 ENV Torch_ROOT /root/libtorch/
 ENV Torch_DIR /root/libtorch/share/cmake/
 
-RUN mkdir -p /root/dependencies/build
-RUN mkdir -p /root/dependencies/src
+RUN mkdir -p /root/dependencies/build; \
+		mkdir -p /root/dependencies/src
 COPY install_dependencies.sh /root/dependencies/install_dependencies.sh
-RUN /root/dependencies/install_dependencies.sh /root/dependencies
-RUN rm -r /root/dependencies
+RUN /root/dependencies/install_dependencies.sh /root/dependencies; \
+		rm -r /root/dependencies
 
 ENV TorchVision_DIR /root/libtorch/share/cmake/
 
