@@ -95,8 +95,8 @@ namespace CoverageControlTorch {
 				PrintTensorSizes(std::cout);
 				std::ofstream file;
 				std::time_t start_time_t = std::chrono::system_clock::to_time_t(start_time);
-				file << "Start time: " << std::ctime(&start_time_t) << std::endl;
 				file.open(data_dir_ + "/init.txt");
+				file << "Start time: " << std::ctime(&start_time_t) << std::endl;
 				PrintTensorSizes(file);
 				file.close();
 				Run();
@@ -104,8 +104,8 @@ namespace CoverageControlTorch {
 				std::chrono::duration<double> elapsed_seconds = end_time - start_time;
 				std::time_t end_time_t = std::chrono::system_clock::to_time_t(end_time);
 				file.open(data_dir_ + "/init.txt", std::ios_base::app);
-				std::cout << "Finished computation at " << std::ctime(&end_time_t)
-					<< "elapsed time: " << elapsed_seconds.count() << "s"
+				file << "Finished computation at " << std::ctime(&end_time_t)
+					<< "elapsed time: " << elapsed_seconds.count()/3600 << " hrs"
 					<< std::endl;
 				file.close();
 			}
