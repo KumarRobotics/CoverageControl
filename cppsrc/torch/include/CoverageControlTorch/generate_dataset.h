@@ -6,8 +6,12 @@
 #ifndef COVERAGECONTROLTORCH_GENERATE_DATASET_H_
 #define COVERAGECONTROLTORCH_GENERATE_DATASET_H_
 
+#include <iostream>
+#include <fstream>
 #include <memory>
 #include <yaml-cpp/yaml.h>
+#include <chrono>
+#include <ctime> 
 #include <CoverageControl/coverage_system.h>
 
 #include <torch/script.h>
@@ -62,6 +66,7 @@ namespace CoverageControlTorch {
 
 		public:
 			GenerateDataset(std::string const &config_file) {
+				auto start_time = std::chrono::system_clock::now();
 
 				LoadConfigs(config_file);
 				dataset_size_ = config_["pNumDataset"].as<size_t>();
@@ -87,10 +92,22 @@ namespace CoverageControlTorch {
 				local_maps_ = torch::empty({trigger_size_, num_robots_, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
 				maps_ = torch::zeros({2, dataset_size_, num_robots_, map_size_, map_size_});
 				coverage_features_ = torch::empty({dataset_size_, num_robots_, 7});
-				PrintTensorSizes();
-
+				PrintTensorSizes(std::cout);
+				std::ofstream file;
+				std::time_t start_time_t = std::chrono::system_clock::to_time_t(start_time);
+				file << "Start time: " << std::ctime(&start_time_t) << std::endl;
+				file.open(data_dir_ + "/init.txt");
+				PrintTensorSizes(file);
+				file.close();
 				Run();
-
+				auto end_time = std::chrono::system_clock::now();
+				std::chrono::duration<double> elapsed_seconds = end_time - start_time;
+				std::time_t end_time_t = std::chrono::system_clock::to_time_t(end_time);
+				file.open(data_dir_ + "/init.txt");
+				std::cout << "Finished computation at " << std::ctime(&end_time_t)
+					<< "elapsed time: " << elapsed_seconds.count() << "s"
+					<< std::endl;
+				file.close();
 			}
 
 			void Run() {
@@ -104,9 +121,6 @@ namespace CoverageControlTorch {
 					while(num_steps < env_params_.pEpisodeSteps and not converged and dataset_count_ < dataset_size_) {
 						if(num_steps % every_num_step_ == 0) {
 							converged = StepWithSave();
-							if(dataset_count_ % 100 == 0) {
-								std::cout << dataset_count_ << " " << env_count_ << " " << num_steps << std::endl;
-							}
 						} else {
 							converged = StepWithoutSave();
 						}
@@ -147,6 +161,9 @@ namespace CoverageControlTorch {
 					local_maps_[trigger_count_][i] = ToTensor(env_->GetRobotLocalMap(i));
 				}
 				++dataset_count_;
+				if(dataset_count_ % 100 == 0) {
+					std::cout << dataset_count_ << " " << env_count_ << std::endl;
+				}
 				++trigger_count_;
 				if(trigger_count_ == trigger_size_) {
 					trigger_count_ = 0;
@@ -246,18 +263,18 @@ namespace CoverageControlTorch {
 				}
 			}
 
-			void PrintTensorSizes() {
-				std::cout << "Device type: " << device_type_ << std::endl;
-				std::cout << "actions_: shape: " << actions_.sizes() << std::endl;
-				std::cout <<  "actions: bytesize (MB): " << GetTensorByteSizeMB(actions_) << std::endl;
-				std::cout << "robot_positions_: " << robot_positions_.sizes() << std::endl;
-				std::cout << "robot_positions: bytesize (MB): " << GetTensorByteSizeMB(robot_positions_) << std::endl;
-				std::cout << "local_maps_: " << local_maps_.sizes() << std::endl;
-				std::cout << "local_maps: bytesize (MB): " << GetTensorByteSizeMB(local_maps_) << std::endl;
-				std::cout << "maps_: " << maps_.sizes() << std::endl;
-				std::cout << "maps: bytesize (MB): " << GetTensorByteSizeMB(maps_) << std::endl;
-				std::cout << "coverage_features_: " << coverage_features_.sizes() << std::endl;
-				std::cout << "coverage_features: bytesize (MB): " << GetTensorByteSizeMB(coverage_features_) << std::endl;
+			void PrintTensorSizes(std::ostream& os) {
+				os << "Device type: " << device_type_ << std::endl;
+				os << "actions_: shape: " << actions_.sizes() << std::endl;
+				os <<  "actions: bytesize (MB): " << GetTensorByteSizeMB(actions_) << std::endl;
+				os << "robot_positions_: " << robot_positions_.sizes() << std::endl;
+				os << "robot_positions: bytesize (MB): " << GetTensorByteSizeMB(robot_positions_) << std::endl;
+				os << "local_maps_: " << local_maps_.sizes() << std::endl;
+				os << "local_maps: bytesize (MB): " << GetTensorByteSizeMB(local_maps_) << std::endl;
+				os << "maps_: " << maps_.sizes() << std::endl;
+				os << "maps: bytesize (MB): " << GetTensorByteSizeMB(maps_) << std::endl;
+				os << "coverage_features_: " << coverage_features_.sizes() << std::endl;
+				os << "coverage_features: bytesize (MB): " << GetTensorByteSizeMB(coverage_features_) << std::endl;
 			}
 
 			void LoadConfigs(std::string const &config_file) {
