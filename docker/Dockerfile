@@ -54,9 +54,6 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/archives/parital/*.deb; \
 		rm -f /var/cache/apt/*.bin
 
-ENV COVERAGECONTROL_WS /root/CoverageControl_ws
-ENV LD_LIBRARY_PATH ${COVERAGECONTROL_WS}/install/lib:${LD_LIBRARY_PATH}
-
 COPY requirements.txt /root/requirements.txt
 RUN python -m venv /root/venv
 RUN /root/venv/bin/pip install --no-cache-dir -r /root/requirements.txt
@@ -78,8 +75,11 @@ RUN /root/dependencies/install_dependencies.sh /root/dependencies; \
 
 ENV TorchVision_DIR /root/libtorch/share/cmake/
 
+ENV COVERAGECONTROL_WS /root/CoverageControl_ws
+ENV LD_LIBRARY_PATH ${COVERAGECONTROL_WS}/install/lib:${LD_LIBRARY_PATH}
 ENV PATH ${COVERAGECONTROL_WS}/install/bin:${PATH}
 ENV LIBTORCH_PYTHON_PATH /root/libtorch/lib/libtorch_python.so
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
 
+RUN mkdir -p ${COVERAGECONTROL_WS}
 WORKDIR ${COVERAGECONTROL_WS}
