@@ -47,6 +47,15 @@ namespace CoverageControlTorch {
 				return maps;
 			}
 
+			torch::Tensor GetAllRobotsObstacleMaps() {
+				torch::Tensor maps = torch::zeros({num_robots_, params_.pLocalMapSize, params_.pLocalMapSize});
+#pragma omp parallel for
+				for(size_t i = 0; i < num_robots_; i++) {
+					maps[i] = ToTensor(robots_[i].GetObstacleMap());
+				}
+				return maps;
+			}
+
 			void GetAllRobotsCommunicationMapsScaled(torch::Tensor maps, size_t const &map_size) {
 				float f_map_size = (float) map_size;
 				torch::Tensor robot_positions = ToTensor(GetRobotPositions());
