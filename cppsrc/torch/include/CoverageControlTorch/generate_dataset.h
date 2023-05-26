@@ -104,7 +104,7 @@ namespace CoverageControlTorch {
 				PrintTensorSizes(std::cout);
 				std::ofstream file;
 				std::time_t start_time_t = std::chrono::system_clock::to_time_t(start_time);
-				file.open(data_dir_ + "/init.txt");
+				file.open(data_folder_ + "/metrics.txt");
 				file << "Start time: " << std::ctime(&start_time_t) << std::endl;
 				PrintTensorSizes(file);
 				file.close();
@@ -112,7 +112,7 @@ namespace CoverageControlTorch {
 				auto end_time = std::chrono::system_clock::now();
 				std::chrono::duration<double> elapsed_seconds = end_time - start_time;
 				std::time_t end_time_t = std::chrono::system_clock::to_time_t(end_time);
-				file.open(data_dir_ + "/init.txt", std::ios_base::app);
+				file.open(data_folder_ + "/metrics.txt", std::ios_base::app);
 				file << "Finished computation at " << std::ctime(&end_time_t)
 					<< "elapsed time: " << elapsed_seconds.count()/3600 << " hrs"
 					<< std::endl;
@@ -143,9 +143,8 @@ namespace CoverageControlTorch {
 					}
 				}
 				/* ProcessCommunicationMaps(); */
-				std::cout << "Saving dataset to " << data_dir_ << std::endl;
+				std::cout << "Saving dataset to " << data_folder_ << std::endl;
 				// Create data subfolder if it does not exists
-				data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/";
 				if(!std::filesystem::exists(data_folder_)) {
 					std::filesystem::create_directory(data_folder_);
 				}
@@ -204,9 +203,9 @@ namespace CoverageControlTorch {
 				edge_weights.masked_fill_(diagonal_mask, 0);
 				edge_weights.to(torch::kCPU);
 				if(config_["pSaveAsSparseQ"].as<bool>()){
-					torch::save(edge_weights.to_sparse(), data_dir_ + "edge_weights.pt");
+					torch::save(edge_weights.to_sparse(), data_folder_ + "edge_weights.pt");
 				} else {
-					torch::save(edge_weights, data_dir_ + "edge_weights.pt");
+					torch::save(edge_weights, data_folder_ + "edge_weights.pt");
 				}
 			}
 
@@ -227,20 +226,23 @@ namespace CoverageControlTorch {
 					trigger_end_idx = dataset_size_;
 				}
 
-				raw_local_maps_.to(device_);
-				torch::Tensor local_maps = raw_local_maps_.view({-1, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
+				torch::Tensor raw_local_maps = raw_local_maps_.index({Slice(0, trigger_end_idx - trigger_start_idx_), Slice(), Slice(), Slice()});
+				raw_local_maps.to(device_);
+				torch::Tensor local_maps = raw_local_maps.view({-1, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
 				torch::Tensor output = torchvision_resizer_.forward({local_maps}).toTensor().to(torch::kCPU);
 				torch::Tensor transformed_local_maps = output.view({-1, num_robots_, map_size_, map_size_});
 				local_maps_.index_put_({Slice(trigger_start_idx_, trigger_end_idx)}, transformed_local_maps.clone());
 
-				raw_obstacle_maps_.to(device_);
-				torch::Tensor obstacle_maps = raw_obstacle_maps_.view({-1, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
+				torch::Tensor raw_obstacle_maps = raw_obstacle_maps_.index({Slice(0, trigger_end_idx - trigger_start_idx_), Slice(), Slice(), Slice()});
+				raw_obstacle_maps.to(device_);
+				torch::Tensor obstacle_maps = raw_obstacle_maps.view({-1, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
 				torch::Tensor output_obstacle_maps = torchvision_resizer_.forward({obstacle_maps}).toTensor().to(torch::kCPU);
 				torch::Tensor transformed_obstacle_maps = output_obstacle_maps.view({-1, num_robots_, map_size_, map_size_});
 				obstacle_maps_.index_put_({Slice(trigger_start_idx_, trigger_end_idx)}, transformed_obstacle_maps.clone());
 
 				trigger_start_idx_ = trigger_end_idx;
-				raw_local_maps_.to(torch::kCPU);
+				raw_local_maps.to(torch::kCPU);
+				raw_obstacle_maps.to(torch::kCPU);
 			}
 
 			void SaveDataset() {
@@ -303,6 +305,7 @@ namespace CoverageControlTorch {
 
 				config_ = YAML::LoadFile(config_file);
 				data_dir_ = config_["pDataDir"].as<std::string>();
+				data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/";
 
 				// Check if config_["pDataDir"] directory exists
 				std::string data_dir = config_["pDataDir"].as<std::string>();
