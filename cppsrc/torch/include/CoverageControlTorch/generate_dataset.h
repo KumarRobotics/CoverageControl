@@ -11,7 +11,7 @@
 #include <memory>
 #include <yaml-cpp/yaml.h>
 #include <chrono>
-#include <ctime> 
+#include <ctime>
 #include <CoverageControl/coverage_system.h>
 
 #include <torch/script.h>
@@ -58,8 +58,9 @@ namespace CoverageControlTorch {
 
 			torch::Tensor actions_;
 			torch::Tensor robot_positions_;
+			torch::Tensor raw_local_maps_;
 			torch::Tensor local_maps_;
-			torch::Tensor maps_;
+			torch::Tensor comm_maps_;
 			torch::Tensor coverage_features_;
 
 			torch::jit::script::Module torchvision_resizer_;
@@ -90,7 +91,8 @@ namespace CoverageControlTorch {
 				actions_ = torch::empty({dataset_size_, num_robots_, 2});
 				robot_positions_ = torch::empty({dataset_size_, num_robots_, 2});
 				local_maps_ = torch::empty({trigger_size_, num_robots_, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
-				maps_ = torch::zeros({2, dataset_size_, num_robots_, map_size_, map_size_});
+				local_maps_ = torch::zeros({dataset_size_, num_robots_, map_size_, map_size_});
+				comm_maps_ = torch::zeros({dataset_size_, num_robots_, 2, map_size_, map_size_});
 				coverage_features_ = torch::empty({dataset_size_, num_robots_, 7});
 				PrintTensorSizes(std::cout);
 				std::ofstream file;
@@ -133,7 +135,7 @@ namespace CoverageControlTorch {
 						++converged_data_count;
 					}
 				}
-				ProcessCommunicationMaps();
+				/* ProcessCommunicationMaps(); */
 				ProcessEdgeWeights();
 				SaveDataset();
 			}
@@ -156,10 +158,11 @@ namespace CoverageControlTorch {
 				actions_[dataset_count_] = ToTensor(actions);
 				robot_positions_[dataset_count_] = ToTensor(env_->GetRobotPositions());
 				coverage_features_[dataset_count_] = ToTensor(env_->GetLocalVoronoiFeatures());
-				/* local_maps_[trigger_count_] = env_->GetAllRobotsLocalMaps().clone(); */
-				for(size_t i = 0; i < num_robots_; ++i) {
-					local_maps_[trigger_count_][i] = ToTensor(env_->GetRobotLocalMap(i));
-				}
+				raw_local_maps_[trigger_count_] = env_->GetAllRobotsLocalMaps().clone();
+				comm_maps_[dataset_count_] = env_->GetAllRobotsCommunicationMaps(map_size_).clone();
+				/* for(size_t i = 0; i < num_robots_; ++i) { */
+				/* 	raw_local_maps_[trigger_count_][i] = ToTensor(env_->GetRobotLocalMap(i)); */
+				/* } */
 				++dataset_count_;
 				if(dataset_count_ % 100 == 0) {
 					std::cout << dataset_count_ << " " << env_count_ << std::endl;
@@ -191,23 +194,12 @@ namespace CoverageControlTorch {
 			}
 
 
-			void ProcessCommunicationMaps() {
-				robot_positions_.to(torch::kCPU);
-				torch::Tensor comm_maps = maps_[1];
-
-				for (T_idx_t b_idx = 0; b_idx < comm_maps.size(0); ++b_idx) {
-					torch::Tensor scaled_relative_pos = torch::round((robot_positions_[b_idx].unsqueeze(0) - robot_positions_[b_idx].unsqueeze(1)) * map_size_/(comm_range_ * env_resolution_ * 2.) + (map_size_/2. - env_resolution_/2.)).to(torch::kInt64);
-					torch::Tensor pairwise_dist_matrices = torch::cdist(robot_positions_[b_idx], robot_positions_[b_idx], 2);
-					torch::Tensor diagonal_mask = torch::eye(pairwise_dist_matrices.size(0)).to(torch::kBool);
-					pairwise_dist_matrices.masked_fill_(diagonal_mask, comm_range_ + 1);
-
-					for (T_idx_t r_idx = 0; r_idx < comm_maps.size(1); ++r_idx) {
-						torch::Tensor indices = scaled_relative_pos.index({r_idx, pairwise_dist_matrices[r_idx] < (comm_range_ - 0.001), Slice()});
-						comm_maps.index_put_({b_idx, r_idx, indices.index({Slice(),0}), indices.index({Slice(), 1})}, 1);
-					}
-				}
-				/* comm_maps.to(device_); */
-			}
+			/* void ProcessCommunicationMaps() { */
+			/* 	for (T_idx_t b_idx = 0; b_idx < dataset_size_; ++b_idx) { */
+			/* 		comm_maps_[b_idx] = env_->GetAllRobotsCommunicationMaps(map_size_).clone(); */
+			/* 	} */
+			/* 	/1* comm_maps.to(device_); *1/ */
+			/* } */
 
 			void ProcessLocalMaps() {
 				std::cout << "Processing local maps" << std::endl;
@@ -218,13 +210,13 @@ namespace CoverageControlTorch {
 					trigger_end_idx = dataset_size_;
 				}
 
-				local_maps_.to(device_);
-				torch::Tensor local_maps = local_maps_.view({-1, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
+				raw_local_maps_.to(device_);
+				torch::Tensor local_maps = raw_local_maps_.view({-1, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
 				torch::Tensor output = torchvision_resizer_.forward({local_maps}).toTensor().to(torch::kCPU);
 				torch::Tensor transformed_local_maps = output.view({-1, num_robots_, map_size_, map_size_});
-				maps_[0].index_put_({Slice(trigger_start_idx_, trigger_end_idx)}, transformed_local_maps.clone());
+				local_maps_.index_put_({Slice(trigger_start_idx_, trigger_end_idx)}, transformed_local_maps.clone());
 				trigger_start_idx_ = trigger_end_idx;
-				local_maps_.to(torch::kCPU);
+				raw_local_maps_.to(torch::kCPU);
 			}
 
 			void SaveDataset() {
@@ -236,12 +228,16 @@ namespace CoverageControlTorch {
 				}
 
 				torch::save(robot_positions_, data_folder + "/robot_positions.pt");
-				torch::save(maps_[0].clone(), data_folder + "/local_maps.pt");
+				torch::save(local_maps_.clone(), data_folder + "/local_maps.pt");
+
+				torch::save(actions_, data_folder + "/actions.pt");
+				torch::save(coverage_features_, data_folder + "/coverage_features.pt");
+
 				if(config_["pSaveAsSparseQ"].as<bool>()) {
-					torch::save(maps_[1].to_sparse(), data_folder + "/comm_maps.pt");
+					torch::save(comm_maps_.to_sparse(), data_folder + "/comm_maps.pt");
 				}
 				else {
-					torch::save(maps_[1].clone(), data_folder + "/comm_maps.pt");
+					torch::save(comm_maps_, data_folder + "/comm_maps.pt");
 				}
 				if(config_["pNormalizeQ"].as<bool>()) {
 					torch::Tensor actions_mean = at::mean(actions_.view({-1,2}), 0);
@@ -249,17 +245,14 @@ namespace CoverageControlTorch {
 					torch::Tensor normalized_actions = (actions_ - actions_mean)/actions_std;
 					torch::save(actions_mean, data_folder + "/actions_mean.pt");
 					torch::save(actions_std, data_folder + "/actions_std.pt");
-					torch::save(normalized_actions, data_folder + "/actions.pt");
+					torch::save(normalized_actions, data_folder + "/normalized_actions.pt");
 
 					torch::Tensor coverage_features_mean = at::mean(coverage_features_.view({-1,coverage_features_.size(2)}), 0);
 					torch::Tensor coverage_features_std = at::std(coverage_features_.view({-1,coverage_features_.size(2)}), 0);
 					torch::Tensor normalized_coverage_features = (coverage_features_ - coverage_features_mean)/coverage_features_std;
 					torch::save(coverage_features_mean, data_folder + "/coverage_features_mean.pt");
 					torch::save(coverage_features_std, data_folder + "/coverage_features_std.pt");
-					torch::save(normalized_coverage_features, data_folder + "/coverage_features.pt");
-				} else {
-					torch::save(actions_, data_folder + "/actions.pt");
-					torch::save(coverage_features_, data_folder + "/coverage_features.pt");
+					torch::save(normalized_coverage_features, data_folder + "/normalized_coverage_features.pt");
 				}
 			}
 
@@ -269,10 +262,12 @@ namespace CoverageControlTorch {
 				os <<  "actions: bytesize (MB): " << GetTensorByteSizeMB(actions_) << std::endl;
 				os << "robot_positions_: " << robot_positions_.sizes() << std::endl;
 				os << "robot_positions: bytesize (MB): " << GetTensorByteSizeMB(robot_positions_) << std::endl;
+				os << "raw_local_maps_: " << raw_local_maps_.sizes() << std::endl;
+				os << "raw_local_maps: bytesize (MB): " << GetTensorByteSizeMB(raw_local_maps_) << std::endl;
 				os << "local_maps_: " << local_maps_.sizes() << std::endl;
-				os << "local_maps: bytesize (MB): " << GetTensorByteSizeMB(local_maps_) << std::endl;
-				os << "maps_: " << maps_.sizes() << std::endl;
-				os << "maps: bytesize (MB): " << GetTensorByteSizeMB(maps_) << std::endl;
+				os << "local_maps_: bytesize (MB): " << GetTensorByteSizeMB(local_maps_) << std::endl;
+				os << "comm_maps_: " << comm_maps_.sizes() << std::endl;
+				os << "comm_maps: bytesize (MB): " << GetTensorByteSizeMB(comm_maps_) << std::endl;
 				os << "coverage_features_: " << coverage_features_.sizes() << std::endl;
 				os << "coverage_features: bytesize (MB): " << GetTensorByteSizeMB(coverage_features_) << std::endl;
 			}

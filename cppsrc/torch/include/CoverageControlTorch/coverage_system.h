@@ -47,7 +47,7 @@ namespace CoverageControlTorch {
 				return maps;
 			}
 
-			void GetAllRobotsCommunicationMaps(torch::Tensor maps, size_t const &map_size) {
+			void GetAllRobotsCommunicationMapsScaled(torch::Tensor maps, size_t const &map_size) {
 				float f_map_size = (float) map_size;
 				torch::Tensor robot_positions = ToTensor(GetRobotPositions());
 				torch::Tensor scaled_relative_pos = torch::round((robot_positions.unsqueeze(0) - robot_positions.unsqueeze(1)) * f_map_size/(comm_range_ * env_resolution_ * 2.) + (f_map_size/2. - env_resolution_/2.)).to(torch::kInt64);
@@ -58,6 +58,29 @@ namespace CoverageControlTorch {
 					torch::Tensor indices = scaled_relative_pos.index({r_idx, pairwise_dist_matrices[r_idx] < (comm_range_ - 0.001), Slice()});
 					maps.index_put_({r_idx, indices.index({Slice(),0}), indices.index({Slice(), 1})}, 1);
 				}
+			}
+
+			torch::Tensor GetAllRobotsCommunicationMaps(int const &map_size) {
+				float f_map_size = (float) map_size;
+
+				torch::Tensor comm_maps = torch::empty({num_robots_, 2, map_size, map_size});
+				torch::Tensor robot_positions = ToTensor(GetRobotPositions());
+
+				torch::Tensor relative_pos = robot_positions.unsqueeze(0) - robot_positions.unsqueeze(1);
+				torch::Tensor scaled_relative_pos = torch::round(relative_pos * f_map_size/(comm_range_ * env_resolution_ * 2.) + (f_map_size/2. - env_resolution_/2.)).to(torch::kInt64);
+				torch::Tensor relative_dist = relative_pos.norm({2}, 2);
+				torch::Tensor diagonal_mask = torch::eye(relative_dist.size(0)).to(torch::kBool);
+				relative_dist.masked_fill_(diagonal_mask, comm_range_ + 1);
+
+				for (T_idx_t r_idx = 0; r_idx < num_robots_; ++r_idx) {
+					torch::Tensor comm_range_mask = relative_dist[r_idx] < (comm_range_ - 0.001);
+					torch::Tensor scaled_indices = scaled_relative_pos.index({r_idx, comm_range_mask, Slice()});
+					torch::Tensor indices = scaled_indices.transpose(1, 0);
+					torch::Tensor values = relative_pos.index({r_idx, comm_range_mask, Slice()})/comm_range_;
+					comm_maps[r_idx][0] = torch::sparse_coo_tensor(indices, values.index({Slice(), 0}), {map_size, map_size}, values.dtype()).to_dense();
+					comm_maps[r_idx][1] = torch::sparse_coo_tensor(indices, values.index({Slice(), 1}), {map_size, map_size}, values.dtype()).to_dense();
+				}
+				return comm_maps;
 			}
 	};
 } // namespace CoverageControlTorch
