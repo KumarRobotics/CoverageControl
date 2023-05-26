@@ -31,7 +31,10 @@ int main(int argc, char** argv) {
 		num_datasets = std::stoi(argv[2]);
 	}
 
-	CCT::GenerateDataset dataset_generator(argv[1]);
+	for(int i = 0; i < num_datasets; i++) {
+		std::cout << "Generating dataset " << i << std::endl;
+		CCT::GenerateDataset dataset_generator(argv[1], std::to_string(i));
+	}
 
 	return 0;
 
