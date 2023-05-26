@@ -90,7 +90,7 @@ namespace CoverageControlTorch {
 
 				actions_ = torch::empty({dataset_size_, num_robots_, 2});
 				robot_positions_ = torch::empty({dataset_size_, num_robots_, 2});
-				local_maps_ = torch::empty({trigger_size_, num_robots_, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
+				raw_local_maps_ = torch::empty({trigger_size_, num_robots_, env_params_.pLocalMapSize, env_params_.pLocalMapSize});
 				local_maps_ = torch::zeros({dataset_size_, num_robots_, map_size_, map_size_});
 				comm_maps_ = torch::zeros({dataset_size_, num_robots_, 2, map_size_, map_size_});
 				coverage_features_ = torch::empty({dataset_size_, num_robots_, 7});
@@ -228,7 +228,7 @@ namespace CoverageControlTorch {
 				}
 
 				torch::save(robot_positions_, data_folder + "/robot_positions.pt");
-				torch::save(local_maps_.clone(), data_folder + "/local_maps.pt");
+				torch::save(local_maps_, data_folder + "/local_maps.pt");
 
 				torch::save(actions_, data_folder + "/actions.pt");
 				torch::save(coverage_features_, data_folder + "/coverage_features.pt");
