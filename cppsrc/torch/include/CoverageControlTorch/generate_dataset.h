@@ -113,6 +113,10 @@ namespace CoverageControlTorch {
 				std::chrono::duration<double> elapsed_seconds = end_time - start_time;
 				std::time_t end_time_t = std::chrono::system_clock::to_time_t(end_time);
 				file.open(data_folder_ + "/metrics.txt", std::ios_base::app);
+				file << std::endl;
+				file << "Number of environments: " << env_count_ << std::endl;
+				file << "Number of non-converged enironments: " << num_non_converged_env_ << std::endl;
+				file << std::endl;
 				file << "Finished computation at " << std::ctime(&end_time_t)
 					<< "elapsed time: " << elapsed_seconds.count()/3600 << " hrs"
 					<< std::endl;
@@ -120,6 +124,7 @@ namespace CoverageControlTorch {
 			}
 
 			void Run() {
+				num_non_converged_env_ = 0;
 				while(dataset_count_ < dataset_size_) {
 					env_ = std::make_shared <CoverageSystem>(env_params_, env_params_.pNumFeatures, env_params_.pNumRobots);
 					alg_ = std::make_shared <CoverageAlgorithm>(env_params_, num_robots_, *env_);
@@ -134,6 +139,10 @@ namespace CoverageControlTorch {
 							converged = StepWithoutSave();
 						}
 						++num_steps;
+					}
+					if(num_steps == env_params_.pEpisodeSteps) {
+						++num_non_converged_env_;
+						std::cout << "num_non_converged_env: " << num_non_converged_env_ << std::endl;
 					}
 					size_t num_converged_data = std::ceil(converged_data_ratio_ * num_steps / every_num_step_);
 					size_t converged_data_count = 0;
@@ -151,6 +160,7 @@ namespace CoverageControlTorch {
 				if(dataset_size_%trigger_size_ != 0) {
 					ProcessLocalMaps();
 				}
+				std::cout << "num_non_converged_env: " << num_non_converged_env << std::endl;
 				ProcessEdgeWeights();
 				SaveDataset();
 			}
