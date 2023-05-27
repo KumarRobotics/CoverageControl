@@ -15,15 +15,26 @@ done
 if [[ ${INSTALL} ]]
 then
 	bash cppsrc/setup.sh -i
+	if [ $? -ne 0 ]; then
+		echo "cppsrc build failed"
+		exit 1
+	fi
 	cd python/core
 	pip install .
+	if [ $? -ne 0 ]; then
+		echo "pyCoverageControl failed"
+		exit 1
+	fi
 	cd ../torch
 	pip install .
+	if [ $? -ne 0 ]; then
+		echo "pyCoverageControlTorch failed"
+		exit 1
+	fi
 	cd ../..
 fi
 
 if [[ ${CLEAN} ]]
 then
-	echo "Cleaning build and install directories"
-	CleanBuild
+	bash cppsrc/setup.sh -c
 fi

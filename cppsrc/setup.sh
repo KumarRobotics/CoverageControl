@@ -45,6 +45,7 @@ InstallCoverageControl () {
 	cmake --install ${BUILD_DIR}/CoverageControlTorch
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTorch install failed"
+		exit 1
 	fi
 
 	echo "Successfully built and installed CoverageControlTorch"
@@ -58,6 +59,7 @@ InstallCoverageControl () {
 	cmake --install ${BUILD_DIR}/CoverageControlTests
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTests install failed"
+		exit 1
 	fi
 
 	echo "Successfully built and installed CoverageControlTests"

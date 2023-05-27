@@ -52,6 +52,7 @@ namespace CoverageControlTorch {
 			size_t trigger_start_idx_ = 0;
 			float comm_range_ = 256;
 			float env_resolution_ = 1;
+			size_t num_non_converged_env_ = 0;
 			std::string data_dir_append_ = "";
 			std::string data_folder_;
 
@@ -157,7 +158,7 @@ namespace CoverageControlTorch {
 				if(dataset_size_%trigger_size_ != 0) {
 					ProcessLocalMaps();
 				}
-				std::cout << "num_non_converged_env: " << num_non_converged_env << std::endl;
+				std::cout << "num_non_converged_env: " << num_non_converged_env_ << std::endl;
 				ProcessEdgeWeights();
 				SaveDataset();
 			}
