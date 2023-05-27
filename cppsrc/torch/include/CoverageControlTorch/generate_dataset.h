@@ -154,9 +154,6 @@ namespace CoverageControlTorch {
 				/* ProcessCommunicationMaps(); */
 				std::cout << "Saving dataset to " << data_folder_ << std::endl;
 				// Create data subfolder if it does not exists
-				if(!std::filesystem::exists(data_folder_)) {
-					std::filesystem::create_directory(data_folder_);
-				}
 				if(dataset_size_%trigger_size_ != 0) {
 					ProcessLocalMaps();
 				}
@@ -323,6 +320,9 @@ namespace CoverageControlTorch {
 					throw std::runtime_error("Could not find data directory: " + data_dir);
 				}
 
+				if(!std::filesystem::exists(data_folder_)) {
+					std::filesystem::create_directories(data_folder_);
+				}
 				// Check if config_["pEnvironmentConfig"] file exists
 				std::string env_config_file = data_dir + "/" + config_["pEnvironmentConfig"].as<std::string>();
 				if(not std::filesystem::exists(env_config_file)) {
