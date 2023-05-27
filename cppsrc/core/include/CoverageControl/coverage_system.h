@@ -148,6 +148,7 @@ namespace CoverageControl {
 				PostStepCommands();
 			}
 
+#pragma omp parallel for num_threads(num_robots_)
 			void UpdateSystemMap() {
 				for(size_t i = 0; i < num_robots_; ++i) {
 					MapUtils::MapBounds index, offset;
