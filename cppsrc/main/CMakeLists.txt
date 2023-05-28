@@ -30,6 +30,11 @@ target_compile_options(compiler_flags INTERFACE
 	"$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-pedantic>>"
 	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
+
 add_executable(data_generation data_generation.cpp)
 target_link_libraries(data_generation PRIVATE compiler_flags CoverageControlCore CoverageControlTorch)
 install(TARGETS data_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(train_cnn train_cnn.cpp)
+target_link_libraries(train_cnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch)
+install(TARGETS train_cnn DESTINATION ${CMAKE_INSTALL_BINDIR})
