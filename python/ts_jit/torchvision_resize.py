@@ -6,7 +6,7 @@ import torchvision.transforms as T
 
 class Resizer(torch.nn.Module):
     def __init__(self, size):
-        super().__init__()
+        super(Resizer, self).__init__()
         self.size = size
         self.T = T.Resize(size, interpolation=T.InterpolationMode.BILINEAR, antialias=True)
 
