@@ -19,6 +19,7 @@ namespace CoverageControlTorch {
 		torch::nn::ModuleList batch_norm_layers_;
 		torch::nn::Linear linear_1_;
 		torch::nn::Linear linear_2_;
+		torch::nn::Linear linear_3_;
 
 		CoverageControlCNNImpl(int input_dim, int output_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
 			input_dim_(input_dim),
@@ -30,7 +31,8 @@ namespace CoverageControlTorch {
 			conv_layers_(torch::nn::ModuleList()),
 			batch_norm_layers_(torch::nn::ModuleList()),
 			linear_1_(nullptr),
-			linear_2_(nullptr) {
+			linear_2_(nullptr),
+			linear_3_(nullptr) {
 
 			std::vector <int> layers_;
 			layers_.push_back(input_dim_);
@@ -47,7 +49,8 @@ namespace CoverageControlTorch {
 
 			size_t flatten_size = latent_size_ * (image_size_ - num_layers_ * (kernel_size_ - 1)) * (image_size_ - num_layers_ * (kernel_size_ - 1));
 			linear_1_ = register_module("linear_1", torch::nn::Linear(flatten_size, latent_size_));
-			linear_2_ = register_module("linear_2", torch::nn::Linear(latent_size_, output_dim_));
+			linear_2_ = register_module("linear_2", torch::nn::Linear(latent_size_, 2 * output_dim_));
+			linear_3_ = register_module("linear_3", torch::nn::Linear(2 * output_dim_, output_dim_));
 		} 
 
 		torch::Tensor forward(torch::Tensor x) {
@@ -63,7 +66,7 @@ namespace CoverageControlTorch {
 			/* std::cout << "x size: " << x.sizes() << std::endl; */
 			x = torch::tanh(linear_2_->forward(x));
 			/* std::cout << "x size: " << x.sizes() << std::endl; */
-			x = torch::tanh(x);
+			x = linear_3_->forward(x);
 			return x;
 		}
 	};
