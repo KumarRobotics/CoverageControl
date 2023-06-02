@@ -38,3 +38,7 @@ install(TARGETS data_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
 add_executable(train_cnn train_cnn.cpp)
 target_link_libraries(train_cnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch)
 install(TARGETS train_cnn DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(test_cnn test_cnn.cpp)
+target_link_libraries(test_cnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch)
+install(TARGETS test_cnn DESTINATION ${CMAKE_INSTALL_BINDIR})
