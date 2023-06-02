@@ -55,3 +55,7 @@ add_executable(test_maps test_maps.cpp)
 target_link_libraries(test_maps PRIVATE CoverageControlTorch)
 install(TARGETS test_maps DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+add_executable(torch_data_loader torch_data_loader.cpp)
+target_link_libraries(torch_data_loader PRIVATE CoverageControlTorch)
+install(TARGETS torch_data_loader DESTINATION ${CMAKE_INSTALL_BINDIR})
+

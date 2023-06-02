@@ -2,10 +2,18 @@ pDataDir: "/root/CoverageControl_ws/data/pure_coverage/" # Absolute location
 
 GPUs: [4, 5]
 
-LearningRate: 0.001
-WeightDecay: 0.0001
-BatchSize: 10
-NumEpochs: 50
+GNNBackBone:
+  InputDim: 7
+  NumHops: 3
+  NumLayers: 4
+  LatentSize: 64
+  OutputDim: 2
+
+GNNTraining:
+  LearningRate: 0.001
+  WeightDecay: 0.0001
+  BatchSize: 10
+  NumEpochs: 50
 
 CNN:
   InputDim: 4
@@ -14,3 +22,10 @@ CNN:
   LatentSize: 8
   KernelSize: 3
   ImageSize: 32
+
+CNNTraining:
+  LearningRate: 0.001
+  WeightDecay: 0.0001
+  BatchSize: 10
+  NumEpochs: 50
+

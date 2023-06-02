@@ -221,10 +221,10 @@ namespace CoverageControlTorch {
 				}
 				config_ = YAML::LoadFile(config_file);
 				data_dir_ = config_["pDataDir"].as<std::string>();
-				batch_size_ = config_["BatchSize"].as<size_t>();
-				num_epochs_ = config_["NumEpochs"].as<size_t>();
-				learning_rate_ = config_["LearningRate"].as<float>();
-				weight_decay_ = config_["WeightDecay"].as<float>();
+				batch_size_ = config_["CNNTraining"]["BatchSize"].as<size_t>();
+				num_epochs_ = config_["CNNTraining"]["NumEpochs"].as<size_t>();
+				learning_rate_ = config_["CNNTraining"]["LearningRate"].as<float>();
+				weight_decay_ = config_["CNNTraining"]["WeightDecay"].as<float>();
 
 				cnn_config_ = config_["CNN"]	;
 				image_size_ = cnn_config_["ImageSize"].as<int>();
