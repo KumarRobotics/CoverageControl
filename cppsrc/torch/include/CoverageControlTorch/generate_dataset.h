@@ -16,20 +16,18 @@
 
 #include <torch/script.h>
 #include <torch/torch.h>
-#include <CoverageControl/algorithms/lloyd_global_online.h>
-#include <CoverageControl/algorithms/oracle_global_offline.h>
-
 
 using namespace torch::indexing;
 typedef long int T_idx_t;
 namespace F = torch::nn::functional;
-typedef CoverageControl::LloydGlobalOnline CoverageAlgorithm;
+/* typedef CoverageControl::LloydGlobalOnline CoverageAlgorithm; */
 /* typedef CoverageControl::OracleGlobalOffline CoverageAlgorithm; */
 
 #include "coverage_system.h"
 
 namespace CoverageControlTorch {
 
+	template <class CoverageAlgorithm>
 	class GenerateDataset {
 
 		private:

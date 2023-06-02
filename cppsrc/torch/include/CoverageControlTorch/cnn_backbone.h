@@ -7,7 +7,7 @@ using namespace torch::indexing;
 
 namespace CoverageControlTorch {
 
-	struct CoverageControlCNNImpl : torch::nn::Module {
+	struct CNNBackboneImpl : torch::nn::Module {
 		int input_dim_ = 4;
 		int output_dim_ = 7;
 		int num_layers_ = 2;
@@ -21,7 +21,7 @@ namespace CoverageControlTorch {
 		torch::nn::Linear linear_2_;
 		torch::nn::Linear linear_3_;
 
-		CoverageControlCNNImpl(int input_dim, int output_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
+		CNNBackboneImpl(int input_dim, int output_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
 			input_dim_(input_dim),
 			output_dim_(output_dim),
 			num_layers_(num_layers),
@@ -57,21 +57,21 @@ namespace CoverageControlTorch {
 			for(size_t i = 0; i < conv_layers_->size(); ++i) {
 				auto batch_norm = (batch_norm_layers_[i].get())->as<torch::nn::BatchNorm2d>();
 				auto conv = (conv_layers_[i].get())->as<torch::nn::Conv2d>();
-				x = torch::tanh(batch_norm->forward(conv->forward(x)));
+				x = torch::leaky_relu(batch_norm->forward(conv->forward(x)));
 				/* std::cout << "x size: " << x.sizes() << std::endl; */
 			}
 			x = x.flatten(1);
 			/* std::cout << "x size: " << x.sizes() << std::endl; */
-			x = torch::tanh(linear_1_->forward(x));
+			x = torch::leaky_relu(linear_1_->forward(x));
 			/* std::cout << "x size: " << x.sizes() << std::endl; */
-			x = torch::tanh(linear_2_->forward(x));
+			x = torch::leaky_relu(linear_2_->forward(x));
 			/* std::cout << "x size: " << x.sizes() << std::endl; */
-			x = linear_3_->forward(x);
+			/* x = linear_3_->forward(x); */
 			return x;
 		}
 	};
 
-	TORCH_MODULE(CoverageControlCNN);
+	TORCH_MODULE(CNNBackbone);
 
 
 } // namespace CoverageControlTorch

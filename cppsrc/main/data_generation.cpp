@@ -9,6 +9,9 @@
 #include <filesystem>
 
 #include <CoverageControlTorch/coverage_system.h>
+#include <CoverageControl/algorithms/lloyd_local_voronoi.h>
+#include <CoverageControl/algorithms/lloyd_global_online.h>
+#include <CoverageControl/algorithms/oracle_global_offline.h>
 #include <CoverageControlTorch/generate_dataset.h>
 
 using CoverageControl::Point2;
@@ -33,7 +36,7 @@ int main(int argc, char** argv) {
 
 	for(int i = 0; i < num_datasets; i++) {
 		std::cout << "Generating dataset " << i << std::endl;
-		CCT::GenerateDataset dataset_generator(argv[1], std::to_string(i));
+		CCT::GenerateDataset<CC::LloydGlobalOnline> dataset_generator(argv[1], std::to_string(i));
 	}
 
 	return 0;

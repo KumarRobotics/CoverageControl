@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <thread>
+#include <limits>
 #include <yaml-cpp/yaml.h>
 #include <torch/torch.h>
 
@@ -22,10 +24,42 @@ namespace F = torch::nn::functional;
 
 namespace CoverageControlTorch {
 
+	struct CoverageControlCNNImpl : torch::nn::Module {
+		int input_dim_ = 4;
+		int output_dim_ = 7;
+		int num_layers_ = 2;
+		int latent_size_ = 8;
+		int kernel_size_ = 3;
+		int image_size_ = 32;
+
+		CNNBackbone cnn_backbone_;
+		torch::nn::Linear linear_;
+
+		CoverageControlCNNImpl(int input_dim, int output_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
+			input_dim_(input_dim),
+			output_dim_(output_dim),
+			num_layers_(num_layers),
+			latent_size_(latent_size),
+			kernel_size_(kernel_size),
+			image_size_(image_size),
+			cnn_backbone_(register_module("cnn_backbone", CNNBackbone(input_dim_, output_dim_, num_layers_, latent_size_, kernel_size_, image_size_))),
+			linear_(register_module("linear", torch::nn::Linear(2 * output_dim_, output_dim))) {
+		} 
+
+		torch::Tensor forward(torch::Tensor x) {
+			x = cnn_backbone_->forward(x);
+			x = linear_->forward(x);
+			return x;
+		}
+	};
+
+	TORCH_MODULE(CoverageControlCNN);
+
 	class TrainCNN {
 		private:
-			torch::Tensor maps_;
-			torch::Tensor features_;
+			torch::Tensor train_maps_, val_maps_;
+			torch::Tensor train_features_, val_features_;
+			torch::Tensor features_mean_, features_std_;
 			torch::Device device_ = torch::kCPU;
 			YAML::Node config_;
 			YAML::Node cnn_config_;
@@ -36,7 +70,9 @@ namespace CoverageControlTorch {
 			float weight_decay_ = 0.0001;
 			int image_size_ = 32;
 
-			std::shared_ptr<torch::optim::Adam> optimizer_;
+			/* std::shared_ptr<torch::optim::Adam> optimizer_; */
+			std::shared_ptr<torch::optim::SGD> optimizer_;
+
 		public:
 
 			TrainCNN(std::string const &config_file) {
@@ -55,6 +91,7 @@ namespace CoverageControlTorch {
 			 * @param batch_size: the batch size.
 			 **/
 			void Train() {
+
 				LoadDataset();
 
 				CoverageControlCNN model(
@@ -68,40 +105,63 @@ namespace CoverageControlTorch {
 
 				model->to(device_);
 
-				optimizer_ = std::make_shared<torch::optim::Adam>(
+				optimizer_ = std::make_shared<torch::optim::SGD>(
 						model->parameters(),
-						torch::optim::AdamOptions(learning_rate_).weight_decay(weight_decay_));
+						torch::optim::SGDOptions(learning_rate_).weight_decay(weight_decay_).momentum(0.1));
 
-				size_t dataset_size = maps_.size(0);
+				/* optimizer_ = std::make_shared<torch::optim::Adam>( */
+				/* 		model->parameters(), */
+				/* 		torch::optim::AdamOptions(learning_rate_).weight_decay(weight_decay_)); */
+				/* const auto num_workers = std::thread::hardware_concurrency()/2; */
+				/* auto data_loader = torch::data::make_data_loader( */
+				/* 		std::move(val_maps_), */
+				/* 		torch::data::DataLoaderOptions().batch_size(batch_size_).workers(num_workers).shuffle(true)); */
+				/* auto data_loader = torch::data::make_data_loader( */
+				/* 		torch::data::datasets::TensorDataset(val_maps_, val_features_), */
+				/* 		torch::data::DataLoaderOptions().batch_size(batch_size_).workers(num_workers)); */
+
+				// Best model parameters
+				float best_val_loss = std::numeric_limits<float>::max();
+				std::vector<float> best_params;
+
+				size_t dataset_size = train_maps_.size(0);
 				for (size_t epoch = 1; epoch < num_epochs_ + 1; ++epoch) {
+					optimizer_->zero_grad();
 					for (size_t i = 0; i < dataset_size; i += batch_size_) {
 						auto loss = TrainOneBatch(model, i);
 						std::cout << "Epoch: " << epoch << ", Batch: " << i << ", Loss: " << loss << std::endl;
 					}
+					// Validate
+					val_maps_ = val_maps_.to(device_);
+					auto pred = model->forward(val_maps_).to(torch::kCPU);
+					val_features_ = val_features_.to(torch::kCPU);
+					// Compute loss individually for each feature in features
+					/* auto loss_vec = torch::norm(pred - val_features_, 2, 0).to(torch::kCPU); */
+					auto loss_vec = torch::mse_loss(pred, val_features_, torch::Reduction::None).mean({0}).to(torch::kCPU);
+					std::cout << "Loss vector: " << loss_vec << std::endl;
+					auto actual_pred = pred * features_std_ + features_mean_;
+					auto actual_features = val_features_ * features_std_ + features_mean_;
+					auto accuracy = 100 * (torch::abs(actual_pred - actual_features).mean({0}))/(actual_features.mean({0}));
+					std::cout << "Accuracy: " << accuracy << std::endl;
+					auto loss = torch::mse_loss(pred, val_features_);
+					std::cout << "Val loss: " << loss << std::endl;
+					std::cout << "Best Val loss: " << best_val_loss << std::endl;
+					if (loss.item<float>() < best_val_loss) {
+						best_val_loss = loss.item<float>();
+						torch::save(model, data_dir_ + "/model.pt");
+						torch::save(*optimizer_, data_dir_ + "/optimizer.pt");
+					}
 				}
-				maps_ = maps_.to(device_);
-				auto pred = model->forward(maps_).to(torch::kCPU);
-				features_ = features_.to(torch::kCPU);
-				// Compute loss individually for each feature in features
-				auto loss = torch::mse_loss(pred, features_);
-				std::cout << "Final loss: " << loss.item<float>() << std::endl;
-				auto loss_vec = torch::norm(pred - features_, 2, 0).to(torch::kCPU);
-				std::cout << "Loss vector: " << loss_vec << std::endl;
-				std::cout << "Max of feature 0 true: " << features_.index({Slice(), 0}).max() << std::endl;
-				std::cout << "Max of feature 0 pred: " << pred.index({Slice(), 0}).max() << std::endl;
-				std::cout << "Max of feature 1 true: " << features_.index({Slice(), 1}).max() << std::endl;
-				std::cout << "Max of feature 1 pred: " << pred.index({Slice(), 1}).max() << std::endl;
-
+				std::cout << "Best validation loss: " << best_val_loss << std::endl;
 			}
 
 			float TrainOneBatch(CoverageControlCNN &model, size_t batch_idx) {
-				torch::Tensor batch = maps_.index({Slice(batch_idx, batch_idx + batch_size_)});
+				torch::Tensor batch = train_maps_.index({Slice(batch_idx, batch_idx + batch_size_)});
 				batch = batch.to(device_);
 				auto x = model->forward(batch);
 
 				// Backward and optimize
-				optimizer_->zero_grad();
-				torch::Tensor batch_features = features_.index({Slice(batch_idx, batch_idx + batch_size_)}).to(device_);
+				torch::Tensor batch_features = train_features_.index({Slice(batch_idx, batch_idx + batch_size_)}).to(device_);
 				auto loss = torch::mse_loss(x, batch_features);
 				loss.backward();
 				optimizer_->step();
@@ -130,13 +190,26 @@ namespace CoverageControlTorch {
 				torch::load(obstacle_maps, obstacle_maps_file);
 				obstacle_maps = obstacle_maps.to_dense().unsqueeze(2).view({-1, 1, image_size_, image_size_});
 
-				torch::load(features_, features_file);
-				features_ = features_.view({-1, features_.size(2)});
+				torch::Tensor features;
+				torch::load(features, features_file);
+				features = features.view({-1, features.size(2)});
 				int output_dim = config_["CNN"]["OutputDim"].as<int>();
-				features_ = features_.index({Slice(), Slice(0, output_dim)});
+				features = features.index({Slice(), Slice(0, output_dim)});
 
-				maps_ = torch::cat({local_maps, comm_maps, obstacle_maps}, 1);
-				std::cout << "maps shape: " << maps_.sizes() << std::endl;
+				torch::Tensor maps = torch::cat({local_maps, comm_maps, obstacle_maps}, 1);
+
+				// Split into train and val
+				size_t num_train = 0.998 * maps.size(0);
+				size_t num_val = maps.size(0) - num_train;
+				train_maps_ = maps.index({Slice(0, num_train), Slice()});
+				train_features_ = features.index({Slice(0, num_train), Slice()});
+				val_maps_ = maps.index({Slice(num_train, maps.size(0))});
+				val_features_ = features.index({Slice(num_train, maps.size(0))});
+				
+				torch::load(features_mean_, data_dir_ + "/coverage_features_mean.pt");
+				torch::load(features_std_, data_dir_ + "/coverage_features_std.pt");
+
+				std::cout << "maps shape: " << maps.sizes() << std::endl;
 
 			}
 
