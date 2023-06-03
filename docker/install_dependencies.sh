@@ -2,7 +2,7 @@
 
 MAIN_DIR=$1
 BUILD_DIR=${MAIN_DIR}/build
-CMAKE_END_FLAGS="-G Ninja -DCMAKE_BUILD_TYPE=Release"
+CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
 echo $CUDAARCHS
 
 InstallCGAL () {
@@ -38,7 +38,7 @@ InstallPybind11 () {
 	echo "Setting up pybind11"
 	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.4.tar.gz -P ${MAIN_DIR}/src
 	tar -xf ${MAIN_DIR}/src/v2.10.4.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/pybind11-2.10.4 -B ${BUILD_DIR}/pybind11 ${CMAKE_END_FLAGS} -DPYBIND11_TEST=OFF
+	cmake -S ${MAIN_DIR}/src/pybind11-2.10.4 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
 	cmake --install ${BUILD_DIR}/pybind11
 	if [ $? -eq 0 ]; then
@@ -85,7 +85,7 @@ InstallTorchVision () {
 	echo "Setting up torchvision"
 	wget https://github.com/pytorch/vision/archive/refs/tags/v0.15.2.tar.gz -P ${MAIN_DIR}/src
 	tar -xf ${MAIN_DIR}/src/v0.15.2.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision ${CMAKE_END_FLAGS} -DWITH_CUDA=ON -DUSE_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT}/
+	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision -DWITH_CUDA=ON -DUSE_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/torchvision -j$(nproc)
 	cmake --install ${BUILD_DIR}/torchvision
 	if [ $? -eq 0 ]; then
@@ -96,13 +96,45 @@ InstallTorchVision () {
 	fi
 }
 
+InstallTorchScatter () {
+	echo "Setting up torchscatter"
+	git clone --recurse-submodules https://github.com/rusty1s/pytorch_scatter.git ${MAIN_DIR}/src/pytorch_scatter
+	cmake -S ${MAIN_DIR}/src/pytorch_scatter -B ${BUILD_DIR}/torchscatter -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/torchscatter -j$(nproc)
+	cmake --install ${BUILD_DIR}/torchscatter
+	cmake -S ${MAIN_DIR}/src/pytorch_scatter -B ${BUILD_DIR}/torchscatter -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
+	cmake --install ${BUILD_DIR}/torchscatter
+	if [ $? -eq 0 ]; then
+		echo "torchscatter install succeeded"
+	else
+		echo "torchscatter install failed"
+		exit 1
+	fi
+}
+
+InstallTorchSparse () {
+	echo "Setting up torchsparse"
+	git clone --recurse-submodules https://github.com/rusty1s/pytorch_sparse.git ${MAIN_DIR}/src/pytorch_sparse
+	cmake -S ${MAIN_DIR}/src/pytorch_sparse -B ${BUILD_DIR}/torchsparse -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/torchsparse -j$(nproc)
+	cmake --install ${BUILD_DIR}/torchsparse
+	cmake -S ${MAIN_DIR}/src/pytorch_sparse -B ${BUILD_DIR}/torchsparse -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
+	cmake --install ${BUILD_DIR}/torchsparse
+	if [ $? -eq 0 ]; then
+		echo "torchsparse install succeeded"
+	else
+		echo "torchsparse install failed"
+		exit 1
+	fi
+}
+
 InstallOpenCV () {
 	echo "Setting up opencv"
 	wget -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.7.0.tar.gz
 	wget -O ${MAIN_DIR}/src/opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.7.0.zip
 	tar -xf ${MAIN_DIR}/src/opencv.tar.gz -C ${MAIN_DIR}/src/
 	unzip ${MAIN_DIR}/src/opencv_contrib.zip -d ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/opencv-4.7.0 -B ${BUILD_DIR}/opencv ${CMAKE_END_FLAGS} -DWITH_CUDA=ON -DWITH_CUBLAS=ON -DWITH_CUDNN=ON -DWITH_FFMPEG=ON -DWITH_EIGEN=ON -DWITH_OPENMP=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DWITH_OPENJPEG=ON -DOPENCV_EXTRA_MODULES_PATH=${MAIN_DIR}/src/opencv_contrib-4.7.0/modules
+	cmake -S ${MAIN_DIR}/src/opencv-4.7.0 -B ${BUILD_DIR}/opencv -DWITH_CUDA=ON -DWITH_CUBLAS=ON -DWITH_CUDNN=ON -DWITH_FFMPEG=ON -DWITH_EIGEN=ON -DWITH_OPENMP=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DWITH_OPENJPEG=ON -DOPENCV_EXTRA_MODULES_PATH=${MAIN_DIR}/src/opencv_contrib-4.7.0/modules ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/opencv -j$(nproc)
 	cmake --install ${BUILD_DIR}/opencv
 	if [ $? -eq 0 ]; then
@@ -120,3 +152,5 @@ InstallYamlCPP
 InstallGeoGraphicLib
 # InstallOpenCV
 InstallTorchVision
+InstallTorchSparse
+InstallTorchScatter

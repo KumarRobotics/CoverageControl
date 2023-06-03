@@ -1,4 +1,5 @@
-IMAGE_NAME=agarwalsaurav/gnn:cuda11.8-torch2.0.1-ubuntu22.04
+# IMAGE_NAME=agarwalsaurav/gnn
+IMAGE_NAME=gnn
 COVERAGECONTROL_WS=${1}
 
 COVERAGECONTROL_VOLUME="--volume=${COVERAGECONTROL_WS}:/root/CoverageControl_ws:rw"
