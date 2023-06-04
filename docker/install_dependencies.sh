@@ -98,11 +98,9 @@ InstallTorchVision () {
 
 InstallTorchScatter () {
 	echo "Setting up torchscatter"
-	git clone --recurse-submodules https://github.com/rusty1s/pytorch_scatter.git ${MAIN_DIR}/src/pytorch_scatter
+	git clone --recurse-submodules https://github.com/AgarwalSaurav/pytorch_scatter.git ${MAIN_DIR}/src/pytorch_scatter
 	cmake -S ${MAIN_DIR}/src/pytorch_scatter -B ${BUILD_DIR}/torchscatter -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/torchscatter -j$(nproc)
-	cmake --install ${BUILD_DIR}/torchscatter
-	cmake -S ${MAIN_DIR}/src/pytorch_scatter -B ${BUILD_DIR}/torchscatter -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
 	cmake --install ${BUILD_DIR}/torchscatter
 	if [ $? -eq 0 ]; then
 		echo "torchscatter install succeeded"
@@ -114,11 +112,9 @@ InstallTorchScatter () {
 
 InstallTorchSparse () {
 	echo "Setting up torchsparse"
-	git clone --recurse-submodules https://github.com/rusty1s/pytorch_sparse.git ${MAIN_DIR}/src/pytorch_sparse
+	git clone --recurse-submodules https://github.com/AgarwalSaurav/pytorch_sparse.git ${MAIN_DIR}/src/pytorch_sparse
 	cmake -S ${MAIN_DIR}/src/pytorch_sparse -B ${BUILD_DIR}/torchsparse -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/torchsparse -j$(nproc)
-	cmake --install ${BUILD_DIR}/torchsparse
-	cmake -S ${MAIN_DIR}/src/pytorch_sparse -B ${BUILD_DIR}/torchsparse -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
 	cmake --install ${BUILD_DIR}/torchsparse
 	if [ $? -eq 0 ]; then
 		echo "torchsparse install succeeded"
