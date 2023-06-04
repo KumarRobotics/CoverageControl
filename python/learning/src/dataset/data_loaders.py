@@ -1,22 +1,24 @@
 import yaml
 import os
 import torch
+import dataset.data_loader_utils as dl_utils
 from torch_geometric.data import Dataset
 
-class LocalMapCNNDataset(Dataset, DataLoaderUtils):
+
+class LocalMapCNNDataset(Dataset):
     """
     Dataset for CNN training
     """
-    def __init__(self, data_dir, stage, use_comm_map, ouput_dim):
-        super(Dataset, self).__init__(None, None, None, None)
+    def __init__(self, data_dir, stage, use_comm_map, output_dim):
+        super(LocalMapCNNDataset, self).__init__(None, None, None, None)
 
         self.stage = stage
         self.output_dim = output_dim
 
-        self.maps = self.LoadMaps(f"{data_dir}/{stage}", use_comm_map)
+        self.maps = dl_utils.LoadMaps(f"{data_dir}/{stage}", use_comm_map)
         self.dataset_size = self.maps.shape[0]
 
-        self.targets, self.targets_mean, self.targets_std = self.LoadFeatures(f"{data_dir}/{stage}", output_dim)
+        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{data_dir}/{stage}", output_dim)
         self.targets = self.targets.view(-1, self.targets.shape[2])
         self.targets = self.targets[:, :output_dim]
 
@@ -28,47 +30,47 @@ class LocalMapCNNDataset(Dataset, DataLoaderUtils):
         target = self.targets[idx]
         return maps, target
 
-class LocalMapGNNDataset(Dataset, DataLoaderUtils):
+class LocalMapGNNDataset(Dataset):
     """
     Dataset for hybrid CNN-GNN training
     """
     def __init__(self, data_dir, stage, use_comm_map):
-        super(Dataset, self).__init__(None, None, None, None)
+        super(LocalMapGNNDataset, self).__init__(None, None, None, None)
 
         self.stage = stage
 
-        self.maps = self.LoadMaps(f"{data_dir}/{stage}", use_comm_map)
+        self.maps = dl_utils.LoadMaps(f"{data_dir}/{stage}", use_comm_map)
         self.dataset_size = self.maps.shape[0]
 
-        self.targets, self.targets_mean, self.targets_std = self.LoadActions(f"{data_dir}/{stage}")
-        self.edge_weights = self.LoadEdgeWeights(f"{data_dir}/{stage}")
+        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{data_dir}/{stage}")
+        self.edge_weights = dl_utils.LoadEdgeWeights(f"{data_dir}/{stage}")
 
     def len(self):
         return self.dataset_size
 
     def get(self, idx):
-        data = self.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx], self.targets[idx])
+        data = dl_utils.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx], self.targets[idx])
         return data
 
-class VoronoiGNNDataset(Dataset, DataLoaderUtils):
+class VoronoiGNNDataset(Dataset):
     """
     Dataset for non-hybrid GNN training
     """
     def __init__(self, data_dir, stage, output_dim):
-        super(Dataset, self).__init__(None, None, None, None)
+        super(VoronoiGNNDataset, self).__init__(None, None, None, None)
 
         self.stage = stage
         self.output_dim = output_dim
 
-        self.features = self.LoadFeatures(f"{data_dir}/{stage}", output_dim)
+        self.features = dl_utils.LoadFeatures(f"{data_dir}/{stage}", output_dim)
         self.dataset_size = self.features.shape[0]
-        self.targets, self.targets_mean, self.targets_std = self.LoadActions(f"{data_dir}/{stage}")
-        self.edge_weights = self.LoadEdgeWeights(f"{data_dir}/{stage}")
+        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{data_dir}/{stage}")
+        self.edge_weights = dl_utils.LoadEdgeWeights(f"{data_dir}/{stage}")
 
 
     def len(self):
         return self.dataset_size
 
     def get(self, idx):
-        data = self.ToTorchGeometricData(self.features[idx], self.edge_weights[idx], self.targets[idx])
+        data = dl_utils.ToTorchGeometricData(self.features[idx], self.edge_weights[idx], self.targets[idx])
         return data
