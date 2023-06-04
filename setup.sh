@@ -19,19 +19,19 @@ then
 		echo "cppsrc build failed"
 		exit 1
 	fi
-	cd python/core
+	cd cppsrc/core/python_bindings/
 	pip install .
 	if [ $? -ne 0 ]; then
 		echo "pyCoverageControl failed"
 		exit 1
 	fi
-	cd ../torch
+	cd ../../torch/python_bindings/
 	pip install .
 	if [ $? -ne 0 ]; then
 		echo "pyCoverageControlTorch failed"
 		exit 1
 	fi
-	cd ../..
+	cd ../../..
 fi
 
 if [[ ${CLEAN} ]]

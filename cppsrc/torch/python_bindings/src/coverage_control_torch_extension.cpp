@@ -5,7 +5,7 @@
 #include <pybind11/stl_bind.h>
 #include <pybind11/eigen.h>
 
-#include "../../core_binds.h"
+#include "../../../core/python_bindings/core_binds.h"
 
 torch::Tensor d_sigmoid(torch::Tensor z) {
 	auto s = torch::sigmoid(z);
