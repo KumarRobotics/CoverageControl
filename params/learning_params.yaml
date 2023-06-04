@@ -2,6 +2,10 @@ pDataDir: "/root/CoverageControl_ws/data/pure_coverage/" # Absolute location
 
 GPUs: [4, 5]
 
+ModelConfig:
+  UseCommMaps: True
+
+
 GNNBackBone:
   InputDim: 7
   NumHops: 3
