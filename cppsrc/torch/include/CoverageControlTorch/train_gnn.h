@@ -1,11 +1,11 @@
-/** This file contains the declaration of the class TrainCNN using Torch C++ API.
- * The class TrainCNN takes local maps, communication maps, and obstacles maps as input, and
+/** This file contains the declaration of the class TrainGNN using Torch C++ API.
+ * The class TrainGNN takes local maps, communication maps, and obstacles maps as input, and
  * predicts the voronoi coverage features.
  *
  **/
 
-#ifndef COVERAGECONTROL_TRAIN_CNN_H_
-#define COVERAGECONTROL_TRAIN_CNN_H_
+#ifndef COVERAGECONTROL_TRAIN_GNN_H_
+#define COVERAGECONTROL_TRAIN_GNN_H_
 
 
 #include <iostream>
@@ -17,18 +17,21 @@
 #include <yaml-cpp/yaml.h>
 #include <torch/torch.h>
 
-#include "cnn_module.h"
+#include "gnn_module.h"
 
 using namespace torch::indexing;
 namespace F = torch::nn::functional;
 
 namespace CoverageControlTorch {
 
-	class TrainCNN {
+	class TrainGNN {
 		private:
 			torch::Tensor train_maps_, val_maps_;
 			torch::Tensor train_features_, val_features_;
+			torch::Tensor train_actions_, val_actions_;
 			torch::Tensor features_mean_, features_std_;
+			torch::Tensor actions_mean_, actions_std_;
+			torch::Tensor edge_weights_;
 			torch::Device device_ = torch::kCPU;
 			YAML::Node config_;
 			YAML::Node cnn_config_;
@@ -44,7 +47,7 @@ namespace CoverageControlTorch {
 
 		public:
 
-			TrainCNN(std::string const &config_file) {
+			TrainGNN(std::string const &config_file) {
 				if (torch::cuda::is_available()) {
 					device_ = torch::kCUDA;
 					std::cout << "Using CUDA" << std::endl;
@@ -52,7 +55,7 @@ namespace CoverageControlTorch {
 				LoadConfigs(config_file);
 			}
 
-			/** Train CNN model.
+			/** Train GNN model.
 			 * @param dataset_dir: the directory of the dataset.
 			 * @param num_layers: the number of convolutional layers.
 			 * @param num_epochs: the number of epochs.
@@ -63,7 +66,8 @@ namespace CoverageControlTorch {
 
 				LoadDataset();
 
-				CoverageControlCNN model(cnn_config_);
+				CoverageControlGNN model(config_);
+
 
 				model->to(device_);
 
@@ -83,37 +87,41 @@ namespace CoverageControlTorch {
 						std::cout << "Epoch: " << epoch << ", Batch: " << i << ", Loss: " << loss << std::endl;
 					}
 					// Validate
-					val_maps_ = val_maps_.to(device_);
-					auto pred = model->forward(val_maps_).to(torch::kCPU);
-					val_features_ = val_features_.to(torch::kCPU);
-					// Compute loss individually for each feature in features
-					/* auto loss_vec = torch::norm(pred - val_features_, 2, 0).to(torch::kCPU); */
-					auto loss_vec = torch::mse_loss(pred, val_features_, torch::Reduction::None).mean({0}).to(torch::kCPU);
-					std::cout << "Loss vector: " << loss_vec << std::endl;
-					auto actual_pred = pred * features_std_ + features_mean_;
-					auto actual_features = val_features_ * features_std_ + features_mean_;
-					auto accuracy = 100 * (torch::abs(actual_pred - actual_features).mean({0}))/(actual_features.mean({0}));
-					std::cout << "Accuracy: " << accuracy << std::endl;
-					auto loss = torch::mse_loss(pred, val_features_);
-					std::cout << "Val loss: " << loss << std::endl;
-					std::cout << "Best Val loss: " << best_val_loss << std::endl;
-					if (loss.item<float>() < best_val_loss) {
-						best_val_loss = loss.item<float>();
-						torch::save(model, data_dir_ + "/model.pt");
-						torch::save(*optimizer_, data_dir_ + "/optimizer.pt");
-					}
+					/* val_maps_ = val_maps_.to(device_); */
+					/* auto pred = model->forward(val_maps_).to(torch::kCPU); */
+					/* val_actions_ = val_actions_.to(torch::kCPU); */
+					/* // Compute loss individually for each feature in features */
+					/* /1* auto loss_vec = torch::norm(pred - val_actions_, 2, 0).to(torch::kCPU); *1/ */
+					/* auto loss_vec = torch::mse_loss(pred, val_actions_, torch::Reduction::None).mean({0}).to(torch::kCPU); */
+					/* std::cout << "Loss vector: " << loss_vec << std::endl; */
+					/* auto actual_pred = pred * actions_std_ + actions_mean_; */
+					/* auto actual_actions_ = val_actions_ * actions_std_ + actions_mean_; */
+					/* auto accuracy = 100 * (torch::abs(actual_pred - actual_actions_).mean({0}))/(actual_actions_.mean({0})); */
+					/* std::cout << "Accuracy: " << accuracy << std::endl; */
+					/* auto loss = torch::mse_loss(pred, val_actions_); */
+					/* std::cout << "Val loss: " << loss << std::endl; */
+					/* std::cout << "Best Val loss: " << best_val_loss << std::endl; */
+					/* if (loss.item<float>() < best_val_loss) { */
+					/* 	best_val_loss = loss.item<float>(); */
+					/* 	torch::save(model, data_dir_ + "/model.pt"); */
+					/* 	torch::save(*optimizer_, data_dir_ + "/optimizer.pt"); */
+					/* } */
 				}
 				std::cout << "Best validation loss: " << best_val_loss << std::endl;
 			}
 
-			float TrainOneBatch(CoverageControlCNN &model, size_t batch_idx) {
+			float TrainOneBatch(CoverageControlGNN &model, size_t batch_idx) {
 				torch::Tensor batch = train_maps_.index({Slice(batch_idx, batch_idx + batch_size_)});
+				torch::Tensor batch_edge_weights = edge_weights_.index({Slice(batch_idx, batch_idx + batch_size_)});
 				batch = batch.to(device_);
-				auto x = model->forward(batch);
+				batch_edge_weights = batch_edge_weights.squeeze(0);
+				batch_edge_weights = batch_edge_weights.to_sparse();
+				batch_edge_weights = batch_edge_weights.to(device_);
+				auto x = model->forward(batch, batch_edge_weights);
 
 				// Backward and optimize
-				torch::Tensor batch_features = train_features_.index({Slice(batch_idx, batch_idx + batch_size_)}).to(device_);
-				auto loss = torch::mse_loss(x, batch_features);
+				torch::Tensor batch_actions = train_actions_.index({Slice(batch_idx, batch_idx + batch_size_)}).to(device_);
+				auto loss = torch::mse_loss(x, batch_actions);
 				loss.backward();
 				optimizer_->step();
 
@@ -133,6 +141,7 @@ namespace CoverageControlTorch {
 
 				torch::Tensor local_maps;
 				torch::load(local_maps, local_maps_file);
+				int dataset_size = local_maps.size(0);
 				local_maps = local_maps.unsqueeze(2).view({-1, 1, image_size_, image_size_});
 				torch::Tensor comm_maps;
 				torch::load(comm_maps, comm_maps_file);
@@ -140,6 +149,8 @@ namespace CoverageControlTorch {
 				torch::Tensor obstacle_maps;
 				torch::load(obstacle_maps, obstacle_maps_file);
 				obstacle_maps = obstacle_maps.to_dense().unsqueeze(2).view({-1, 1, image_size_, image_size_});
+				torch::Tensor maps = torch::cat({local_maps, comm_maps, obstacle_maps}, 1);
+				maps = maps.view({dataset_size, -1, 4, image_size_, image_size_});
 
 				torch::Tensor features;
 				torch::load(features, features_file);
@@ -147,18 +158,28 @@ namespace CoverageControlTorch {
 				int output_dim = config_["CNN"]["OutputDim"].as<int>();
 				features = features.index({Slice(), Slice(0, output_dim)});
 
-				torch::Tensor maps = torch::cat({local_maps, comm_maps, obstacle_maps}, 1);
+				torch::Tensor actions;
+				torch::load(actions, data_dir_ + "/actions.pt");
 
 				// Split into train and val
 				size_t num_train = 0.998 * maps.size(0);
 				size_t num_val = maps.size(0) - num_train;
 				train_maps_ = maps.index({Slice(0, num_train), Slice()});
 				train_features_ = features.index({Slice(0, num_train), Slice()});
+				train_actions_ = actions.index({Slice(0, num_train), Slice()});
 				val_maps_ = maps.index({Slice(num_train, maps.size(0))});
 				val_features_ = features.index({Slice(num_train, maps.size(0))});
+				val_actions_ = actions.index({Slice(num_train, maps.size(0))});
 				
 				torch::load(features_mean_, data_dir_ + "/coverage_features_mean.pt");
 				torch::load(features_std_, data_dir_ + "/coverage_features_std.pt");
+				torch::load(actions_mean_, data_dir_ + "/actions_mean.pt");
+				torch::load(actions_std_, data_dir_ + "/actions_std.pt");
+
+				std::cout << "Loading edge weights" << std::endl;
+
+				torch::load(edge_weights_, data_dir_ + "/edge_weights.pt");
+				edge_weights_ = edge_weights_.to_dense();
 
 				std::cout << "maps shape: " << maps.sizes() << std::endl;
 
@@ -172,12 +193,12 @@ namespace CoverageControlTorch {
 				}
 				config_ = YAML::LoadFile(config_file);
 				data_dir_ = config_["pDataDir"].as<std::string>();
-				batch_size_ = config_["CNNTraining"]["BatchSize"].as<size_t>();
-				num_epochs_ = config_["CNNTraining"]["NumEpochs"].as<size_t>();
-				learning_rate_ = config_["CNNTraining"]["LearningRate"].as<float>();
-				weight_decay_ = config_["CNNTraining"]["WeightDecay"].as<float>();
+				batch_size_ = config_["GNNTraining"]["BatchSize"].as<size_t>();
+				num_epochs_ = config_["GNNTraining"]["NumEpochs"].as<size_t>();
+				learning_rate_ = config_["GNNTraining"]["LearningRate"].as<float>();
+				weight_decay_ = config_["GNNTraining"]["WeightDecay"].as<float>();
 
-				cnn_config_ = config_["CNN"];
+				cnn_config_ = config_["CNN"]	;
 				image_size_ = cnn_config_["ImageSize"].as<int>();
 			}
 
@@ -185,4 +206,4 @@ namespace CoverageControlTorch {
 
 } // namespace CoverageControlTorch
 
-#endif //COVERAGECONTROL_TRAIN_CNN_H_
+#endif //COVERAGECONTROL_TRAIN_GNN_H_

@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 	std::string data_dir = config["pDataDir"].as<std::string>();
 
 	CoverageControlCNN model(cnn_config);
-	torch::load(model, data_dir + config["CNNTraining"]["ModelCkpt"].as<std::string>());
+	torch::load(model, config["CNNModel"]["Dir"].as<std::string>() + config["CNNModel"]["Model"].as<std::string>());
 	model->to(device);
 
 	int image_size = cnn_config["ImageSize"].as<int>();

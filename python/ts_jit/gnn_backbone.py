@@ -25,18 +25,20 @@ class GNNBackBone(nn.Module):
         for layer in range(self.num_layers_):
             self.graph_convs.append(TAGConv(in_channels=f[layer], out_channels=f[layer+1], K=self.num_hops_).jittable())
     
-    def forward(self, x, edge_index, edge_weight) -> torch.Tensor:
+    def forward(self, x, edge_weight) -> torch.Tensor:
+        edge_index = edge_weight.indices()
+        weight = edge_weight.values()
         for conv in self.graph_convs:
-            x = conv(x, edge_index, edge_weight)
+            x = conv(x, edge_index, weight)
             x = torch.relu(x)
         return x
 
 if __name__ == "__main__":
     # Load config yaml file
     config_file = str(sys.argv[1])
-    script_file = str(sys.argv[2])
     with open(config_file, 'r') as stream:
         config = yaml.safe_load(stream)['GNNBackBone']
     print(config)
     scripted_model = torch.jit.script(GNNBackBone(config['InputDim'], config['NumLayers'], config['NumHops'], config['LatentSize']))
+    script_file = config["ScriptName"]
     scripted_model.save(script_file)

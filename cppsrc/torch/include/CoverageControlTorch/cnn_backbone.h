@@ -21,9 +21,8 @@ namespace CoverageControlTorch {
 		torch::nn::Linear linear_2_;
 		torch::nn::Linear linear_3_;
 
-		CNNBackboneImpl(int input_dim, int output_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
+		CNNBackboneImpl(int input_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
 			input_dim_(input_dim),
-			output_dim_(output_dim),
 			num_layers_(num_layers),
 			latent_size_(latent_size),
 			kernel_size_(kernel_size),

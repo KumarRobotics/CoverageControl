@@ -16,6 +16,9 @@ find_package(CGAL REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 find_package(CoverageControlTorch REQUIRED)
+find_package(TorchScatter REQUIRED)
+find_package(TorchSparse REQUIRED)
+
 
 #################
 ## Executables ##
@@ -42,3 +45,7 @@ install(TARGETS train_cnn DESTINATION ${CMAKE_INSTALL_BINDIR})
 add_executable(test_cnn test_cnn.cpp)
 target_link_libraries(test_cnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch)
 install(TARGETS test_cnn DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(train_gnn train_gnn.cpp)
+target_link_libraries(train_gnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch TorchScatter::TorchScatter TorchSparse::TorchSparse ${CUDA_cusparse_LIBRARY})
+install(TARGETS train_gnn DESTINATION ${CMAKE_INSTALL_BINDIR})
