@@ -1,17 +1,16 @@
 import torch
 import math
 import yaml
+from .config_parser import CNNConfigParser
 
-class CNNBackBone(torch.nn.Module):
+class CNNBackBone(torch.nn.Module, CNNConfigParser):
     """
     Implements a multi-layer convolutional neural network, with ReLU non-linearities between layers,
     according to hyperparameters specified in the config
     """
     def __init__(self, config):
         super(CNNBackBone, self).__init__()
-
-        self.config = config
-        self.parse_config()
+        self.Parse(config)
 
         self.add_module("conv0", torch.nn.Conv2d(self.input_dim, self.latent_size, kernel_size=self.kernel_size))
         self.add_module("batch_norm0", torch.nn.BatchNorm2d(self.latent_size))
@@ -22,8 +21,8 @@ class CNNBackBone(torch.nn.Module):
         self.flatten_size = self.latent_size * (self.image_size - self.num_layers * (self.kernel_size - 1)) ** 2
 
         self.add_module("linear_1", torch.nn.Linear(self.flatten_size, self.latent_size))
-        self.add_module("linear_2", torch.nn.Linear(self.latent_size, 2 * self.output_dim))
-        self.add_module("linear_3", torch.nn.Linear(2 * self.output_dim, self.output_dim))
+        self.add_module("linear_2", torch.nn.Linear(self.latent_size, self.backbone_output_dim))
+        # self.add_module("linear_3", torch.nn.Linear(2 * self.output_dim, self.output_dim))
     
     def parse_config(self):
         self.input_dim = self.config["InputDim"]
@@ -39,9 +38,7 @@ class CNNBackBone(torch.nn.Module):
             x = self._modules["batch_norm{}".format(layer)](x)
             x = torch.nn.functional.leaky_relu(x)
 
-        print(x.shape)
         x = x.flatten(1)
-        print(x.shape)
         x = torch.nn.functional.leaky_relu(self.linear_1(x))
         x = torch.nn.functional.leaky_relu(self.linear_2(x))
         # x = self.linear_3(x)

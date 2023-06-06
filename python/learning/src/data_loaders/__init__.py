@@ -1,4 +1,4 @@
-from dataset.data_loaders import (
+from src.data_loaders.data_loaders import (
         LocalMapCNNDataset, LocalMapGNNDataset, VoronoiGNNDataset
         )
 

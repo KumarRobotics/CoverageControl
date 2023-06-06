@@ -1,7 +1,7 @@
 import yaml
 import os
 import torch
-import dataset.data_loader_utils as dl_utils
+import src.data_loaders.data_loader_utils as dl_utils
 from torch_geometric.data import Dataset
 
 
@@ -15,7 +15,12 @@ class LocalMapCNNDataset(Dataset):
         self.stage = stage
         self.output_dim = output_dim
 
+        # maps has shape (num_samples, num_robots, num_channels, image_size, image_size)
         self.maps = dl_utils.LoadMaps(f"{data_dir}/{stage}", use_comm_map)
+        num_channels = self.maps.shape[2]
+        image_size = self.maps.shape[3]
+
+        self.maps = self.maps.view(-1, num_channels, image_size, image_size)
         self.dataset_size = self.maps.shape[0]
 
         self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{data_dir}/{stage}", output_dim)
@@ -50,7 +55,7 @@ class LocalMapGNNDataset(Dataset):
 
     def get(self, idx):
         data = dl_utils.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx], self.targets[idx])
-        return data
+        return data, data.y
 
 class VoronoiGNNDataset(Dataset):
     """
@@ -73,4 +78,4 @@ class VoronoiGNNDataset(Dataset):
 
     def get(self, idx):
         data = dl_utils.ToTorchGeometricData(self.features[idx], self.edge_weights[idx], self.targets[idx])
-        return data
+        return data, data.y
