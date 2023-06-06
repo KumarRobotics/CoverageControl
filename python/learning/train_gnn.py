@@ -64,3 +64,6 @@ criterion = torch.nn.MSELoss()
 trainer = TrainModel(model, train_loader, val_loader, test_loader, optimizer, criterion, num_epochs, device, model_file)
 
 trainer.Train()
+test_loss = trainer.Test()
+print("Test loss: {}".format(test_loss))
+
