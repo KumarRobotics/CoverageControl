@@ -192,7 +192,7 @@ namespace CoverageControlTorch {
 					throw std::runtime_error("Could not open config file: " + config_file);
 				}
 				config_ = YAML::LoadFile(config_file);
-				data_dir_ = config_["pDataDir"].as<std::string>();
+				data_dir_ = config_["DataDir"].as<std::string>();
 				batch_size_ = config_["GNNTraining"]["BatchSize"].as<size_t>();
 				num_epochs_ = config_["GNNTraining"]["NumEpochs"].as<size_t>();
 				learning_rate_ = config_["GNNTraining"]["LearningRate"].as<float>();

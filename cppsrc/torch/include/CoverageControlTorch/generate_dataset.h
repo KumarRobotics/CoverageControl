@@ -74,13 +74,13 @@ namespace CoverageControlTorch {
 				data_dir_append_ = data_dir_append;
 
 				LoadConfigs(config_file);
-				dataset_size_ = config_["pNumDataset"].as<size_t>();
+				dataset_size_ = config_["NumDataset"].as<size_t>();
 				num_robots_ = env_params_.pNumRobots;
 				comm_range_ = (float)env_params_.pCommunicationRange;
 				env_resolution_ = (float)env_params_.pResolution;
-				map_size_ = config_["pCNNMapSize"].as<int>();
-				every_num_step_ = config_["pEveryNumSteps"].as<size_t>();
-				trigger_size_ = config_["pTriggerPostProcessing"].as<size_t>();
+				map_size_ = config_["CNNMapSize"].as<int>();
+				every_num_step_ = config_["EveryNumSteps"].as<size_t>();
+				trigger_size_ = config_["TriggerPostProcessing"].as<size_t>();
 				if(trigger_size_ == 0 or trigger_size_ > dataset_size_ ) {
 					trigger_size_ = dataset_size_;
 				}
@@ -208,7 +208,7 @@ namespace CoverageControlTorch {
 				torch::Tensor diagonal_mask = torch::eye(edge_weights.size(1)).repeat({edge_weights.size(0), 1, 1}).to(torch::kBool);
 				edge_weights.masked_fill_(diagonal_mask, 0);
 				edge_weights.to(torch::kCPU);
-				if(config_["pSaveAsSparseQ"].as<bool>()){
+				if(config_["SaveAsSparseQ"].as<bool>()){
 					torch::save(edge_weights.to_sparse(), data_folder_ + "edge_weights.pt");
 				} else {
 					torch::save(edge_weights, data_folder_ + "edge_weights.pt");
@@ -259,7 +259,7 @@ namespace CoverageControlTorch {
 				torch::save(actions_, data_folder_ + "/actions.pt");
 				torch::save(coverage_features_, data_folder_ + "/coverage_features.pt");
 
-				if(config_["pSaveAsSparseQ"].as<bool>()) {
+				if(config_["SaveAsSparseQ"].as<bool>()) {
 					torch::save(comm_maps_.to_sparse(), data_folder_ + "/comm_maps.pt");
 					torch::save(obstacle_maps_.to_sparse(), data_folder_ + "/obstacle_maps.pt");
 				}
@@ -267,7 +267,7 @@ namespace CoverageControlTorch {
 					torch::save(comm_maps_, data_folder_ + "/comm_maps.pt");
 					torch::save(obstacle_maps_, data_folder_ + "/obstacle_maps.pt");
 				}
-				if(config_["pNormalizeQ"].as<bool>()) {
+				if(config_["NormalizeQ"].as<bool>()) {
 					torch::Tensor actions_mean = at::mean(actions_.view({-1,2}), 0);
 					torch::Tensor actions_std = at::std(actions_.view({-1,2}), 0);
 					torch::Tensor normalized_actions = (actions_ - actions_mean)/actions_std;
@@ -310,27 +310,26 @@ namespace CoverageControlTorch {
 				}
 
 				config_ = YAML::LoadFile(config_file);
-				data_dir_ = config_["pDataDir"].as<std::string>();
+				data_dir_ = config_["DataDir"].as<std::string>();
 				data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/";
 
-				// Check if config_["pDataDir"] directory exists
-				std::string data_dir = config_["pDataDir"].as<std::string>();
-				if(not std::filesystem::exists(data_dir)) {
-					throw std::runtime_error("Could not find data directory: " + data_dir);
+				// Check if config_["DataDir"] directory exists
+				if(not std::filesystem::exists(data_dir_)) {
+					throw std::runtime_error("Could not find data directory: " + data_dir_);
 				}
 
 				if(!std::filesystem::exists(data_folder_)) {
 					std::filesystem::create_directories(data_folder_);
 				}
-				// Check if config_["pEnvironmentConfig"] file exists
-				std::string env_config_file = data_dir + "/" + config_["pEnvironmentConfig"].as<std::string>();
+				// Check if config_["EnvironmentConfig"] file exists
+				std::string env_config_file = data_dir_ + "/" + config_["EnvironmentConfig"].as<std::string>();
 				if(not std::filesystem::exists(env_config_file)) {
 					throw std::runtime_error("Could not find environment config file: " + env_config_file);
 				}
 				env_params_ = CoverageControl::Parameters(env_config_file);
 
-				std::string resizer_model_path = data_dir + "/" + config_["pTorchVisionTransformJIT"].as<std::string>();
-				// Check if config_["pResizerModel"] file exists
+				std::string resizer_model_path = data_dir_ + "/" + config_["TorchVisionTransformJIT"].as<std::string>();
+				// Check if config_["ResizerModel"] file exists
 				if(not std::filesystem::exists(resizer_model_path)) {
 					throw std::runtime_error("Could not find resizer model file: " + resizer_model_path);
 				}

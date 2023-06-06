@@ -60,11 +60,8 @@ namespace CoverageControlTorch {
 				/* std::cout << "x size: " << x.sizes() << std::endl; */
 			}
 			x = x.flatten(1);
-			/* std::cout << "x size: " << x.sizes() << std::endl; */
 			x = torch::leaky_relu(linear_1_->forward(x));
-			/* std::cout << "x size: " << x.sizes() << std::endl; */
 			x = torch::leaky_relu(linear_2_->forward(x));
-			/* std::cout << "x size: " << x.sizes() << std::endl; */
 			/* x = linear_3_->forward(x); */
 			return x;
 		}

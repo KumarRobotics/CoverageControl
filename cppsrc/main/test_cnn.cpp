@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 	YAML::Node config = YAML::LoadFile(config_file);
 	auto cnn_config = config["CNN"];
 
-	std::string data_dir = config["pDataDir"].as<std::string>();
+	std::string data_dir = config["DataDir"].as<std::string>();
 
 	CoverageControlCNN model(cnn_config);
 	torch::load(model, config["CNNModel"]["Dir"].as<std::string>() + config["CNNModel"]["Model"].as<std::string>());
