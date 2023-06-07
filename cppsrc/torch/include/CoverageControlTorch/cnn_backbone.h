@@ -21,12 +21,13 @@ namespace CoverageControlTorch {
 		torch::nn::Linear linear_2_;
 		torch::nn::Linear linear_3_;
 
-		CNNBackboneImpl(int input_dim, int num_layers, int latent_size, int kernel_size, int image_size) : 
+		CNNBackboneImpl(int input_dim, int num_layers, int latent_size, int kernel_size, int image_size, int output_dim) : 
 			input_dim_(input_dim),
 			num_layers_(num_layers),
 			latent_size_(latent_size),
 			kernel_size_(kernel_size),
 			image_size_(image_size),
+			output_dim_(output_dim),
 			conv_layers_(torch::nn::ModuleList()),
 			batch_norm_layers_(torch::nn::ModuleList()),
 			linear_1_(nullptr),
@@ -41,7 +42,7 @@ namespace CoverageControlTorch {
 
 			for(int i = 0; i < num_layers_; ++i) {
 				conv_layers_->push_back(register_module("conv" + std::to_string(i),
-							torch::nn::Conv2d(torch::nn::Conv2dOptions(layers_[i], layers_[i + 1], 3))));
+							torch::nn::Conv2d(torch::nn::Conv2dOptions(layers_[i], layers_[i + 1], kernel_size_))));
 				batch_norm_layers_->push_back(register_module("batch_norm" + std::to_string(i),
 							torch::nn::BatchNorm2d(layers_[i+1])));
 			}

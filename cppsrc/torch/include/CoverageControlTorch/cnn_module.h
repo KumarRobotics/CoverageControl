@@ -41,7 +41,7 @@ namespace CoverageControlTorch {
 
 		CoverageControlCNNImpl(YAML::Node const &yaml_config) :
 			config_(yaml_config),
-			cnn_backbone_(register_module("cnn_backbone", CNNBackbone(config_.pInputDim, config_.pNumLayers, config_.pLatentSize, config_.pKernelSize, config_.pImageSize))),
+			cnn_backbone_(register_module("cnn_backbone", CNNBackbone(config_.pInputDim, config_.pNumLayers, config_.pLatentSize, config_.pKernelSize, config_.pImageSize, config_.pOutputDim))),
 			linear_(register_module("linear", torch::nn::Linear(2 * config_.pOutputDim, config_.pOutputDim))) {
 		}
 
