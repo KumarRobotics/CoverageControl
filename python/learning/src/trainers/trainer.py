@@ -11,11 +11,11 @@ class TrainModel():
     :param criterion: loss function
     :param epochs: number of epochs
     :param device: device
-    :param model_name: model name
+    :param model_file: model file
     :return: None
     """
 
-    def __init__(self, model, train_loader, val_loader, test_loader, optimizer, criterion, epochs, device, model_name):
+    def __init__(self, model, train_loader, val_loader, test_loader, optimizer, criterion, epochs, device, model_file):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -24,7 +24,23 @@ class TrainModel():
         self.criterion = criterion
         self.epochs = epochs
         self.device = device
-        self.model_name = model_name
+        self.model_file = model_file
+
+    def LoadSavedModelDict(self, model_path):
+        """
+        Load the saved model
+        :param model_path: model path
+        :return: None
+        """
+        self.model.load_state_dict(torch.load(model_path))
+
+    def LoadSavedModel(self, model_path):
+        """
+        Load the saved model
+        :param model_path: model path
+        :return: None
+        """
+        self.model = torch.load(model_path)
 
     # Train in batches, save the best model using the validation set
     def Train(self):
@@ -52,17 +68,17 @@ class TrainModel():
             # Save the best model
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
-                torch.save(self.model.state_dict(), self.model_name)
+                torch.save(self.model, self.model_file)
 
             # Print the loss
             print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
                   "Training Loss: {:.5f}.. ".format(train_loss),
                   "Validation Loss: {:.5f}.. ".format(val_loss))
 
-        # Save the loss history
-        model_path = self.model_name.split('.')[0]
-        torch.save(train_loss_history, model_path + '_train_loss.pt')
-        torch.save(val_loss_history, model_path + '_val_loss.pt')
+            # Save the loss history
+            model_path = self.model_file.split('.')[0]
+            torch.save(train_loss_history, model_path + '_train_loss.pt')
+            torch.save(val_loss_history, model_path + '_val_loss.pt')
 
     # Train the model in batches
     def TrainEpoch(self):

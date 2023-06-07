@@ -25,12 +25,12 @@ then
 		echo "pyCoverageControl failed"
 		exit 1
 	fi
-	cd ../../torch/python_bindings/
-	pip install .
-	if [ $? -ne 0 ]; then
-		echo "pyCoverageControlTorch failed"
-		exit 1
-	fi
+	# cd ../../torch/python_bindings/
+	# pip install .
+	# if [ $? -ne 0 ]; then
+	# 	echo "pyCoverageControlTorch failed"
+	# 	exit 1
+	# fi
 	cd ../../..
 fi
 

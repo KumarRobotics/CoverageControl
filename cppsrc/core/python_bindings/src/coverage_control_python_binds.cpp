@@ -4,6 +4,11 @@
 
 #include "../core_binds.h"
 
+#include <CoverageControl/coverage_system.h>
+using namespace CoverageControl;
+
 PYBIND11_MODULE(pyCoverageControl, m) {
 	pyCoverageControl_core(m);
+	pyCoverageControl_core_coverage_system(m);
 }
+

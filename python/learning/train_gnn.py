@@ -56,12 +56,14 @@ train_loader = torch_geometric.loader.DataLoader(train_dataset, batch_size=batch
 val_loader = torch_geometric.loader.DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 test_loader = torch_geometric.loader.DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+# optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
 # Use mse loss for regression
 criterion = torch.nn.MSELoss()
 
 trainer = TrainModel(model, train_loader, val_loader, test_loader, optimizer, criterion, num_epochs, device, model_file)
+trainer.LoadSavedModel(model_file)
 
 trainer.Train()
 test_loss = trainer.Test()

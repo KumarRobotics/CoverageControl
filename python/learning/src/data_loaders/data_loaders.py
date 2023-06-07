@@ -50,12 +50,20 @@ class LocalMapGNNDataset(Dataset):
         self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{data_dir}/{stage}")
         self.edge_weights = dl_utils.LoadEdgeWeights(f"{data_dir}/{stage}")
 
+        # Print the details of the dataset with device information
+        print(f"Dataset: {self.stage} | Size: {self.dataset_size}")
+        print(f"Maps: {self.maps.shape} | Device: {self.maps.device}")
+        print(f"Targets: {self.targets.shape} | Device: {self.targets.device}")
+        print(f"Edge Weights: {self.edge_weights.shape} | Device: {self.edge_weights.device}")
+        print(f"Targets: {self.targets.shape} | Device: {self.targets.device}")
+
+
     def len(self):
         return self.dataset_size
 
     def get(self, idx):
-        data = dl_utils.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx], self.targets[idx])
-        return data, data.y
+        data = dl_utils.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx])
+        return data, self.targets[idx]
 
 class VoronoiGNNDataset(Dataset):
     """

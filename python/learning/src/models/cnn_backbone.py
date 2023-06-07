@@ -34,9 +34,10 @@ class CNNBackBone(torch.nn.Module, CNNConfigParser):
     
     def forward(self, x):
         for layer in range(self.num_layers):
-            x = self._modules["conv{}".format(layer)](x)
-            x = self._modules["batch_norm{}".format(layer)](x)
-            x = torch.nn.functional.leaky_relu(x)
+            x = torch.nn.functional.leaky_relu(self._modules["batch_norm{}".format(layer)](self._modules["conv{}".format(layer)](x)))
+            # x = self._modules["conv{}".format(layer)](x)
+            # x = self._modules["batch_norm{}".format(layer)](x)
+            # x = torch.nn.functional.leaky_relu(x)
 
         x = x.flatten(1)
         x = torch.nn.functional.leaky_relu(self.linear_1(x))

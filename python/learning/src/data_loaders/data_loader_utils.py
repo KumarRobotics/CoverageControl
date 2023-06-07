@@ -63,7 +63,7 @@ def LoadEdgeWeights(path):
     edge_weights.to_dense()
     return edge_weights
 
-def ToTorchGeometricData(feature, edge_weights, target):
+def ToTorchGeometricData(feature, edge_weights):
     edge_weights = edge_weights.to_sparse()
     edge_weights = edge_weights.coalesce()
     edge_index = edge_weights.indices().long()
@@ -72,6 +72,5 @@ def ToTorchGeometricData(feature, edge_weights, target):
             x=feature,
             edge_index=edge_index,
             edge_weight=weights,
-            y = target
             )
     return data

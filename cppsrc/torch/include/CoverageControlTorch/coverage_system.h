@@ -16,6 +16,7 @@
 typedef long int T_idx_t;
 using namespace torch::indexing;
 using namespace CoverageControl;
+namespace F = torch::nn::functional;
 namespace CoverageControlTorch {
 
 	class CoverageSystem : public CoverageControl::CoverageSystem {
@@ -90,6 +91,21 @@ namespace CoverageControlTorch {
 					comm_maps[r_idx][1] = torch::sparse_coo_tensor(indices, values.index({Slice(), 1}), {map_size, map_size}, values.dtype()).to_dense();
 				}
 				return comm_maps;
+			}
+
+			torch::Tensor GetEdgeWeights() {
+				float onebyexp = expf(-1);
+				torch::Tensor robot_positions = ToTensor(GetRobotPositions());
+				torch::Tensor  pairwise_dist_matrices= torch::cdist(robot_positions, robot_positions, 2);
+				torch::Tensor edge_weights = torch::exp(-(pairwise_dist_matrices.square())/(comm_range_*comm_range_)).to(torch::kCPU);
+				F::threshold(edge_weights, F::ThresholdFuncOptions(onebyexp, 0).inplace(true));
+				torch::Tensor diagonal_mask = torch::eye(edge_weights.size(1)).repeat({edge_weights.size(0), 1, 1}).to(torch::kBool);
+				edge_weights.masked_fill_(diagonal_mask, 0);
+				return edge_weights;
+			}
+
+			torch::Tensor GetLocalVoronoiFeaturesTensor() {
+				return ToTensor(GetLocalVoronoiFeatures());
 			}
 	};
 } // namespace CoverageControlTorch
