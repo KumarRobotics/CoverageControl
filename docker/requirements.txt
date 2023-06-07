@@ -25,9 +25,7 @@ geopy
 geographiclib
 
 shapely
-gymnasium
 seaborn
-stable-baselines3
 configparser
 pyyaml
 opencv-python
