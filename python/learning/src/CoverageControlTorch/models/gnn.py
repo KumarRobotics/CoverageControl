@@ -1,9 +1,9 @@
 import torch
 from torch_geometric.nn import MLP
 
-from .config_parser import GNNConfigParser
-from .gnn_backbone import GNNBackBone
-from .cnn_backbone import CNNBackBone
+from CoverageControlTorch.models.config_parser import GNNConfigParser
+from CoverageControlTorch.models.gnn_backbone import GNNBackBone
+from CoverageControlTorch.models.cnn_backbone import CNNBackBone
 
 class CNNGNN(torch.nn.Module, GNNConfigParser):
     def __init__(self, config):
@@ -12,7 +12,8 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         self.Parse(config['GNN'])
         self.cnn_backbone = CNNBackBone(self.cnn_config)
         self.gnn_backbone = GNNBackBone(self.config, self.cnn_backbone.backbone_output_dim)
-        self.mlp = MLP([self.latent_size, 32, 32], dropout=0.4)
+        self.mlp = MLP([self.latent_size, 32])
+        # self.mlp = MLP([self.latent_size, 32, 32], dropout=0.4)
         self.output_linear = torch.nn.Linear(32, self.output_dim)
 
     def forward(self, data):

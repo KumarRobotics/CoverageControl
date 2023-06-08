@@ -31,6 +31,8 @@ then
 	# 	echo "pyCoverageControlTorch failed"
 	# 	exit 1
 	# fi
+	cd ../../../python/learning/
+	pip install .
 	cd ../../..
 fi
 

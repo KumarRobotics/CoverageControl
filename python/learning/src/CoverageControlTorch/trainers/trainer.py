@@ -15,7 +15,7 @@ class TrainModel():
     :return: None
     """
 
-    def __init__(self, model, train_loader, val_loader, test_loader, optimizer, criterion, epochs, device, model_file):
+    def __init__(self, model, train_loader, val_loader, test_loader, optimizer, criterion, epochs, device, model_file, optimizer_file):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -25,6 +25,7 @@ class TrainModel():
         self.epochs = epochs
         self.device = device
         self.model_file = model_file
+        self.optimizer_file = optimizer_file
 
     def LoadSavedModelDict(self, model_path):
         """
@@ -41,6 +42,14 @@ class TrainModel():
         :return: None
         """
         self.model = torch.load(model_path)
+
+    def LoadSavedOptimizer(self, optimizer_path):
+        """
+        Load the saved optimizer
+        :param optimizer_path: optimizer path
+        :return: None
+        """
+        self.optimizer = torch.load(optimizer_path)
 
     # Train in batches, save the best model using the validation set
     def Train(self):
@@ -69,6 +78,7 @@ class TrainModel():
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 torch.save(self.model, self.model_file)
+                torch.save(self.optimizer, self.optimizer_file)
 
             # Print the loss
             print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),

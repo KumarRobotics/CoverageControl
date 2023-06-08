@@ -1,7 +1,8 @@
 import yaml
 import os
 import torch
-import src.data_loaders.data_loader_utils as dl_utils
+import CoverageControlTorch
+import CoverageControlTorch.data_loaders.data_loader_utils as dl_utils
 from torch_geometric.data import Dataset
 
 

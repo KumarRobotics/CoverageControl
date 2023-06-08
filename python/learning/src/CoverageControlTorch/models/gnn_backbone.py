@@ -3,7 +3,8 @@ import sys
 import yaml
 import torch
 import torch_geometric
-from .config_parser import GNNConfigParser
+import CoverageControlTorch
+from CoverageControlTorch.models.config_parser import GNNConfigParser
 
 class GNNBackBone(torch.nn.Module, GNNConfigParser):
     """

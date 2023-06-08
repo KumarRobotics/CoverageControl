@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "CoverageControlTorch"
+version = "0.0.1"
+authors = [
+  { name="Saurav Agarwal", email="SauravAg@upenn.edu" },
+]
+description = "Coverage Control for Multi-Agent Systems using PyTorch"
+# readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]

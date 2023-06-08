@@ -1,6 +1,7 @@
 import torch
-from .cnn_backbone import CNNBackBone
-from .config_parser import CNNConfigParser
+import CoverageControlTorch
+from CoverageControlTorch.models.cnn_backbone import CNNBackBone
+from CoverageControlTorch.models.config_parser import CNNConfigParser
 
 class CNN(torch.nn.Module, CNNConfigParser):
     """
