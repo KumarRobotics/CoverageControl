@@ -19,8 +19,6 @@ from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
         self.config = config
-        self.params = params
-        self.env = env
         self.num_robots = num_robots
         self.name = self.config['Name']
         self.type = self.config['Type']
@@ -42,45 +40,45 @@ class Controller:
         elif self.type == 'CoverageControl':
             self.Step = self.StepCoverageControl
             if self.name == 'OracleGlobalOffline':
-                self.cc = OracleGlobalOffline(self.params, self.num_robots, self.env)
+                self.cc = OracleGlobalOffline(params, self.num_robots, env)
             elif self.name == 'LloydLocalVoronoi':
-                self.cc = LloydLocalVoronoi(self.params, self.num_robots, self.env)
+                self.cc = LloydLocalVoronoi(params, self.num_robots, env)
             elif self.name == 'LloydGlobalOnline':
-                self.cc = LloydGlobalOnline(self.params, self.num_robots, self.env)
+                self.cc = LloydGlobalOnline(params, self.num_robots, env)
             elif self.name == 'LloydLocalSensorGlobalComm':
-                self.cc = LloydLocalSensorGlobalComm(self.params, self.num_robots, self.env)
+                self.cc = LloydLocalSensorGlobalComm(params, self.num_robots, env)
             else:
                 raise ValueError('Unknown controller type: {}'.format(self.type))
 
-    def StepCoverageControl(self):
+    def StepCoverageControl(self, env):
         self.cc.Step()
         actions = self.cc.GetActions()
-        self.env.StepActions(actions)
-        return self.env.GetObjectiveValue()
+        env.StepActions(actions)
+        return env.GetObjectiveValue()
 
-    def StepLearning(self):
+    def StepLearning(self, env):
         if self.use_cnn:
             features = self.GetMaps(self.use_comm_map)
         else:
-            features = self.env.GetLocalVoronoiFeaturesTensor()
-        edge_weights = self.env.GetEdgeWeights()
+            features = env.GetLocalVoronoiFeaturesTensor()
+        edge_weights = env.GetEdgeWeights()
         data = dl_utils.ToTorchGeometricData(features, edge_weights)
         data = data.to(self.device)
         with torch.no_grad():
             actions = self.model(data)
         point_vector_actions = PointVector(actions.cpu().numpy())
-        self.env.StepActions(point_vector_actions)
-        return self.env.GetObjectiveValue()
+        env.StepActions(point_vector_actions)
+        return env.GetObjectiveValue()
 
-    def GetMaps(self, use_comm_map):
+    def GetMaps(self, use_comm_map, env):
 
-        local_maps = torch.tensor(self.env.GetRobotLocalMap(0)).clone()
-        obstacle_maps = torch.tensor(self.env.GetRobotObstacleMap(0)).clone()
+        local_maps = torch.tensor(env.GetRobotLocalMap(0)).clone()
+        obstacle_maps = torch.tensor(env.GetRobotObstacleMap(0)).clone()
         local_maps = local_maps.unsqueeze(0)
         obstacle_maps = obstacle_maps.unsqueeze(0)
         for i in range(1, self.num_robots):
-            local_maps = torch.cat([local_maps, torch.tensor(self.env.GetRobotLocalMap(i)).unsqueeze(0)], 0)
-            obstacle_maps = torch.cat([obstacle_maps, torch.tensor(self.env.GetRobotObstacleMap(i)).unsqueeze(0)], 0)
+            local_maps = torch.cat([local_maps, torch.tensor(env.GetRobotLocalMap(i)).unsqueeze(0)], 0)
+            obstacle_maps = torch.cat([obstacle_maps, torch.tensor(env.GetRobotObstacleMap(i)).unsqueeze(0)], 0)
 
         self.resizer.to(self.device)
         local_maps = local_maps.to(self.device)
@@ -93,7 +91,7 @@ class Controller:
 
         if use_comm_map == True:
             communication_maps = torch.Tensor((self.num_robots, self.num_robots, self.map_size, self.map_size))
-            communication_maps = self.env.GetAllRobotsCommunicationMaps(self.map_size)
+            communication_maps = env.GetAllRobotsCommunicationMaps(self.map_size)
             communication_maps.to_dense()
             maps = torch.cat([local_maps, comm_maps, obstacle_maps], 1)
         else:
@@ -141,9 +139,6 @@ class Evaluator:
         while dataset_count < self.num_envs:
             print("New environment")
 
-            if dataset_count > 0:
-                del world_idf
-                del env_main
             pos_file = self.env_path + str(dataset_count) + ".pos"
             env_file = self.env_path + str(dataset_count) + ".env"
             if os.path.isfile(env_file) and os.path.isfile(pos_file):
@@ -161,18 +156,15 @@ class Evaluator:
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
 
                 while step_count < self.num_steps:
-                    cost_data[controller_id, dataset_count, step_count] = controller.Step()
+                    objective_value = controller.Step(env)
+                    cost_data[controller_id, dataset_count, step_count] = objective_value
                     step_count = step_count + 1
                     if step_count % 100 == 0:
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
-                del controller
-                # Save controller data
                 controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                 controller_data_file = controller_dir + '/' + 'eval.csv'
                 np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count, :], delimiter=",")
-
-
             dataset_count = dataset_count + 1
 
 
