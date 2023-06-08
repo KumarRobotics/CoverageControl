@@ -140,32 +140,25 @@ class Evaluator:
         cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
         while dataset_count < self.num_envs:
             print("New environment")
-            # Check if envs exist
+
             if dataset_count > 0:
-                for env in envs:
-                    del env
-                if self.env is not None:
-                    del self.env
                 del world_idf
-            envs = []
+                del env_main
             pos_file = self.env_path + str(dataset_count) + ".pos"
             env_file = self.env_path + str(dataset_count) + ".env"
             if os.path.isfile(env_file) and os.path.isfile(pos_file):
                 world_idf = WorldIDF(self.cc_params, env_file)
-                envs.append(CoverageSystem(self.cc_params, world_idf, pos_file))
+                env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
             else:
-                envs.append(CoverageSystem(self.cc_params, self.num_features, self.num_robots))
-                envs[0].WriteEnvironment(pos_file, env_file)
-                world_idf = envs[0].GetWorldIDFObject()
+                env_main = CoverageSystem(self.cc_params, self.num_features, self.num_robots)
+                env_main.WriteEnvironment(pos_file, env_file)
+                world_idf = env_main.GetWorldIDFObject()
 
-            robot_init_pos = envs[0].GetRobotPositions()
-            for controller in self.controllers:
-                envs.append(CoverageSystem(self.cc_params, world_idf, robot_init_pos))
-
+            robot_init_pos = env_main.GetRobotPositions()
             for controller_id in range(self.num_controllers):
                 step_count = 0
-                self.env = envs[controller_id]
-                controller = Controller(self.controllers[controller_id], self.cc_params, self.env, self.num_robots, self.map_size)
+                env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+                controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
 
                 while step_count < self.num_steps:
                     cost_data[controller_id, dataset_count, step_count] = controller.Step()
