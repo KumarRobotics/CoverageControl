@@ -21,7 +21,8 @@ RUN apt-get	-y update; \
 											 wget \
 											 gpg \
 											 curl \
-											 gdb
+											 gdb \
+											 software-properties-common
 
 # Add repo for installing latest version of cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
@@ -29,14 +30,17 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 		apt-get update; \
 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 
+RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
+
 RUN apt-get -y install \
 											 kitware-archive-keyring \
 											 cmake \
 											 libboost-dev \
 											 libboost-all-dev \
 											 libcgal-dev \
-											 python3-dev \
-											 python3-venv \
+											 python3.11 \
+											 python3.11-dev \
+											 python3.11-venv \
 											 python-is-python3 \
 											 python3-numpy \
 											 libgeos-dev \
@@ -55,7 +59,7 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/*.bin
 
 COPY requirements.txt /root/requirements.txt
-RUN python -m venv /root/venv
+RUN python3.11 -m venv /root/venv
 RUN /root/venv/bin/pip install --no-cache-dir -r /root/requirements.txt
 
 RUN mkdir download; \
