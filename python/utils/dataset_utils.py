@@ -62,8 +62,8 @@ def SplitSaveData(path, data_name, num_train, num_val, num_test):
     os.remove(path + data_name + '.pt')
 
 def NormalizeData(data):
-    data_mean = torch.mean(data, dim=0)
-    data_std = torch.std(data, dim=0)
+    data_mean = torch.mean(data.view(-1, data.shape[-1]), dim=0)
+    data_std = torch.std(data.view(-1, data.shape[-1]), dim=0)
     data = (data - data_mean) / data_std
     return data_mean, data_std, data
 
@@ -127,17 +127,17 @@ def CombineDataset(config_path, subdir_list):
                     data = data.to_dense()
                 combined_data = torch.cat((combined_data, data.clone()), dim=0)
             del data
+        if is_sparse:
+            combined_data = combined_data.to_sparse()
+        torch.save(combined_data, data_dir + data_name + '.pt')
         if data_name in normalize_data_names:
+            combined_data = combined_data.to_dense()
             combined_data_mean, combined_data_std, combined_data = NormalizeData(combined_data)
             if is_sparse:
                 combined_data = combined_data.to_sparse()
             torch.save(combined_data_mean, data_dir + data_name + '_mean.pt')
             torch.save(combined_data_std, data_dir + data_name + '_std.pt')
             torch.save(combined_data, data_dir + 'normalized_' + data_name + '.pt')
-        if is_sparse:
-            combined_data = combined_data.to_sparse()
-        torch.save(combined_data, data_dir + data_name + '.pt')
-
         del combined_data
 
 __all__ = ['SplitDataset', 'CombineDataset']

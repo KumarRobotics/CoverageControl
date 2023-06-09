@@ -239,6 +239,7 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("GetExplorationRatio", &CoverageSystem::GetExplorationRatio)
 			.def("GetWeightedExplorationRatio", &CoverageSystem::GetWeightedExplorationRatio)
 			.def("RecordPlotData", py::overload_cast<>(&CoverageSystem::RecordPlotData))
+			.def("RecordPlotData", py::overload_cast<std::string const &>(&CoverageSystem::RecordPlotData))
 			.def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
 			.def("WriteEnvironment", &CoverageSystem::WriteEnvironment)
 			.def("GetNumRobots", &CoverageSystem::GetNumRobots)

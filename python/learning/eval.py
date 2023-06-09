@@ -9,12 +9,10 @@ from pyCoverageControl import CoverageSystem
 from pyCoverageControl import PointVector, Parameters, WorldIDF
 from pyCoverageControl import OracleGlobalOffline, LloydLocalVoronoi, LloydGlobalOnline, LloydLocalSensorGlobalComm
 
-from torch_geometric.data import Data
-import torchvision.transforms as T
-
 import CoverageControlTorch as cct
 from CoverageControlTorch.data_loaders import data_loader_utils as dl_utils
 from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
+from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData
 
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
@@ -23,18 +21,19 @@ class Controller:
         self.name = self.config['Name']
         self.type = self.config['Type']
         self.map_size = map_size
-        self.resizer = Resizer(self.map_size)
         if self.type == 'Learning':
             self.Step = self.StepLearning
             self.model_file = self.config['ModelFile']
             self.model = torch.load(self.model_file)
             self.use_cnn = self.config['UseCNN']
             self.use_comm_map = self.config['UseCommMap']
-            self.model_dict = torch.load(self.model_file)
             if torch.cuda.is_available():
                 self.device = torch.device('cuda')
             else:
                 self.device = torch.device('cpu')
+            # Get actions_mean and actions_std from model buffer
+            self.actions_mean = self.model.actions_mean.to(self.device)
+            self.actions_std = self.model.actions_std.to(self.device)
             self.model = self.model.to(self.device)
             self.model.eval()
         elif self.type == 'CoverageControl':
@@ -50,62 +49,21 @@ class Controller:
             else:
                 raise ValueError('Unknown controller type: {}'.format(self.type))
 
-    def StepCoverageControl(self, env):
+    def StepCoverageControl(self, params, env):
         self.cc.Step()
         actions = self.cc.GetActions()
         env.StepActions(actions)
         return env.GetObjectiveValue()
 
-    def StepLearning(self, env):
-        if self.use_cnn:
-            features = self.GetMaps(self.use_comm_map)
-        else:
-            features = env.GetLocalVoronoiFeaturesTensor()
-        edge_weights = env.GetEdgeWeights()
-        data = dl_utils.ToTorchGeometricData(features, edge_weights)
+    def StepLearning(self, params, env):
+        data = GetTorchGeometricData(env, params, self.use_cnn, self.use_comm_map, self.map_size)
         data = data.to(self.device)
         with torch.no_grad():
             actions = self.model(data)
+        actions = actions * self.actions_std + self.actions_mean
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
         return env.GetObjectiveValue()
-
-    def GetMaps(self, use_comm_map, env):
-
-        local_maps = torch.tensor(env.GetRobotLocalMap(0)).clone()
-        obstacle_maps = torch.tensor(env.GetRobotObstacleMap(0)).clone()
-        local_maps = local_maps.unsqueeze(0)
-        obstacle_maps = obstacle_maps.unsqueeze(0)
-        for i in range(1, self.num_robots):
-            local_maps = torch.cat([local_maps, torch.tensor(env.GetRobotLocalMap(i)).unsqueeze(0)], 0)
-            obstacle_maps = torch.cat([obstacle_maps, torch.tensor(env.GetRobotObstacleMap(i)).unsqueeze(0)], 0)
-
-        self.resizer.to(self.device)
-        local_maps = local_maps.to(self.device)
-        local_maps_resized = self.resizer.forward(local_maps)
-        local_maps_resized = local_maps_resized.unsqueeze(1).to('cpu')
-
-        obstacle_maps = obstacle_maps.to(self.device)
-        obstacle_maps_resized = self.resizer.forward(obstacle_maps)
-        obstacle_maps_resized = obstacle_maps_resized.unsqueeze(1).to('cpu')
-
-        if use_comm_map == True:
-            communication_maps = torch.Tensor((self.num_robots, self.num_robots, self.map_size, self.map_size))
-            communication_maps = env.GetAllRobotsCommunicationMaps(self.map_size)
-            communication_maps.to_dense()
-            maps = torch.cat([local_maps, comm_maps, obstacle_maps], 1)
-        else:
-            maps = torch.cat([local_maps, obstacle_maps], 1)
-        return maps
-
-class Resizer(torch.nn.Module):
-    def __init__(self, size):
-        super(Resizer, self).__init__()
-        self.size = size
-        self.T = T.Resize(size, interpolation=T.InterpolationMode.BILINEAR, antialias=True)
-
-    def forward(self, img):
-        return self.T(img)
 
 class Evaluator:
     def __init__(self, config):
@@ -154,17 +112,18 @@ class Evaluator:
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
-
                 while step_count < self.num_steps:
-                    objective_value = controller.Step(env)
+                    objective_value = controller.Step(self.cc_params, env)
                     cost_data[controller_id, dataset_count, step_count] = objective_value
                     step_count = step_count + 1
+                    env.RecordPlotData('world')
                     if step_count % 100 == 0:
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
                 controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                 controller_data_file = controller_dir + '/' + 'eval.csv'
                 np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count, :], delimiter=",")
+                env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
             dataset_count = dataset_count + 1
 
 
