@@ -89,3 +89,23 @@ def GetTorchGeometricData(env, params, use_cnn, use_comm_map, map_size):
     data = torch_geometric.data.Data(x=features, edge_index=edge_index, edge_weight=weights)
     return data
 
+def ToTorchGeometricDataRobotPositions(env, params, use_cnn, use_comm_map, map_size):
+    if use_cnn:
+        features = GetMaps(env, params, map_size, use_comm_map)
+    else:
+        features = GetVoronoiFeatures(env, params)
+    x = ToTensor(env.GetRobotPositions())
+    dist_matrix = torch.cdist(x, x, 2)
+    dist_matrix[dist_matrix > params.pCommunicationRange] = 0
+    C = (params.pWorldMapSize **2)/(dist_matrix.shape[0] ** 2)
+    C = 3/C
+    edge_weights = dist_matrix * C
+    edge_weights = edge_weights.to_sparse()
+    edge_index = edge_weights.indices().long()
+    weights = edge_weights.values().float()
+    data = torch_geometric.data.Data(
+            x=feature,
+            edge_index=edge_index,
+            edge_weight=weights,
+            )
+    return data

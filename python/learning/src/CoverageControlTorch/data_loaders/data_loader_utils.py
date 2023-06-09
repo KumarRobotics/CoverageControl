@@ -58,6 +58,10 @@ def LoadActions(path):
     actions_std = LoadTensor(f"{path}/../actions_std.pt")
     return actions, actions_mean, actions_std
 
+def LoadRobotPositions(path):
+    robot_positions = LoadTensor(f"{path}/robot_positions.pt")
+    return robot_positions
+
 def LoadEdgeWeights(path):
     edge_weights = LoadTensor(f"{path}/edge_weights.pt")
     edge_weights.to_dense()
@@ -66,6 +70,23 @@ def LoadEdgeWeights(path):
 def ToTorchGeometricData(feature, edge_weights):
     edge_weights = edge_weights.to_sparse()
     edge_weights = edge_weights.coalesce()
+    edge_index = edge_weights.indices().long()
+    weights = torch.reciprocal(edge_weights.values().float())
+    data = torch_geometric.data.Data(
+            x=feature,
+            edge_index=edge_index,
+            edge_weight=weights,
+            )
+    return data
+
+def ToTorchGeometricDataRobotPositions(feature, robot_positions):
+    x = robot_positions
+    dist_matrix = torch.cdist(x, x, 2)
+    dist_matrix[dist_matrix > 256] = 0
+    C = (2048 **2)/(dist_matrix.shape[0] ** 2)
+    C = 3/C
+    edge_weights = dist_matrix * C
+    edge_weights = edge_weights.to_sparse()
     edge_index = edge_weights.indices().long()
     weights = edge_weights.values().float()
     data = torch_geometric.data.Data(
