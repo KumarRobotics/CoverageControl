@@ -64,6 +64,7 @@ namespace CoverageControl {
 
 	void CoverageSystem::PlotMapVoronoi(std::string const &dir_name, int const &step, Voronoi const &voronoi, PointVector const &goals) const {
 		Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetScale(0.5);
 		plotter.SetPlotName("map", step);
 		plotter.PlotMap(GetWorldIDF(), robot_global_positions_, goals, voronoi);
 	}

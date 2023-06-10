@@ -51,14 +51,14 @@ int main(int argc, char** argv) {
 	else {
 		env = std::make_unique<CoverageSystem> (params, num_dists, num_robots);
 	}
-	env->WriteEnvironment("data/test/pos", "data/test/idf");
+	env->WriteEnvironment("datasets/test/pos", "datasets/test/idf");
 
 	CoverageAlgorithm oracle(params, num_robots, *env);
 
-	std::string dir = "data/test/";
+	std::string dir = "datasets/test/maps/";
 	env->PlotInitMap(dir, "init_map");
 	auto goals = oracle.GetGoals();
-	/* env->PlotMapVoronoi(dir, 0, oracle.GetVoronoi(), oracle.GetGoals()); */
+	env->PlotMapVoronoi(dir, 0, oracle.GetVoronoi(), oracle.GetGoals());
 	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 		env->StepActions(actions);
 		if(ii%1 == 0) {
 			/* env->RecordPlotData(); */
-			/* env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals()); */
+			env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
 		}
 		if(cont_flag == false) {
 			break;
@@ -80,10 +80,10 @@ int main(int argc, char** argv) {
 	for(int ii = 0; ii < 90; ++ii) {
 		env->StepActions(zero_actions);
 		/* env->RecordPlotData(); */
-		/* env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals()); */
+		env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
 	}
 
-	/* env->PlotMapVoronoi(dir, 1, oracle.GetVoronoi(), oracle.GetGoals()); */
+	env->PlotMapVoronoi(dir, 1, oracle.GetVoronoi(), oracle.GetGoals());
 	/* env->RenderRecordedMap(dir, "CoverageControl_oracle.mp4"); */
 	return 0;
 }

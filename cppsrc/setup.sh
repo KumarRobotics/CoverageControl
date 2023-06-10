@@ -87,8 +87,8 @@ InstallCoverageControlMain () {
 if [[ ${INSTALL} ]]
 then
 	InstallCoverageControlCore
-	# InstallCoverageControlTorch
-	# InstallCoverageControlTests
+	InstallCoverageControlTorch
+	InstallCoverageControlTests
 	# InstallCoverageControlMain
 fi
 

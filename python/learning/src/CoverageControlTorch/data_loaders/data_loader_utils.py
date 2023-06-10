@@ -39,6 +39,7 @@ def LoadMaps(path, use_comm_map):
     if use_comm_map:
         comm_maps = LoadTensor(f"{path}/comm_maps.pt")
         comm_maps = comm_maps.to_dense()
+        comm_maps = (comm_maps * 256 + 256)/512
         maps = torch.cat([local_maps, comm_maps, obstacle_maps], 2)
     else:
         maps = torch.cat([local_maps, obstacle_maps], 2)
