@@ -123,6 +123,9 @@ namespace CoverageControl {
 					}
 					double speed = dist / params_.pTimeStep;
 					/* double speed = 2 * dist * voronoi_mass_[iRobot]; */
+					/* if(dist > 0 and voronoi_mass_[iRobot] == 0) { */
+					/* 	speed = dist / params_.pTimeStep; */
+					/* } */
 					speed = std::min(params_.pMaxRobotSpeed, speed);
 					Point2 direction(diff);
 					direction.normalize();

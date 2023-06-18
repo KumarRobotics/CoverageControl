@@ -101,17 +101,17 @@ namespace CoverageControl {
 					/* std::cout << map_size_.x() << " " << map_size_.y() << std::endl; */
 					map_ = std::make_shared<const MapType>(map);
 					num_sites_ = sites_.size();
-					double shortest_dist = std::numeric_limits<double>::max();
-					for(int i = 0; i < num_sites_; ++i) {
-						auto const &site = sites[i];
-						for(int j = i + 1; j < num_sites_; ++j) {
-							auto const &site2 = sites[j];
-							double dist = (site - site2).norm();
-							if(dist < shortest_dist) {
-								shortest_dist = dist;
-							}
-						}
-					}
+					/* double shortest_dist = std::numeric_limits<double>::max(); */
+					/* for(int i = 0; i < num_sites_; ++i) { */
+					/* 	auto const &site = sites[i]; */
+					/* 	for(int j = i + 1; j < num_sites_; ++j) { */
+					/* 		auto const &site2 = sites[j]; */
+					/* 		double dist = (site - site2).norm(); */
+					/* 		if(dist < shortest_dist) { */
+					/* 			shortest_dist = dist; */
+					/* 		} */
+					/* 	} */
+					/* } */
 					/* std::cout << "Shortest dist between sites: " << shortest_dist << std::endl; */
 					if(compute_single_ == false) {
 						voronoi_cells_.resize(num_sites_);

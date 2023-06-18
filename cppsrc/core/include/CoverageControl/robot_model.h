@@ -170,8 +170,8 @@ namespace CoverageControl {
 			}
 
 			const MapType& GetRobotLocalMap() {
-				/* local_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, -1.0); */
-				local_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0.);
+				local_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, -1.0);
+				/* local_map_ = MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0.); */
 				if(not MapUtils::IsPointOutsideBoundary(params_.pResolution, global_current_position_, params_.pLocalMapSize, params_.pWorldMapSize)) {
 					MapUtils::GetSubMap(params_.pResolution, global_current_position_, params_.pRobotMapSize, robot_map_, params_.pLocalMapSize, local_map_);
 				}
