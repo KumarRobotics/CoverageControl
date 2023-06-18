@@ -1,11 +1,14 @@
 import math
 import numpy
+import cv2
 import torch
 import torchvision
 import torch_geometric
 from torch_geometric.data import Dataset
 import pyCoverageControl
 import CoverageControlTorch as cct
+from scipy.ndimage import gaussian_filter
+from scipy.spatial import distance_matrix
 
 
 def ToTensor(data):
@@ -65,6 +68,31 @@ def GetMaps(env, params, map_size, use_comm_map):
         maps = torch.cat([local_maps.unsqueeze(1), obstacle_maps.unsqueeze(1)], dim=1)
     return maps
 
+def GetStableMaps(env, params, map_size):
+    robot_positions = ToTensor(env.GetRobotPositions())
+    num_robots = env.GetNumRobots()
+    maps = torch.empty((num_robots, 4, map_size, map_size))
+    h_vals = torch.linspace(1.0, -1.0, maps.shape[-2]+1)
+    h_vals = (h_vals[1:] + h_vals[:-1])/2
+    w_vals = torch.linspace(-1.0, 1.0, maps.shape[-1]+1)
+    w_vals = (w_vals[1:] + w_vals[:-1])/2
+    heatmap_x = torch.stack([h_vals] * maps.shape[-1], dim=1)/100
+    heatmap_y = torch.stack([w_vals] * maps.shape[-2], dim=0)/100
+    for r_idx in range(num_robots):
+        local_map = env.GetRobotLocalMap(r_idx)
+        resized_local_map = cv2.resize(local_map, dsize=(map_size, map_size), interpolation=cv2.INTER_AREA)
+        maps[r_idx][0] = torch.tensor(resized_local_map).float()
+
+        comm_map = env.GetCommunicationMap(r_idx)
+        filtered_comm_map = gaussian_filter(comm_map, sigma=(3,3), order=0)
+        resized_comm_map = torch.tensor(cv2.resize(numpy.array(filtered_comm_map), dsize=(map_size, map_size), interpolation=cv2.INTER_AREA)).float()
+        maps[r_idx][1] = resized_comm_map
+
+        maps[r_idx][2] = heatmap_x
+        maps[r_idx][3] = heatmap_y
+
+    return maps
+
 def GetVoronoiFeatures(env, params):
     features = ToTensor(env.GetVoronoiFeatures())
     return features
@@ -89,23 +117,34 @@ def GetTorchGeometricData(env, params, use_cnn, use_comm_map, map_size):
     data = torch_geometric.data.Data(x=features, edge_index=edge_index, edge_weight=weights)
     return data
 
-def ToTorchGeometricDataRobotPositions(env, params, use_cnn, use_comm_map, map_size):
-    if use_cnn:
-        features = GetMaps(env, params, map_size, use_comm_map)
-    else:
-        features = GetVoronoiFeatures(env, params)
-    x = ToTensor(env.GetRobotPositions())
-    dist_matrix = torch.cdist(x, x, 2)
-    dist_matrix[dist_matrix > params.pCommunicationRange] = 0
-    C = (params.pWorldMapSize **2)/(dist_matrix.shape[0] ** 2)
-    C = 3/C
-    edge_weights = dist_matrix * C
-    edge_weights = edge_weights.to_sparse()
-    edge_index = edge_weights.indices().long()
-    weights = edge_weights.values().float()
-    data = torch_geometric.data.Data(
-            x=feature,
-            edge_index=edge_index,
-            edge_weight=weights,
-            )
-    return data
+# def GetTorchGeometricDataRobotPositions(env, params, use_cnn, use_comm_map, map_size):
+#     if use_cnn:
+#         features = GetMaps(env, params, map_size, use_comm_map)
+#     else:
+#         features = GetVoronoiFeatures(env, params)
+#     x = ToTensor(env.GetRobotPositions())
+#     edge_weights = RobotPositionsToEdgeWeights(x, params.pWorldMapSize, params.pCommunicationRange)
+#     edge_weights = edge_weights.to_sparse()
+#     edge_index = edge_weights.indices().long()
+#     weights = edge_weights.values().float()
+#     data = torch_geometric.data.Data(
+#             x=feature,
+#             edge_index=edge_index,
+#             edge_weight=weights,
+#             )
+#     return data
+
+def RobotPositionsToEdgeWeights(robot_positions, world_map_size, comm_range):
+    x = numpy.array(robot_positions)
+    S = distance_matrix(x, x)
+    S[S > comm_range] = 0
+    C = (world_map_size**2) / (S.shape[0]**2)
+    C = 3 / C
+    graph_obs = C * S
+    return graph_obs
+    # dist_matrix = torch.cdist(robot_positions, robot_positions, 2)
+    # dist_matrix[dist_matrix > comm_range] = 0
+    # C = (world_map_size **2)/(dist_matrix.shape[0] ** 2)
+    # C = 3/C
+    # edge_weights = C * dist_matrix
+    # return edge_weights

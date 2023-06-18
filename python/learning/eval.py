@@ -12,7 +12,7 @@ from pyCoverageControl import OracleGlobalOffline, LloydLocalVoronoi, LloydGloba
 import CoverageControlTorch as cct
 from CoverageControlTorch.data_loaders import data_loader_utils as dl_utils
 from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
-from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData
+from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData, GetStableMaps, RobotPositionsToEdgeWeights, ToTensor
 
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
@@ -56,11 +56,17 @@ class Controller:
         return env.GetObjectiveValue()
 
     def StepLearning(self, params, env):
-        data = GetTorchGeometricData(env, params, self.use_cnn, self.use_comm_map, self.map_size)
+        maps = GetStableMaps(env, params, self.map_size)
+        # robot_positions = ToTensor(env.GetRobotPositions())
+        # edge_weights = RobotPositionsToEdgeWeights(robot_positions, params.pWorldMapSize, params.pCommunicationRange)
+        edge_weights = RobotPositionsToEdgeWeights(env.GetRobotPositions(), params.pWorldMapSize, params.pCommunicationRange)
+        data = dl_utils.ToTorchGeometricData(maps, edge_weights)
+        # data = GetTorchGeometricData(env, params, self.use_cnn, self.use_comm_map, self.map_size)
         data = data.to(self.device)
         with torch.no_grad():
             actions = self.model(data)
         actions = actions * self.actions_std + self.actions_mean
+        actions[torch.abs(actions) < params.pResolution/2] = 0.0
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
         return env.GetObjectiveValue()
@@ -112,18 +118,20 @@ class Evaluator:
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
+                cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
+                step_count = step_count + 1
                 while step_count < self.num_steps:
                     objective_value = controller.Step(self.cc_params, env)
                     cost_data[controller_id, dataset_count, step_count] = objective_value
                     step_count = step_count + 1
-                    env.RecordPlotData('world')
+                    # env.RecordPlotData('world')
                     if step_count % 100 == 0:
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
                 controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                 controller_data_file = controller_dir + '/' + 'eval.csv'
                 np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count, :], delimiter=",")
-                env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
+                # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
             dataset_count = dataset_count + 1
 
 

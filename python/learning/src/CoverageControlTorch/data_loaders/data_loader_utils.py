@@ -2,6 +2,7 @@ import yaml
 import os
 import torch
 import torch_geometric
+import numpy
 
 """
 Function to load a tensor from a file
@@ -39,7 +40,7 @@ def LoadMaps(path, use_comm_map):
     if use_comm_map:
         comm_maps = LoadTensor(f"{path}/comm_maps.pt")
         comm_maps = comm_maps.to_dense()
-        comm_maps = (comm_maps * 256 + 256)/512
+        # comm_maps = (comm_maps * 256 + 256)/512
         maps = torch.cat([local_maps, comm_maps, obstacle_maps], 2)
     else:
         maps = torch.cat([local_maps, obstacle_maps], 2)
@@ -69,30 +70,16 @@ def LoadEdgeWeights(path):
     return edge_weights
 
 def ToTorchGeometricData(feature, edge_weights):
-    edge_weights = edge_weights.to_sparse()
-    edge_weights = edge_weights.coalesce()
-    edge_index = edge_weights.indices().long()
-    weights = torch.reciprocal(edge_weights.values().float())
+    senders, receivers = numpy.nonzero(edge_weights)
+    weights = edge_weights[senders, receivers]
+    edge_index = numpy.stack([senders, receivers])
+    # edge_weights = edge_weights.to_sparse()
+    # edge_weights = edge_weights.coalesce()
+    # edge_index = edge_weights.indices().long()
+    # weights = torch.reciprocal(edge_weights.values().float())
     data = torch_geometric.data.Data(
             x=feature,
-            edge_index=edge_index,
-            edge_weight=weights,
-            )
-    return data
-
-def ToTorchGeometricDataRobotPositions(feature, robot_positions):
-    x = robot_positions
-    dist_matrix = torch.cdist(x, x, 2)
-    dist_matrix[dist_matrix > 256] = 0
-    C = (2048 **2)/(dist_matrix.shape[0] ** 2)
-    C = 3/C
-    edge_weights = dist_matrix * C
-    edge_weights = edge_weights.to_sparse()
-    edge_index = edge_weights.indices().long()
-    weights = edge_weights.values().float()
-    data = torch_geometric.data.Data(
-            x=feature,
-            edge_index=edge_index,
-            edge_weight=weights,
+            edge_index=torch.tensor(edge_index, dtype=torch.long),
+            edge_weight=torch.tensor(weights, dtype=torch.float),
             )
     return data

@@ -26,7 +26,7 @@ class GNNBackBone(torch.nn.Module, GNNConfigParser):
     def forward(self, x, edge_index, edge_weight):
         for i in range(self.num_layers):
             x = self._modules["graph_conv_{}".format(i)](x, edge_index, edge_weight)
-            x = torch.nn.functional.leaky_relu(x)
+            x = torch.relu(x)
         return x
 
 

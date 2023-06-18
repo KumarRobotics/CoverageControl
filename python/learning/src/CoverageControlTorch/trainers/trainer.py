@@ -71,7 +71,7 @@ class TrainModel():
             train_loss_history.append(train_loss)
 
             # Validation
-            val_loss = self.ValidateEpoch()
+            val_loss = self.ValidateEpoch(self.val_loader)
             val_loss_history.append(val_loss)
 
             # Save the best model
@@ -108,14 +108,14 @@ class TrainModel():
             # Move the data to the device
             data, target = data.to(self.device), target.to(self.device)
 
+            if target.dim() == 3:
+                target = target.view(-1, target.shape[-1])
+
             # Clear the gradients
             self.optimizer.zero_grad()
 
             # Forward propagation
             output = self.model(data)
-
-            if target.dim() == 3:
-                target = target.view(-1, target.shape[-1])
 
             # Calculate the loss
             loss = self.criterion(output, target)
@@ -137,7 +137,7 @@ class TrainModel():
         return train_loss / num_dataset
 
     # Validate the model in batches
-    def ValidateEpoch(self):
+    def ValidateEpoch(self, data_loader):
         """
         Validate the model in batches
         :return: validation loss
@@ -155,11 +155,11 @@ class TrainModel():
                 # Move the data to the device
                 data, target = data.to(self.device), target.to(self.device)
 
-                # Forward propagation
-                output = self.model(data)
-
                 if target.dim() == 3:
                     target = target.view(-1, target.shape[-1])
+
+                # Forward propagation
+                output = self.model(data)
 
                 # Calculate the loss
                 loss = self.criterion(output, target)
@@ -177,31 +177,5 @@ class TrainModel():
         Test the model in batches
         :return: test loss
         """
-        # Initialize the test loss
-        test_loss = 0.0
 
-        # Set the model to evaluation mode
-        self.model.eval()
-
-        num_dataset = 0
-        # Test the model in batches
-        with torch.no_grad():
-            for batch_idx, (data, target) in enumerate(self.test_loader):
-                # Move the data to the device
-                data, target = data.to(self.device), target.to(self.device)
-
-                # Forward propagation
-                output = self.model(data)
-
-                # Calculate the loss
-                loss = self.criterion(output, target)
-
-                if target.dim() == 3:
-                    target = target.view(-1, target.shape[-1])
-
-                # Update the test loss
-                test_loss += loss.item() * data.size(0)
-                num_dataset += data.size(0)
-
-        # Return the test loss
-        return test_loss / num_dataset
+        return self.ValidateEpoch(self.test_loader)
