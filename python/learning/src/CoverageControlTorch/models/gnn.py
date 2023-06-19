@@ -12,17 +12,17 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         self.Parse(config['GNN'])
         self.cnn_backbone = CNNBackBone(self.cnn_config)
         self.gnn_backbone = GNNBackBone(self.config, self.cnn_backbone.latent_size)
-        self.mlp = MLP([self.latent_size, 32, self.output_dim], norm=None)
-        # self.mlp = MLP([self.latent_size, 32, 32], dropout=0.4)
-        # self.output_linear = torch.nn.Linear(32, self.output_dim)
+        # self.mlp = MLP([self.latent_size, 32, self.output_dim], norm=None)
+        self.gnn_mlp = MLP([self.latent_size, 32, 32])
+        self.output_linear = torch.nn.Linear(32, self.output_dim)
 
     def forward(self, data):
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_weight
         cnn_output = self.cnn_backbone(x.view(-1, x.shape[-3], x.shape[-2], x.shape[-1]))
         gnn_output = self.gnn_backbone(cnn_output, edge_index, edge_weight)
-        mlp_output = self.mlp(gnn_output)
-        # x = self.output_linear(x)
-        return mlp_output
+        mlp_output = self.gnn_mlp(gnn_output)
+        x = self.output_linear(mlp_output)
+        return x
 
     def LoadCNNBackBone(self, model_path):
-        self.load_state_dict(torch.load(model_path), strict=False)
+        self.load_state_dict(torch.load(model_path).state_dict(), strict=False)

@@ -170,6 +170,8 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def(py::init<>())
 			.def(py::init<std::string const &>())
 			.def("SetConfig", &Parameters::SetConfig)
+			.def_readonly("pNumRobots", &Parameters::pNumRobots)
+			.def_readonly("pNumFeatures", &Parameters::pNumFeatures)
 			.def_readonly("pResolution", &Parameters::pResolution)
 			.def_readonly("pWorldMapSize", &Parameters::pWorldMapSize)
 			.def_readonly("pRobotMapSize", &Parameters::pRobotMapSize)

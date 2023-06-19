@@ -10,7 +10,6 @@ class CNNConfigParser():
         self.latent_size = self.config['LatentSize']
         self.kernel_size = self.config['KernelSize']
         self.image_size = self.config['ImageSize']
-        self.backbone_output_dim = self.config['BackBoneOutputDim']
 
 class GNNConfigParser():
     def __init__(self, config):

@@ -6,7 +6,7 @@ import torch_geometric
 
 import CoverageControlTorch as cct
 import CoverageControlTorch.data_loaders.data_loader_utils as dl_utils
-from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
+from CoverageControlTorch.data_loaders.data_loaders import CNNGNNDataset
 from CoverageControlTorch.models.gnn import CNNGNN
 from CoverageControlTorch.trainers.trainer import TrainModel
 # from CoverageControlTorch.trainers.multi_trainer import MultiTrainModel
@@ -26,14 +26,6 @@ if not os.path.exists(model_dir):
 
 model_file = model_dir + gnn_model["Model"]
 optimizer_file = model_dir + gnn_model["Optimizer"]
-# model_files = []
-# optimizer_files = []
-# model_files.append(model_dir + 'k2lr1e3' + gnn_model["Model"])
-# optimizer_files.append(model_dir + 'k2lr1e3' + gnn_model["Optimizer"])
-# model_files.append(model_dir + 'k2lr1e2' + gnn_model["Model"])
-# optimizer_files.append(model_dir + 'k2lr1e2' + gnn_model["Optimizer"])
-# model_files.append(model_dir + 'k3lr1e2' + gnn_model["Model"])
-# optimizer_files.append(model_dir + 'k3lr1e2' + gnn_model["Optimizer"])
 
 training_config = config["GNNTraining"]
 batch_size = training_config["BatchSize"]
@@ -45,19 +37,13 @@ weight_decay = training_config["WeightDecay"]
 use_comm_map = config["GNN"]["UseCommMap"]
 
 model = CNNGNN(config).to(device)
-# models =[]
-# models.append(CNNGNN(config).to(device))
-# models.append(CNNGNN(config).to(device))
-# configk3 = copy.deepcopy(config)
-# configk3["GNN"]["K"] = 3
-# models.append(CNNGNN(configk3).to(device))
 
 cnn_pretrained_model = config["CNNModel"]["Dir"] + config["CNNModel"]["Model"]
-# model.LoadCNNBackBone(cnn_pretrained_model)
+model.LoadCNNBackBone(cnn_pretrained_model)
 
-train_dataset = LocalMapGNNDataset(data_dir, "train", use_comm_map)
-val_dataset = LocalMapGNNDataset(data_dir, "val", use_comm_map)
-test_dataset = LocalMapGNNDataset(data_dir, "test", use_comm_map)
+train_dataset = CNNGNNDataset(data_dir, "train", use_comm_map)
+val_dataset = CNNGNNDataset(data_dir, "val", use_comm_map)
+test_dataset = CNNGNNDataset(data_dir, "test", use_comm_map)
 
 # for model in models:
 model.register_buffer("actions_mean", train_dataset.targets_mean)
@@ -72,16 +58,11 @@ test_loader = torch_geometric.loader.DataLoader(test_dataset, batch_size=batch_s
 
 # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-# optimizers = []
-# optimizers.append(torch.optim.SGD(models[0].parameters(), lr=0.0001, momentum=momentum, weight_decay=weight_decay))
-# optimizers.append(torch.optim.SGD(models[1].parameters(), lr=0.001, momentum=momentum, weight_decay=weight_decay))
-# optimizers.append(torch.optim.SGD(models[2].parameters(), lr=0.001, momentum=momentum, weight_decay=weight_decay))
 
 # Use mse loss for regression
 criterion = torch.nn.MSELoss()
 
 trainer = TrainModel(model, train_loader, val_loader, test_loader, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
-# trainer = MultiTrainModel(models, train_loader, val_loader, test_loader, optimizers, criterion, num_epochs, [5, 6, 7], model_files, optimizer_files)
 # trainer.LoadSavedModel(model_file)
 # trainer.LoadSavedOptimizer(optimizer_file)
 

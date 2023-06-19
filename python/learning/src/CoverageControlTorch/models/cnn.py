@@ -2,6 +2,7 @@ import torch
 import CoverageControlTorch
 from CoverageControlTorch.models.cnn_backbone import CNNBackBone
 from CoverageControlTorch.models.config_parser import CNNConfigParser
+from torch_geometric.nn import MLP
 
 class CNN(torch.nn.Module, CNNConfigParser):
     """
@@ -13,10 +14,12 @@ class CNN(torch.nn.Module, CNNConfigParser):
         self.Parse(config)
 
         self.cnn_backbone = CNNBackBone(self.config)
-        self.linear = torch.nn.Linear(self.backbone_output_dim, self.output_dim)
+        self.mlp = MLP([self.latent_size, 2 * self.latent_size, self.latent_size])
+        self.linear = torch.nn.Linear(self.latent_size, self.output_dim)
     
     def forward(self, x, return_embed=None):
         x = self.cnn_backbone(x)
+        x = self.mlp(x)
         x = self.linear(x)
         return x
 

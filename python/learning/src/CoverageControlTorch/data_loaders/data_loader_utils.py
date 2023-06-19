@@ -33,7 +33,7 @@ def LoadYaml(path):
 
 def LoadMaps(path, use_comm_map):
     local_maps = LoadTensor(f"{path}/local_maps.pt")
-    local_maps = local_maps.unsqueeze(2)
+    local_maps = local_maps.to_dense().unsqueeze(2)
     obstacle_maps = LoadTensor(f"{path}/obstacle_maps.pt")
     obstacle_maps = obstacle_maps.to_dense().unsqueeze(2)
 
@@ -70,16 +70,17 @@ def LoadEdgeWeights(path):
     return edge_weights
 
 def ToTorchGeometricData(feature, edge_weights):
-    senders, receivers = numpy.nonzero(edge_weights)
-    weights = edge_weights[senders, receivers]
-    edge_index = numpy.stack([senders, receivers])
-    # edge_weights = edge_weights.to_sparse()
-    # edge_weights = edge_weights.coalesce()
-    # edge_index = edge_weights.indices().long()
+    # senders, receivers = numpy.nonzero(edge_weights)
+    # weights = edge_weights[senders, receivers]
+    # edge_index = numpy.stack([senders, receivers])
+    edge_weights = edge_weights.to_sparse()
+    edge_weights = edge_weights.coalesce()
+    edge_index = edge_weights.indices().long()
+    weights = edge_weights.values().float()
     # weights = torch.reciprocal(edge_weights.values().float())
     data = torch_geometric.data.Data(
             x=feature,
-            edge_index=torch.tensor(edge_index, dtype=torch.long),
-            edge_weight=torch.tensor(weights, dtype=torch.float),
+            edge_index=torch.tensor(edge_index.clone().detach(), dtype=torch.long),
+            edge_weight=torch.tensor(weights.clone().detach(), dtype=torch.float),
             )
     return data

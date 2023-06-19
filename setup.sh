@@ -32,7 +32,7 @@ then
 	# 	exit 1
 	# fi
 	cd ../../../python/learning/
-	pip install .
+	pip install -e .
 	cd ../../..
 fi
 
