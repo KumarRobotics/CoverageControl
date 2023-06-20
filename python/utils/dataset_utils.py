@@ -76,9 +76,9 @@ def SplitDataset(config_path):
     data_path = config['DataDir']
     data_dir = data_path + '/data/'
 
-    train_dir = data_path + '/train'
-    val_dir = data_path + '/val'
-    test_dir = data_path + '/test'
+    train_dir = data_dir + '/train'
+    val_dir = data_dir + '/val'
+    test_dir = data_dir + '/test'
 
     # Create directories if they don't exist
     if not os.path.exists(train_dir):
@@ -98,7 +98,7 @@ def SplitDataset(config_path):
 
     data_names = ['local_maps', 'comm_maps', 'obstacle_maps', 'actions', 'normalized_actions', 'edge_weights', 'robot_positions', 'coverage_features', 'normalized_coverage_features']
     for data_name in data_names:
-        SplitSaveData(data_path, data_name, num_train, num_val, num_test)
+        SplitSaveData(data_dir, data_name, num_train, num_val, num_test)
 
 '''
 Combine split datasets into one dataset.
