@@ -80,7 +80,7 @@ def ToTorchGeometricData(feature, edge_weights):
     # weights = torch.reciprocal(edge_weights.values().float())
     data = torch_geometric.data.Data(
             x=feature,
-            edge_index=torch.tensor(edge_index.clone().detach(), dtype=torch.long),
-            edge_weight=torch.tensor(weights.clone().detach(), dtype=torch.float),
+            edge_index=edge_index.clone().detach(),
+            edge_weight=weights.clone().detach()
             )
     return data

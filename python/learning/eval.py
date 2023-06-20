@@ -12,7 +12,9 @@ from pyCoverageControl import OracleGlobalOffline, LloydLocalVoronoi, LloydGloba
 import CoverageControlTorch as cct
 from CoverageControlTorch.data_loaders import data_loader_utils as dl_utils
 from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
-from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData, GetStableMaps, RobotPositionsToEdgeWeights, ToTensor
+from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData
+# , GetStableMaps, RobotPositionsToEdgeWeights, ToTensor
+import CoverageControlTorch.utils.coverage_system as CoverageSystemUtils
 
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
@@ -56,17 +58,25 @@ class Controller:
         return env.GetObjectiveValue()
 
     def StepLearning(self, params, env):
-        maps = GetStableMaps(env, params, self.map_size)
+        # maps = GetStableMaps(env, params, self.map_size)
         # robot_positions = ToTensor(env.GetRobotPositions())
         # edge_weights = RobotPositionsToEdgeWeights(robot_positions, params.pWorldMapSize, params.pCommunicationRange)
-        edge_weights = RobotPositionsToEdgeWeights(env.GetRobotPositions(), params.pWorldMapSize, params.pCommunicationRange)
+        # edge_weights = RobotPositionsToEdgeWeights(env.GetRobotPositions(), params.pWorldMapSize, params.pCommunicationRange)
+        raw_local_maps = CoverageSystemUtils.GetRawLocalMaps(env, params).to(self.device)
+        resized_local_maps = CoverageSystemUtils.ResizeMaps(raw_local_maps, self.map_size)
+        raw_obstable_maps = CoverageSystemUtils.GetRawObstacleMaps(env, params).to(self.device)
+        resized_obstacle_maps = CoverageSystemUtils.ResizeMaps(raw_obstable_maps, self.map_size)
+        comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
+        edge_weights = CoverageSystemUtils.GetWeights(env, params)
+        maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+
         data = dl_utils.ToTorchGeometricData(maps, edge_weights)
         # data = GetTorchGeometricData(env, params, self.use_cnn, self.use_comm_map, self.map_size)
         data = data.to(self.device)
         with torch.no_grad():
             actions = self.model(data)
         actions = actions * self.actions_std + self.actions_mean
-        actions[torch.abs(actions) < params.pResolution/2] = 0.0
+        # actions[torch.abs(actions) < params.pResolution/2] = 0.0
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
         return env.GetObjectiveValue()
@@ -130,7 +140,7 @@ class Evaluator:
 
                 controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                 controller_data_file = controller_dir + '/' + 'eval.csv'
-                np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count, :], delimiter=",")
+                np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
                 # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
             dataset_count = dataset_count + 1
 

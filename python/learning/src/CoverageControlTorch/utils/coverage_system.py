@@ -63,10 +63,11 @@ def GetCommunicationMaps(env, params, map_size):
         indices = torch.transpose(scaled_indices, 1, 0)
         indices = indices.long()
         values = relative_pos[r_idx][comm_range_mask]
-        values = (values + params.pCommunicationRange) / (2. * params.pCommunicationRange)
+        values = values / params.pCommunicationRange
+        # values = (values + params.pCommunicationRange) / (2. * params.pCommunicationRange)
         comm_maps[r_idx][0] = torch.sparse.FloatTensor(indices, values[:, 0], torch.Size([map_size, map_size])).to_dense()
         comm_maps[r_idx][1] = torch.sparse.FloatTensor(indices, values[:, 1], torch.Size([map_size, map_size])).to_dense()
-        return comm_maps
+    return comm_maps
 
 def ResizeMaps(maps, map_size):
     shape = maps.shape

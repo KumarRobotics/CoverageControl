@@ -15,12 +15,14 @@ import CoverageControlTorch.utils.coverage_system as CoverageSystemUtils
 
 
 class DatasetGenerator():
-    def __init__(self, config_file):
+    def __init__(self, config_file, append_dir=None):
 
         # Load configs and create directories
         self.config = dl_utils.LoadYaml(config_file)
         self.data_dir = self.config['DataDir']
         self.data_folder = self.data_dir + '/data/'
+        if append_dir is not None:
+            self.data_folder += append_dir + '/'
 
         if not os.path.exists(self.data_dir):
             throw("Data directory does not exist")
@@ -67,24 +69,8 @@ class DatasetGenerator():
         self.coverage_features = torch.zeros((self.num_dataset, self.num_robots, 7))
         self.edge_weights = torch.zeros((self.num_dataset, self.num_robots, self.num_robots))
 
-        # Write metrics
-        self.metrics_file = self.data_folder + 'metrics.txt'
-        self.metrics = open(self.metrics_file, 'w')
-        # Get current time
-        start_time = datetime.datetime.now()
-        self.metrics.write('Time: ' + str(datetime.datetime.now()) + '\n')
-        self.metrics.write('Data directory: ' + self.data_dir + '\n')
-        self.PrintTensorSizes()
-        self.PrintTensorSizes(self.metrics)
-        self.metrics.flush()
-
         self.RunDataGeneration()
         self.SaveDataset()
-        end_time = datetime.datetime.now()
-        self.metrics.write('Time: ' + str(datetime.datetime.now()) + '\n')
-        self.metrics.write('Total time: ' + str(end_time - start_time) + '\n')
-        self.metrics.close()
-
 
     def RunDataGeneration(self):
         num_non_converged_env = 0
@@ -165,56 +151,16 @@ class DatasetGenerator():
         print('Communication map max: ' + str(max_val))
         return min_val, range_val
 
-    def SaveTensor(self, tensor, name, as_sparse=False):
-        tensor = tensor.cpu()
-        train_tensor = tensor[0:self.train_size].clone()
-        validation_tensor = tensor[self.train_size:self.train_size + self.validation_size].clone()
-        test_tensor = tensor[self.train_size + self.validation_size:].clone()
-        if as_sparse:
-            train_tensor = train_tensor.to_sparse()
-            validation_tensor = validation_tensor.to_sparse()
-            test_tensor = test_tensor.to_sparse()
-
-        torch.save(train_tensor, self.data_folder + '/train/' + name)
-        torch.save(validation_tensor, self.data_folder + '/val/' + name)
-        torch.save(test_tensor, self.data_folder + '/test/' + name)
-
     def SaveDataset(self):
-        as_sparse = self.config['SaveAsSparseQ']
-        self.train_size = int(self.num_dataset * self.config['DatasetSplit']['TrainRatio'])
-        self.validation_size = int(self.num_dataset * self.config['DatasetSplit']['ValRatio'])
-        self.test_size = self.num_dataset - self.train_size - self.validation_size
+        torch.save(self.robot_positions, self.data_folder + '/robot_positions.pt')
+        torch.save(self.local_maps.to_sparse(), self.data_folder + '/local_maps.pt')
+        torch.save(self.obstacle_maps.to_sparse(), self.data_folder + '/obstacle_maps.pt')
+        torch.save(self.edge_weights.to_sparse(), self.data_folder + '/edge_weights.pt')
 
-        # Make sure the folder exists
-        if not os.path.exists(self.data_folder + '/train'):
-            os.makedirs(self.data_folder + '/train')
-        if not os.path.exists(self.data_folder + '/val'):
-            os.makedirs(self.data_folder + '/val')
-        if not os.path.exists(self.data_folder + '/test'):
-            os.makedirs(self.data_folder + '/test')
+        torch.save(self.comm_maps.to_sparse(), self.data_folder + '/comm_maps.pt')
 
-        self.SaveTensor(self.robot_positions, 'robot_positions.pt')
-        self.SaveTensor(self.local_maps, 'local_maps.pt', as_sparse)
-        self.SaveTensor(self.obstacle_maps, 'obstacle_maps.pt', as_sparse)
-        self.SaveTensor(self.edge_weights, 'edge_weights.pt', as_sparse)
-
-        # min_val, range_val = self.NormalizeCommunicationMaps()
-        self.SaveTensor(self.comm_maps, 'comm_maps.pt', as_sparse)
-        # torch.save(min_val, self.data_folder + '/comm_maps_min.pt')
-        # torch.save(range_val, self.data_folder + '/comm_maps_range.pt')
-
-        self.SaveTensor(self.actions, 'actions.pt')
-        self.SaveTensor(self.coverage_features, 'coverage_features.pt')
-
-        if self.config['NormalizeQ']:
-            normalized_actions, actions_mean, actions_std = self.NormalizeTensor(self.actions)
-            coverage_features, coverage_features_mean, coverage_features_std = self.NormalizeTensor(self.coverage_features)
-            self.SaveTensor(normalized_actions, 'normalized_actions.pt')
-            self.SaveTensor(coverage_features, 'normalized_coverage_features.pt')
-            torch.save(actions_mean, self.data_folder + '/actions_mean.pt')
-            torch.save(actions_std, self.data_folder + '/actions_std.pt')
-            torch.save(coverage_features_mean, self.data_folder + '/coverage_features_mean.pt')
-            torch.save(coverage_features_std, self.data_folder + '/coverage_features_std.pt')
+        torch.save(self.actions, self.data_folder + '/actions.pt')
+        torch.save(self.coverage_features, self.data_folder + '/coverage_features.pt')
 
 
     def StepWithoutSave(self):
@@ -239,6 +185,8 @@ class DatasetGenerator():
 
 if __name__ == '__main__':
     config_file = sys.argv[1]
-    DatasetGenerator(config_file)
-
-
+    if len(sys.argv) > 2:
+        append_folder = sys.argv[2]
+    else:
+        append_folder = None
+    DatasetGenerator(config_file, append_folder)
