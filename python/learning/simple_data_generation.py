@@ -70,6 +70,9 @@ class DatasetGenerator():
         self.edge_weights = torch.zeros((self.num_dataset, self.num_robots, self.num_robots))
 
         self.RunDataGeneration()
+        TriggerPostProcessing()
+        del self.raw_local_maps
+        del self.raw_obstacle_maps
         self.SaveDataset()
 
     def RunDataGeneration(self):
