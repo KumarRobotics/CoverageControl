@@ -507,6 +507,7 @@ namespace CoverageControl {
 				PlotSystemMap(dir_name, step, robot_status);
 			}
 			void PlotSystemMap(std::string const &, int const &, std::vector <int> const &) const;
+			void PlotMapVoronoi(std::string const &, int const &);
 			void PlotMapVoronoi(std::string const &, int const &, Voronoi const &, PointVector const &) const;
 			void PlotWorldMap(std::string const &, std::string const &) const;
 			void PlotWorldMapRobots(std::string const &, std::string const &) const;

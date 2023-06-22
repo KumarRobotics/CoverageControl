@@ -127,21 +127,29 @@ class Evaluator:
             for controller_id in range(self.num_controllers):
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+
+                map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
+                os.makedirs(map_dir, exist_ok = True)
+                env.PlotInitMap(map_dir, "InitMap")
+                env.RecordPlotData()
+                env.PlotMapVoronoi(map_dir, step_count)
+
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
                 cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
                 step_count = step_count + 1
                 while step_count < self.num_steps:
                     objective_value = controller.Step(self.cc_params, env)
                     cost_data[controller_id, dataset_count, step_count] = objective_value
+                    env.PlotMapVoronoi(map_dir, step_count)
+                    env.RecordPlotData()
                     step_count = step_count + 1
-                    # env.RecordPlotData('world')
                     if step_count % 100 == 0:
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
                 controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                 controller_data_file = controller_dir + '/' + 'eval.csv'
-                np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
-                # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
+                # np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
             dataset_count = dataset_count + 1
 
 

@@ -83,6 +83,7 @@ namespace CoverageControl {
 
 			void PlotMap(MapType const &map, PointVector const &positions, std::vector <std::list<Point2>> const &trajectories, std::vector<int> const &robot_status);
 
+			void PlotMap(MapType const &map, PointVector const &positions, Voronoi const &voronoi, std::vector <std::list<Point2>> const &trajectories);
 			void PlotMap(MapType const &map, PointVector const &positions, PointVector const &goals, Voronoi const &voronoi);
 
 			void PlotMap(MapType const &map, PointVector const &positions, std::vector <std::list<Point2>> const &trajectories, PointVector const &frontiers);

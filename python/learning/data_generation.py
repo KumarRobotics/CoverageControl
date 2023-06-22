@@ -6,8 +6,9 @@ import math
 
 import pyCoverageControl as CoverageControl
 from pyCoverageControl import CoverageSystem
-from pyCoverageControl import LloydGlobalOnline as CoverageAlgorithm
+# from pyCoverageControl import LloydGlobalOnline as CoverageAlgorithm
 # from pyCoverageControl import OracleGlobalOffline as CoverageAlgorithm
+prom pyCoverageControl import LloydLocalSensorGlobalComm
 import CoverageControlTorch as cct
 import CoverageControlTorch.data_loaders.data_loader_utils as dl_utils
 from CoverageControlTorch.utils.coverage_system import ToTensor

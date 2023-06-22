@@ -9,7 +9,7 @@ namespace CoverageControl {
 		std::string frame_dir = dir_name + "/frames/";
 		std::filesystem::create_directory(frame_dir);
 		Plotter plotter(frame_dir, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
-		plotter.SetScale(4);
+		plotter.SetScale(2);
 #pragma omp parallel for num_threads(std::thread::hardware_concurrency()/2)
 		for(size_t i = 0; i < plotter_data_.size(); ++i) {
 			auto iPlotter = plotter;
@@ -57,14 +57,22 @@ namespace CoverageControl {
 
 	void CoverageSystem::PlotInitMap(std::string const &dir_name, std::string const &map_name) const {
 		Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
-		plotter.SetScale(1);
+		plotter.SetScale(2);
 		plotter.SetPlotName(map_name);
 		plotter.PlotMap(GetWorldIDF(), robot_global_positions_);
 	}
 
+	void CoverageSystem::PlotMapVoronoi(std::string const &dir_name, int const &step) {
+		ComputeVoronoiCells();
+		Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetScale(2);
+		plotter.SetPlotName("voronoi_map", step);
+		plotter.PlotMap(GetWorldIDF(), robot_global_positions_, voronoi_, robot_positions_history_);
+	}
+
 	void CoverageSystem::PlotMapVoronoi(std::string const &dir_name, int const &step, Voronoi const &voronoi, PointVector const &goals) const {
 		Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
-		plotter.SetScale(0.5);
+		plotter.SetScale(2);
 		plotter.SetPlotName("map", step);
 		plotter.PlotMap(GetWorldIDF(), robot_global_positions_, goals, voronoi);
 	}

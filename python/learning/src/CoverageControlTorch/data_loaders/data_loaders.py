@@ -11,14 +11,26 @@ class LocalMapCNNDataset(Dataset):
     """
     Dataset for CNN training
     """
-    def __init__(self, data_dir, stage, use_comm_map, output_dim):
+    def __init__(self, data_dir, stage, use_comm_map, output_dim, preload=True):
         super(LocalMapCNNDataset, self).__init__(None, None, None, None)
 
         self.stage = stage
         self.output_dim = output_dim
+        self.use_comm_map = use_comm_map
+        if preload == True:
+            self.LoadData()
 
-        # maps has shape (num_samples, num_robots, num_channels, image_size, image_size)
-        self.maps = dl_utils.LoadMaps(f"{data_dir}/{stage}", use_comm_map)
+    def len(self):
+        return self.dataset_size
+
+    def get(self, idx):
+        maps = self.maps[idx]
+        target = self.targets[idx]
+        return maps, target
+
+    def LoadData(self):
+        # maps has shape (num_samples, num_robots, nuimage_size, image_size)
+        self.maps = dl_utils.LoadMaps(f"{data_dir}/{stage}", self.use_comm_map)
         num_channels = self.maps.shape[2]
         image_size = self.maps.shape[3]
 
@@ -29,13 +41,6 @@ class LocalMapCNNDataset(Dataset):
         self.targets = self.targets.view(-1, self.targets.shape[2])
         self.targets = self.targets[:, :output_dim]
 
-    def len(self):
-        return self.dataset_size
-
-    def get(self, idx):
-        maps = self.maps[idx]
-        target = self.targets[idx]
-        return maps, target
 
 class LocalMapGNNDataset(Dataset):
     """

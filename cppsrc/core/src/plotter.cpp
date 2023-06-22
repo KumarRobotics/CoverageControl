@@ -115,6 +115,44 @@ namespace CoverageControl {
 		}
 	}
 
+	void Plotter::PlotMap(MapType const &map, PointVector const &positions, Voronoi const &voronoi, std::vector <std::list<Point2>> const &trajectories) {
+
+		Gnuplot gp;
+		GnuplotCommands(gp);
+		PlotMap(gp);
+
+		PlotLine(gp, marker_sz, color_robot, false);
+		PlotLine(gp, half_marker_sz, color_voronoi, false); // voronoi
+		PlotPoints(gp, 7, marker_sz, color_robot, false); // robots
+		gp << "\n";
+
+		StreamMap(gp, map);
+
+		for(auto const &trajectory : trajectories) {
+			for(auto const &pos : trajectory) {
+				gp << pos[0] << " " << pos[1] << "\n";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		auto voronoi_cells = voronoi.GetVoronoiCells();
+		for(auto const &vcell : voronoi_cells) {
+			for(auto const &pos : vcell.cell) {
+				gp << pos[0] << " " << pos[1] << "\n";
+			}
+			auto const &pos = vcell.cell.front();
+			gp << pos[0] << " " << pos[1] << "\n";
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		for(auto const &pos : positions) {
+			gp << pos[0] << " " << pos[1] << "\n";
+		}
+		gp << "e\n";
+	}
+
 	void Plotter::PlotMap(MapType const &map, PointVector const &positions, PointVector const &goals, Voronoi const &voronoi) {
 
 		Gnuplot gp;
