@@ -120,6 +120,7 @@ namespace CoverageControl {
 					std::cout << sp << " " << dir.norm() << std::endl;
 					std::cerr << "Speed needs to be non-negative\n";
 					std::cerr << "Zero-vector direction cannot be given in control\n";
+					std::throw_with_nested(std::runtime_error("Speed needs to be non-negative"));
 					return 1;
 				}
 				/* if(dir.normalize() and sp > kEps) { */

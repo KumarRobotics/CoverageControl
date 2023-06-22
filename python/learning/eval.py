@@ -52,10 +52,11 @@ class Controller:
                 raise ValueError('Unknown controller type: {}'.format(self.type))
 
     def StepCoverageControl(self, params, env):
-        self.cc.Step()
+        continue_flag = self.cc.Step()
+        converged = not continue_flag
         actions = self.cc.GetActions()
         env.StepActions(actions)
-        return env.GetObjectiveValue()
+        return env.GetObjectiveValue(), converged
 
     def StepLearning(self, params, env):
         # maps = GetStableMaps(env, params, self.map_size)
@@ -76,10 +77,9 @@ class Controller:
         with torch.no_grad():
             actions = self.model(data)
         actions = actions * self.actions_std + self.actions_mean
-        # actions[torch.abs(actions) < params.pResolution/2] = 0.0
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
-        return env.GetObjectiveValue()
+        return env.GetObjectiveValue(), False
 
 class Evaluator:
     def __init__(self, config):
@@ -130,26 +130,29 @@ class Evaluator:
 
                 map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
                 os.makedirs(map_dir, exist_ok = True)
-                env.PlotInitMap(map_dir, "InitMap")
-                env.RecordPlotData()
-                env.PlotMapVoronoi(map_dir, step_count)
+                # env.PlotInitMap(map_dir, "InitMap")
+                # env.RecordPlotData()
+                # env.PlotMapVoronoi(map_dir, step_count)
 
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
                 cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
                 step_count = step_count + 1
                 while step_count < self.num_steps:
-                    objective_value = controller.Step(self.cc_params, env)
+                    objective_value, converged = controller.Step(self.cc_params, env)
                     cost_data[controller_id, dataset_count, step_count] = objective_value
-                    env.PlotMapVoronoi(map_dir, step_count)
-                    env.RecordPlotData()
+                    if converged:
+                        cost_data[controller_id, dataset_count, step_count:] = objective_value
+                        break
+                    # env.PlotMapVoronoi(map_dir, step_count)
+                    # env.RecordPlotData()
                     step_count = step_count + 1
                     if step_count % 100 == 0:
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
                 controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                 controller_data_file = controller_dir + '/' + 'eval.csv'
-                # np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
-                env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
+                np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
             dataset_count = dataset_count + 1
 
 
