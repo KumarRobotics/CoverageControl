@@ -14,7 +14,7 @@ class CNN(torch.nn.Module, CNNConfigParser):
         self.Parse(config)
 
         self.cnn_backbone = CNNBackBone(self.config)
-        self.mlp = MLP([self.latent_size, 2 * self.latent_size, self.latent_size])
+        self.mlp = MLP([self.latent_size, 2 * self.latent_size, 2 * self.latent_size, self.latent_size])
         self.linear = torch.nn.Linear(self.latent_size, self.output_dim)
     
     def forward(self, x, return_embed=None):

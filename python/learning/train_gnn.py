@@ -52,9 +52,9 @@ model.register_buffer("actions_std", train_dataset.targets_std)
 print("Loaded datasets")
 print("Train dataset size: {}".format(len(train_dataset)))
 
-train_loader = torch_geometric.loader.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=48)
-val_loader = torch_geometric.loader.DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=48)
-test_loader = torch_geometric.loader.DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=48)
+train_loader = torch_geometric.loader.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=24)
+val_loader = torch_geometric.loader.DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=24)
+test_loader = torch_geometric.loader.DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=24)
 
 # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
@@ -63,8 +63,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 criterion = torch.nn.MSELoss()
 
 trainer = TrainModel(model, train_loader, val_loader, test_loader, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
-# trainer.LoadSavedModel(model_file)
-# trainer.LoadSavedOptimizer(optimizer_file)
+trainer.LoadSavedModel(model_file)
+trainer.LoadSavedOptimizer(optimizer_file)
 
 trainer.Train()
 
