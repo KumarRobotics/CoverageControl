@@ -35,6 +35,10 @@ namespace CoverageControl {
 			// Returns the total importance in a rectangle by summing up for normal distribution
 
 		public:
+			WorldIDF(size_t sz) {
+				world_map_ = MapType(sz, sz);
+			}
+
 			WorldIDF(Parameters const &params): params_{params}{
 				world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
 			}
@@ -135,10 +139,11 @@ namespace CoverageControl {
 				}
 			}
 
-			void GenerateMapCuda() {
-				float resolution = (float) params_.pResolution;
-				float truncation = (float) params_.pTruncationBND;
-				int map_size = (int) params_.pWorldMapSize;
+			void GenerateMapCuda () {
+				GenerateMapCuda((float)params_.pResolution, (float)params_.pTruncationBND, (int)params_.pWorldMapSize);
+			}
+
+			void GenerateMapCuda(float const resolution, float const truncation, int const map_size) {
 
 				int num_dists = normal_distributions_.size();
 				/* std::cout << "num_dists: " << num_dists << std::endl; */
