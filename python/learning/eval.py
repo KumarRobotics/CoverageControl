@@ -128,8 +128,8 @@ class Evaluator:
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
-                map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
-                os.makedirs(map_dir, exist_ok = True)
+                # map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
+                # os.makedirs(map_dir, exist_ok = True)
                 # env.PlotInitMap(map_dir, "InitMap")
                 # env.RecordPlotData()
                 # env.PlotMapVoronoi(map_dir, step_count)
@@ -153,6 +153,8 @@ class Evaluator:
                 controller_data_file = controller_dir + '/' + 'eval.csv'
                 np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
                 # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
+                del env
+                del controller
             dataset_count = dataset_count + 1
 
 
