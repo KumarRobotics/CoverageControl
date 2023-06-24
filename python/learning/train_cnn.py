@@ -9,7 +9,7 @@ from CoverageControlTorch.models.cnn import CNN
 from CoverageControlTorch.trainers.trainer import TrainModel
 
 # Set the device
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 config_file = sys.argv[1]
 config = dl_utils.LoadYaml(config_file)
