@@ -15,6 +15,7 @@ class LocalMapCNNDataset(Dataset):
         super(LocalMapCNNDataset, self).__init__(None, None, None, None)
 
         self.stage = stage
+        self.data_dir = data_dir
         self.output_dim = output_dim
         self.use_comm_map = use_comm_map
         if preload == True:
@@ -30,17 +31,15 @@ class LocalMapCNNDataset(Dataset):
 
     def LoadData(self):
         # maps has shape (num_samples, num_robots, nuimage_size, image_size)
-        self.maps = dl_utils.LoadMaps(f"{data_dir}/{stage}", self.use_comm_map)
+        self.maps = dl_utils.LoadMaps(f"{self.data_dir}/{self.stage}", self.use_comm_map)
         num_channels = self.maps.shape[2]
         image_size = self.maps.shape[3]
 
         self.maps = self.maps.view(-1, num_channels, image_size, image_size)
         self.dataset_size = self.maps.shape[0]
 
-        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{data_dir}/{stage}", output_dim)
+        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{self.data_dir}/{self.stage}", self.output_dim)
         self.targets = self.targets.view(-1, self.targets.shape[2])
-        self.targets = self.targets[:, :output_dim]
-
 
 class LocalMapGNNDataset(Dataset):
     """
