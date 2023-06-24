@@ -83,6 +83,7 @@ ENV COVERAGECONTROL_WS /root/CoverageControl_ws
 ENV LD_LIBRARY_PATH ${COVERAGECONTROL_WS}/install/lib:${LD_LIBRARY_PATH}
 ENV PATH ${COVERAGECONTROL_WS}/install/bin:${PATH}
 ENV LIBTORCH_PYTHON_PATH /root/libtorch/lib/libtorch_python.so
+COPY .bashrc /root/.bashrc
 RUN echo "source /root/venv/bin/activate" >> /root/.bashrc
 
 RUN mkdir -p ${COVERAGECONTROL_WS}
