@@ -63,8 +63,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 criterion = torch.nn.MSELoss()
 
 trainer = TrainModel(model, train_loader, val_loader, test_loader, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
-trainer.LoadSavedModel(model_file)
-trainer.LoadSavedOptimizer(optimizer_file)
+# trainer.LoadSavedModel(model_file)
+# trainer.LoadSavedOptimizer(optimizer_file)
 
 trainer.Train()
 

@@ -49,7 +49,6 @@ def GetCommunicationMaps(env, params, map_size):
     num_robots = env.GetNumRobots()
     positions = env.GetRobotPositions()
     robot_positions = ToTensor(env.GetRobotPositions())
-    comm_maps = torch.Tensor((num_robots, 2, map_size, map_size))
     relative_pos = robot_positions.unsqueeze(0) - robot_positions.unsqueeze(1)
     scaled_relative_pos = torch.round(relative_pos * map_size / (params.pCommunicationRange * params.pResolution * 2.) + (map_size / 2. - params.pResolution / 2.))
     relative_dist = relative_pos.norm(2, 2)
