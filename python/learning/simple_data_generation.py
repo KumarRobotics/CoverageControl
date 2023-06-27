@@ -25,14 +25,17 @@ class DatasetGenerator():
             self.data_folder += append_dir + '/'
 
         if not os.path.exists(self.data_dir):
-            throw("Data directory does not exist")
+            print(self.data_dir)
+            print("Data directory does not exist")
+            exit()
 
         if not os.path.exists(self.data_folder):
             os.makedirs(self.data_folder)
 
         env_config_file = self.data_dir + self.config["EnvironmentConfig"]
         if not os.path.exists(env_config_file):
-            throw("Environment config file does not exist")
+            print("Environment config file does not exist")
+            exit()
 
         self.env_params = CoverageControl.Parameters(env_config_file)
 
