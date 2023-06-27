@@ -23,7 +23,7 @@ class GNNBackBone(torch.nn.Module, GNNConfigParser):
             self.add_module("graph_conv_{}".format(i), torch_geometric.nn.TAGConv(in_channels = self.latent_size, out_channels = self.latent_size, K = self.num_hops))
 
 
-    def forward(self, x, edge_index, edge_weight):
+    def forward(self, x, edge_index, edge_weight = None):
         for i in range(self.num_layers):
             x = self._modules["graph_conv_{}".format(i)](x, edge_index, edge_weight)
             x = torch.relu(x)

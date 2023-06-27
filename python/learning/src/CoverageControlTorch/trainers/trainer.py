@@ -6,7 +6,6 @@ class TrainModel():
     Train a model using pytorch
     :param model: CNN model
     :param train_loader: training data loader
-    :param test_loader: testing data loader
     :param optimizer: optimizer
     :param criterion: loss function
     :param epochs: number of epochs
@@ -15,11 +14,10 @@ class TrainModel():
     :return: None
     """
 
-    def __init__(self, model, train_loader, val_loader, test_loader, optimizer, criterion, epochs, device, model_file, optimizer_file):
+    def __init__(self, model, train_loader, val_loader, optimizer, criterion, epochs, device, model_file, optimizer_file):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
-        self.test_loader = test_loader
         self.optimizer = optimizer
         self.criterion = criterion
         self.epochs = epochs
@@ -172,10 +170,10 @@ class TrainModel():
         return val_loss / num_dataset
 
     # Test the model in batches
-    def Test(self):
+    def Test(self, test_loader):
         """
         Test the model in batches
         :return: test loss
         """
 
-        return self.ValidateEpoch(self.test_loader)
+        return self.ValidateEpoch(test_loader)
