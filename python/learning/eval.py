@@ -60,18 +60,20 @@ class Controller:
 
     def StepLearning(self, params, env):
         # maps = GetStableMaps(env, params, self.map_size)
-        # robot_positions = ToTensor(env.GetRobotPositions())
         # edge_weights = RobotPositionsToEdgeWeights(robot_positions, params.pWorldMapSize, params.pCommunicationRange)
         # edge_weights = RobotPositionsToEdgeWeights(env.GetRobotPositions(), params.pWorldMapSize, params.pCommunicationRange)
         raw_local_maps = CoverageSystemUtils.GetRawLocalMaps(env, params).to(self.device)
         resized_local_maps = CoverageSystemUtils.ResizeMaps(raw_local_maps, self.map_size)
         raw_obstable_maps = CoverageSystemUtils.GetRawObstacleMaps(env, params).to(self.device)
         resized_obstacle_maps = CoverageSystemUtils.ResizeMaps(raw_obstable_maps, self.map_size)
-        comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
+        # comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
         edge_weights = CoverageSystemUtils.GetWeights(env, params)
-        maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+        maps = torch.cat([resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1)
 
-        data = dl_utils.ToTorchGeometricData(maps, edge_weights)
+        robot_positions = CoverageSystemUtils.GetRobotPositions(env)
+        robot_positions = (robot_positions + params.pWorldMapSize/2) / params.pWorldMapSize
+
+        data = dl_utils.ToTorchGeometricData(maps, edge_weights, robot_positions)
         # data = GetTorchGeometricData(env, params, self.use_cnn, self.use_comm_map, self.map_size)
         data = data.to(self.device)
         with torch.no_grad():
