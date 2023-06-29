@@ -40,7 +40,7 @@ world_size = 1024
 model = CNNGNN(config).to(device)
 
 cnn_pretrained_model = config["CNNModel"]["Dir"] + config["CNNModel"]["Model"]
-model.LoadCNNBackBone(cnn_pretrained_model)
+# model.LoadCNNBackBone(cnn_pretrained_model)
 
 train_dataset = CNNGNNDataset(data_dir, "train", use_comm_map, world_size)
 val_dataset = CNNGNNDataset(data_dir, "val", use_comm_map, world_size)

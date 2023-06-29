@@ -57,6 +57,7 @@ class TrainModel():
         """
         # Initialize the best validation loss
         best_val_loss = float("Inf")
+        best_train_loss = float("Inf")
 
         # Initialize the loss history
         train_loss_history = []
@@ -78,13 +79,19 @@ class TrainModel():
                 torch.save(self.model, self.model_file)
                 torch.save(self.optimizer, self.optimizer_file)
 
+            model_path = self.model_file.split('.')[0]
+            if train_loss < best_train_loss:
+                best_train_loss = train_loss
+                torch.save(self.model, model_path + "_curr.pt")
+                torch.save(self.optimizer, model_path + "_optimizer_curr.pt")
+
             # Print the loss
             print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
                   "Training Loss: {:.5f}.. ".format(train_loss),
-                  "Validation Loss: {:.5f}.. ".format(val_loss))
+                  "Validation Loss: {:.5f}.. ".format(val_loss),
+                  "Best Validation Loss: {:.5f}.. ".format(best_val_loss))
 
             # Save the loss history
-            model_path = self.model_file.split('.')[0]
             torch.save(train_loss_history, model_path + '_train_loss.pt')
             torch.save(val_loss_history, model_path + '_val_loss.pt')
 
