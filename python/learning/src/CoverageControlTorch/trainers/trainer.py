@@ -85,6 +85,9 @@ class TrainModel():
                 torch.save(self.model, model_path + "_curr.pt")
                 torch.save(self.optimizer, model_path + "_optimizer_curr.pt")
 
+            if epoch % 5 == 0:
+                torch.save(self.model, model_path + "_epoch" + str(epoch) + ".pt")
+
             # Print the loss
             print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
                   "Training Loss: {:.5f}.. ".format(train_loss),
