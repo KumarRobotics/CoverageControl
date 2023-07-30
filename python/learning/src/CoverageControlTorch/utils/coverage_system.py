@@ -68,14 +68,14 @@ def GetCommunicationMaps(env, params, map_size):
         comm_maps[r_idx][1] = torch.sparse.FloatTensor(indices, values[:, 1], torch.Size([map_size, map_size])).to_dense()
     return comm_maps
 
-def ResizeMaps(maps, map_size):
+def ResizeMaps(maps, resized_map_size):
     shape = maps.shape
     maps = maps.view(-1, maps.shape[-2], maps.shape[-1])
-    maps = torchvision.transforms.functional.resize(maps, (map_size, map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
+    maps = torchvision.transforms.functional.resize(maps, (resized_map_size, resized_map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
     maps = maps.view(shape[:-2] + maps.shape[-2:])
     return maps
 
-def GetMaps(env, params, map_size, use_comm_map):
+def GetMaps(env, params, resized_map_size, use_comm_map):
 
     num_robots = env.GetNumRobots()
     local_maps = torch.zeros((num_robots, params.pLocalMapSize, params.pLocalMapSize))
@@ -87,13 +87,13 @@ def GetMaps(env, params, map_size, use_comm_map):
         local_maps[r_idx] = map
         obstacle_maps[r_idx] = obstacle_map
 
-    # Resize maps to map_size
-    local_maps = ResizeMaps(local_maps, map_size)
-    obstacle_maps = ResizeMaps(obstacle_maps, map_size)
-    # local_maps = torchvision.transforms.functional.resize(local_maps, (map_size, map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
-    # obstacle_maps = torchvision.transforms.functional.resize(obstacle_maps, (map_size, map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
+    # Resize maps to resized_map_size
+    local_maps = ResizeMaps(local_maps, resized_map_size)
+    obstacle_maps = ResizeMaps(obstacle_maps, resized_map_size)
+    # local_maps = torchvision.transforms.functional.resize(local_maps, (resized_map_size, resized_map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
+    # obstacle_maps = torchvision.transforms.functional.resize(obstacle_maps, (resized_map_size, resized_map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
     if use_comm_map:
-        comm_maps = GetCommunicationMaps(env, params, map_size)
+        comm_maps = GetCommunicationMaps(env, params, resized_map_size)
         maps = torch.cat([local_maps.unsqueeze(1), comm_maps, obstacle_maps.unsqueeze(1)], dim=1)
     else:
         maps = torch.cat([local_maps.unsqueeze(1), obstacle_maps.unsqueeze(1)], dim=1)
@@ -119,6 +119,18 @@ def GetWeights(env, params):
     edge_weights.fill_diagonal_(0)
     return edge_weights
 
+# Legacy edge weights used in previous research
+# The weights are proportional to the distance
+# Trying to move away from this
+def RobotPositionsToEdgeWeights(robot_positions, world_map_size, comm_range):
+    x = numpy.array(robot_positions)
+    S = distance_matrix(x, x)
+    S[S > comm_range] = 0
+    C = (world_map_size**2) / (S.shape[0]**2)
+    C = 3 / C
+    graph_obs = C * S
+    return graph_obs
+
 def GetTorchGeometricData(env, params, use_cnn, use_comm_map, map_size):
     if use_cnn:
         features = GetMaps(env, params, map_size, use_comm_map)
@@ -130,19 +142,12 @@ def GetTorchGeometricData(env, params, use_cnn, use_comm_map, map_size):
     data = torch_geometric.data.Data(x=features, edge_index=edge_index, edge_weight=weights)
     return data
 
-def RobotPositionsToEdgeWeights(robot_positions, world_map_size, comm_range):
-    x = numpy.array(robot_positions)
-    S = distance_matrix(x, x)
-    S[S > comm_range] = 0
-    C = (world_map_size**2) / (S.shape[0]**2)
-    C = 3 / C
-    graph_obs = C * S
-    return graph_obs
-
-def GetStableMaps(env, params, map_size):
+# Legacy maps which gives decent results
+# Trying to move away from this
+def GetStableMaps(env, params, resized_map_size):
     robot_positions = ToTensor(env.GetRobotPositions())
     num_robots = env.GetNumRobots()
-    maps = torch.empty((num_robots, 4, map_size, map_size))
+    maps = torch.empty((num_robots, 4, resized_map_size, resized_map_size))
     h_vals = torch.linspace(1.0, -1.0, maps.shape[-2]+1)
     h_vals = (h_vals[1:] + h_vals[:-1])/2
     w_vals = torch.linspace(-1.0, 1.0, maps.shape[-1]+1)
@@ -151,12 +156,12 @@ def GetStableMaps(env, params, map_size):
     heatmap_y = torch.stack([w_vals] * maps.shape[-2], dim=0)/100
     for r_idx in range(num_robots):
         local_map = env.GetRobotLocalMap(r_idx)
-        resized_local_map = cv2.resize(local_map, dsize=(map_size, map_size), interpolation=cv2.INTER_AREA)
+        resized_local_map = cv2.resize(local_map, dsize=(resized_map_size, resized_map_size), interpolation=cv2.INTER_AREA)
         maps[r_idx][0] = torch.tensor(resized_local_map).float()
 
         comm_map = env.GetCommunicationMap(r_idx)
         filtered_comm_map = gaussian_filter(comm_map, sigma=(3,3), order=0)
-        resized_comm_map = torch.tensor(cv2.resize(numpy.array(filtered_comm_map), dsize=(map_size, map_size), interpolation=cv2.INTER_AREA)).float()
+        resized_comm_map = torch.tensor(cv2.resize(numpy.array(filtered_comm_map), dsize=(resized_map_size, resized_map_size), interpolation=cv2.INTER_AREA)).float()
         maps[r_idx][1] = resized_comm_map
 
         maps[r_idx][2] = heatmap_x

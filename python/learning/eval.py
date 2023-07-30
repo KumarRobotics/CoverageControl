@@ -109,7 +109,7 @@ class Evaluator:
         self.num_steps = self.config['NumSteps']
         self.map_size = self.config['MapSize']
 
-    def Evaluate(self):
+    def Evaluate(self, save = True):
         dataset_count = 0
 
         cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
@@ -152,13 +152,15 @@ class Evaluator:
                     if step_count % 100 == 0:
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
-                controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
-                controller_data_file = controller_dir + '/' + 'eval.csv'
-                np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                if save == True:
+                    controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
+                    controller_data_file = controller_dir + '/' + 'eval.csv'
+                    np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
                 # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
                 del env
                 del controller
             dataset_count = dataset_count + 1
+        return cost_data
 
 
 if __name__ == "__main__":
