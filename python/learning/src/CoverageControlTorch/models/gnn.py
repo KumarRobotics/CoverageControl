@@ -28,3 +28,6 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
 
     def LoadCNNBackBone(self, model_path):
         self.load_state_dict(torch.load(model_path).state_dict(), strict=False)
+
+    def LoadGNNBackBone(self, model_path):
+        self.load_state_dict(torch.load(model_path).state_dict(), strict=False)

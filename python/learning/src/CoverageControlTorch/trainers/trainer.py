@@ -70,14 +70,15 @@ class TrainModel():
             train_loss_history.append(train_loss)
 
             # Validation
-            val_loss = self.ValidateEpoch(self.val_loader)
-            val_loss_history.append(val_loss)
+            if self.loader is not None:
+                val_loss = self.ValidateEpoch(self.val_loader)
+                val_loss_history.append(val_loss)
 
-            # Save the best model
-            if val_loss < best_val_loss:
-                best_val_loss = val_loss
-                torch.save(self.model, self.model_file)
-                torch.save(self.optimizer, self.optimizer_file)
+                # Save the best model
+                if val_loss < best_val_loss:
+                    best_val_loss = val_loss
+                    torch.save(self.model, self.model_file)
+                    torch.save(self.optimizer, self.optimizer_file)
 
             model_path = self.model_file.split('.')[0]
             if train_loss < best_train_loss:

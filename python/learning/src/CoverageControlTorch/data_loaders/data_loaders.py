@@ -38,7 +38,8 @@ class LocalMapCNNDataset(Dataset):
         self.maps = self.maps.view(-1, num_channels, image_size, image_size)
         self.dataset_size = self.maps.shape[0]
 
-        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{self.data_dir}/{self.stage}", self.output_dim)
+        # self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{self.data_dir}/{self.stage}", self.output_dim)
+        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{self.data_dir}/{self.stage}")
         self.targets = self.targets.view(-1, self.targets.shape[2])
 
 class LocalMapGNNDataset(Dataset):
