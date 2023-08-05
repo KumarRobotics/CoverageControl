@@ -100,8 +100,8 @@ namespace CoverageControl {
 		auto fp = std::bind(&VoronoiCell::MassCentroidFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
 		CellNavigator(vcell, fp);
 		vcell.ComputeFinalCentroid();
-		auto fp1 = std::bind(&VoronoiCell::GoalObjFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
-		CellNavigator(vcell, fp1);
+		/* auto fp1 = std::bind(&VoronoiCell::GoalObjFunctional, &vcell, std::placeholders::_1, std::placeholders::_2); */
+		/* CellNavigator(vcell, fp1); */
 	}
 
 	void Voronoi::ComputeVoronoiCells() {
@@ -142,10 +142,10 @@ namespace CoverageControl {
 		/* std::cout << "segments pushed" << std::endl; */
 		Arrangement_2 arr;
 
-		/* CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end()); */
-		for(auto const &ray:vor.rays_) {
-			CGAL::insert(arr, ray);
-		}
+		CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end());
+		/* for(auto const &ray:vor.rays_) { */
+		/* 	CGAL::insert(arr, ray); */
+		/* } */
 		/* std::cout << "rays inserted" << std::endl; */
 		CGAL::insert(arr, vor.lines_.begin(), vor.lines_.end());
 		/* std::cout << "lines inserted" << std::endl; */
