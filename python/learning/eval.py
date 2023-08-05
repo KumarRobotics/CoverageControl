@@ -157,8 +157,8 @@ class Evaluator:
                     controller_data_file = controller_dir + '/' + 'eval.csv'
                     np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
                 # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
-                del env
                 del controller
+                del env
             dataset_count = dataset_count + 1
         return cost_data
 

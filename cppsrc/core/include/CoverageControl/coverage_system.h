@@ -156,14 +156,20 @@ namespace CoverageControl {
 					exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(offset.width, offset.height);
 				}
 				system_map_ = explored_idf_map_ - exploration_map_;
-				exploration_ratio_ = 1.0 - (double)(exploration_map_.sum())/(params_.pWorldMapSize * params_.pWorldMapSize);
-				weighted_exploration_ratio_ = (double)(explored_idf_map_.sum())/(total_idf_weight_);
+				/* exploration_ratio_ = 1.0 - (double)(exploration_map_.sum())/(params_.pWorldMapSize * params_.pWorldMapSize); */
+				/* weighted_exploration_ratio_ = (double)(explored_idf_map_.sum())/(total_idf_weight_); */
 				/* std::cout << "Exploration: " << exploration_ratio_ << " Weighted: " << weighted_exploration_ratio_ << std::endl; */
 				/* std::cout << "Diff: " << (exploration_map_.count() - exploration_map_.sum()) << std::endl; */
 			}
 
-			inline double GetExplorationRatio() const { return exploration_ratio_; }
-			inline double GetWeightedExplorationRatio() const { return weighted_exploration_ratio_; }
+			inline double GetExplorationRatio() const {
+				double exploration_ratio = 1.0 - (double)(exploration_map_.sum())/(params_.pWorldMapSize * params_.pWorldMapSize);
+				return exploration_ratio;
+			}
+			inline double GetWeightedExplorationRatio() const {
+				double weighted_exploration_ratio = (double)(explored_idf_map_.sum())/(total_idf_weight_);
+				return weighted_exploration_ratio;
+			}
 
 			void PostStepCommands() {
 				UpdateRobotPositions();
@@ -249,7 +255,7 @@ namespace CoverageControl {
 			MapType const& GetSystemExplorationMap() const { return exploration_map_; }
 			MapType const& GetSystemExploredIDFMap() const { return explored_idf_map_; }
 
-			bool CheckOscillation(size_t const robot_id) {
+			bool CheckOscillation(size_t const robot_id) const {
 				if(robot_positions_history_[robot_id].size() < 2) { return false; }
 				auto const &history = robot_positions_history_[robot_id];
 				Point2 const last_pos = history.back();
