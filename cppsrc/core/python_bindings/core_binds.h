@@ -92,6 +92,7 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("WriteWorldMap", &WorldIDF::WriteWorldMap)
 			.def("GetNormalizationFactor", &WorldIDF::GetNormalizationFactor)
 			.def("PrintMapSize", &WorldIDF::PrintMapSize)
+			.def("LoadMap", &WorldIDF::LoadMap)
 			;
 
 		py::class_<RobotModel>(m, "RobotModel")
