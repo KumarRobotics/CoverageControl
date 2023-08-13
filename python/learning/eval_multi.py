@@ -13,12 +13,12 @@ if __name__ == "__main__":
     config = dl_utils.LoadYaml(config_file)
     orig_name = config["Controllers"][0]["Name"]
     orig_dir = os.path.dirname(config["Controllers"][0]["ModelFile"])
-    for i in range(0, 100, 5):
-        config["Controllers"][0]["Name"] = orig_name + "/" + str(i)
-        config["Controllers"][0]["ModelFile"] = orig_dir + "/model_epoch" + str(i) + ".pt"
-        print(config)
-        evaluator = Evaluator(config)
-        evaluator.Evaluate()
+
+    config["Controllers"][0]["Name"] = orig_name + "/pre"
+    config["Controllers"][0]["ModelFile"] = orig_dir + "/model_1024.pt"
+    print(config)
+    evaluator = Evaluator(config)
+    evaluator.Evaluate()
 
     config["Controllers"][0]["Name"] = orig_name + "/curr"
     config["Controllers"][0]["ModelFile"] = orig_dir + "/model_curr.pt"
@@ -31,3 +31,11 @@ if __name__ == "__main__":
     print(config)
     evaluator = Evaluator(config)
     evaluator.Evaluate()
+
+    for i in range(0, 100, 5):
+        config["Controllers"][0]["Name"] = orig_name + "/" + str(i)
+        config["Controllers"][0]["ModelFile"] = orig_dir + "/model_epoch" + str(i) + ".pt"
+        print(config)
+        evaluator = Evaluator(config)
+        evaluator.Evaluate()
+
