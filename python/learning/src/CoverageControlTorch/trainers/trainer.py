@@ -1,3 +1,4 @@
+import time
 import torch
 import matplotlib.pyplot as plt
 
@@ -62,25 +63,35 @@ class TrainModel():
         # Initialize the loss history
         train_loss_history = []
         val_loss_history = []
+        start_time = time.time()
 
+        model_path = self.model_file.split('.')[0]
         # Train the model
         for epoch in range(self.epochs):
             # Training
             train_loss = self.TrainEpoch()
             train_loss_history.append(train_loss)
+            torch.save(train_loss_history, model_path + '_train_loss.pt')
+            # Print the loss
+            print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
+                  "Training Loss: {:.5f}.. ".format(train_loss))
+
 
             # Validation
-            if self.loader is not None:
+            if self.val_loader is not None:
                 val_loss = self.ValidateEpoch(self.val_loader)
                 val_loss_history.append(val_loss)
+                torch.save(val_loss_history, model_path + '_val_loss.pt')
 
                 # Save the best model
                 if val_loss < best_val_loss:
                     best_val_loss = val_loss
                     torch.save(self.model, self.model_file)
                     torch.save(self.optimizer, self.optimizer_file)
+                print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
+                      "Validation Loss: {:.5f}.. ".format(val_loss),
+                      "Best Validation Loss: {:.5f}.. ".format(best_val_loss))
 
-            model_path = self.model_file.split('.')[0]
             if train_loss < best_train_loss:
                 best_train_loss = train_loss
                 torch.save(self.model, model_path + "_curr.pt")
@@ -89,15 +100,10 @@ class TrainModel():
             if epoch % 5 == 0:
                 torch.save(self.model, model_path + "_epoch" + str(epoch) + ".pt")
 
-            # Print the loss
-            print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
-                  "Training Loss: {:.5f}.. ".format(train_loss),
-                  "Validation Loss: {:.5f}.. ".format(val_loss),
-                  "Best Validation Loss: {:.5f}.. ".format(best_val_loss))
+            elapsed_time = time.time() - start_time
+            # Print elapsed time in minutes
+            print("Elapsed time: {:.2f} minutes".format(elapsed_time / 60))
 
-            # Save the loss history
-            torch.save(train_loss_history, model_path + '_train_loss.pt')
-            torch.save(val_loss_history, model_path + '_val_loss.pt')
 
     # Train the model in batches
     def TrainEpoch(self):
@@ -130,7 +136,8 @@ class TrainModel():
             loss = self.criterion(output, target)
 
             # Print batch number and loss
-            print("Batch: {}, Loss: {}".format(batch_idx, loss))
+            if batch_idx % 10 == 0:
+                print("Batch: {}, Loss: {}".format(batch_idx, loss))
 
             # Backward propagation
             loss.backward()

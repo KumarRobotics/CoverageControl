@@ -35,14 +35,15 @@ momentum = training_config["Momentum"]
 weight_decay = training_config["WeightDecay"]
 
 use_comm_map = config["GNN"]["UseCommMap"]
-world_size = 2048
+world_size = 1916
 
 model = CNNGNN(config).to(device)
 
 cnn_pretrained_model = config["CNNModel"]["Dir"] + config["CNNModel"]["Model"]
 # model.LoadCNNBackBone(cnn_pretrained_model)
-gnn_pretrained_model = config["GNNModel"]["Dir"] + config["CNNModel"]["PreTrainedModel"]
-model.LoadGNNBackBone(gnn_pretrained_model)
+gnn_pretrained_model = config["GNNModel"]["Dir"] + config["GNNModel"]["PreTrainedModel"]
+if gnn_pretrained_model != "":
+    model.LoadGNNBackBone(gnn_pretrained_model)
 
 train_dataset = CNNGNNDataset(data_dir, "train", use_comm_map, world_size)
 val_dataset = CNNGNNDataset(data_dir, "val", use_comm_map, world_size)
@@ -63,7 +64,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 # Use mse loss for regression
 criterion = torch.nn.MSELoss()
 
-trainer = TrainModel(model, train_loader, None, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
+# trainer = TrainModel(model, train_loader, None, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
+trainer = TrainModel(model, train_loader, val_loader, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
 # trainer.LoadSavedModel(model_file)
 # trainer.LoadSavedOptimizer(optimizer_file)
 
@@ -72,4 +74,4 @@ trainer.Train()
 # test_dataset = CNNGNNDataset(data_dir, "test", use_comm_map, world_size)
 # test_loader = torch_geometric.loader.DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=24)
 # test_loss = trainer.Test(test_loader)
-print("Test loss: {}".format(test_loss))
+# print("Test loss: {}".format(test_loss))
