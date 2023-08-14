@@ -15,6 +15,7 @@ from CoverageControlTorch.trainers.trainer import TrainModel
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 config_file = sys.argv[1]
+world_size = int(sys.argv[2])
 config = dl_utils.LoadYaml(config_file)
 dataset_path = config["DataDir"]
 data_dir = dataset_path + "/data/"
@@ -35,14 +36,13 @@ momentum = training_config["Momentum"]
 weight_decay = training_config["WeightDecay"]
 
 use_comm_map = config["GNN"]["UseCommMap"]
-world_size = 1916
 
 model = CNNGNN(config).to(device)
 
 cnn_pretrained_model = config["CNNModel"]["Dir"] + config["CNNModel"]["Model"]
 # model.LoadCNNBackBone(cnn_pretrained_model)
 gnn_pretrained_model = config["GNNModel"]["Dir"] + config["GNNModel"]["PreTrainedModel"]
-if gnn_pretrained_model != "":
+if config["GNNModel"]["PreTrainedModel"] != "":
     model.LoadGNNBackBone(gnn_pretrained_model)
 
 train_dataset = CNNGNNDataset(data_dir, "train", use_comm_map, world_size)
