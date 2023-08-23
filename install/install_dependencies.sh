@@ -1,8 +1,9 @@
 #!/bin/bash
 
-MAIN_DIR=$1
-BUILD_DIR=$2
-CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$3"
+TMP_DIR=`mktemp -d`
+MAIN_DIR=${TMP_DIR}/main/
+BUILD_DIR=${TMP_DIR}/build/
+CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$1"
 
 InstallCGAL () {
 	echo "Setting up CGAL"
