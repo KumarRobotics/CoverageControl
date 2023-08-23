@@ -47,8 +47,8 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
 
     osmApi = OSMApi()
     overpass = Overpass()
-    # osmApi = OSMApi(endpoint="http://localhost:12346/api/")
-    # overpass = Overpass(endpoint="http://localhost:12346/api/")
+    osmApi = OSMApi(endpoint="http://localhost/api/")
+    overpass = Overpass(endpoint="http://localhost/api/")
     # CachingStrategy.use(CachingNone)
     geod = Geodesic.WGS84
 
@@ -80,98 +80,102 @@ def OverpassOSMQuery(params, origin, semantic_data_filename):
 
     semantic_objects = params['semantic_objects']
     road_network_query = 'way[highway~"^('
-    road_network_tags = semantic_objects['road_network']
-    for iTag in range(0, len(road_network_tags)):
-        if iTag > 0:
-            road_network_query += '|'
-        road_network_query += road_network_tags[iTag]
-    road_network_query += ')$"]' + bounds_str + out_str
-    road_network = overpass.query(road_network_query)
-    print(type(road_network))
+    # Check if tags are present in the semantic data file
+    if 'road_network' in semantic_objects:
+        road_network_tags = semantic_objects['road_network']
+        for iTag in range(0, len(road_network_tags)):
+            if iTag > 0:
+                road_network_query += '|'
+            road_network_query += road_network_tags[iTag]
+        road_network_query += ')$"]' + bounds_str + out_str
+        road_network = overpass.query(road_network_query)
+        print(type(road_network))
 
-    if road_network.ways():
-        contains_data = True
-        for ways in road_network.ways():
-            ways_coordinates = ways.geometry()["coordinates"]
-            if ways.geometry()["type"] == "LineString":
-                ways_coordinates = [ways_coordinates]
-            clipped_ways_list = []
-            for way_coords in ways_coordinates:
-                clipped_ways = ClipWay(bounding_polygon, way_coords)
-                for clipped_way in clipped_ways:
-                    clipped_ways_list.append(clipped_way)
-            for clipped_way in clipped_ways_list:
-                if len(clipped_way) > 0:
-                    way_feature = geojson.Feature(geometry = geojson.LineString(clipped_way), id = ways.id(), properties={"type": "road_network", "subtype": ways.tags()['highway'], "osmtype": "way"})
-                feature_collection.features.append(way_feature)
+        if road_network.ways():
+            contains_data = True
+            for ways in road_network.ways():
+                ways_coordinates = ways.geometry()["coordinates"]
+                if ways.geometry()["type"] == "LineString":
+                    ways_coordinates = [ways_coordinates]
+                clipped_ways_list = []
+                for way_coords in ways_coordinates:
+                    clipped_ways = ClipWay(bounding_polygon, way_coords)
+                    for clipped_way in clipped_ways:
+                        clipped_ways_list.append(clipped_way)
+                for clipped_way in clipped_ways_list:
+                    if len(clipped_way) > 0:
+                        way_feature = geojson.Feature(geometry = geojson.LineString(clipped_way), id = ways.id(), properties={"type": "road_network", "subtype": ways.tags()['highway'], "osmtype": "way"})
+                    feature_collection.features.append(way_feature)
 
     leisure_query = 'nwr[leisure~"^('
-    leisure_tags = semantic_objects['leisure']
-    if leisure_tags != None:
-        for iTag in range(0, len(leisure_tags)):
-            if iTag > 0:
-                leisure_query += '|'
-            leisure_query += leisure_tags[iTag]
-        leisure_query += ')$"]' + bounds_str + out_str
-        leisure = overpass.query(leisure_query)
-        leisure_json = leisure.toJSON()
+    if 'leisure' in semantic_objects:
+        leisure_tags = semantic_objects['leisure']
+        if leisure_tags != None:
+            for iTag in range(0, len(leisure_tags)):
+                if iTag > 0:
+                    leisure_query += '|'
+                leisure_query += leisure_tags[iTag]
+            leisure_query += ')$"]' + bounds_str + out_str
+            leisure = overpass.query(leisure_query)
+            leisure_json = leisure.toJSON()
 
-        if leisure.ways():
-            contains_data = True
-            for way in leisure.ways():
-                tags = way.tags()
-                if tags == None or 'leisure' not in tags:
-                    continue
-                leisure_tag = way.tags()['leisure']
-                if leisure_tag in semantic_objects['leisure']:
-                    coords_list = way.geometry()["coordinates"]
-                    poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "leisure", "subtype": leisure_tag, "osmtype": "way"})
-                    feature_collection.features.append(poly_feature)
+            if leisure.ways():
+                contains_data = True
+                for way in leisure.ways():
+                    tags = way.tags()
+                    if tags == None or 'leisure' not in tags:
+                        continue
+                    leisure_tag = way.tags()['leisure']
+                    if leisure_tag in semantic_objects['leisure']:
+                        coords_list = way.geometry()["coordinates"]
+                        poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "leisure", "subtype": leisure_tag, "osmtype": "way"})
+                        feature_collection.features.append(poly_feature)
             
     amenity_query = 'nwr[amenity~"^('
-    amenity_tags = semantic_objects['amenity']
-    if amenity_tags != None:
-        for iTag in range(0, len(amenity_tags)):
-            if iTag > 0:
-                amenity_query += '|'
-            amenity_query += amenity_tags[iTag]
-        amenity_query += ')$"]' + bounds_str + out_str
-        amenity = overpass.query(amenity_query)
-        amenity_json = amenity.toJSON()
+    if 'amenity' in semantic_objects:
+        amenity_tags = semantic_objects['amenity']
+        if amenity_tags != None:
+            for iTag in range(0, len(amenity_tags)):
+                if iTag > 0:
+                    amenity_query += '|'
+                amenity_query += amenity_tags[iTag]
+            amenity_query += ')$"]' + bounds_str + out_str
+            amenity = overpass.query(amenity_query)
+            amenity_json = amenity.toJSON()
 
-        if amenity.ways():
-            contains_data = True
-            for way in amenity.ways():
-                tags = way.tags()
-                if tags == None or 'amenity' not in tags:
-                    continue
-                amenity_tag = way.tags()['amenity']
-                if amenity_tag in semantic_objects['amenity']:
-                    if 'parking' in tags and tags['parking'] == 'underground':
-                        continue
-                    coords_list = way.geometry()["coordinates"]
-                    poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "way"})
-                    feature_collection.features.append(poly_feature)
-            
-        if amenity.relations():
-            contains_data = True
-            for relation in amenity.relations():
-                try:
-                    geom = relation.geometry()
-                except:
-                    continue
+            if amenity.ways():
                 contains_data = True
-                tags = relation.tags()
-                if tags == None or 'amenity' not in tags:
-                    continue
-                amenity_tag = relation.tags()['amenity']
-                if amenity_tag in semantic_objects['amenity']:
-                    coords_list = geom["coordinates"]
-                    if geom["type"] == "Polygon":
-                        coords_list = [coords_list]
-                    for coords in coords_list:
-                        poly_feature = geojson.Feature(geometry = geojson.Polygon(coords), id = relation.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "relation"})
+                for way in amenity.ways():
+                    tags = way.tags()
+                    if tags == None or 'amenity' not in tags:
+                        continue
+                    amenity_tag = way.tags()['amenity']
+                    if amenity_tag in semantic_objects['amenity']:
+                        if 'parking' in tags and tags['parking'] == 'underground':
+                            continue
+                        coords_list = way.geometry()["coordinates"]
+                        poly_feature = geojson.Feature(geometry = geojson.Polygon(coords_list), id = way.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "way"})
                         feature_collection.features.append(poly_feature)
+                
+            if amenity.relations():
+                contains_data = True
+                for relation in amenity.relations():
+                    try:
+                        geom = relation.geometry()
+                    except:
+                        continue
+                    contains_data = True
+                    tags = relation.tags()
+                    if tags == None or 'amenity' not in tags:
+                        continue
+                    amenity_tag = relation.tags()['amenity']
+                    if amenity_tag in semantic_objects['amenity']:
+                        coords_list = geom["coordinates"]
+                        if geom["type"] == "Polygon":
+                            coords_list = [coords_list]
+                        for coords in coords_list:
+                            poly_feature = geojson.Feature(geometry = geojson.Polygon(coords), id = relation.id(), properties={"type": "amenity", "subtype": amenity_tag, "osmtype": "relation"})
+                            feature_collection.features.append(poly_feature)
 
     if semantic_objects['traffic_signals'] == True:
         traffic_signal_query = 'node[highway~"^(traffic_signals)$"]' + bounds_str + out_str
