@@ -17,11 +17,11 @@ from pyCoverageControl import Point2 # for defining points
 from pyCoverageControl import PointVector # for defining list of points
 
 
-dataset_base_dir = '/root/CoverageControl_ws/datasets/50_cities/'
+dataset_base_dir = '/root/CoverageControl_ws/results/50_cities/'
 dataset_filename = 'cities_origins'
 
 params_filename = dataset_base_dir + 'semantic_objects.yaml'
-path_to_dataset = dataset_base_dir + dataset_filename
+path_to_dataset = dataset_base_dir + '/envs/' + dataset_filename
 
 with open(params_filename, 'r') as file:
     params = yaml.safe_load(file)
@@ -43,7 +43,7 @@ for i in range(data_count, len(city_origin_points)):
     origin = city_origin_points[i]
     print(city_names[i])
     # print(origin)
-    data_path = dataset_base_dir + city_names[i]
+    data_path = dataset_base_dir + '/envs/' + city_names[i]
     semantic_data_filename = data_path + '/semantic_data.json'
     print(semantic_data_filename)
     if not os.path.exists(data_path):
@@ -78,6 +78,7 @@ for i in range(data_count, len(city_origin_points)):
     env = CoverageSystem(params_, world_idf, robot_positions)
     env.WriteEnvironment(data_path + '/pos.dat', data_path + '/idf.dat')
     env.PlotWorldMap(data_path, 'idf')
+    env.PlotInitMap(data_path, 'InitMap')
 
 print('Total cities: ' + str(count))
 print('Cities with no data: ' + str(no_data_count))
