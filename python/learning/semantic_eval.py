@@ -119,11 +119,11 @@ class Evaluator:
     def Evaluate(self, save = True):
 
         cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
-        for controller_id in range(self.num_controllers):
-            controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
-            controller_data_file = controller_dir + '/' + 'eval.csv'
-            controller_data = genfromtxt(controller_data_file, delimiter=',')
-            cost_data[controller_id, :, :] = controller_data
+        # for controller_id in range(self.num_controllers):
+        #     controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
+        #     controller_data_file = controller_dir + '/' + 'eval.csv'
+        #     controller_data = genfromtxt(controller_data_file, delimiter=',')
+        #     cost_data[controller_id, :, :] = controller_data
 
         dataset_count = 0
         while dataset_count < self.num_envs:
@@ -141,8 +141,8 @@ class Evaluator:
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
-                map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
-                os.makedirs(map_dir, exist_ok = True)
+                # map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
+                # os.makedirs(map_dir, exist_ok = True)
                 # env.PlotInitMap(map_dir, "InitMap")
                 # env.RecordPlotData()
                 # env.PlotMapVoronoi(map_dir, step_count)
