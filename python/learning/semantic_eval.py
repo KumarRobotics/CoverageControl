@@ -4,6 +4,7 @@ import numpy as np
 import sys
 
 import torch
+from numpy import genfromtxt
 
 import pyCoverageControl as cc# Main library
 from pyCoverageControl import CoverageSystem
@@ -116,9 +117,15 @@ class Evaluator:
         self.map_size = self.config['MapSize']
 
     def Evaluate(self, save = True):
-        dataset_count = 0
 
         cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
+        for controller_id in range(self.num_controllers):
+            controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
+            controller_data_file = controller_dir + '/' + 'eval.csv'
+            controller_data = genfromtxt(controller_data_file, delimiter=',')
+            cost_data[controller_id, :, :] = controller_data
+
+        dataset_count = 0
         while dataset_count < self.num_envs:
             print("New environment")
 
@@ -127,15 +134,15 @@ class Evaluator:
             idf_file = self.env_path + '/' + env_name + '/idf.dat'
             world_idf = WorldIDF(self.cc_params, idf_file)
             env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
-            env_main.PlotInitMap(self.env_path + '/' + env_name, "InitMap")
+            # env_main.PlotInitMap(self.env_path + '/' + env_name, "InitMap")
 
             robot_init_pos = env_main.GetRobotPositions()
             for controller_id in range(self.num_controllers):
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
-                # map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
-                # os.makedirs(map_dir, exist_ok = True)
+                map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
+                os.makedirs(map_dir, exist_ok = True)
                 # env.PlotInitMap(map_dir, "InitMap")
                 # env.RecordPlotData()
                 # env.PlotMapVoronoi(map_dir, step_count)
@@ -158,7 +165,8 @@ class Evaluator:
                 if save == True:
                     controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
                     controller_data_file = controller_dir + '/' + 'eval.csv'
-                    np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                    # np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                    np.savetxt(controller_data_file, cost_data[controller_id, :, :], delimiter=",")
                 # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
                 del controller
                 del env
