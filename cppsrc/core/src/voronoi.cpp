@@ -147,17 +147,17 @@ namespace CoverageControl {
 		}
 		/* std::cout << "segments pushed" << std::endl; */
 
-		/* CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end()); */
-		for(auto const &ray:vor.rays_) {
-			if(ray.is_degenerate()) { continue; }
-			CGAL::insert(arr, ray);
-		}
+		CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end());
+		/* for(auto const &ray:vor.rays_) { */
+		/* 	if(ray.is_degenerate()) { continue; } */
+		/* 	CGAL::insert(arr, ray); */
+		/* } */
 		/* std::cout << "rays inserted" << std::endl; */
-		/* CGAL::insert(arr, vor.lines_.begin(), vor.lines_.end()); */
-		for(auto const &line:vor.lines_) {
-			if(line.is_degenerate()) { continue; }
-			CGAL::insert(arr, line);
-		}
+		CGAL::insert(arr, vor.lines_.begin(), vor.lines_.end());
+		/* for(auto const &line:vor.lines_) { */
+		/* 	if(line.is_degenerate()) { continue; } */
+		/* 	CGAL::insert(arr, line); */
+		/* } */
 		/* std::cout << "lines inserted" << std::endl; */
 		/* CGAL::insert(arr, vor.segments_.begin(), vor.segments_.end()); */
 		/* std::cout << "arr end" << std::endl; */
