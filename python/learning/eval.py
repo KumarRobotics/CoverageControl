@@ -66,10 +66,12 @@ class Controller:
         resized_local_maps = CoverageSystemUtils.ResizeMaps(raw_local_maps, self.map_size)
         raw_obstable_maps = CoverageSystemUtils.GetRawObstacleMaps(env, params).to(self.device)
         resized_obstacle_maps = CoverageSystemUtils.ResizeMaps(raw_obstable_maps, self.map_size)
-        comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
         edge_weights = CoverageSystemUtils.GetWeights(env, params)
-        # maps = torch.cat([resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1)
-        maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+        if self.use_comm_map:
+            comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
+            maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+        else:
+            maps = torch.cat([resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1)
 
         robot_positions = CoverageSystemUtils.GetRobotPositions(env)
         robot_positions = (robot_positions + params.pWorldMapSize/2) / params.pWorldMapSize
