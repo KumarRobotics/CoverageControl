@@ -244,6 +244,26 @@ namespace CoverageControl {
 
 			PointVector GetRobotPositions() {
 				UpdateRobotPositions();
+				if(params_.pAddNoisePositions) {
+					PointVector noisy_robot_global_positions = robot_global_positions_;
+					std::normal_distribution pos_noise{0.0, params_.pPositionsNoiseSigma};
+					for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+						noisy_robot_global_positions[iRobot] += Point2(pos_noise(gen_), pos_noise(gen_));
+						if(noisy_robot_global_positions[iRobot][0] < 0.01) {
+							noisy_robot_global_positions[iRobot][0] = 0.01;
+						}
+						if(noisy_robot_global_positions[iRobot][1] < 0.01) {
+							noisy_robot_global_positions[iRobot][1] = 0.01;
+						}
+						if(noisy_robot_global_positions[iRobot][0] > params_.pWorldMapSize - 0.01) {
+							noisy_robot_global_positions[iRobot][0] = params_.pWorldMapSize - 0.01;
+						}
+						if(noisy_robot_global_positions[iRobot][1] > params_.pWorldMapSize - 0.01) {
+							noisy_robot_global_positions[iRobot][1] = params_.pWorldMapSize - 0.01;
+						}
+					}
+					return noisy_robot_global_positions;
+				}
 				return robot_global_positions_;
 			}
 

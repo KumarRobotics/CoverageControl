@@ -86,6 +86,8 @@ namespace CoverageControl {
 			int pLloydNumTries = 10;
 
 			int pNumFrontiers = 10; // Number of frontiers to be selected
+			bool pAddNoisePositions = false;
+			double pPositionsNoiseSigma = 0.;
 
 			Parameters() {}
 

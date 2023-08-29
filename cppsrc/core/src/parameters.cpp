@@ -56,5 +56,10 @@ namespace CoverageControl {
 		pLloydNumTries = algorithm_yaml["pLloydNumTries"].as<int>();
 		pNumFrontiers = algorithm_yaml["pNumFrontiers"].as<int>();
 
+		if (robot_model_yaml["pAddNoisePositions"]) {
+			pAddNoisePositions = robot_model_yaml["pAddNoisePositions"].as<bool>();
+			pPositionsNoiseSigma = robot_model_yaml["pPositionsNoiseSigma"].as<double>();
+		}
+
 	}
 } /* namespace CoverageControl */
