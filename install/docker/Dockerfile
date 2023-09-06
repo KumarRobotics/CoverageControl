@@ -1,7 +1,8 @@
 # Start with cuda image
 FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
-CMD ["/bin/bash"]
+# CMD ["/bin/bash"]
+SHELL ["/bin/bash", "-c"]
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -22,18 +23,19 @@ RUN apt-get	-y update; \
 											 gpg \
 											 curl \
 											 gdb \
-											 software-properties-common
+											 software-properties-common \
+											 ca-certificates \
+											 gpg
 
 # Add repo for installing latest version of cmake
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
-		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
-		apt-get update; \
-		rm /usr/share/keyrings/kitware-archive-keyring.gpg
+# RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
+# 		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
+# 		apt-get update; \
+# 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 
 RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
 RUN apt-get -y install \
-											 kitware-archive-keyring \
 											 cmake \
 											 libboost-dev \
 											 libboost-all-dev \
@@ -50,7 +52,7 @@ RUN apt-get -y install \
 											 gnuplot-nox \
 											 texlive-base texlive-latex-extra texlive-science \
 											 dvipng texlive-fonts-recommended cm-super \
-											ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
+											 ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
 # Remove cache to reduce image size
 RUN rm -rf /var/lib/apt/lists/*; \
@@ -74,8 +76,8 @@ ENV Torch_DIR /root/libtorch/share/cmake/
 RUN mkdir -p /root/dependencies/build; \
 		mkdir -p /root/dependencies/src
 COPY install_dependencies.sh /root/dependencies/install_dependencies.sh
-RUN /root/dependencies/install_dependencies.sh /root/dependencies; \
-		rm -r /root/dependencies
+RUN ["/bin/bash", "-c", "/root/dependencies/install_dependencies.sh /root/dependencies"]
+RUN rm -r /root/dependencies
 
 ENV TorchVision_DIR /root/libtorch/share/cmake/
 
