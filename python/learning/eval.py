@@ -82,6 +82,10 @@ class Controller:
         with torch.no_grad():
             actions = self.model(data)
         actions = actions * self.actions_std + self.actions_mean
+        # for i in range(self.num_robots):
+        #     if actions[i][0] < 1e-3 and actions[i][1] < 1e-3:
+        #         actions[i][0] = 0
+        #         actions[i][1] = 0
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
         return env.GetObjectiveValue(), False
@@ -116,20 +120,21 @@ class Evaluator:
 
         cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
         while dataset_count < self.num_envs:
-            print("New environment")
-
+            print(f"Environment {dataset_count}")
             pos_file = self.env_path + str(dataset_count) + ".pos"
             env_file = self.env_path + str(dataset_count) + ".env"
             if os.path.isfile(env_file) and os.path.isfile(pos_file):
                 world_idf = WorldIDF(self.cc_params, env_file)
                 env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
             else:
+                print("New environment")
                 env_main = CoverageSystem(self.cc_params, self.num_features, self.num_robots)
                 env_main.WriteEnvironment(pos_file, env_file)
                 world_idf = env_main.GetWorldIDFObject()
 
             robot_init_pos = env_main.GetRobotPositions()
             for controller_id in range(self.num_controllers):
+                print(f"Controller {controller_id}")
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
