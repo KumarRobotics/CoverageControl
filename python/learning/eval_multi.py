@@ -14,11 +14,11 @@ if __name__ == "__main__":
     orig_name = config["Controllers"][0]["Name"]
     orig_dir = os.path.dirname(config["Controllers"][0]["ModelFile"])
 
-    config["Controllers"][0]["Name"] = orig_name + "/pre"
-    config["Controllers"][0]["ModelFile"] = orig_dir + "/model_1024.pt"
-    print(config)
-    evaluator = Evaluator(config)
-    evaluator.Evaluate()
+    # config["Controllers"][0]["Name"] = orig_name + "/pre"
+    # config["Controllers"][0]["ModelFile"] = orig_dir + "/model_1024.pt"
+    # print(config)
+    # evaluator = Evaluator(config)
+    # evaluator.Evaluate()
 
     config["Controllers"][0]["Name"] = orig_name + "/curr"
     config["Controllers"][0]["ModelFile"] = orig_dir + "/model_curr.pt"
