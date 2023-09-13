@@ -15,7 +15,7 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+/* using namespace std; */
 
 
 class HungarianAlgorithm
@@ -23,7 +23,7 @@ class HungarianAlgorithm
 public:
 	HungarianAlgorithm();
 	~HungarianAlgorithm();
-	double Solve(vector <vector<double> >& DistMatrix, vector<int>& Assignment);
+	double Solve(std::vector <std::vector<double> >& DistMatrix, std::vector<int>& Assignment);
 
 private:
 	void assignmentoptimal(int *assignment, double *cost, double *distMatrix, int nOfRows, int nOfColumns);
