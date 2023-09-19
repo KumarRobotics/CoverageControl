@@ -49,6 +49,7 @@ namespace CoverageControl {
 			double weighted_exploration_ratio_ = 0;
 			double total_idf_weight_ = 0;
 			std::vector <PlotterData> plotter_data_;
+			std::vector <std::vector <int>> adjacency_matrix_;
 
 		public:
 
@@ -56,9 +57,9 @@ namespace CoverageControl {
 			// Initialize num_robots with random start positions
 			CoverageSystem( Parameters const &params, int const num_gaussians, int const num_robots) : params_{params}, world_idf_{WorldIDF(params_)}{
 				// Generate Bivariate Normal Distribution from random numbers
-				std::srand(0);
+				std::srand(std::time(nullptr)); // use current time as seed for random generator
 				gen_ = std::mt19937(rd_()); //Standard mersenne_twister_engine seeded with rd_()
-				distrib_pts_ = std::uniform_real_distribution<>(0.001, params_.pWorldMapSize * params_.pResolution-0.001);
+				distrib_pts_ = std::uniform_real_distribution<>(kLargeEps, params_.pWorldMapSize * params_.pResolution-kLargeEps);
 				std::uniform_real_distribution<> distrib_var(params_.pMinSigma, params_.pMaxSigma);
 				std::uniform_real_distribution<> distrib_peak(params_.pMinPeak, params_.pMaxPeak);
 				for(int i = 0; i < num_gaussians; ++i) {
@@ -73,7 +74,7 @@ namespace CoverageControl {
 				world_idf_.GenerateMapCuda();
 				normalization_factor_ = world_idf_.GetNormalizationFactor();
 
-				std::uniform_real_distribution<> robot_pos_dist (0.001, params_.pRobotInitDist-0.001);
+				std::uniform_real_distribution<> robot_pos_dist (kLargeEps, params_.pRobotInitDist - kLargeEps);
 				robots_.reserve(num_robots);
 				for(int i = 0; i < num_robots; ++i) {
 					Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));
@@ -145,6 +146,10 @@ namespace CoverageControl {
 				exploration_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 1);
 				explored_idf_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
 				total_idf_weight_ = GetWorldIDF().sum();
+				adjacency_matrix_.resize(num_robots_);
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					adjacency_matrix_[iRobot].resize(num_robots_, 0);
+				}
 				PostStepCommands();
 			}
 
@@ -173,6 +178,7 @@ namespace CoverageControl {
 
 			void PostStepCommands() {
 				UpdateRobotPositions();
+				ComputeAdjacencyMatrix();
 				if(params_.pUpdateSystemMap) {
 					UpdateSystemMap();
 				}
@@ -182,6 +188,26 @@ namespace CoverageControl {
 						history.pop_front();
 					} else {
 						history.push_back(robot_global_positions_[iRobot]);
+					}
+				}
+			}
+
+			void ComputeAdjacencyMatrix() {
+#pragma omp parallel for num_threads(num_robots_)
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					for(size_t jRobot = 0; jRobot < iRobot; ++jRobot) {
+						if(iRobot == jRobot) {
+							adjacency_matrix_[iRobot][jRobot] = 0;
+							continue;
+						}
+						Point2 relative_pos = robot_global_positions_[jRobot] - robot_global_positions_[iRobot];
+						if(relative_pos.norm() < params_.pCommunicationRange) {
+							adjacency_matrix_[iRobot][jRobot] = 1;
+							adjacency_matrix_[jRobot][iRobot] = 1;
+						} else {
+							adjacency_matrix_[iRobot][jRobot] = 0;
+							adjacency_matrix_[jRobot][iRobot] = 0;
+						}
 					}
 				}
 			}
@@ -225,6 +251,15 @@ namespace CoverageControl {
 				return 0;
 			}
 
+			void SetLocalRobotPositions(std::vector <Point2> const &relative_pos) {
+				SetRobotPositions(relative_pos);
+			}
+
+			void SetLocalRobotPosition(size_t const robot_id, Point2 const &relative_pos) {
+				robots_[robot_id].SetRobotPosition(relative_pos);
+				PostStepCommands();
+			}
+
 			// Sets positions of all robots with respect to the local start position
 			void SetRobotPositions(std::vector<Point2> const &positions) {
 				if(positions.size() != num_robots_) {
@@ -242,6 +277,18 @@ namespace CoverageControl {
 				}
 			}
 
+			PointVector GetRelativePositonsNeighbors(size_t const robot_id) const {
+				PointVector relative_positions;
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					if(adjacency_matrix_[robot_id][iRobot] == 0) {
+						continue;
+					}
+					Point2 relative_pos = robot_global_positions_[iRobot] - robot_global_positions_[robot_id];
+					relative_positions.push_back(relative_pos);
+				}
+				return relative_positions;
+			}
+
 			PointVector GetRobotPositions() {
 				UpdateRobotPositions();
 				if(params_.pAddNoisePositions) {
@@ -249,17 +296,17 @@ namespace CoverageControl {
 					std::normal_distribution pos_noise{0.0, params_.pPositionsNoiseSigma};
 					for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 						noisy_robot_global_positions[iRobot] += Point2(pos_noise(gen_), pos_noise(gen_));
-						if(noisy_robot_global_positions[iRobot][0] < 0.01) {
-							noisy_robot_global_positions[iRobot][0] = 0.01;
+						if(noisy_robot_global_positions[iRobot][0] < kLargeEps) {
+							noisy_robot_global_positions[iRobot][0] = kLargeEps;
 						}
-						if(noisy_robot_global_positions[iRobot][1] < 0.01) {
-							noisy_robot_global_positions[iRobot][1] = 0.01;
+						if(noisy_robot_global_positions[iRobot][1] < kLargeEps) {
+							noisy_robot_global_positions[iRobot][1] = kLargeEps;
 						}
-						if(noisy_robot_global_positions[iRobot][0] > params_.pWorldMapSize - 0.01) {
-							noisy_robot_global_positions[iRobot][0] = params_.pWorldMapSize - 0.01;
+						if(noisy_robot_global_positions[iRobot][0] > params_.pWorldMapSize - kLargeEps) {
+							noisy_robot_global_positions[iRobot][0] = params_.pWorldMapSize - kLargeEps;
 						}
-						if(noisy_robot_global_positions[iRobot][1] > params_.pWorldMapSize - 0.01) {
-							noisy_robot_global_positions[iRobot][1] = params_.pWorldMapSize - 0.01;
+						if(noisy_robot_global_positions[iRobot][1] > params_.pWorldMapSize - kLargeEps) {
+							noisy_robot_global_positions[iRobot][1] = params_.pWorldMapSize - kLargeEps;
 						}
 					}
 					return noisy_robot_global_positions;
@@ -282,7 +329,7 @@ namespace CoverageControl {
 				auto it_end = std::next(history.crbegin(), std::max(6, int(history.size()) - 1));
 				bool flag = false;
 				int count = 0;
-				std::for_each(history.crbegin(), it_end, [last_pos, &count](Point2 const &pt) { if((pt - last_pos).norm() < kEps) { ++count; }  });
+				std::for_each(history.crbegin(), it_end, [last_pos, &count](Point2 const &pt) { if((pt - last_pos).norm() < kLargeEps) { ++count; }  });
 				if(count > 2) { flag = true; }
 				return flag;
 			}
@@ -380,7 +427,7 @@ namespace CoverageControl {
 				Point2 diff = goal - curr_pos;
 				double dist = diff.norm();
 				double speed = speed_factor * dist / params_.pTimeStep;
-				if(speed <= kEps) {
+				if(speed <= kLargeEps) {
 					return 0;
 				}
 				speed = std::min(params_.pMaxRobotSpeed, speed);
@@ -403,7 +450,7 @@ namespace CoverageControl {
 					Point2 diff = goals[iRobot] - robot_global_positions_[iRobot];
 					double dist = diff.norm();
 					double speed = dist / params_.pTimeStep;
-					if(speed <= kEps) {
+					if(speed <= kLargeEps) {
 						continue;
 					}
 					speed = std::min(params_.pMaxRobotSpeed, speed);

@@ -137,12 +137,11 @@ namespace CoverageControl {
 
 			void SetRobotPosition(Point2 const &pos) {
 				Point2 new_global_pos = pos + global_start_position_;
-				double eps = 0.0001;
-				if(new_global_pos.x() <= 0) { new_global_pos[0] = 0 + eps; }
-				if(new_global_pos.y() <= 0) { new_global_pos[1] = 0 + eps; }
+				if(new_global_pos.x() <= 0) { new_global_pos[0] = 0 + kLargeEps; }
+				if(new_global_pos.y() <= 0) { new_global_pos[1] = 0 + kLargeEps; }
 				double max_xy = params_.pWorldMapSize * params_.pResolution;
-				if(new_global_pos.x() >= max_xy) { new_global_pos[0] = max_xy - eps; }
-				if(new_global_pos.y() >= max_xy) { new_global_pos[1] = max_xy - eps; }
+				if(new_global_pos.x() >= max_xy) { new_global_pos[0] = max_xy - kLargeEps; }
+				if(new_global_pos.y() >= max_xy) { new_global_pos[1] = max_xy - kLargeEps; }
 
 				local_current_position_ = new_global_pos - global_start_position_;
 				global_current_position_ = new_global_pos;
@@ -197,15 +196,14 @@ namespace CoverageControl {
 			}
 
 			auto GetExplorationFeatures() {
-				double eps = 0.0001;
 				queue_t frontiers;
 				Point2 const &pos = global_current_position_;
 
 				double factor = 4;
 				double pos_x_lim = std::min(pos[0] + factor * time_step_dist_, double(params_.pWorldMapSize));
 				double pos_y_lim = std::min(pos[1] + factor * time_step_dist_, double(params_.pWorldMapSize));
-				for(double pos_x = std::max(pos[0] - factor * time_step_dist_, eps); pos_x < pos_x_lim;  pos_x += 1 * params_.pResolution ) {
-					for(double pos_y = std::max(pos[1] - factor * time_step_dist_, eps); pos_y < pos_y_lim; pos_y += 1 * params_.pResolution ) {
+				for(double pos_x = std::max(pos[0] - factor * time_step_dist_, kLargeEps); pos_x < pos_x_lim;  pos_x += 1 * params_.pResolution ) {
+					for(double pos_y = std::max(pos[1] - factor * time_step_dist_, kLargeEps); pos_y < pos_y_lim; pos_y += 1 * params_.pResolution ) {
 						Point2 qpos{ pos_x, pos_y };
 						double dist = (qpos - pos).norm();
 						dist = std::max(dist, time_step_dist_);
