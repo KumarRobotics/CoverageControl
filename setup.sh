@@ -38,6 +38,12 @@ then
 		exit 1
 	fi
 fi
+if [[ ${CLEAN} ]]
+then
+	echo "Cleaning python bindings"
+	pip uninstall -y pyCoverageControl
+	pip uninstall -y CoverageControlTorch
+fi
 # cd ../../torch/python_bindings/
 # pip install .
 # if [ $? -ne 0 ]; then

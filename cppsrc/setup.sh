@@ -8,7 +8,7 @@ while getopts 'ictp' flag; do
 	case "${flag}" in
 		i) INSTALL=true;;
 		c) CLEAN=true;;
-		t) WITH_TORCH=true;;
+		t) WITH_TORCH=ON;;
 		p) WITH_PYTHON=true;;
 		*) print_usage
 			exit 1 ;;
@@ -73,7 +73,7 @@ InstallCoverageControlTests () {
 }
 
 InstallCoverageControlMain () {
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/main -B ${BUILD_DIR}/CoverageControlMain ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/main -B ${BUILD_DIR}/CoverageControlMain ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DWITH_TORCH=${WITH_TORCH}
 	cmake --build ${BUILD_DIR}/CoverageControlMain -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlMain build failed"
@@ -90,11 +90,11 @@ InstallCoverageControlMain () {
 if [[ ${INSTALL} ]]
 then
 	InstallCoverageControlCore
-	if [[ ${WITH_TORCH} == 1 ]]
+	InstallCoverageControlMain
+	InstallCoverageControlTests
+	if [[ ${WITH_TORCH} == "ON" ]]
 	then
 		InstallCoverageControlTorch
-		InstallCoverageControlTests
-		InstallCoverageControlMain
 	fi
 fi
 
