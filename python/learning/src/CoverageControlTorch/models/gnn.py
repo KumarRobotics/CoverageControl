@@ -21,9 +21,15 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         pos = data.pos
         cnn_output = self.cnn_backbone(x.view(-1, x.shape[-3], x.shape[-2], x.shape[-1]))
         gnn_backbone_in = torch.cat([cnn_output, pos], dim=-1)
-        gnn_output = self.gnn_backbone(gnn_backbone_in, edge_index)
-        mlp_output = self.gnn_mlp(gnn_output)
-        x = self.output_linear(mlp_output)
+        # print(gnn_backbone_in)
+        # gnn_output = self.gnn_backbone(gnn_backbone_in, edge_index)
+        # mid_test = self.gnn_mlp.lins[0](gnn_output)
+        # print(f'mid_test sum1: {mid_test.sum()}')
+        # mid_test = self.gnn_mlp.norms[0](mid_test)
+        # print(f'mid_test sum: {mid_test.sum()}')
+        # mlp_output = self.gnn_mlp(self.gnn_backbone(gnn_backbone_in, edge_index)
+        # print(f'mlp_output sum: {mlp_output[0]}')
+        x = self.output_linear(self.gnn_mlp(self.gnn_backbone(gnn_backbone_in, edge_index)))
         return x
 
     def LoadCNNBackBone(self, model_path):

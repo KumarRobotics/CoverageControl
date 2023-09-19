@@ -145,6 +145,7 @@ class Evaluator:
                 # env.PlotMapVoronoi(map_dir, step_count)
 
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
+                # objective_value = env.GetObjectiveValue()
                 cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
                 step_count = step_count + 1
                 while step_count < self.num_steps:
@@ -157,6 +158,7 @@ class Evaluator:
                     # env.RecordPlotData()
                     step_count = step_count + 1
                     if step_count % 100 == 0:
+                        print(f"Step {step_count}, Objective Value {objective_value}")
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
                 if save == True:
