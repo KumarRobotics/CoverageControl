@@ -4,7 +4,6 @@ print_usage() {
 }
 
 WITH_TORCH=0
-WITH_PYTHON=true
 while getopts 'ictp' flag; do
 	case "${flag}" in
 		i) INSTALL=true;;
@@ -16,12 +15,16 @@ while getopts 'ictp' flag; do
 	esac
 done
 
-bash cppsrc/setup.sh $@
-if [ $? -ne 0 ]; then
-	echo "cppsrc build failed"
-	exit 1
-fi
 if [[ ${INSTALL} ]]
+then
+	bash cppsrc/setup.sh $@
+	if [ $? -ne 0 ]; then
+		echo "cppsrc build failed"
+		exit 1
+	fi
+fi
+
+if [[ ${WITH_PYTHON} ]]
 then
 	echo "Installing python bindings"
 	cd cppsrc/core/python_bindings/
@@ -38,6 +41,7 @@ then
 		exit 1
 	fi
 fi
+
 if [[ ${CLEAN} ]]
 then
 	echo "Cleaning python bindings"
