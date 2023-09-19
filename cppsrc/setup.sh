@@ -90,12 +90,12 @@ InstallCoverageControlMain () {
 if [[ ${INSTALL} ]]
 then
 	InstallCoverageControlCore
-	InstallCoverageControlMain
-	InstallCoverageControlTests
 	if [[ ${WITH_TORCH} == "ON" ]]
 	then
 		InstallCoverageControlTorch
 	fi
+	InstallCoverageControlMain
+	InstallCoverageControlTests
 fi
 
 if [[ ${CLEAN} ]]

@@ -6,7 +6,7 @@
 using namespace torch::indexing;
 namespace CoverageControlTorch {
 
-	struct MLP : torch::nn::Module {
+	struct MLPImpl : torch::nn::Module {
 		int input_size = 256;
 		int output_size = 2;
 		int layer0_size = 32;
@@ -18,7 +18,7 @@ namespace CoverageControlTorch {
 		torch::nn::BatchNorm1d batch_norm_layer_0_;
 		torch::nn::Linear output_layer_;
 
-		MLP() : 
+		MLPImpl() : 
 			linear_layer_0_(register_module("linear_0", torch::nn::Linear(input_size, layer0_size))),
 			batch_norm_layer_0_(register_module("batch_norm_0", torch::nn::BatchNorm1d(torch::nn::BatchNorm1dOptions(layer0_size).eps(1e-5).momentum(0.1).affine(true).track_running_stats(true)))),
 			linear_layer_1_(register_module("linear_1", torch::nn::Linear(layer0_size, layer1_size))),
