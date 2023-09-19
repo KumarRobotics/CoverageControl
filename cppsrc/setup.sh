@@ -3,13 +3,16 @@ print_usage() {
 	printf "bash $0 [-c (for clean)] [-i (for install)]\n"
 }
 
-while getopts 'uic' flag; do
+WITH_TORCH=0
+while getopts 'ictp' flag; do
 	case "${flag}" in
 		i) INSTALL=true;;
 		c) CLEAN=true;;
+		t) WITH_TORCH=true;;
+		p) WITH_PYTHON=true;;
 		*) print_usage
 			exit 1 ;;
-esac
+	esac
 done
 
 BUILD_DIR=${COVERAGECONTROL_WS}/build
@@ -87,9 +90,12 @@ InstallCoverageControlMain () {
 if [[ ${INSTALL} ]]
 then
 	InstallCoverageControlCore
-	# InstallCoverageControlTorch
-	# InstallCoverageControlTests
-	# InstallCoverageControlMain
+	if [[ ${WITH_TORCH} == 1 ]]
+	then
+		InstallCoverageControlTorch
+		InstallCoverageControlTests
+		InstallCoverageControlMain
+	fi
 fi
 
 if [[ ${CLEAN} ]]
