@@ -16,9 +16,14 @@ while getopts 'ictp' flag; do
 done
 
 BUILD_DIR=${COVERAGECONTROL_WS}/build
-INSTALL_DIR=${COVERAGECONTROL_WS}/install
+# INSTALL_DIR=${COVERAGECONTROL_WS}/install
 
-CMAKE_END_FLAGS="-DCMAKE_PREFIX_PATH=$Torch_DIR -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+if [[ ${WITH_TORCH} == "ON" ]]
+then
+	CMAKE_END_FLAGS="-DCMAKE_PREFIX_PATH=$Torch_DIR -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+else
+	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+fi
 
 CleanBuild () {
 	rm -rf ${BUILD_DIR}
