@@ -99,7 +99,7 @@ namespace CoverageControl {
 				}
 				robots_.reserve(robot_positions.size());
 				num_robots_ = robot_positions.size();
-				for(auto const &pos:robot_positions) {
+				for(Point2 const &pos:robot_positions) {
 					robots_.push_back(RobotModel(params_, pos, world_idf_));
 				}
 				InitSetup();
@@ -174,6 +174,37 @@ namespace CoverageControl {
 			inline double GetWeightedExplorationRatio() const {
 				double weighted_exploration_ratio = (double)(explored_idf_map_.sum())/(total_idf_weight_);
 				return weighted_exploration_ratio;
+			}
+
+			void PostStepCommands(size_t robot_id) {
+				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
+				for(size_t jRobot = 0; jRobot < robot_id; ++jRobot) {
+					if(robot_id == jRobot) {
+						adjacency_matrix_[robot_id][jRobot] = 0;
+						continue;
+					}
+					Point2 relative_pos = robot_global_positions_[jRobot] - robot_global_positions_[robot_id];
+					if(relative_pos.norm() < params_.pCommunicationRange) {
+						adjacency_matrix_[robot_id][jRobot] = 1;
+						adjacency_matrix_[jRobot][robot_id] = 1;
+					} else {
+						adjacency_matrix_[robot_id][jRobot] = 0;
+						adjacency_matrix_[jRobot][robot_id] = 0;
+					}
+				}
+				if(params_.pUpdateSystemMap) {
+					MapUtils::MapBounds index, offset;
+					MapUtils::ComputeOffsets(params_.pResolution, robot_global_positions_[robot_id], params_.pSensorSize, params_.pWorldMapSize, index, offset);
+					explored_idf_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = GetRobotSensorView(robot_id).block(offset.left, offset.bottom, offset.width, offset.height);
+					exploration_map_.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height) = MapType::Zero(offset.width, offset.height);
+					system_map_ = explored_idf_map_ - exploration_map_;
+				}
+				auto &history = robot_positions_history_[robot_id];
+				if(history.size() > 0 and history.size() == size_t(params_.pRobotPosHistorySize)) {
+					history.pop_front();
+				} else {
+					history.push_back(robot_global_positions_[robot_id]);
+				}
 			}
 
 			void PostStepCommands() {
@@ -257,7 +288,7 @@ namespace CoverageControl {
 
 			void SetLocalRobotPosition(size_t const robot_id, Point2 const &relative_pos) {
 				robots_[robot_id].SetRobotPosition(relative_pos);
-				PostStepCommands();
+				PostStepCommands(robot_id);
 			}
 
 			// Sets positions of all robots with respect to the local start position
@@ -289,32 +320,58 @@ namespace CoverageControl {
 				return relative_positions;
 			}
 
+			std::vector <int> GetNeighborIDs(size_t const robot_id) const {
+				std::vector <int> neighbor_ids;
+				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+					if(adjacency_matrix_[robot_id][iRobot] == 0) {
+						continue;
+					}
+					neighbor_ids.push_back(iRobot);
+				}
+				return neighbor_ids;
+			}
+
 			PointVector GetRobotPositions() {
 				UpdateRobotPositions();
 				if(params_.pAddNoisePositions) {
-					PointVector noisy_robot_global_positions = robot_global_positions_;
-					std::normal_distribution pos_noise{0.0, params_.pPositionsNoiseSigma};
-					for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-						noisy_robot_global_positions[iRobot] += Point2(pos_noise(gen_), pos_noise(gen_));
-						if(noisy_robot_global_positions[iRobot][0] < kLargeEps) {
-							noisy_robot_global_positions[iRobot][0] = kLargeEps;
-						}
-						if(noisy_robot_global_positions[iRobot][1] < kLargeEps) {
-							noisy_robot_global_positions[iRobot][1] = kLargeEps;
-						}
-						if(noisy_robot_global_positions[iRobot][0] > params_.pWorldMapSize - kLargeEps) {
-							noisy_robot_global_positions[iRobot][0] = params_.pWorldMapSize - kLargeEps;
-						}
-						if(noisy_robot_global_positions[iRobot][1] > params_.pWorldMapSize - kLargeEps) {
-							noisy_robot_global_positions[iRobot][1] = params_.pWorldMapSize - kLargeEps;
-						}
+					PointVector noisy_robot_global_positions;
+					for(Point2 pt:robot_global_positions_) {
+						noisy_robot_global_positions.push_back(AddNoise(pt));
 					}
 					return noisy_robot_global_positions;
 				}
 				return robot_global_positions_;
 			}
 
-			Point2 GetRobotPosition(int const robot_id) const { return robots_[robot_id].GetGlobalCurrentPosition(); }
+			Point2 AddNoise(Point2 const pt) {
+				Point2 noisy_pt;
+				noisy_pt[0] = pt[0]; noisy_pt[1] = pt[1];
+				auto noise_sigma = params_.pPositionsNoiseSigma;
+				std::normal_distribution pos_noise{0.0, noise_sigma};
+				noisy_pt += Point2(pos_noise(gen_), pos_noise(gen_));
+				if(noisy_pt[0] < kLargeEps) {
+					noisy_pt[0] = kLargeEps;
+				}
+				if(noisy_pt[1] < kLargeEps) {
+					noisy_pt[1] = kLargeEps;
+				}
+				if(noisy_pt[0] > params_.pWorldMapSize - kLargeEps) {
+					noisy_pt[0] = params_.pWorldMapSize - kLargeEps;
+				}
+				if(noisy_pt[1] > params_.pWorldMapSize - kLargeEps) {
+					noisy_pt[1] = params_.pWorldMapSize - kLargeEps;
+				}
+				return noisy_pt;
+			}
+
+			Point2 GetRobotPosition(int const robot_id) {
+				Point2 robot_pos;
+				robot_pos[0] = robots_[robot_id].GetGlobalCurrentPosition()[0];
+				robot_pos[1] = robots_[robot_id].GetGlobalCurrentPosition()[1];
+				if(params_.pAddNoisePositions) {
+					return AddNoise(robot_pos);
+				}
+			}
 
 			auto const& GetWorldIDFObject() const { return world_idf_; }
 			MapType const& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
@@ -381,7 +438,7 @@ namespace CoverageControl {
 					/* if(relative_pos.x() < params_.pCommunicationRange and */
 					/* 		relative_pos.x() > -params_.pCommunicationRange and */
 					/* 		relative_pos.y() < params_.pCommunicationRange and */
-					/* 		relative_pos.y() > -params_.pCommunicationRange) { */
+					/* 		relative_pos.y() > -params_.pCommunicationRange)  */
 					if(relative_pos.norm() < params_.pCommunicationRange) {
 						robot_neighbors_pos.push_back(relative_pos);
 					}
