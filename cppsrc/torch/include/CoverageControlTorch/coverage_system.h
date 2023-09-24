@@ -261,7 +261,7 @@ namespace CoverageControlTorch {
 			torch::Tensor GetAllRobotsCommunicationMaps(int const &map_size) {
 				float f_map_size = (float) map_size;
 
-				torch::Tensor comm_maps = torch::empty({num_robots_, 2, map_size, map_size});
+				torch::Tensor comm_maps = torch::zeros({num_robots_, 2, map_size, map_size});
 				torch::Tensor robot_positions = ToTensor(GetRobotPositions());
 
 				torch::Tensor relative_pos = robot_positions.unsqueeze(0) - robot_positions.unsqueeze(1);
