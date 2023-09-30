@@ -50,6 +50,8 @@ namespace CoverageControl {
 			double total_idf_weight_ = 0;
 			std::vector <PlotterData> plotter_data_;
 			std::vector <std::vector <int>> adjacency_matrix_;
+			std::vector <std::vector <Point2>> relative_positions_neighbors_;
+			std::vector <std::vector <int>> neighbor_ids_;
 
 		public:
 
@@ -147,8 +149,12 @@ namespace CoverageControl {
 				explored_idf_map_ = MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
 				total_idf_weight_ = GetWorldIDF().sum();
 				adjacency_matrix_.resize(num_robots_);
+				relative_positions_neighbors_.resize(num_robots_);
+				neighbor_ids_.resize(num_robots_);
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					adjacency_matrix_[iRobot].resize(num_robots_, 0);
+					relative_positions_neighbors_[iRobot].reserve(num_robots_);
+					neighbor_ids_[iRobot].reserve(num_robots_);
 				}
 				PostStepCommands();
 			}
@@ -179,10 +185,6 @@ namespace CoverageControl {
 			void PostStepCommands(size_t robot_id) {
 				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
 				for(size_t jRobot = 0; jRobot < robot_id; ++jRobot) {
-					if(robot_id == jRobot) {
-						adjacency_matrix_[robot_id][jRobot] = 0;
-						continue;
-					}
 					Point2 relative_pos = robot_global_positions_[jRobot] - robot_global_positions_[robot_id];
 					if(relative_pos.norm() < params_.pCommunicationRange) {
 						adjacency_matrix_[robot_id][jRobot] = 1;
@@ -192,6 +194,8 @@ namespace CoverageControl {
 						adjacency_matrix_[jRobot][robot_id] = 0;
 					}
 				}
+				UpdateNeighbors();
+
 				if(params_.pUpdateSystemMap) {
 					MapUtils::MapBounds index, offset;
 					MapUtils::ComputeOffsets(params_.pResolution, robot_global_positions_[robot_id], params_.pSensorSize, params_.pWorldMapSize, index, offset);
@@ -213,6 +217,7 @@ namespace CoverageControl {
 				if(params_.pUpdateSystemMap) {
 					UpdateSystemMap();
 				}
+				UpdateNeighbors();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					auto &history = robot_positions_history_[iRobot];
 					if(history.size() > 0 and history.size() == size_t(params_.pRobotPosHistorySize)) {
@@ -224,7 +229,7 @@ namespace CoverageControl {
 			}
 
 			void ComputeAdjacencyMatrix() {
-#pragma omp parallel for num_threads(num_robots_)
+/* #pragma omp parallel for num_threads(num_robots_) */
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					for(size_t jRobot = 0; jRobot < iRobot; ++jRobot) {
 						if(iRobot == jRobot) {
@@ -308,27 +313,27 @@ namespace CoverageControl {
 				}
 			}
 
-			PointVector GetRelativePositonsNeighbors(size_t const robot_id) const {
-				PointVector relative_positions;
+			void UpdateNeighbors() {
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					if(adjacency_matrix_[robot_id][iRobot] == 0) {
-						continue;
+					relative_positions_neighbors_[iRobot].clear();
+					neighbor_ids_[iRobot].clear();
+					for(size_t jRobot = 0; jRobot < num_robots_; ++jRobot) {
+						if(adjacency_matrix_[iRobot][jRobot] == 0) {
+							continue;
+						}
+						Point2 relative_pos = robot_global_positions_[jRobot] - robot_global_positions_[iRobot];
+						relative_positions_neighbors_[iRobot].push_back(relative_pos);
+						neighbor_ids_[iRobot].push_back(jRobot);
 					}
-					Point2 relative_pos = robot_global_positions_[iRobot] - robot_global_positions_[robot_id];
-					relative_positions.push_back(relative_pos);
 				}
-				return relative_positions;
+			}
+
+			PointVector GetRelativePositonsNeighbors(size_t const robot_id) const {
+				return relative_positions_neighbors_[robot_id];
 			}
 
 			std::vector <int> GetNeighborIDs(size_t const robot_id) const {
-				std::vector <int> neighbor_ids;
-				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-					if(adjacency_matrix_[robot_id][iRobot] == 0) {
-						continue;
-					}
-					neighbor_ids.push_back(iRobot);
-				}
-				return neighbor_ids;
+				return neighbor_ids_[robot_id];
 			}
 
 			PointVector GetRobotPositions() {
