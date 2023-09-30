@@ -28,10 +28,10 @@ RUN apt-get	-y update; \
 											 gpg
 
 # Add repo for installing latest version of cmake
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
-		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
-		apt-get update; \
-		rm /usr/share/keyrings/kitware-archive-keyring.gpg
+# RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
+# 		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
+# 		apt-get update; \
+# 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 
 RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
