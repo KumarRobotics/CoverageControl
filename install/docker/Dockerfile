@@ -46,6 +46,7 @@ RUN apt-get -y install \
 											 python-is-python3 \
 											 python3-numpy \
 											 libgeos-dev \
+											 libyaml-cpp-dev \
 											 vim \
 											 tmux \
 											 ffmpeg \

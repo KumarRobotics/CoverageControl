@@ -41,7 +41,7 @@ set(sources_list
 	extern/Hungarian.cpp)
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX pthread boost_iostreams boost_system boost_filesystem)
+set(dependencies_list Eigen3::Eigen m stdc++fs OpenMP::OpenMP_CXX pthread boost_iostreams boost_system boost_filesystem ${GeographicLib_LIBRARIES} yaml-cpp)
 
 add_library(CoverageControl_core SHARED ${sources_list})
 
@@ -52,7 +52,7 @@ target_include_directories(CoverageControlCore INTERFACE
 target_link_libraries(CoverageControlCore INTERFACE ${dependencies_list} CoverageControl_core)
 
 target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
-target_link_libraries(CoverageControl_core PRIVATE compiler_flags ${GeographicLib_LIBRARIES} CGAL::CGAL)
+target_link_libraries(CoverageControl_core PRIVATE compiler_flags  CGAL::CGAL)
 target_link_libraries(CoverageControl_core PUBLIC ${dependencies_list})
 set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 

@@ -1,4 +1,4 @@
-IMAGE_NAME=agarwalsaurav/gnn
+IMAGE_NAME=agarwalsaurav/gnn:latest
 COVERAGECONTROL_WS=${1}
 
 COVERAGECONTROL_VOLUME="--volume=${COVERAGECONTROL_WS}:/opt/CoverageControl_ws:rw"

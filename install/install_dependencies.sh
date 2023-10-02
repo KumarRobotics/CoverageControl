@@ -56,8 +56,9 @@ InstallPybind11 () {
 
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
-	git clone https://github.com/jbeder/yaml-cpp.git ${MAIN_DIR}/src/yaml-cpp
-	cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=OFF  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+	wget https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/0.8.0.tar.gz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/yaml-cpp-0.8.0 -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=OFF  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "YAML build failed"
