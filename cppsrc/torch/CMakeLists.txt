@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.24)
 project(CoverageControlTorch VERSION 0.3 LANGUAGES CUDA CXX)
 
 include(CheckCXXCompilerFlag)
@@ -9,16 +9,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 find_package(Torch REQUIRED)
-find_package(TorchVision REQUIRED)
+# find_package(TorchVision REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 find_package(OpenCV REQUIRED)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(yaml-cpp REQUIRED)
-find_package(CGAL REQUIRED)
-find_package(GeographicLib REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
 configure_file(cmake/CoverageControlTorchConfig.h.in CoverageControlTorchConfig.h)
@@ -41,7 +38,7 @@ target_compile_options(compiler_flags INTERFACE
 set(sources_list base.cpp)
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list CoverageControlCore ${TORCH_LIBRARIES} TorchVision::TorchVision)
+set(dependencies_list CoverageControlCore ${TORCH_LIBRARIES})
 
 add_library(CoverageControl_torch SHARED ${sources_list})
 

@@ -51,39 +51,28 @@ int main(int argc, char** argv) {
 	else {
 		env = std::make_unique<CoverageSystem> (params, num_dists, num_robots);
 	}
-	env->WriteEnvironment("datasets/test/pos", "datasets/test/idf");
 
 	CoverageAlgorithm oracle(params, num_robots, *env);
 
-	std::string dir = "datasets/test/maps/";
-	env->PlotInitMap(dir, "init_map");
 	auto goals = oracle.GetGoals();
-	env->PlotMapVoronoi(dir, 0, oracle.GetVoronoi(), oracle.GetGoals());
+	std::cout << "Initial objective: " << env->GetObjectiveValue() << std::endl;
 	for(int ii = 0; ii < params.pEpisodeSteps; ++ii) {
-		std::cout << "Step: " << ii << std::endl;
 		bool cont_flag = oracle.Step();
 		auto actions = oracle.GetActions();
 		env->StepActions(actions);
-		if(ii%1 == 0) {
-			/* env->RecordPlotData(); */
-			env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
+		if(ii%100 == 0) {
+			std::cout << "Step: " << ii << std::endl;
 		}
 		if(cont_flag == false) {
 			break;
 		}
 	}
 	std::cout << "Converged" << std::endl;
-	std::cout << "Exploration ratio: " << env->GetExplorationRatio() << " Weighted: " << env->GetWeightedExplorationRatio() << std::endl;
 	std::cout << "Coverage objective: " << env->GetObjectiveValue() << std::endl;
 	auto zero_actions = PointVector(num_robots, Point2(0,0));
 
 	for(int ii = 0; ii < 90; ++ii) {
 		env->StepActions(zero_actions);
-		/* env->RecordPlotData(); */
-		env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
 	}
-
-	env->PlotMapVoronoi(dir, 1, oracle.GetVoronoi(), oracle.GetGoals());
-	/* env->RenderRecordedMap(dir, "CoverageControl_oracle.mp4"); */
 	return 0;
 }
