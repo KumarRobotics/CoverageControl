@@ -1,15 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-MAIN_DIR=$1
-BUILD_DIR=${MAIN_DIR}/build
-CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
-echo $CUDAARCHS
+TMP_DIR=`mktemp -d`
+MAIN_DIR=${TMP_DIR}/main/
+BUILD_DIR=${TMP_DIR}/build/
+
+if [ -z "$1" ]; then
+	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
+else
+	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$1"
+fi
 
 InstallCGAL () {
 	echo "Setting up CGAL"
-	wget https://github.com/CGAL/cgal/releases/download/v5.5.2/CGAL-5.5.2-library.tar.xz -P ${MAIN_DIR}/src
-	tar -xf ${MAIN_DIR}/src/CGAL-5.5.2-library.tar.xz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/CGAL-5.5.2 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS}
+	wget https://github.com/CGAL/cgal/releases/download/v5.6/CGAL-5.6-library.tar.xz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/CGAL-5.6-library.tar.xz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/CGAL-5.6 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS}
 	cmake --install ${BUILD_DIR}/cgal
 	if [ $? -eq 0 ]; then
 		echo "cgal install succeeded"
@@ -21,9 +26,9 @@ InstallCGAL () {
 
 InstallGeoGraphicLib () {
 	echo "Setting up geographiclib"
-	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.2.tar.gz -P ${MAIN_DIR}/src
-	tar -xf ${MAIN_DIR}/src/v2.2.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/geographiclib-2.2 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS}
+	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.3.tar.gz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/v2.3.tar.gz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/geographiclib-2.3 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS} -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/geographiclib -j$(nproc)
 	cmake --install ${BUILD_DIR}/geographiclib
 	if [ $? -eq 0 ]; then
@@ -36,9 +41,9 @@ InstallGeoGraphicLib () {
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
-	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.10.4.tar.gz -P ${MAIN_DIR}/src
-	tar -xf ${MAIN_DIR}/src/v2.10.4.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/pybind11-2.10.4 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
+	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.tar.gz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/v2.11.1.tar.gz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/pybind11-2.11.1 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
 	cmake --install ${BUILD_DIR}/pybind11
 	if [ $? -eq 0 ]; then
@@ -52,7 +57,7 @@ InstallPybind11 () {
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
 	git clone https://github.com/jbeder/yaml-cpp.git ${MAIN_DIR}/src/yaml-cpp
-	cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS}
+	cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=OFF  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "YAML build failed"
@@ -126,11 +131,11 @@ InstallTorchSparse () {
 
 InstallOpenCV () {
 	echo "Setting up opencv"
-	wget -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.7.0.tar.gz
-	wget -O ${MAIN_DIR}/src/opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.7.0.zip
+	wget -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.8.0.tar.gz
+	wget -O ${MAIN_DIR}/src/opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.8.0.zip
 	tar -xf ${MAIN_DIR}/src/opencv.tar.gz -C ${MAIN_DIR}/src/
 	unzip ${MAIN_DIR}/src/opencv_contrib.zip -d ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/opencv-4.7.0 -B ${BUILD_DIR}/opencv -DWITH_CUDA=ON -DWITH_CUBLAS=ON -DWITH_CUDNN=ON -DWITH_FFMPEG=ON -DWITH_EIGEN=ON -DWITH_OPENMP=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DWITH_OPENJPEG=ON -DOPENCV_EXTRA_MODULES_PATH=${MAIN_DIR}/src/opencv_contrib-4.7.0/modules ${CMAKE_END_FLAGS}
+	cmake -S ${MAIN_DIR}/src/opencv-4.8.0 -B ${BUILD_DIR}/opencv -DWITH_CUDA=ON -DWITH_CUBLAS=ON -DWITH_CUDNN=ON -DWITH_FFMPEG=ON -DWITH_EIGEN=ON -DWITH_OPENMP=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DWITH_OPENJPEG=ON -DOPENCV_EXTRA_MODULES_PATH=${MAIN_DIR}/src/opencv_contrib-4.8.0/modules ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/opencv -j$(nproc)
 	cmake --install ${BUILD_DIR}/opencv
 	if [ $? -eq 0 ]; then
@@ -147,6 +152,8 @@ InstallCGAL
 InstallYamlCPP
 InstallGeoGraphicLib
 # InstallOpenCV
-InstallTorchVision
-InstallTorchSparse
-InstallTorchScatter
+# InstallTorchVision
+# InstallTorchSparse
+# InstallTorchScatter
+#
+rm -rf ${TMP_DIR}

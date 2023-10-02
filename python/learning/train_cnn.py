@@ -41,8 +41,8 @@ train_dataset = LocalMapCNNDataset(data_dir, "train", use_comm_map, output_dim)
 val_dataset = LocalMapCNNDataset(data_dir, "val", use_comm_map, output_dim)
 test_dataset = LocalMapCNNDataset(data_dir, "test", use_comm_map, output_dim)
 
-model.register_buffer("coverage_features_mean", train_dataset.targets_mean)
-model.register_buffer("coverage_features_std", train_dataset.targets_std)
+model.register_buffer("target_mean", train_dataset.targets_mean)
+model.register_buffer("target_Std", train_dataset.targets_std)
 
 print("Loaded datasets")
 print("Train dataset size: {}".format(len(train_dataset)))
@@ -56,7 +56,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momen
 # Use mse loss for regression
 criterion = torch.nn.MSELoss()
 
-trainer = TrainModel(model, train_loader, val_loader, test_loader, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
+trainer = TrainModel(model, train_loader, val_loader, optimizer, criterion, num_epochs, device, model_file, optimizer_file)
 # trainer.LoadSavedModel(model_file)
 # trainer.LoadSavedOptimizer(optimizer_file)
 

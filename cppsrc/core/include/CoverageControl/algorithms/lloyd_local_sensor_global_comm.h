@@ -19,9 +19,6 @@
 #include "../parameters.h"
 #include "../typedefs.h"
 #include "../coverage_system.h"
-#include "../map_utils.h"
-#include "lloyd_algorithms.h"
-#include "../extern/lsap/Hungarian.h"
 
 namespace CoverageControl {
 
@@ -61,7 +58,7 @@ namespace CoverageControl {
 			auto &GetVoronoi() { return voronoi_; }
 
 			void ComputeGoals() {
-				voronoi_.UpdateSites(robot_global_positions_);
+				voronoi_ = Voronoi(robot_global_positions_, env_.GetSystemExploredIDFMap(), Point2(params_.pWorldMapSize, params_.pWorldMapSize), params_.pResolution);
 				auto voronoi_cells = voronoi_.GetVoronoiCells();
 				for(size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
 					goals_[iRobot] = voronoi_cells[iRobot].centroid();

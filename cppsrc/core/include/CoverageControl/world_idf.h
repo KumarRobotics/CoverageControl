@@ -84,6 +84,19 @@ namespace CoverageControl {
 				}
 			}
 
+			void LoadMap(std::string const &file_name) {
+				std::ifstream file(file_name);
+				if(!file.is_open()) {
+					std::cout << "Error: Could not open file " << file_name << std::endl;
+					exit(1);
+				}
+				for(int i = 0; i < params_.pWorldMapSize; ++i) {
+					for(int j = 0; j < params_.pWorldMapSize; ++j) {
+						file >> world_map_(i, j);
+					}
+				}
+			}
+
 			/** Add a uniform distribution over a polygon to world IDF **/
 			void AddUniformDistributionPolygon(PolygonFeature const &poly_feature) {
 				polygon_features_.push_back(poly_feature);

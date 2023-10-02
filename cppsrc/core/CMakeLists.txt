@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.24)
 project(CoverageControlCore VERSION 0.3 LANGUAGES CUDA CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -41,7 +41,7 @@ set(sources_list
 	extern/Hungarian.cpp)
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX CGAL::CGAL pthread ${GeographicLib_LIBRARIES} boost_iostreams boost_system boost_filesystem)
+set(dependencies_list Eigen3::Eigen m stdc++fs yaml-cpp OpenMP::OpenMP_CXX pthread boost_iostreams boost_system boost_filesystem)
 
 add_library(CoverageControl_core SHARED ${sources_list})
 
@@ -52,7 +52,7 @@ target_include_directories(CoverageControlCore INTERFACE
 target_link_libraries(CoverageControlCore INTERFACE ${dependencies_list} CoverageControl_core)
 
 target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
-target_link_libraries(CoverageControl_core PRIVATE compiler_flags)
+target_link_libraries(CoverageControl_core PRIVATE compiler_flags ${GeographicLib_LIBRARIES} CGAL::CGAL)
 target_link_libraries(CoverageControl_core PUBLIC ${dependencies_list})
 set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 

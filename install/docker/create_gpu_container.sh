@@ -1,8 +1,8 @@
 IMAGE_NAME=agarwalsaurav/gnn
 COVERAGECONTROL_WS=${1}
 
-COVERAGECONTROL_VOLUME="--volume=${COVERAGECONTROL_WS}:/root/CoverageControl_ws:rw"
-CONTAINERNAME="gnn-${USER}-jammy"
+COVERAGECONTROL_VOLUME="--volume=${COVERAGECONTROL_WS}:/opt/CoverageControl_ws:rw"
+CONTAINERNAME="gnn-${USER}"
 
 docker run -it \
     --name=$CONTAINERNAME \

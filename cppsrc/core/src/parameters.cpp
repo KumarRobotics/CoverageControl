@@ -49,12 +49,18 @@ namespace CoverageControl {
 		pRobotPosHistorySize = robot_model_yaml["pRobotPosHistorySize"].as<int>();
 		pTimeStep = robot_model_yaml["pTimeStep"].as<double>();
 
-		auto algorithm_yaml = yaml_config_["Algorithm"];
+		if (yaml_config_["Algorithm"]) {
+			auto algorithm_yaml = yaml_config_["Algorithm"];
+			pEpisodeSteps = algorithm_yaml["pEpisodeSteps"].as<int>();
+			pLloydMaxIterations = algorithm_yaml["pLloydMaxIterations"].as<int>();
+			pLloydNumTries = algorithm_yaml["pLloydNumTries"].as<int>();
+			pNumFrontiers = algorithm_yaml["pNumFrontiers"].as<int>();
+		}
 
-		pEpisodeSteps = algorithm_yaml["pEpisodeSteps"].as<int>();
-		pLloydMaxIterations = algorithm_yaml["pLloydMaxIterations"].as<int>();
-		pLloydNumTries = algorithm_yaml["pLloydNumTries"].as<int>();
-		pNumFrontiers = algorithm_yaml["pNumFrontiers"].as<int>();
+		if (robot_model_yaml["pAddNoisePositions"]) {
+			pAddNoisePositions = robot_model_yaml["pAddNoisePositions"].as<bool>();
+			pPositionsNoiseSigma = robot_model_yaml["pPositionsNoiseSigma"].as<double>();
+		}
 
 	}
 } /* namespace CoverageControl */

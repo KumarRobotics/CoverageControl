@@ -69,7 +69,7 @@ def LoadEdgeWeights(path):
     edge_weights.to_dense()
     return edge_weights
 
-def ToTorchGeometricData(feature, edge_weights):
+def ToTorchGeometricData(feature, edge_weights, pos = None):
     # senders, receivers = numpy.nonzero(edge_weights)
     # weights = edge_weights[senders, receivers]
     # edge_index = numpy.stack([senders, receivers])
@@ -78,9 +78,17 @@ def ToTorchGeometricData(feature, edge_weights):
     edge_index = edge_weights.indices().long()
     weights = edge_weights.values().float()
     # weights = torch.reciprocal(edge_weights.values().float())
-    data = torch_geometric.data.Data(
-            x=feature,
-            edge_index=edge_index.clone().detach(),
-            edge_weight=weights.clone().detach()
-            )
+    if pos == None:
+        data = torch_geometric.data.Data(
+                x=feature,
+                edge_index=edge_index.clone().detach(),
+                edge_weight=weights.clone().detach()
+                )
+    else:
+        data = torch_geometric.data.Data(
+                x=feature,
+                edge_index=edge_index.clone().detach(),
+                edge_weight=weights.clone().detach(),
+                pos=pos.clone().detach()
+                )
     return data

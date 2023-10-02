@@ -38,7 +38,8 @@ class LocalMapCNNDataset(Dataset):
         self.maps = self.maps.view(-1, num_channels, image_size, image_size)
         self.dataset_size = self.maps.shape[0]
 
-        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{self.data_dir}/{self.stage}", self.output_dim)
+        # self.targets, self.targets_mean, self.targets_std = dl_utils.LoadFeatures(f"{self.data_dir}/{self.stage}", self.output_dim)
+        self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{self.data_dir}/{self.stage}")
         self.targets = self.targets.view(-1, self.targets.shape[2])
 
 class LocalMapGNNDataset(Dataset):
@@ -96,7 +97,7 @@ class CNNGNNDataset(Dataset):
     """
     Dataset for hybrid CNN-GNN training
     """
-    def __init__(self, data_dir, stage, use_comm_map):
+    def __init__(self, data_dir, stage, use_comm_map, world_size):
         super(CNNGNNDataset, self).__init__(None, None, None, None)
 
         self.stage = stage
@@ -107,7 +108,8 @@ class CNNGNNDataset(Dataset):
         self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{data_dir}/{stage}")
         self.edge_weights = dl_utils.LoadEdgeWeights(f"{data_dir}/{stage}")
 
-        # self.robot_positions = dl_utils.LoadRobotPositions(f"{data_dir}/{stage}")
+        self.robot_positions = dl_utils.LoadRobotPositions(f"{data_dir}/{stage}")
+        self.robot_positions = (self.robot_positions + world_size/2)/world_size
 
         # Print the details of the dataset with device information
         print(f"Dataset: {self.stage} | Size: {self.dataset_size}")
@@ -115,14 +117,14 @@ class CNNGNNDataset(Dataset):
         print(f"Targets: {self.targets.shape} | Device: {self.targets.device}")
         print(f"Edge Weights: {self.edge_weights.shape} | Device: {self.edge_weights.device}")
         print(f"Targets: {self.targets.shape} | Device: {self.targets.device}")
-        # print(f"Robot Positions: {self.robot_positions.shape} | Device: {self.robot_positions.device}")
+        print(f"Robot Positions: {self.robot_positions.shape} | Device: {self.robot_positions.device}")
 
 
     def len(self):
         return self.dataset_size
 
     def get(self, idx):
-        data = dl_utils.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx])
+        data = dl_utils.ToTorchGeometricData(self.maps[idx], self.edge_weights[idx], self.robot_positions[idx])
         # data = coverage_system.GetTorchGeometricDataRobotPositions(self.maps[idx], self.robot_positions[idx])
         targets = self.targets[idx]
         if targets.dim == 3:

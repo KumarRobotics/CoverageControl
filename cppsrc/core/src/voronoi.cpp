@@ -100,8 +100,8 @@ namespace CoverageControl {
 		auto fp = std::bind(&VoronoiCell::MassCentroidFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
 		CellNavigator(vcell, fp);
 		vcell.ComputeFinalCentroid();
-		auto fp1 = std::bind(&VoronoiCell::GoalObjFunctional, &vcell, std::placeholders::_1, std::placeholders::_2);
-		CellNavigator(vcell, fp1);
+		/* auto fp1 = std::bind(&VoronoiCell::GoalObjFunctional, &vcell, std::placeholders::_1, std::placeholders::_2); */
+		/* CellNavigator(vcell, fp1); */
 	}
 
 	void Voronoi::ComputeVoronoiCells() {
@@ -139,17 +139,27 @@ namespace CoverageControl {
 		vor.segments_.push_back(Segment_2(CGAL_Point2(map_size_.x(), map_size_.y()), CGAL_Point2(0, map_size_.y())));
 		vor.segments_.push_back(Segment_2(CGAL_Point2(0, map_size_.y()), CGAL_Point2(0, 0)));
 
-		/* std::cout << "segments pushed" << std::endl; */
 		Arrangement_2 arr;
-
-		/* CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end()); */
-		for(auto const &ray:vor.rays_) {
-			CGAL::insert(arr, ray);
+		for(auto const &seg:vor.segments_) {
+			/* std::cout << seg << std::endl; */
+			if(seg.is_degenerate()) { continue; }
+			CGAL::insert(arr, seg);
 		}
+		/* std::cout << "segments pushed" << std::endl; */
+
+		CGAL::insert(arr, vor.rays_.begin(), vor.rays_.end());
+		/* for(auto const &ray:vor.rays_) { */
+		/* 	if(ray.is_degenerate()) { continue; } */
+		/* 	CGAL::insert(arr, ray); */
+		/* } */
 		/* std::cout << "rays inserted" << std::endl; */
 		CGAL::insert(arr, vor.lines_.begin(), vor.lines_.end());
+		/* for(auto const &line:vor.lines_) { */
+		/* 	if(line.is_degenerate()) { continue; } */
+		/* 	CGAL::insert(arr, line); */
+		/* } */
 		/* std::cout << "lines inserted" << std::endl; */
-		CGAL::insert(arr, vor.segments_.begin(), vor.segments_.end());
+		/* CGAL::insert(arr, vor.segments_.begin(), vor.segments_.end()); */
 		/* std::cout << "arr end" << std::endl; */
 		CGAL_pl cgal_pl(arr);
 		/* std::cout << "cgal_pl end" << std::endl; */
