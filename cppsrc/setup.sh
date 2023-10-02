@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 print_usage() {
-	printf "bash $0 [-c <for clean>] [-i <for install>] [-t <for torch>] [-p <for python>] [-d <workspace_dir>]\n"
+	printf "bash $0 [-i <for install>] [-t <for torch>] [-p <for python>] [-d <workspace_dir>]\n"
 }
 
 # Get directory of script
@@ -14,13 +14,13 @@ done
 DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 WITH_TORCH=0
-while getopts 'd:ictp' flag; do
+while getopts 'd:ictpg' flag; do
 	case "${flag}" in
 		i) INSTALL=true;;
-		c) CLEAN=true;;
 		t) WITH_TORCH=ON;;
 		p) WITH_PYTHON=true;;
 		d) WS_DIR=${OPTARG};;
+		g) GLOBAL=true;;
 		*) print_usage
 			exit 1 ;;
 	esac
@@ -36,8 +36,12 @@ fi
 if [[ ${WS_DIR} ]]
 then
 	BUILD_DIR=${WS_DIR}/build/
-	INSTALL_DIR=${WS_DIR}/install/CoverageControl/
-	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+	# If not global then install to workspace
+	if [[ ! ${GLOBAL} ]]
+	then
+		INSTALL_DIR=${WS_DIR}/install/CoverageControl/
+		CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+	fi
 else
 	TMP_DIR=$(mktemp -d)
 	BUILD_DIR=${TMP_DIR}/build
@@ -114,10 +118,4 @@ then
 		InstallCoverageControlTests
 	fi
 	InstallCoverageControlMain
-fi
-
-if [[ ${CLEAN} ]]
-then
-	echo "Cleaning build and install directories"
-	CleanBuild
 fi
