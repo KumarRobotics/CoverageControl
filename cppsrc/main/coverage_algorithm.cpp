@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 		env->StepActions(actions);
 		if(ii%1 == 0) {
 			/* env->RecordPlotData(); */
-			env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
+			/* env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals()); */
 		}
 		if(cont_flag == false) {
 			break;
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
 	for(int ii = 0; ii < 90; ++ii) {
 		env->StepActions(zero_actions);
 		/* env->RecordPlotData(); */
-		env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals());
+		/* env->PlotMapVoronoi(dir, ii, oracle.GetVoronoi(), oracle.GetGoals()); */
 	}
 
 	env->PlotMapVoronoi(dir, 1, oracle.GetVoronoi(), oracle.GetGoals());

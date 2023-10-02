@@ -38,7 +38,7 @@ int main(int argc, const char* argv[]) {
 		std::string py_filename = py_dir + filename;
 		std::string cpp_filename = cpp_dir + filename;
 		std::cout << filename << std::endl;
-		torch::Tensor tensor = GetTensorFromBytes(py_filename);
+		torch::Tensor tensor = CoverageControlTorch::GetTensorFromBytes(py_filename);
 		std::cout << filename << " " << tensor.sizes() << std::endl;
 		torch::save(tensor, cpp_filename);
 		torch::Tensor temp;

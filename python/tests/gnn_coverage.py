@@ -83,24 +83,23 @@ class Evaluator:
             world_idf = env_main.GetWorldIDFObject()
 
         robot_init_pos = env_main.GetRobotPositions()
-        for i in range(10):
-            env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
-            controller = Controller(env, self.num_robots, self.map_size, self.model_file)
-            step_count = 0
-            cost_data[step_count] = env.GetObjectiveValue()
-            print("Initial objective value: ", cost_data[step_count])
+        env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+        controller = Controller(env, self.num_robots, self.map_size, self.model_file)
+        step_count = 0
+        cost_data[step_count] = env.GetObjectiveValue()
+        print("Initial objective value: ", cost_data[step_count])
+        step_count = step_count + 1
+        while step_count < self.num_steps:
+            objective_value, converged = controller.Step(self.cc_params, env)
+            cost_data[step_count] = objective_value
+            if converged:
+                cost_data[step_count:] = objective_value
+                break
             step_count = step_count + 1
-            while step_count < self.num_steps:
-                objective_value, converged = controller.Step(self.cc_params, env)
-                cost_data[step_count] = objective_value
-                if converged:
-                    cost_data[step_count:] = objective_value
-                    break
-                step_count = step_count + 1
-                if step_count % 100 == 0:
-                    print(f"Step: {step_count}")
+            if step_count % 100 == 0:
+                print(f"Step: {step_count}")
 
-            print(f"Objective value: {cost_data[-1]}")
+        print(f"Objective value: {cost_data[-1]}")
         return cost_data
 
 

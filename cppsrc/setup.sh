@@ -1,37 +1,50 @@
-#!/bin/bash
+#!/usr/bin/env bash
 print_usage() {
-	printf "bash $0 [-c (for clean)] [-i (for install)]\n"
+	printf "bash $0 [-c <for clean>] [-i <for install>] [-t <for torch>] [-p <for python>] [-d <workspace_dir>]\n"
 }
 
+# Get directory of script
+# https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
+SOURCE=${BASH_SOURCE[0]}
+while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+  SOURCE=$(readlink "$SOURCE")
+  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+
 WITH_TORCH=0
-while getopts 'ictp' flag; do
+while getopts 'd:ictp' flag; do
 	case "${flag}" in
 		i) INSTALL=true;;
 		c) CLEAN=true;;
 		t) WITH_TORCH=ON;;
 		p) WITH_PYTHON=true;;
+		d) WS_DIR=${OPTARG};;
 		*) print_usage
 			exit 1 ;;
 	esac
 done
 
-BUILD_DIR=${COVERAGECONTROL_WS}/build
-# INSTALL_DIR=${COVERAGECONTROL_WS}/install
+# if -d was given then set build_dir and install_dir to that
 
+CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
 if [[ ${WITH_TORCH} == "ON" ]]
 then
-	CMAKE_END_FLAGS="-DCMAKE_PREFIX_PATH=$Torch_DIR -DCMAKE_BUILD_TYPE=RelWithDebInfo"
+	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_PREFIX_PATH=${Torch_DIR}"
+fi
+if [[ ${WS_DIR} ]]
+then
+	BUILD_DIR=${WS_DIR}/build/
+	INSTALL_DIR=${WS_DIR}/install/CoverageControl/
+	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
 else
-	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+	TMP_DIR=$(mktemp -d)
+	BUILD_DIR=${TMP_DIR}/build
 fi
 
-CleanBuild () {
-	rm -rf ${BUILD_DIR}
-	rm -rf ${INSTALL_DIR}
-}
-
 InstallCoverageControlCore () {
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/core -B ${BUILD_DIR}/CoverageControlCore ${CMAKE_END_FLAGS}
+	cmake -S ${DIR}/core -B ${BUILD_DIR}/CoverageControlCore ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/CoverageControlCore -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlCore build failed"
@@ -46,7 +59,7 @@ InstallCoverageControlCore () {
 }
 
 InstallCoverageControlTorch () {
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/torch -B ${BUILD_DIR}/CoverageControlTorch ${CMAKE_END_FLAGS} -DCMAKE_PREFIX_PATH=${Torch_DIR}
+	cmake -S ${DIR}/torch -B ${BUILD_DIR}/CoverageControlTorch ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/CoverageControlTorch -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTorch build failed"
@@ -62,7 +75,7 @@ InstallCoverageControlTorch () {
 }
 
 InstallCoverageControlTests () {
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/tests -B ${BUILD_DIR}/CoverageControlTests ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+	cmake -S ${DIR}/tests -B ${BUILD_DIR}/CoverageControlTests ${CMAKE_END_FLAGS} -DWITH_TORCH=${WITH_TORCH}
 	cmake --build ${BUILD_DIR}/CoverageControlTests -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTests build failed"
@@ -78,7 +91,7 @@ InstallCoverageControlTests () {
 }
 
 InstallCoverageControlMain () {
-	cmake -S ${COVERAGECONTROL_WS}/src/CoverageControl/cppsrc/main -B ${BUILD_DIR}/CoverageControlMain ${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DWITH_TORCH=${WITH_TORCH}
+	cmake -S ${DIR}/main -B ${BUILD_DIR}/CoverageControlMain ${CMAKE_END_FLAGS} -DWITH_TORCH=${WITH_TORCH}
 	cmake --build ${BUILD_DIR}/CoverageControlMain -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlMain build failed"
@@ -98,9 +111,9 @@ then
 	if [[ ${WITH_TORCH} == "ON" ]]
 	then
 		InstallCoverageControlTorch
+		InstallCoverageControlTests
 	fi
 	InstallCoverageControlMain
-	InstallCoverageControlTests
 fi
 
 if [[ ${CLEAN} ]]

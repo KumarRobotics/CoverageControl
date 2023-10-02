@@ -1,9 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-MAIN_DIR=$1
-BUILD_DIR=${MAIN_DIR}/build
-CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
-echo $CUDAARCHS
+TMP_DIR=`mktemp -d`
+MAIN_DIR=${TMP_DIR}/main/
+BUILD_DIR=${TMP_DIR}/build/
+
+if [ -z "$1" ]; then
+	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
+else
+	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$1"
+fi
 
 InstallCGAL () {
 	echo "Setting up CGAL"
@@ -23,7 +28,7 @@ InstallGeoGraphicLib () {
 	echo "Setting up geographiclib"
 	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.3.tar.gz -P ${MAIN_DIR}/src
 	tar -xf ${MAIN_DIR}/src/v2.3.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/geographiclib-2.3 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS}
+	cmake -S ${MAIN_DIR}/src/geographiclib-2.3 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS} -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/geographiclib -j$(nproc)
 	cmake --install ${BUILD_DIR}/geographiclib
 	if [ $? -eq 0 ]; then
@@ -52,7 +57,7 @@ InstallPybind11 () {
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
 	git clone https://github.com/jbeder/yaml-cpp.git ${MAIN_DIR}/src/yaml-cpp
-	cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS}
+	cmake -S ${MAIN_DIR}/src/yaml-cpp -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=OFF  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "YAML build failed"
@@ -147,6 +152,8 @@ InstallCGAL
 InstallYamlCPP
 InstallGeoGraphicLib
 # InstallOpenCV
-InstallTorchVision
-InstallTorchSparse
-InstallTorchScatter
+# InstallTorchVision
+# InstallTorchSparse
+# InstallTorchScatter
+#
+rm -rf ${TMP_DIR}

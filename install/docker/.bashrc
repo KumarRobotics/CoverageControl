@@ -126,7 +126,3 @@ alias tmux='tmux -2'
 
 export VISUAL=vim
 export EDITOR="$VISUAL"
-
-source /root/venv/bin/activate
-
-
