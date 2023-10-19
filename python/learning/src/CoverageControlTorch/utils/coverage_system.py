@@ -47,22 +47,24 @@ def GetRawObstacleMaps(env, params):
 
 def GetCommunicationMaps(env, params, map_size):
     num_robots = env.GetNumRobots()
-    positions = env.GetRobotPositions()
-    robot_positions = ToTensor(env.GetRobotPositions())
-    relative_pos = robot_positions.unsqueeze(0) - robot_positions.unsqueeze(1)
-    scaled_relative_pos = torch.round(relative_pos * map_size / (params.pCommunicationRange * params.pResolution * 2.) + (map_size / 2. - params.pResolution / 2.))
-    relative_dist = relative_pos.norm(2, 2)
-    diagonal_mask = torch.eye(num_robots).to(torch.bool)
-    relative_dist.masked_fill_(diagonal_mask, params.pCommunicationRange + 1)
+    # positions = env.GetRobotPositions()
+    # robot_positions = ToTensor(env.GetRobotPositions())
+    # relative_pos = robot_positions.unsqueeze(0) - robot_positions.unsqueeze(1)
+    # scaled_relative_pos = torch.round(relative_pos * map_size / (params.pCommunicationRange * params.pResolution * 2.) + (map_size / 2. - params.pResolution / 2.))
+    # relative_dist = relative_pos.norm(2, 2)
+    # diagonal_mask = torch.eye(num_robots).to(torch.bool)
+    # relative_dist.masked_fill_(diagonal_mask, params.pCommunicationRange + 1)
 
     comm_maps = torch.zeros((num_robots, 2, map_size, map_size))
     for r_idx in range(num_robots):
-        comm_range_mask = relative_dist[r_idx] < params.pCommunicationRange
-        scaled_indices = scaled_relative_pos[r_idx][comm_range_mask]
+        neighbors_pos = ToTensor(env.GetRelativePositonsNeighbors(r_idx))
+        scaled_indices = torch.round(neighbors_pos * map_size / (params.pCommunicationRange * params.pResolution * 2.) + (map_size / 2. - params.pResolution / 2.))
+        # comm_range_mask = relative_dist[r_idx] < params.pCommunicationRange
+        # scaled_indices = scaled_relative_pos[r_idx][comm_range_mask]
         indices = torch.transpose(scaled_indices, 1, 0)
         indices = indices.long()
-        values = relative_pos[r_idx][comm_range_mask]
-        values = values / params.pCommunicationRange
+        values = neighbors_pos / params.pCommunicationRange
+        # values = values / params.pCommunicationRange
         # values = (values + params.pCommunicationRange) / (2. * params.pCommunicationRange)
         comm_maps[r_idx][0] = torch.sparse.FloatTensor(indices, values[:, 0], torch.Size([map_size, map_size])).to_dense()
         comm_maps[r_idx][1] = torch.sparse.FloatTensor(indices, values[:, 1], torch.Size([map_size, map_size])).to_dense()
