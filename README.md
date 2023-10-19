@@ -8,4 +8,4 @@ Key features:
 
 
 ## Installation
-See [Installation](https://github.com/KumarRobotics/CoverageControl/wiki)
+See [Installation](https://github.com/AgarwalSaurav/CoverageControl/wiki)
