@@ -93,8 +93,8 @@ class Evaluator:
         self.eval_dir = self.config['EvalDir']
         self.env_path = self.eval_dir + '/envs/'
 
-        with open(self.env_path + '/cities_origins', 'r') as file:
-            csv_reader = csv.reader(file, delimiter='\t')
+        with open(self.env_path + '/cities_features.dat', 'r') as file:
+            csv_reader = csv.reader(file, delimiter=',')
             self.city_names = []
             for row in csv_reader:
                 self.city_names.append(row[0])
@@ -112,13 +112,15 @@ class Evaluator:
 
         self.num_robots = self.env_config['pNumRobots']
         self.num_features = self.env_config['pNumFeatures']
+        self.world_map_size = self.env_config['EnvMaps']['pWorldMapSize']
         self.num_envs = self.config['NumEnvironments']
         self.num_steps = self.config['NumSteps']
         self.map_size = self.config['MapSize']
 
     def Evaluate(self, save = True):
 
-        cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
+        num_trials = 10
+        cost_data = np.zeros((self.num_controllers, self.num_envs, num_trials, self.num_steps))
         # for controller_id in range(self.num_controllers):
         #     controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
         #     controller_data_file = controller_dir + '/' + 'eval.csv'
@@ -130,46 +132,60 @@ class Evaluator:
             print("New environment")
 
             env_name = self.city_names[dataset_count]
-            pos_file = self.env_path + '/' + env_name + '/pos.dat'
+
             idf_file = self.env_path + '/' + env_name + '/idf.dat'
             world_idf = WorldIDF(self.cc_params, idf_file)
-            env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
-            # env_main.PlotInitMap(self.env_path + '/' + env_name, "InitMap")
 
-            robot_init_pos = env_main.GetRobotPositions()
-            for controller_id in range(self.num_controllers):
-                step_count = 0
-                env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+            for trial_count in range(num_trials):
+                # Load positions from file
+                # pos_file = self.env_path + '/' + env_name + '/pos.dat'
+                # env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
+                # robot_init_pos = env_main.GetRobotPositions()
 
-                # map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
-                # os.makedirs(map_dir, exist_ok = True)
-                # env.PlotInitMap(map_dir, "InitMap")
-                # env.RecordPlotData()
-                # env.PlotMapVoronoi(map_dir, step_count)
+                # Generate random positions
+                robot_init_pos = PointVector()
+                for robot_id in range(self.num_robots):
+                    robot_init_pos.append(np.array([np.random.uniform(0, self.world_map_size), np.random.uniform(0, self.world_map_size)]))
 
-                controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
-                cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
-                step_count = step_count + 1
-                while step_count < self.num_steps:
-                    objective_value, converged = controller.Step(self.cc_params, env)
-                    cost_data[controller_id, dataset_count, step_count] = objective_value
-                    if converged:
-                        cost_data[controller_id, dataset_count, step_count:] = objective_value
-                        break
-                    # env.PlotMapVoronoi(map_dir, step_count)
+                # env_main = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+
+                # env_main.PlotInitMap(self.env_path + '/' + env_name, "InitMap")
+
+                for controller_id in range(self.num_controllers):
+                    step_count = 0
+                    env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+
+                    # map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
+                    # os.makedirs(map_dir, exist_ok = True)
+                    # env.PlotInitMap(map_dir, "InitMap")
                     # env.RecordPlotData()
-                    step_count = step_count + 1
-                    if step_count % 100 == 0:
-                        print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
+                    # env.PlotMapVoronoi(map_dir, step_count)
 
-                if save == True:
-                    controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
-                    controller_data_file = controller_dir + '/' + 'eval.csv'
-                    # np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
-                    np.savetxt(controller_data_file, cost_data[controller_id, :, :], delimiter=",")
-                # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
-                del controller
-                del env
+                    controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
+                    cost_data[controller_id, dataset_count, trial_count, step_count] = env.GetObjectiveValue()
+                    step_count = step_count + 1
+                    while step_count < self.num_steps:
+                        objective_value, converged = controller.Step(self.cc_params, env)
+                        cost_data[controller_id, dataset_count, trial_count, step_count] = objective_value
+                        if converged:
+                            cost_data[controller_id, dataset_count, trial_count, step_count:] = objective_value
+                            break
+                        # env.PlotMapVoronoi(map_dir, step_count)
+                        # env.RecordPlotData()
+                        step_count = step_count + 1
+                        if step_count % 100 == 0:
+                            print(f"Environment {dataset_count}, Controller {controller_id}, Trial {trial_count}, Step {step_count}")
+
+                    if save == True:
+                        controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
+                        controller_data_file = controller_dir + '/' + 'eval.csv'
+                        # np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                        # np.savetxt(controller_data_file, cost_data[controller_id, :, :], delimiter=",")
+                        # change (controllers, envs, trials, steps) to (controllers, envs * trials, steps)
+                        np.savetxt(controller_data_file, cost_data[controller_id, :, :, :].reshape(self.num_envs * num_trials, self.num_steps), delimiter=",")
+                    # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
+                    del controller
+                    del env
             dataset_count = dataset_count + 1
         return cost_data
 
