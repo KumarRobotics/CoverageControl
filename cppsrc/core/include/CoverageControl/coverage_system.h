@@ -336,9 +336,9 @@ namespace CoverageControl {
 				return neighbor_ids_[robot_id];
 			}
 
-			PointVector GetRobotPositions() {
+			PointVector GetRobotPositions(bool force_no_noise = true) {	
 				UpdateRobotPositions();
-				if(params_.pAddNoisePositions) {
+				if(params_.pAddNoisePositions and (not force_no_noise)) {
 					PointVector noisy_robot_global_positions;
 					for(Point2 pt:robot_global_positions_) {
 						noisy_robot_global_positions.push_back(AddNoise(pt));
@@ -369,11 +369,11 @@ namespace CoverageControl {
 				return noisy_pt;
 			}
 
-			Point2 GetRobotPosition(int const robot_id) {
+			Point2 GetRobotPosition(int const robot_id, bool force_no_noise = false) {
 				Point2 robot_pos;
 				robot_pos[0] = robots_[robot_id].GetGlobalCurrentPosition()[0];
 				robot_pos[1] = robots_[robot_id].GetGlobalCurrentPosition()[1];
-				if(params_.pAddNoisePositions) {
+				if(params_.pAddNoisePositions and (not force_no_noise)) {
 					return AddNoise(robot_pos);
 				}
 			}

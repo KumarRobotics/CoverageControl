@@ -221,8 +221,10 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("SetLocalRobotPosition", &CoverageSystem::SetLocalRobotPosition)
 			.def("GetRelativePositonsNeighbors", &CoverageSystem::GetRelativePositonsNeighbors)
 			.def("SetRobotPositions", &CoverageSystem::SetRobotPositions)
-			.def("GetRobotPositions", &CoverageSystem::GetRobotPositions)
-			.def("GetRobotPosition", &CoverageSystem::GetRobotPosition)
+			/* .def("GetRobotPositions", &CoverageSystem::GetRobotPositions) */
+			/* .def("GetRobotPosition", &CoverageSystem::GetRobotPosition) */
+			.def("GetRobotPosition", &CoverageSystem::GetRobotPosition, "Get Position of Robot", py::arg("robot_id"), py::arg("force_no_noise") = false)
+			.def("GetRobotPositions", &CoverageSystem::GetRobotPositions, "Get Positions of Robots", py::arg("force_no_noise") = false)
 			.def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap, py::return_value_policy::reference_internal)
 			.def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView, py::return_value_policy::reference_internal)
 			.def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap, py::return_value_policy::reference_internal)

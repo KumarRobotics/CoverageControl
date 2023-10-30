@@ -132,7 +132,7 @@ class Evaluator:
                 env_main.WriteEnvironment(pos_file, env_file)
                 world_idf = env_main.GetWorldIDFObject()
 
-            robot_init_pos = env_main.GetRobotPositions()
+            robot_init_pos = env_main.GetRobotPositions(force_no_noise = True)
             for controller_id in range(self.num_controllers):
                 print(f"Controller {controller_id}")
                 step_count = 0
