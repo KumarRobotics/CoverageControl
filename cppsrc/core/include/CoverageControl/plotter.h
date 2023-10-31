@@ -33,6 +33,7 @@ namespace CoverageControl {
 
 			std::string color_robot = "#1b4f72";
 			std::string color_robot_alt = "#196f3d";
+			/* std::string color_idf = "#900C3F"; */
 			std::string color_idf = "#900C3F";
 			std::string color_voronoi = "#196f3d";
 			std::string color_unknown = "#aeb6bf";

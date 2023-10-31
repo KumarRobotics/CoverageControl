@@ -87,11 +87,17 @@ namespace CoverageControl {
 	void CoverageSystem::PlotRobotSystemMap(std::string const &dir_name, int const &robot_id, int const &step) {
 		Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution, params_.pResolution);
 		plotter.SetPlotName("robot_" + std::to_string(robot_id) + "_", step);
-		plotter.PlotMap(GetRobotSystemMap(robot_id));
+		PointVector neighbours_positions = GetRelativePositonsNeighbors(robot_id);
+		for(Point2 &pos : neighbours_positions) {
+			pos[0] += params_.pLocalMapSize / 2;
+			pos[1] += params_.pLocalMapSize / 2;
+		}
+		plotter.PlotMap(GetRobotSystemMap(robot_id), neighbours_positions);
 	}
 
 	void CoverageSystem::PlotRobotIDFMap(std::string const &dir_name, int const &robot_id, int const &step) {
 		Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetScale(4);
 		plotter.SetPlotName("robot_" + std::to_string(robot_id) + "_", step);
 		plotter.PlotMap(GetRobotLocalMap(robot_id));
 	}
@@ -108,9 +114,26 @@ namespace CoverageControl {
 		plotter.PlotMap(GetRobotSensorView(robot_id));
 	}
 
-	void CoverageSystem::PlotRobotLocalMap(std::string const &dir_name, int const &robot_id) {
+	void CoverageSystem::PlotRobotLocalMap(std::string const &dir_name, int const &robot_id, int const &step) {
 		Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution, params_.pResolution);
-		plotter.SetPlotName("robot_map_" + std::to_string(robot_id));
+		plotter.SetPlotName("robot_map_" + std::to_string(robot_id) + "_", step);
 		plotter.PlotMap(GetRobotLocalMap(robot_id));
 	}
+
+	void CoverageSystem::PlotRobotObstacleMap(std::string const &dir_name, int const &robot_id, int const &step) {
+		Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution, params_.pResolution);
+		plotter.SetPlotName("robot_obstacle_map_" + std::to_string(robot_id) + "_", step);
+		plotter.PlotMap(GetRobotObstacleMap(robot_id));
+	}
+
+	void CoverageSystem::PlotRobotCommunicationMaps(std::string const &dir_name, int const &robot_id, int const &step, size_t const &map_size) {
+		auto robot_communication_maps = GetCommunicationMap(robot_id, map_size);
+		Plotter plotter_x(dir_name, map_size * params_.pResolution, params_.pResolution);
+		plotter_x.SetPlotName("robot_communication_map_x_" + std::to_string(robot_id) + "_", step);
+		plotter_x.PlotMap(robot_communication_maps.first);
+		Plotter plotter_y(dir_name, map_size * params_.pResolution, params_.pResolution);
+		plotter_y.SetPlotName("robot_communication_map_y_" + std::to_string(robot_id) + "_", step);
+		plotter_y.PlotMap(robot_communication_maps.second);
+	}
+
 }	// namespace CoverageControl

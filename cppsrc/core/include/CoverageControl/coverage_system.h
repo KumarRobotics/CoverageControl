@@ -33,7 +33,7 @@ namespace CoverageControl {
 			WorldIDF world_idf_;
 			size_t num_robots_ = 0;
 			std::vector <RobotModel> robots_;
-			std::vector <MapType> communication_maps_;
+			std::vector <std::pair <MapType, MapType>>  communication_maps_;
 			double normalization_factor_ = 0;
 			Voronoi voronoi_;
 			std::vector <VoronoiCell> voronoi_cells_;
@@ -431,7 +431,7 @@ namespace CoverageControl {
 				return robots_[id].GetSensorView();
 			}
 
-			// Get robots within a square communication range
+			// Get robots within communication range
 			auto GetRobotsInCommunication(size_t const id) const {
 				CheckRobotID(id);
 				PointVector robot_neighbors_pos;
@@ -454,26 +454,27 @@ namespace CoverageControl {
 				return robot_neighbors_pos;
 			}
 
-			MapType const& GetCommunicationMap(size_t const id) {
-				communication_maps_[id] = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
-				auto robot_neighbors_pos = GetRobotsInCommunication(id);
-				double comm_scale = (params_.pCommunicationRange * 2.) / params_.pLocalMapSize;
-				Point2 map_translation(params_.pLocalMapSize * comm_scale * params_.pResolution/2., params_.pLocalMapSize * comm_scale * params_.pResolution/2.);
+			auto const& GetCommunicationMap(size_t const id, size_t map_size) {
+				communication_maps_[id] = std::make_pair(MapType::Zero(map_size, map_size), MapType::Zero(map_size, map_size));
+				PointVector robot_neighbors_pos = GetRelativePositonsNeighbors(id);
+				double center = map_size/2. - params_.pResolution/2.;
+				Point2 center_point(center, center);
 				for(Point2 const& relative_pos:robot_neighbors_pos) {
-					Point2 map_pos = relative_pos + map_translation;
-					int pos_idx, pos_idy;
-					MapUtils::GetClosestGridCoordinate(params_.pResolution * comm_scale, map_pos, pos_idx, pos_idy);
-					if(pos_idx < params_.pLocalMapSize and pos_idy < params_.pLocalMapSize and pos_idx >= 0 and pos_idy >= 0) {
-						communication_maps_[id](pos_idx, pos_idy) = 1;
-					}
+					Point2 scaled_indices_val = relative_pos * map_size / (params_.pCommunicationRange * params_.pResolution * 2.) + center_point;
+					int scaled_indices_x = scaled_indices_val[0];
+					int scaled_indices_y = scaled_indices_val[1];
+					Point2 normalized_relative_pos = relative_pos/params_.pCommunicationRange;
+
+					communication_maps_[id].first(scaled_indices_x, scaled_indices_y) += normalized_relative_pos[0];
+					communication_maps_[id].second(scaled_indices_x, scaled_indices_y) += normalized_relative_pos[1];
 				}
 				return communication_maps_[id];
 			}
 
-			std::vector <MapType> const& GetCommunicationMaps() {
+			auto const& GetCommunicationMaps(size_t map_size) {
 #pragma omp parallel for num_threads(num_robots_)
 				for(size_t i = 0; i < num_robots_; ++i) {
-					GetCommunicationMap(i);
+					GetCommunicationMap(i, map_size);
 				}
 				return communication_maps_;
 			}
@@ -647,11 +648,13 @@ namespace CoverageControl {
 			void PlotWorldMap(std::string const &, std::string const &) const;
 			void PlotWorldMapRobots(std::string const &, std::string const &) const;
 			void PlotInitMap(std::string const &, std::string const &) const;
-			void PlotRobotLocalMap(std::string const &, int const &);
+			void PlotRobotLocalMap(std::string const &, int const &, int const &);
 			void PlotRobotSystemMap(std::string const &, int const &, int const &);
 			void PlotRobotIDFMap(std::string const &, int const &, int const &);
 			void PlotRobotExplorationMap(std::string const &, int const &, int const &);
 			void PlotRobotSensorView(std::string const &, int const &, int const &);
+			void PlotRobotObstacleMap(std::string const &, int const &, int const &);
+			void PlotRobotCommunicationMaps(std::string const &, int const &, int const &, size_t const &);
 
 			inline int WriteEnvironment(std::string const &pos_filename, std::string const &env_filename) const {
 				WriteRobotPositions(pos_filename);
