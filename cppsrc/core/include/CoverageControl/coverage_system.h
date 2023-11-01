@@ -336,7 +336,7 @@ namespace CoverageControl {
 				return neighbor_ids_[robot_id];
 			}
 
-			PointVector GetRobotPositions(bool force_no_noise = true) {	
+			PointVector GetRobotPositions(bool force_no_noise = false) {	
 				UpdateRobotPositions();
 				if(params_.pAddNoisePositions and (not force_no_noise)) {
 					PointVector noisy_robot_global_positions;
