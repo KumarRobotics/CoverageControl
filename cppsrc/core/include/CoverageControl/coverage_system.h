@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <mutex>
 #include <omp.h>
 #define EIGEN_NO_CUDA // Don't use eigen's cuda facility
 #include <Eigen/Dense> // Eigen is used for maps
@@ -37,8 +38,9 @@ namespace CoverageControl {
 			double normalization_factor_ = 0;
 			Voronoi voronoi_;
 			std::vector <VoronoiCell> voronoi_cells_;
-			std::random_device rd_;  //Will be used to obtain a seed for the random number engine
-			std::mt19937 gen_;
+			mutable std::random_device rd_;  //Will be used to obtain a seed for the random number engine
+			mutable std::mt19937 gen_;
+			mutable std::mutex mutex_;
 			std::uniform_real_distribution<> distrib_pts_;
 			PointVector robot_global_positions_;
 			MapType system_map_; // Map with exploration and coverage
@@ -328,7 +330,20 @@ namespace CoverageControl {
 				}
 			}
 
-			PointVector GetRelativePositonsNeighbors(size_t const robot_id) const {
+			PointVector GetRelativePositonsNeighbors(size_t const robot_id) {
+				if(params_.pAddNoisePositions) {
+					PointVector noisy_positions = GetRobotPositions();
+					PointVector relative_positions;
+					for(size_t i = 0; i < num_robots_; ++i) {
+						if(i == robot_id) {
+							continue;
+						}
+						if ((noisy_positions[i] - noisy_positions[robot_id]).norm() < params_.pCommunicationRange) {
+							relative_positions.push_back(noisy_positions[i] - noisy_positions[robot_id]);
+						}
+					}
+					return relative_positions;
+				}
 				return relative_positions_neighbors_[robot_id];
 			}
 
@@ -348,12 +363,18 @@ namespace CoverageControl {
 				return robot_global_positions_;
 			}
 
-			Point2 AddNoise(Point2 const pt) {
+			Point2 AddNoise(Point2 const pt) const {
 				Point2 noisy_pt;
 				noisy_pt[0] = pt[0]; noisy_pt[1] = pt[1];
 				auto noise_sigma = params_.pPositionsNoiseSigma;
+				{ // Wrap noise generation in a mutex to avoid issues with random number generation
+				std::lock_guard<std::mutex> lock(mutex_);
 				std::normal_distribution pos_noise{0.0, noise_sigma};
 				noisy_pt += Point2(pos_noise(gen_), pos_noise(gen_));
+				}
+
+				/* std::normal_distribution pos_noise{0.0, noise_sigma}; */
+				/* noisy_pt += Point2(pos_noise(gen_), pos_noise(gen_)); */
 				if(noisy_pt[0] < kLargeEps) {
 					noisy_pt[0] = kLargeEps;
 				}
