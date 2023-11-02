@@ -333,6 +333,9 @@ namespace CoverageControl {
 			PointVector GetRelativePositonsNeighbors(size_t const robot_id) {
 				if(params_.pAddNoisePositions) {
 					PointVector noisy_positions = GetRobotPositions();
+					for(Point2 &pt:noisy_positions) {
+						pt = AddNoise(pt);
+					}
 					PointVector relative_positions;
 					for(size_t i = 0; i < num_robots_; ++i) {
 						if(i == robot_id) {
