@@ -110,7 +110,7 @@ class Evaluator:
         self.map_size = self.config['MapSize']
 
     def Evaluate(self, save = True):
-        dataset_count = 90
+        dataset_count = 9
 
         cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
         while dataset_count < self.num_envs:
@@ -135,7 +135,7 @@ class Evaluator:
                 os.makedirs(map_dir, exist_ok = True)
                 env.PlotInitMap(map_dir, "InitMap")
                 env.RecordPlotData()
-                env.PlotMapVoronoi(map_dir, step_count)
+                # env.PlotMapVoronoi(map_dir, step_count)
 
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
                 cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
@@ -146,7 +146,7 @@ class Evaluator:
                     # if converged:
                     #     cost_data[controller_id, dataset_count, step_count:] = objective_value
                     #     break
-                    env.PlotMapVoronoi(map_dir, step_count)
+                    # env.PlotMapVoronoi(map_dir, step_count)
                     env.RecordPlotData()
                     step_count = step_count + 1
                     if step_count % 100 == 0:

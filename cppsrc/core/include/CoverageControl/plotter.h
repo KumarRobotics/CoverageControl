@@ -16,6 +16,7 @@ namespace CoverageControl {
 		PointVector positions;
 		std::vector <std::list<Point2>> positions_history;
 		std::vector <int> robot_status;
+		std::vector <std::list<Point2>> voronoi;
 	};
 
 		class Plotter {
@@ -31,12 +32,13 @@ namespace CoverageControl {
 			int range_max = 1024;
 			double resolution = 1;
 
-			std::string color_robot = "#1b4f72";
+			std::string color_robot = "#002d7d";
 			std::string color_robot_alt = "#196f3d";
 			/* std::string color_idf = "#900C3F"; */
 			std::string color_idf = "#900C3F";
 			std::string color_voronoi = "#196f3d";
 			std::string color_unknown = "#aeb6bf";
+			std::string color_communication_links = "#1f77b4";
 
 			public:
 			Plotter(std::string const &d, int const &r_max, double const &res) {
@@ -83,7 +85,9 @@ namespace CoverageControl {
 			void PlotMap(MapType const &map, PointVector const &positions);
 
 			void PlotMap(MapType const &map, PointVector const &positions, std::vector <std::list<Point2>> const &trajectories, std::vector<int> const &robot_status);
+			void PlotMap(MapType const &map, PointVector const &positions, std::vector <std::list<Point2>> const &trajectories, std::vector<int> const &robot_status, double const &communication_range);
 
+			void PlotMap(MapType const &map, PointVector const &positions, std::vector<std::list<Point2>> const &voronoi, std::vector <std::list<Point2>> const &trajectories);
 			void PlotMap(MapType const &map, PointVector const &positions, Voronoi const &voronoi, std::vector <std::list<Point2>> const &trajectories);
 			void PlotMap(MapType const &map, PointVector const &positions, PointVector const &goals, Voronoi const &voronoi);
 

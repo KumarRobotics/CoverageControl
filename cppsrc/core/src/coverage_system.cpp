@@ -10,14 +10,27 @@ namespace CoverageControl {
 		std::filesystem::create_directory(frame_dir);
 		Plotter plotter(frame_dir, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
 		plotter.SetScale(2);
+		Plotter plotter_voronoi(frame_dir, params_.pWorldMapSize * params_.pResolution, params_.pResolution);
+		plotter_voronoi.SetScale(2);
 #pragma omp parallel for num_threads(std::thread::hardware_concurrency()/2)
 		for(size_t i = 0; i < plotter_data_.size(); ++i) {
 			auto iPlotter = plotter;
 			iPlotter.SetPlotName("map", i);
-			iPlotter.PlotMap(plotter_data_[i].map, plotter_data_[i].positions, plotter_data_[i].positions_history, plotter_data_[i].robot_status);
+			/* iPlotter.PlotMap(plotter_data_[i].map, plotter_data_[i].positions, plotter_data_[i].positions_history, plotter_data_[i].robot_status); */
+			iPlotter.PlotMap(plotter_data_[i].map, plotter_data_[i].positions, plotter_data_[i].positions_history, plotter_data_[i].robot_status, params_.pCommunicationRange);
+			auto iPlotterVoronoi = plotter_voronoi;
+			iPlotterVoronoi.SetPlotName("voronoi_map", i);
+			iPlotterVoronoi.PlotMap(GetWorldIDF(), plotter_data_[i].positions, plotter_data_[i].voronoi, plotter_data_[i].positions_history);
 		}
-		system(("ffmpeg -y -r 30 -i " + frame_dir + "map%04d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p " + dir_name + "/" + video_name).c_str());
-		std::filesystem::remove_all(frame_dir);
+		bool ffmpeg_call = system(("ffmpeg -y -r 30 -i " + frame_dir + "map%04d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p " + dir_name + "/" + video_name).c_str());
+		if(ffmpeg_call) {
+			std::cout << "Error: ffmpeg call failed." << std::endl;
+		}
+		ffmpeg_call = system(("ffmpeg -y -r 30 -i " + frame_dir + "voronoi_map%04d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p " + dir_name + "/voronoi_" + video_name).c_str());
+		if(ffmpeg_call) {
+			std::cout << "Error: ffmpeg call failed." << std::endl;
+		}
+		/* std::filesystem::remove_all(frame_dir); */
 	}
 
 	void CoverageSystem::RecordPlotData(std::vector <int> const &robot_status, std::string const &map_name) {
@@ -30,6 +43,18 @@ namespace CoverageControl {
 		data.positions = robot_global_positions_;
 		data.positions_history = robot_positions_history_;
 		data.robot_status = robot_status;
+		ComputeVoronoiCells();
+		std::vector <std::list<Point2>> voronoi;
+		auto voronoi_cells = voronoi_.GetVoronoiCells();
+		for(size_t i = 0; i < num_robots_; ++i) {
+			std::list<Point2> cell_points;
+			for(auto const &pos : voronoi_cells[i].cell) {
+				cell_points.push_back(Point2(pos[0], pos[1]));
+			}
+			cell_points.push_back(cell_points.front());
+			voronoi.push_back(cell_points);
+		}
+		data.voronoi = voronoi;
 		plotter_data_.push_back(data);
 	}
 

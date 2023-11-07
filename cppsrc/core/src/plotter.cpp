@@ -115,6 +115,90 @@ namespace CoverageControl {
 		}
 	}
 
+	void Plotter::PlotMap(MapType const &map, PointVector const &positions, std::vector <std::list<Point2>> const &trajectories, std::vector<int> const &robot_status, double const &communication_range) {
+
+		Gnuplot gp;
+		GnuplotCommands(gp);
+		PlotMap(gp);
+
+		for(size_t i = 0; i < positions.size(); ++i) {
+			if(robot_status[i] == 0) {
+				PlotLine(gp, marker_sz, color_robot, false);
+			} else {
+				PlotLine(gp, marker_sz, color_robot_alt, false);
+			}
+		}
+		PlotLine(gp, half_marker_sz, color_communication_links, false);
+		for(size_t i = 0; i < positions.size(); ++i) {
+			if(robot_status[i] == 0) {
+				PlotPoints(gp, 7, marker_sz, color_robot, false);
+			} else {
+				PlotPoints(gp, 7, marker_sz, color_robot_alt, false);
+			}
+		}
+		gp << "\n";
+
+
+		StreamMap(gp, map);
+		for(auto const &trajectory : trajectories) {
+			for(auto const &pos : trajectory) {
+				gp << pos[0] << " " << pos[1] << std::endl;
+			}
+			gp << "e\n";
+		}
+
+		for(size_t i = 0; i < positions.size(); ++i) {
+			for(size_t j = i + 1; j < positions.size(); ++j) {
+				if((positions[i] - positions[j]).norm() < communication_range) {
+					gp << positions[i][0] << " " << positions[i][1] << "\n";
+					gp << positions[j][0] << " " << positions[j][1] << "\n";
+					gp << "\n";
+				}
+			}
+		}
+		gp << "e\n";
+		for(auto const &pos : positions) {
+			gp << pos[0] << " " << pos[1] << std::endl;
+			gp << "e\n";
+		}
+
+	}
+
+	void Plotter::PlotMap(MapType const &map, PointVector const &positions, std::vector<std::list<Point2>> const &voronoi, std::vector <std::list<Point2>> const &trajectories) {
+
+		Gnuplot gp;
+		GnuplotCommands(gp);
+		PlotMap(gp);
+
+		PlotLine(gp, marker_sz, color_robot, false);
+		PlotLine(gp, half_marker_sz, color_voronoi, false); // voronoi
+		PlotPoints(gp, 7, marker_sz, color_robot, false); // robots
+		gp << "\n";
+
+		StreamMap(gp, map);
+
+		for(auto const &trajectory : trajectories) {
+			for(auto const &pos : trajectory) {
+				gp << pos[0] << " " << pos[1] << "\n";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		for(auto const &vcell : voronoi) {
+			for(auto const &pos : vcell) {
+				gp << pos[0] << " " << pos[1] << "\n";
+			}
+			gp << "\n";
+		}
+		gp << "e\n";
+
+		for(auto const &pos : positions) {
+			gp << pos[0] << " " << pos[1] << "\n";
+		}
+		gp << "e\n";
+	}
+
 	void Plotter::PlotMap(MapType const &map, PointVector const &positions, Voronoi const &voronoi, std::vector <std::list<Point2>> const &trajectories) {
 
 		Gnuplot gp;
