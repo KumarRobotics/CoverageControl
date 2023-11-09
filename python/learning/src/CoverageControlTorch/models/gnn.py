@@ -17,6 +17,9 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         # --- no pos ---
         self.gnn_mlp = MLP([self.latent_size, 32, 32])
         self.output_linear = torch.nn.Linear(32, self.output_dim)
+        # Register buffers to model
+        self.register_buffer("actions_mean", torch.zeros(self.output_dim))
+        self.register_buffer("actions_std", torch.ones(self.output_dim))
 
     def forward(self, data):
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_weight
@@ -41,6 +44,9 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         # print(f'mlp_output sum: {mlp_output[0]}')
         x = self.output_linear(self.gnn_mlp(self.gnn_backbone(gnn_backbone_in, edge_index)))
         return x
+
+    def LoadModel(self, model_state_dict_path):
+        self.load_state_dict(torch.load(model_state_dict_path), strict=False)
 
     def LoadCNNBackBone(self, model_path):
         self.load_state_dict(torch.load(model_path).state_dict(), strict=False)

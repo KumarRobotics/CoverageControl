@@ -15,6 +15,7 @@ from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
 from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData
 # , GetStableMaps, RobotPositionsToEdgeWeights, ToTensor
 import CoverageControlTorch.utils.coverage_system as CoverageSystemUtils
+from CoverageControlTorch.models.gnn import CNNGNN
 
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
@@ -24,15 +25,22 @@ class Controller:
         self.type = self.config['Type']
         self.map_size = map_size
         if self.type == 'Learning':
-            self.Step = self.StepLearning
-            self.model_file = self.config['ModelFile']
-            self.model = torch.load(self.model_file)
-            self.use_cnn = self.config['UseCNN']
-            self.use_comm_map = self.config['UseCommMap']
             if torch.cuda.is_available():
                 self.device = torch.device('cuda')
             else:
                 self.device = torch.device('cpu')
+            self.Step = self.StepLearning
+            # Check if ModelFile is provided
+            if 'ModelFile' in self.config:
+                self.model_file = self.config['ModelFile']
+                self.model = torch.load(self.model_file)
+            else: # Load from ModelStateDict
+                self.learning_config_file = self.config['LearningConfig']
+                self.learning_config = dl_utils.LoadYaml(self.learning_config_file)
+                self.model = CNNGNN(self.learning_config).to(self.device)
+                self.model.LoadModel(self.config['ModelStateDict'])
+            self.use_cnn = self.config['UseCNN']
+            self.use_comm_map = self.config['UseCommMap']
             # Get actions_mean and actions_std from model buffer
             self.actions_mean = self.model.actions_mean.to(self.device)
             self.actions_std = self.model.actions_std.to(self.device)
