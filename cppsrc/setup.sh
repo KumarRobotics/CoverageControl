@@ -9,7 +9,7 @@ then
 fi
 
 print_usage() {
-	printf "bash $0 [-i <for install>] [-t <for torch>] [-p <for python>] [-d <workspace_dir>]\n"
+	printf "bash $0 [-d|--directory <workspace directory>] [-i|--install] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--nocuda <cpu only>]\n"
 }
 
 # Get directory of script
