@@ -1,3 +1,4 @@
 // the configured options and settings for CoverageControl
 #define CoverageControlCore_VERSION_MAJOR @CoverageControlCore_VERSION_MAJOR@
 #define CoverageControlCore_VERSION_MINOR @CoverageControlCore_VERSION_MINOR@
+#cmakedefine WITH_CUDA

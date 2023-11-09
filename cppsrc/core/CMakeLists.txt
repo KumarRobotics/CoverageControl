@@ -1,5 +1,16 @@
-cmake_minimum_required(VERSION 3.24)
-project(CoverageControlCore VERSION 0.3 LANGUAGES CUDA CXX)
+cmake_minimum_required(VERSION 3.22)
+project(CoverageControlCore VERSION 0.3 LANGUAGES CXX)
+
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
+option(WITH_CUDA "Enable CUDA support" ON)
+
+if (WITH_CUDA)
+	cmake_minimum_required(VERSION 3.24)
+	enable_language(CUDA)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -54,11 +65,18 @@ target_link_libraries(CoverageControlCore INTERFACE ${dependencies_list} Coverag
 target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
 target_link_libraries(CoverageControl_core PRIVATE compiler_flags  CGAL::CGAL)
 target_link_libraries(CoverageControl_core PUBLIC ${dependencies_list})
-set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+
+if (WITH_CUDA)
+	set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+	else()
+	set_target_properties(CoverageControl_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(TARGETS CoverageControl_core CoverageControlCore EXPORT CoverageControlCoreTargets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(FILES "${PROJECT_BINARY_DIR}/CoverageControlCoreConfig.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 set(CMAKEPACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControlCore)
 

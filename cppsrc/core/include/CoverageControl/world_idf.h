@@ -7,17 +7,20 @@
 #ifndef COVERAGECONTROL_WORLDIDF_H_
 #define COVERAGECONTROL_WORLDIDF_H_
 
+#include "CoverageControlCoreConfig.h"
 #include <vector>
 #include <fstream>
 #include <iostream>
 #define EIGEN_NO_CUDA // Don't use eigen's cuda facility
 #include <Eigen/Dense> // Eigen is used for maps
 
+#ifdef WITH_CUDA
+#include "generate_world_map.ch"
+#endif
 #include "constants.h"
 #include "parameters.h"
 #include "typedefs.h"
 #include "bivariate_normal_distribution.h"
-#include "generate_world_map.ch"
 #include "map_utils.h"
 #include "cgal/polygon_utils.h"
 
@@ -118,13 +121,13 @@ namespace CoverageControl {
 			/** Integrate each normal distribution over a rectangle (cell).
 				*  If the cell is far away, the importance is set to 0
 				**/
-			double ComputeImportanceRectangle (Point2 const &bottom_left, Point2 const &top_right) const {
+			float ComputeImportanceRectangle (Point2 const &bottom_left, Point2 const &top_right) const {
 				Point2 bottom_right(top_right.x(), bottom_left.y());
 				Point2 top_left(Point2(bottom_left.x(), top_right.y()));
-				double importance = 0;
+				float importance = 0;
 				for(auto const &normal_distribution:normal_distributions_) {
 					Point2 mid_point = (bottom_left + top_right)/2.;
-					if(normal_distribution.TransformPoint(mid_point).squaredNorm() > params_.pTruncationBND * params_.pTruncationBND + params_.pResolution * params_.pResolution) {
+					if(normal_distribution.TransformPoint(mid_point).squaredNorm() > params_.pTruncationBND * params_.pTruncationBND) {
 						continue;
 					}
 					importance += normal_distribution.IntegrateQuarterPlane(bottom_left);
@@ -135,23 +138,87 @@ namespace CoverageControl {
 				return importance;
 			}
 
-			/** Fills in values of the world_map_ with the total importance for each cell **/
 			void GenerateMap() {
+#ifdef WITH_CUDA
+				GenerateMapCuda();
+#else
+				GenerateMapCPU();
+#endif
+			}
+			/** Fills in values of the world_map_ with the total importance for each cell **/
+			void GenerateMapCPU() {
+				float max_importance = 0;
 				for(int i = 0; i < params_.pWorldMapSize; ++i) { // Row (x index)
-					double x1 = params_.pResolution * i; // Left x-coordinate of pixel
-					double x2 = x1 + params_.pResolution; // Right x-coordinate of pixel
+					float x1 = params_.pResolution * i; // Left x-coordinate of pixel
+					float x2 = x1 + params_.pResolution; // Right x-coordinate of pixel
 					for(int j = 0; j < params_.pWorldMapSize; ++j) { // Column (y index)
-						double y1 = params_.pResolution * j; // Lower y-coordinate of pixel
-						double y2 = y1 + params_.pResolution; // Upper y-coordinate of pixel
-						double importance	= ComputeImportanceRectangle(Point2(x1,y1), Point2(x2,y2));
+						float y1 = params_.pResolution * j; // Lower y-coordinate of pixel
+						float y2 = y1 + params_.pResolution; // Upper y-coordinate of pixel
+						float importance	= ComputeImportanceRectangle(Point2(x1,y1), Point2(x2,y2));
 						if(std::abs(importance) < kEps) {
 							importance = 0;
 						}
 						world_map_(i, j) = importance;
+						if(importance > max_importance) {
+							max_importance = importance;
+						}
+					}
+				}
+
+				if(max_importance < kEps) {
+					normalization_factor_ = params_.pNorm;
+				} else {
+					normalization_factor_ = params_.pNorm / max_importance;
+				}
+
+				// Normalize the world map
+				for(int i = 0; i < params_.pWorldMapSize; ++i) {
+					for(int j = 0; j < params_.pWorldMapSize; ++j) {
+						world_map_(i, j) *= normalization_factor_;
 					}
 				}
 			}
+			/** Write the world map to a file **/
+			int WriteWorldMap(std::string const &file_name) const {
+				return MapUtils::WriteMap(world_map_, file_name);
+			}
 
+			void GetSubWorldMap(Point2 const &pos, int const sensor_size, MapType &submap) const {
+				MapUtils::GetSubMap(params_.pResolution, pos, params_.pWorldMapSize, world_map_, sensor_size, submap);
+			}
+
+			void PrintMapSize() const {
+				std::cout << "World map size: " << world_map_.rows() << " " << world_map_.cols() << std::endl;
+			}
+
+			auto GetNormalizationFactor() const { return normalization_factor_; }
+
+			const MapType& GetWorldMap() const { return world_map_; }
+
+			inline int WriteDistributions(std::string const &file_name) const {
+				std::ofstream file(file_name);
+				if(!file.is_open()) {
+					std::cerr << "Could not open file: " << file_name << std::endl;
+					return -1;
+				}
+				file << std::setprecision(kMaxPrecision);
+				for(auto const &dist:normal_distributions_) {
+					auto sigma = dist.GetSigma();
+					if(sigma.x() == sigma.y()) {
+						file << "CircularBND" << std::endl;
+						file << dist.GetMean().x() << " " << dist.GetMean().y() << " " << sigma.x() << " " << dist.GetScale() << std::endl;
+					} else {
+						file << "BND" << std::endl;
+						file << dist.GetMean().x() << " " << dist.GetMean().y() << " " << dist.GetSigma().x() << " " << dist.GetSigma().y() << " " << dist.GetRho() << " " << dist.GetScale() << std::endl;
+					}
+				}
+				file.close();
+				return 0;
+			}
+
+			auto GetNumFeatures() const { return normal_distributions_.size() + polygon_features_.size(); }
+
+#ifdef WITH_CUDA
 			void GenerateMapCuda () {
 				GenerateMapCuda((float)params_.pResolution, (float)params_.pTruncationBND, (int)params_.pWorldMapSize);
 			}
@@ -205,46 +272,8 @@ namespace CoverageControl {
 				normalization_factor_ = static_cast<double>(f_norm);
 				/* GenerateMap(); */
 			}
+#endif
 
-			/** Write the world map to a file **/
-			int WriteWorldMap(std::string const &file_name) const {
-				return MapUtils::WriteMap(world_map_, file_name);
-			}
-
-			void GetSubWorldMap(Point2 const &pos, int const sensor_size, MapType &submap) const {
-				MapUtils::GetSubMap(params_.pResolution, pos, params_.pWorldMapSize, world_map_, sensor_size, submap);
-			}
-
-			void PrintMapSize() const {
-				std::cout << "World map size: " << world_map_.rows() << " " << world_map_.cols() << std::endl;
-			}
-
-			auto GetNormalizationFactor() const { return normalization_factor_; }
-
-			const MapType& GetWorldMap() const { return world_map_; }
-
-			inline int WriteDistributions(std::string const &file_name) const {
-				std::ofstream file(file_name);
-				if(!file.is_open()) {
-					std::cerr << "Could not open file: " << file_name << std::endl;
-					return -1;
-				}
-				file << std::setprecision(kMaxPrecision);
-				for(auto const &dist:normal_distributions_) {
-					auto sigma = dist.GetSigma();
-					if(sigma.x() == sigma.y()) {
-						file << "CircularBND" << std::endl;
-						file << dist.GetMean().x() << " " << dist.GetMean().y() << " " << sigma.x() << " " << dist.GetScale() << std::endl;
-					} else {
-						file << "BND" << std::endl;
-						file << dist.GetMean().x() << " " << dist.GetMean().y() << " " << dist.GetSigma().x() << " " << dist.GetSigma().y() << " " << dist.GetRho() << " " << dist.GetScale() << std::endl;
-					}
-				}
-				file.close();
-				return 0;
-			}
-
-			auto GetNumFeatures() const { return normal_distributions_.size() + polygon_features_.size(); }
 	};
 
 } /* namespace CoverageControl */

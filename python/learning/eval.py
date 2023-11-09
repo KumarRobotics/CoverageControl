@@ -138,9 +138,9 @@ class Evaluator:
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
-                # map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
-                # os.makedirs(map_dir, exist_ok = True)
-                # env.PlotInitMap(map_dir, "InitMap")
+                map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
+                os.makedirs(map_dir, exist_ok = True)
+                env.PlotInitMap(map_dir, "InitMap")
                 # env.RecordPlotData()
                 # env.PlotMapVoronoi(map_dir, step_count)
 

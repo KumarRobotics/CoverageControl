@@ -1,6 +1,15 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 
-project(CoverageControlTests VERSION 0.3 LANGUAGES CUDA CXX)
+option(WITH_CUDA "Build with CUDA support" ON)
+project(CoverageControlTests VERSION 0.3 LANGUAGES CXX)
+if(WITH_CUDA)
+	enable_language(CUDA)
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)

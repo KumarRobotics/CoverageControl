@@ -1,19 +1,29 @@
-cmake_minimum_required(VERSION 3.24)
-project(CoverageControlTorch VERSION 0.3 LANGUAGES CUDA CXX)
+cmake_minimum_required(VERSION 3.22)
+project(CoverageControlTorch VERSION 0.3 LANGUAGES CXX)
 
-include(CheckCXXCompilerFlag)
-include(GNUInstallDirs)
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
+option(WITH_CUDA "Build with CUDA support" ON)
+
+if(WITH_CUDA)
+	cmake_minimum_required(VERSION 3.24)
+	enable_language(CUDA)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
+include(CheckCXXCompilerFlag)
+include(GNUInstallDirs)
+
 find_package(Torch REQUIRED)
 # find_package(TorchVision REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-find_package(OpenCV REQUIRED)
-
+# find_package(OpenCV REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(GeographicLib REQUIRED)
@@ -52,9 +62,14 @@ target_link_libraries(CoverageControlTorch INTERFACE ${dependencies_list} Covera
 target_include_directories(CoverageControl_torch PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS})
 target_link_libraries(CoverageControl_torch PRIVATE compiler_flags)
 target_link_libraries(CoverageControl_torch PUBLIC ${dependencies_list})
-set_target_properties(CoverageControl_torch PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+if (WITH_CUDA)
+	set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+	else()
+	set_target_properties(CoverageControl_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES ${PROJECT_BINARY_DIR}/CoverageControlTorchConfig.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(TARGETS CoverageControl_torch CoverageControlTorch EXPORT CoverageControlTorchTargets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 

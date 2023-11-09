@@ -86,8 +86,8 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("AddNormalDistribution", py::overload_cast<BivariateNormalDistribution const &>(&WorldIDF::AddNormalDistribution))
 			.def("AddNormalDistribution", py::overload_cast<BNDVector const &>(&WorldIDF::AddNormalDistribution))
 			.def("GenerateMap", &WorldIDF::GenerateMap)
-			.def("GenerateMapCuda", py::overload_cast<>(&WorldIDF::GenerateMapCuda))
-			.def("GenerateMapCuda", py::overload_cast<float const, float const, int const>(&WorldIDF::GenerateMapCuda))
+			.def("GenerateMap", py::overload_cast<>(&WorldIDF::GenerateMap))
+			/* .def("GenerateMapCuda", py::overload_cast<float const, float const, int const>(&WorldIDF::GenerateMapCuda)) */
 			.def("GetWorldMap", &WorldIDF::GetWorldMap, py::return_value_policy::reference_internal)
 			.def("WriteWorldMap", &WorldIDF::WriteWorldMap)
 			.def("GetNormalizationFactor", &WorldIDF::GetNormalizationFactor)

@@ -1,10 +1,15 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 
-project(CoverageControlMain VERSION 0.3 LANGUAGES CUDA CXX)
+option(WITH_CUDA "Build with CUDA support" ON)
+project(CoverageControlMain VERSION 0.3 LANGUAGES CXX)
+if(WITH_CUDA)
+	enable_language(CUDA)
+	cmake_minimum_required(VERSION 3.24)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
-
 
 if(NOT DEFINED WITH_TORCH)
 	set(WITH_TORCH OFF)
@@ -62,8 +67,8 @@ install(TARGETS coverage_algorithm DESTINATION ${CMAKE_INSTALL_BINDIR})
 # target_link_libraries(eval_gnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch ${CUDA_cusparse_LIBRARY})
 # install(TARGETS eval_gnn DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-if(WITH_TORCH)
-	add_executable(eval_dist_gnn eval_dist_gnn.cpp)
-	target_link_libraries(eval_dist_gnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch ${CUDA_cusparse_LIBRARY})
-	install(TARGETS eval_dist_gnn DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif()
+# if(WITH_TORCH)
+# 	add_executable(eval_dist_gnn eval_dist_gnn.cpp)
+# 	target_link_libraries(eval_dist_gnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch ${CUDA_cusparse_LIBRARY})
+# 	install(TARGETS eval_dist_gnn DESTINATION ${CMAKE_INSTALL_BINDIR})
+# endif()
