@@ -1,11 +1,15 @@
 wheel
 numpy
 pytest
+--find-links https://download.pytorch.org/whl/cu118
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
 torch
 torchvision
 torchaudio
 pytorch-lightning
---find-links https://data.pyg.org/whl/torch-2.1.0+cu121.html
+--find-links https://data.pyg.org/whl/torch-2.0.0+cu118.html
 torch_scatter
 torch_sparse
 torch_cluster
