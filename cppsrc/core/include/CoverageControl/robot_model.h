@@ -156,6 +156,27 @@ namespace CoverageControl {
 				}
 			}
 
+			void SetGlobalRobotPosition(Point2 const &pos) {
+				Point2 new_global_pos = pos;
+				if(new_global_pos.x() <= 0) { new_global_pos[0] = 0 + kLargeEps; }
+				if(new_global_pos.y() <= 0) { new_global_pos[1] = 0 + kLargeEps; }
+				double max_xy = params_.pWorldMapSize * params_.pResolution;
+				if(new_global_pos.x() >= max_xy) { new_global_pos[0] = max_xy - kLargeEps; }
+				if(new_global_pos.y() >= max_xy) { new_global_pos[1] = max_xy - kLargeEps; }
+
+				local_current_position_ = new_global_pos - global_start_position_;
+				global_current_position_ = new_global_pos;
+				if(params_.pUpdateSensorView == true) {
+					UpdateSensorView();
+				}
+				if(params_.pUpdateRobotMap == true) {
+					UpdateRobotMap();
+				}
+				if(params_.pUpdateExplorationMap == true) {
+					UpdateExplorationMap();
+				}
+			}
+
 			Point2 GetGlobalStartPosition() const { return global_start_position_; }
 			Point2 GetGlobalCurrentPosition() const { return global_current_position_; }
 

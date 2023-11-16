@@ -219,6 +219,7 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("StepActions", &CoverageSystem::StepActions)
 			.def("SetLocalRobotPositions", &CoverageSystem::SetLocalRobotPositions)
 			.def("SetLocalRobotPosition", &CoverageSystem::SetLocalRobotPosition)
+			.def("SetGlobalRobotPosition", &CoverageSystem::SetGlobalRobotPosition)
 			.def("GetRelativePositonsNeighbors", &CoverageSystem::GetRelativePositonsNeighbors)
 			.def("SetRobotPositions", &CoverageSystem::SetRobotPositions)
 			/* .def("GetRobotPositions", &CoverageSystem::GetRobotPositions) */

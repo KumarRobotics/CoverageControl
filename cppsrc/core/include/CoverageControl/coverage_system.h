@@ -298,6 +298,11 @@ namespace CoverageControl {
 				PostStepCommands(robot_id);
 			}
 
+			void SetGlobalRobotPosition(size_t const robot_id, Point2 const &global_pos) {
+				robots_[robot_id].SetGlobalRobotPosition(global_pos);
+				PostStepCommands(robot_id);
+			}
+
 			// Sets positions of all robots with respect to the local start position
 			void SetRobotPositions(std::vector<Point2> const &positions) {
 				if(positions.size() != num_robots_) {
