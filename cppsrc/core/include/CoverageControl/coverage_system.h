@@ -186,6 +186,10 @@ namespace CoverageControl {
 			void PostStepCommands(size_t robot_id) {
 				robot_global_positions_[robot_id] = robots_[robot_id].GetGlobalCurrentPosition();
 				for(size_t jRobot = 0; jRobot < robot_id; ++jRobot) {
+					if(robot_id == jRobot) {
+						adjacency_matrix_[robot_id][jRobot] = 0;
+						continue;
+					}
 					Point2 relative_pos = robot_global_positions_[jRobot] - robot_global_positions_[robot_id];
 					if(relative_pos.norm() < params_.pCommunicationRange) {
 						adjacency_matrix_[robot_id][jRobot] = 1;
