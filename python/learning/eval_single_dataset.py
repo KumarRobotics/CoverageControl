@@ -17,6 +17,9 @@ from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData
 import CoverageControlTorch.utils.coverage_system as CoverageSystemUtils
 from CoverageControlTorch.models.gnn import CNNGNN
 
+import matplotlib.pyplot as plt
+
+
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
         self.config = config
@@ -29,6 +32,7 @@ class Controller:
                 self.device = torch.device('cuda')
             else:
                 self.device = torch.device('cpu')
+            self.device = torch.device('cpu')
             self.Step = self.StepLearning
             # Check if ModelFile is provided
             if 'ModelFile' in self.config:
@@ -126,9 +130,9 @@ class Evaluator:
     def Evaluate(self, save = True):
         dataset_count = 0
 
-        cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
+
         while dataset_count < self.num_envs:
-            # dataset_count = 90
+            objective_values = np.zeros((self.num_controllers, self.num_steps))
             print(f"Environment {dataset_count}")
             pos_file = self.env_path + str(dataset_count) + ".pos"
             env_file = self.env_path + str(dataset_count) + ".env"
@@ -148,20 +152,23 @@ class Evaluator:
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
                 map_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/plots/'
-                os.makedirs(map_dir, exist_ok = True)
+                # os.makedirs(map_dir, exist_ok = True)
                 # env.PlotInitMap(map_dir, "InitMap")
                 # env.RecordPlotData()
                 # env.PlotMapVoronoi(map_dir, step_count)
 
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
-                # objective_value = env.GetObjectiveValue()
-                cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
+                init_objective_value = env.GetObjectiveValue()
+                objective_value = init_objective_value/init_objective_value
+                objective_values[controller_id, step_count] = objective_value
                 step_count = step_count + 1
                 while step_count < self.num_steps:
+
                     objective_value, converged = controller.Step(self.cc_params, env)
-                    cost_data[controller_id, dataset_count, step_count] = objective_value
+                    objective_value = objective_value/init_objective_value
+                    objective_values[controller_id, step_count] = objective_value
                     if converged:
-                        cost_data[controller_id, dataset_count, step_count:] = objective_value
+                        objective_values[controller_id, step_count:] = objective_value
                         break
                     # env.PlotMapVoronoi(map_dir, step_count)
                     # env.RecordPlotData()
@@ -170,15 +177,21 @@ class Evaluator:
                         print(f"Step {step_count}, Objective Value {objective_value}")
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
 
-                if save == True:
-                    controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
-                    controller_data_file = controller_dir + '/' + 'eval.csv'
-                    np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
                 # env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
                 del controller
                 del env
+            # Plot objective values
+            objective_values = objective_values.T
+            plt.figure()
+            plt.plot(objective_values)
+            plt.xlabel('Steps')
+            plt.ylabel('Objective Value')
+            plt.title('Objective Value vs Steps')
+            plt.legend([self.controllers[i]['Name'] for i in range(self.num_controllers)])
+            plt.savefig(self.eval_dir + '/plots/' + str(dataset_count) + '.png')
+            plt.close()
+
             dataset_count = dataset_count + 1
-        return cost_data
 
 
 if __name__ == "__main__":

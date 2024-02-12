@@ -15,6 +15,7 @@ from CoverageControlTorch.data_loaders.data_loaders import LocalMapGNNDataset
 from CoverageControlTorch.utils.coverage_system import GetTorchGeometricData
 # , GetStableMaps, RobotPositionsToEdgeWeights, ToTensor
 import CoverageControlTorch.utils.coverage_system as CoverageSystemUtils
+from CoverageControlTorch.models.gnn import CNNGNN
 
 class Controller:
     def __init__(self, config, params, env, num_robots, map_size):
@@ -24,15 +25,23 @@ class Controller:
         self.type = self.config['Type']
         self.map_size = map_size
         if self.type == 'Learning':
-            self.Step = self.StepLearning
-            self.model_file = self.config['ModelFile']
-            self.model = torch.load(self.model_file)
-            self.use_cnn = self.config['UseCNN']
-            self.use_comm_map = self.config['UseCommMap']
             if torch.cuda.is_available():
                 self.device = torch.device('cuda')
             else:
                 self.device = torch.device('cpu')
+            self.device = torch.device('cpu')
+            self.Step = self.StepLearning
+            # Check if ModelFile is provided
+            if 'ModelFile' in self.config:
+                self.model_file = self.config['ModelFile']
+                self.model = torch.load(self.model_file)
+            else: # Load from ModelStateDict
+                self.learning_config_file = self.config['LearningConfig']
+                self.learning_config = dl_utils.LoadYaml(self.learning_config_file)
+                self.model = CNNGNN(self.learning_config).to(self.device)
+                self.model.LoadModel(self.config['ModelStateDict'])
+            self.use_cnn = self.config['UseCNN']
+            self.use_comm_map = self.config['UseCommMap']
             # Get actions_mean and actions_std from model buffer
             self.actions_mean = self.model.actions_mean.to(self.device)
             self.actions_std = self.model.actions_std.to(self.device)
@@ -66,10 +75,12 @@ class Controller:
         resized_local_maps = CoverageSystemUtils.ResizeMaps(raw_local_maps, self.map_size)
         raw_obstable_maps = CoverageSystemUtils.GetRawObstacleMaps(env, params).to(self.device)
         resized_obstacle_maps = CoverageSystemUtils.ResizeMaps(raw_obstable_maps, self.map_size)
-        comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
         edge_weights = CoverageSystemUtils.GetWeights(env, params)
-        # maps = torch.cat([resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1)
-        maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+        if self.use_comm_map:
+            comm_maps = CoverageSystemUtils.GetCommunicationMaps(env, params, self.map_size).to(self.device)
+            maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+        else:
+            maps = torch.cat([resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1)
 
         robot_positions = CoverageSystemUtils.GetRobotPositions(env)
         robot_positions = (robot_positions + params.pWorldMapSize/2) / params.pWorldMapSize
@@ -80,6 +91,10 @@ class Controller:
         with torch.no_grad():
             actions = self.model(data)
         actions = actions * self.actions_std + self.actions_mean
+        # for i in range(self.num_robots):
+        #     if actions[i][0] < 1e-3 and actions[i][1] < 1e-3:
+        #         actions[i][0] = 0
+        #         actions[i][1] = 0
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
         return env.GetObjectiveValue(), False
@@ -110,24 +125,26 @@ class Evaluator:
         self.map_size = self.config['MapSize']
 
     def Evaluate(self, save = True):
-        dataset_count = 9
+        dataset_count = 0
 
-        cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
         while dataset_count < self.num_envs:
-            print("New environment")
-
+            dataset_count = 74
+            print(f"Environment {dataset_count}")
             pos_file = self.env_path + str(dataset_count) + ".pos"
             env_file = self.env_path + str(dataset_count) + ".env"
             if os.path.isfile(env_file) and os.path.isfile(pos_file):
                 world_idf = WorldIDF(self.cc_params, env_file)
                 env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
             else:
+                print("New environment")
                 env_main = CoverageSystem(self.cc_params, self.num_features, self.num_robots)
                 env_main.WriteEnvironment(pos_file, env_file)
                 world_idf = env_main.GetWorldIDFObject()
 
-            robot_init_pos = env_main.GetRobotPositions()
+            robot_init_pos = env_main.GetRobotPositions(force_no_noise = True)
             for controller_id in range(self.num_controllers):
+                objective_values = np.zeros(self.num_steps)
+                print(f"Controller {controller_id}")
                 step_count = 0
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
@@ -138,30 +155,32 @@ class Evaluator:
                 # env.PlotMapVoronoi(map_dir, step_count)
 
                 controller = Controller(self.controllers[controller_id], self.cc_params, env, self.num_robots, self.map_size)
-                cost_data[controller_id, dataset_count, step_count] = env.GetObjectiveValue()
+                objective_value = env.GetObjectiveValue()
+                initial_objective_value = objective_value
+                objective_values[step_count] = 1
                 step_count = step_count + 1
                 while step_count < self.num_steps:
                     objective_value, converged = controller.Step(self.cc_params, env)
-                    cost_data[controller_id, dataset_count, step_count] = objective_value
-                    # if converged:
-                    #     cost_data[controller_id, dataset_count, step_count:] = objective_value
-                    #     break
+                    objective_values[step_count] = objective_value/initial_objective_value
                     # env.PlotMapVoronoi(map_dir, step_count)
                     env.RecordPlotData()
                     step_count = step_count + 1
                     if step_count % 100 == 0:
+                        print(f"Step {step_count}, Objective Value {objective_value}")
                         print(f"Environment {dataset_count}, Controller {controller_id}, Step {step_count}")
+                    # if converged:
+                    #     break
 
                 if save == True:
                     controller_dir = self.eval_dir + '/' + self.controllers[controller_id]['Name']
-                    controller_data_file = controller_dir + '/' + 'eval.csv'
-                    # np.savetxt(controller_data_file, cost_data[controller_id, :dataset_count + 1, :], delimiter=",")
+                # Write objective values to file
+                objective_values_file = self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/objective_values_' + str(dataset_count) + '.csv'
+                np.savetxt(objective_values_file, objective_values, delimiter = ',')
+
                 env.RenderRecordedMap(self.eval_dir + '/' + self.controllers[controller_id]['Name'] + '/', 'video.mp4')
                 del controller
                 del env
             dataset_count = dataset_count + 1
-            break
-        return cost_data
 
 
 if __name__ == "__main__":

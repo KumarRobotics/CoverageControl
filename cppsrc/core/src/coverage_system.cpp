@@ -30,7 +30,7 @@ namespace CoverageControl {
 		if(ffmpeg_call) {
 			std::cout << "Error: ffmpeg call failed." << std::endl;
 		}
-		/* std::filesystem::remove_all(frame_dir); */
+		std::filesystem::remove_all(frame_dir);
 	}
 
 	void CoverageSystem::RecordPlotData(std::vector <int> const &robot_status, std::string const &map_name) {
