@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 TMP_DIR=`mktemp -d`
 params="$(getopt -o d: -l directory:,nocuda --name "$(basename "$0")" -- "$@")"
 if [ $? -ne 0 ]
@@ -24,10 +26,10 @@ done
 mkdir -p ${INSTALL_DIR}
 if [[ ${NOCUDA} ]]
 then
-	wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.1.0%2Bcpu.zip -O ${TMP_DIR}/libtorch.zip
+	wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.0%2Bcpu.zip -O ${TMP_DIR}/libtorch.zip
+
 else
-	# wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.1.0%2Bcu118.zip -O ${TMP_DIR}/libtorch.zip
-	wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.1.0%2Bcu121.zip -O ${TMP_DIR}/libtorch.zip
+	wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.0%2Bcu121.zip -O ${TMP_DIR}/libtorch.zip
 fi
 unzip ${TMP_DIR}/libtorch.zip -d ${INSTALL_DIR}/
 # cp -r ${TMP_DIR}/libtorch/* ${1}/.

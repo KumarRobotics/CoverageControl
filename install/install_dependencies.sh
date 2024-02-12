@@ -1,13 +1,37 @@
 #!/usr/bin/env bash
 
 TMP_DIR=`mktemp -d`
+
+params="$(getopt -o d: -l directory:,nocuda --name "$(basename "$0")" -- "$@")"
+if [ $? -ne 0 ]
+then
+    print_usage
+fi
+
+print_usage() {
+	printf "bash $0 [-d|--directory <specify install directory>]\n"
+}
+eval set -- "$params"
+unset params
+
+while true; do
+	case ${1} in
+		-d|--directory) INSTALL_DIR+=("${2}");shift 2;;
+		--nocuda) NOCUDA=true;shift;;
+		--) shift;break;;
+		*) print_usage
+			exit 1 ;;
+	esac
+done
+
 MAIN_DIR=${TMP_DIR}/main/
 BUILD_DIR=${TMP_DIR}/build/
 
-if [ -z "$1" ]; then
+if [ -z "$INSTALL_DIR" ]; then
 	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
 else
-	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$1"
+	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR"
+	echo "Installing to $INSTALL_DIR"
 fi
 
 InstallCGAL () {

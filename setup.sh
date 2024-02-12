@@ -52,7 +52,7 @@ then
 		echo "python bindings build failed"
 		exit 1
 	fi
-	pip install -e ${DIR}/python/learning/
+	pip install -e ${DIR}/python/
 	if [ $? -ne 0 ]; then
 		echo "CoverageControlTorch Python package install failed"
 		exit 1

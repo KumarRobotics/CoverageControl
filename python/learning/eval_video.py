@@ -29,7 +29,6 @@ class Controller:
                 self.device = torch.device('cuda')
             else:
                 self.device = torch.device('cpu')
-            self.device = torch.device('cpu')
             self.Step = self.StepLearning
             # Check if ModelFile is provided
             if 'ModelFile' in self.config:
