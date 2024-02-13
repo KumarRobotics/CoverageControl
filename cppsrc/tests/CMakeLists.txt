@@ -25,7 +25,6 @@ endif()
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(GeographicLib REQUIRED)
-find_package(CGAL REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
