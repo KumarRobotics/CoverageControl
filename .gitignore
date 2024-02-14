@@ -1,6 +1,8 @@
 data/
 osm_dataset_generator/cache/
 osm_dataset_generator/leaflet_geojson_viz/data/
+doc/html/
+doc/latex/
 
 # Prerequisites
 *.d
