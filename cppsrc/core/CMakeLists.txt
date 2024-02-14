@@ -22,7 +22,6 @@ include(GNUInstallDirs)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
 find_package(CGAL 5.6 REQUIRED)
-find_package(yaml-cpp REQUIRED)
 
 configure_file(cmake/CoverageControlCoreConfig.h.in CoverageControlCoreConfig.h)
 
@@ -51,7 +50,7 @@ set(sources_list
 	extern/Hungarian.cpp)
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list Eigen3::Eigen m stdc++fs OpenMP::OpenMP_CXX pthread boost_iostreams boost_system boost_filesystem ${GeographicLib_LIBRARIES} yaml-cpp)
+set(dependencies_list Eigen3::Eigen m stdc++fs OpenMP::OpenMP_CXX pthread boost_iostreams boost_system boost_filesystem)
 
 add_library(CoverageControl_core SHARED ${sources_list})
 
@@ -62,7 +61,7 @@ target_include_directories(CoverageControlCore INTERFACE
 target_link_libraries(CoverageControlCore INTERFACE ${dependencies_list} CoverageControl_core)
 
 target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
-target_link_libraries(CoverageControl_core PRIVATE compiler_flags  CGAL::CGAL)
+target_link_libraries(CoverageControl_core PRIVATE compiler_flags CGAL::CGAL)
 target_link_libraries(CoverageControl_core PUBLIC ${dependencies_list})
 
 if (WITH_CUDA)

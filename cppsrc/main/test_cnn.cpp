@@ -40,7 +40,7 @@ void LoadDataset(std::string const &data_dir, int const image_size, int const ou
 int main(int argc, char* argv[]) {
 
 	if (argc < 2) {
-		std::cout << "Usage: ./test_cnn <yaml>" << std::endl;
+		std::cout << "Usage: ./test_cnn <parameters_file>" << std::endl;
 		return 1;
 	}
 	std::string config_file = std::string(argv[1]);

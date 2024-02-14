@@ -10,7 +10,6 @@
 #include <CoverageControl/coverage_system.h>
 #include <torch/script.h>
 #include <torch/torch.h>
-#include <yaml-cpp/yaml.h>
 
 #include "CoverageControlTorch/cnn_backbone.h"
 #include "CoverageControlTorch/gnn_backbone.h"

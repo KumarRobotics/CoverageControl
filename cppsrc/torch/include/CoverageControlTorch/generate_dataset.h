@@ -9,13 +9,14 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include <yaml-cpp/yaml.h>
 #include <chrono>
 #include <ctime>
 #include <CoverageControl/coverage_system.h>
 
 #include <torch/script.h>
 #include <torch/torch.h>
+
+#include "extern/tomlplusplus/toml.hpp"
 
 using namespace torch::indexing;
 typedef long int T_idx_t;
@@ -31,7 +32,7 @@ namespace CoverageControlTorch {
 	class GenerateDataset {
 
 		private:
-			YAML::Node config_;
+			toml::table config_;
 			std::string data_dir_;
 
 			CoverageControl::Parameters env_params_;
@@ -309,9 +310,14 @@ namespace CoverageControlTorch {
 					throw std::runtime_error("Could not open config file: " + config_file);
 				}
 
-				config_ = YAML::LoadFile(config_file);
-				data_dir_ = config_["DataDir"].as<std::string>();
-				data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/";
+				config_ = toml::parse_file(config_file);
+				if(config_["DataDir"].value<std::string>()) {
+					data_dir_ = config_["DataDir"].value<std::string>();
+				} else {
+					throw std::runtime_error("Could not find DataDir in config file: " + config_file);
+				}
+				/* data_dir_ = config_["DataDir"].as<std::string>(); */
+				/* data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/"; */
 
 				// Check if config_["DataDir"] directory exists
 				if(not std::filesystem::exists(data_dir_)) {

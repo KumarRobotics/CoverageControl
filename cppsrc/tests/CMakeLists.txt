@@ -24,7 +24,6 @@ endif()
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
-find_package(yaml-cpp REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
 if(WITH_TORCH)
@@ -38,11 +37,6 @@ endif()
 add_executable(system_map system_map.cpp)
 target_link_libraries(system_map PUBLIC CoverageControlCore)
 install(TARGETS system_map DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-# add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)
-# target_include_directories(geo_transforms PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
-# target_link_libraries(geo_transforms PRIVATE Eigen3::Eigen CoverageControlTorch yaml-cpp OpenMP::OpenMP_CXX ${GeographicLib_LIBRARIES})
-# install(TARGETS geo_transforms DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(robot_map ${PROJECT_SOURCE_DIR}/test/robot_map.cpp)
 # target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)

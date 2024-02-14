@@ -42,6 +42,12 @@ namespace CoverageControl {
 			// Should be greater than pCommunicationRange so that they can form different channels of the same image.
 			int pLocalMapSize = 256;
 
+			// Set pUpdateRobotMap to false for centralized known world
+			bool pUpdateRobotMap = true;
+			bool pUpdateExplorationMap = true;
+			bool pUpdateSensorView = true;
+			bool pUpdateSystemMap = true;
+
 			// Bivariate Normal Distribution truncated after pTruncationBND * sigma
 			// Helps in reducing the number of erfc evaluations
 			// Needs testing to be sure that the probability masses are not significantly off
@@ -56,15 +62,8 @@ namespace CoverageControl {
 			double pMinPeak = 6;
 			double pMaxPeak = 10;
 
-
 			double pUnknownImportance = 0.5;
 			bool pRobotMapUseUnknownImportance = false;
-
-			// Set pUpdateRobotMap to false for centralized known world
-			bool pUpdateRobotMap = true;
-			bool pUpdateExplorationMap = true;
-			bool pUpdateSensorView = true;
-			bool pUpdateSystemMap = true;
 
 			// Assuming square sensor FOV.
 			// Actual FOV: square with side pResolution * pSensorSize
@@ -79,6 +78,8 @@ namespace CoverageControl {
 			int pRobotPosHistorySize = 20; // Number of previous positions to store
 			// Each time step corresponds to pTimeStep seconds
 			double pTimeStep = 1;
+			bool pAddNoisePositions = false;
+			double pPositionsNoiseSigma = 0.;
 
 			int pEpisodeSteps = 2000; // Total time is pEpisodeSteps * pTimeStep
 
@@ -86,22 +87,23 @@ namespace CoverageControl {
 			int pLloydNumTries = 10;
 
 			int pNumFrontiers = 10; // Number of frontiers to be selected
-			bool pAddNoisePositions = false;
-			double pPositionsNoiseSigma = 0.;
 
 			Parameters() {}
 
 			Parameters (std::string const &config_file) : config_file_{config_file}{
-				ParseConfig();
+				ParseParameters();
+				PrintParameters();
 			}
 
 			void SetConfig (std::string const &config_file) {
 				config_file_ = config_file;
-				ParseConfig();
+				ParseParameters();
 			}
 
+			void PrintParameters();
+
 		private:
-			void ParseConfig();
+			void ParseParameters();
 
 	};
 

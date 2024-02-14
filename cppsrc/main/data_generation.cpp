@@ -24,8 +24,8 @@ namespace CCT = CoverageControlTorch;
 
 int main(int argc, char** argv) {
 	if (argc == 1) {
-		std::cout << "Usage: ./data_generation <path_to_yaml>" << std::endl;
-		std::cout << "YAML file for data generation is required" << std::endl;
+		std::cout << "Usage: ./data_generation <parameters_file>" << std::endl;
+		std::cout << "Parameteres file for data generation is required" << std::endl;
 		return 1;
 	}
 
