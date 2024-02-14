@@ -18,7 +18,7 @@ class DatasetGenerator():
     def __init__(self, config_file, append_dir=None):
 
         # Load configs and create directories
-        self.config = dl_utils.LoadYaml(config_file)
+        self.config = dl_utils.LoadToml(config_file)
         self.data_dir = self.config['DataDir']
         self.data_folder = self.data_dir + '/data/'
         if append_dir is not None:

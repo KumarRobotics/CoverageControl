@@ -14,7 +14,7 @@ from CoverageControlTorch.trainers.trainer import TrainModel
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 config_file = sys.argv[1]
-config = dl_utils.LoadYaml(config_file)
+config = dl_utils.LoadToml(config_file)
 dataset_path = config["DataDir"]
 data_dir = dataset_path + "/data/"
 

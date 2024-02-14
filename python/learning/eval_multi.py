@@ -10,7 +10,7 @@ from eval import Evaluator
 if __name__ == "__main__":
 
     config_file = sys.argv[1]
-    config = dl_utils.LoadYaml(config_file)
+    config = dl_utils.LoadToml(config_file)
     orig_name = config["Controllers"][0]["Name"]
     orig_dir = os.path.dirname(config["Controllers"][0]["ModelFile"])
 

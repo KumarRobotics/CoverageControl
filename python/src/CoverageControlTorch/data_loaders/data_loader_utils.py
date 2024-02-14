@@ -1,4 +1,5 @@
 import yaml
+import tomllib
 import os
 import torch
 import torch_geometric
@@ -29,6 +30,15 @@ def LoadYaml(path):
     # Load data
     with open(path, "r") as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
+    return data
+
+def LoadToml(path):
+    # Throw error if path does not exist
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"data_loader_utils::LoadToml: File not found: {path}")
+    # Load data
+    with open(path, "rb") as f:
+        data = tomllib.load(f)
     return data
 
 def LoadMaps(path, use_comm_map):

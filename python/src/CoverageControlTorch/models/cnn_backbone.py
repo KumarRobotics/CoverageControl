@@ -1,6 +1,6 @@
 import torch
 import math
-import yaml
+import tomllib
 from .config_parser import CNNConfigParser
 
 class CNNBackBone(torch.nn.Module, CNNConfigParser):
@@ -24,13 +24,6 @@ class CNNBackBone(torch.nn.Module, CNNConfigParser):
         # self.add_module("linear_2", torch.nn.Linear(self.latent_size, self.backbone_output_dim))
         # self.add_module("linear_3", torch.nn.Linear(2 * self.output_dim, self.output_dim))
 
-    def parse_config(self):
-        self.input_dim = self.config["InputDim"]
-        self.output_dim = self.config["OutputDim"]
-        self.num_layers = self.config["NumLayers"]
-        self.latent_size = self.config["LatentSize"]
-        self.kernel_size = self.config["KernelSize"]
-        self.image_size = self.config["ImageSize"]
 
     def forward(self, x):
         for layer in range(self.num_layers):

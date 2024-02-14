@@ -24,10 +24,10 @@ if __name__ == "__main__":
             print("Directory does not exist: " + f_dir)
             exit(1)
 
-        env_file = f_dir + "/env_params.yaml"
-        eval_file = f_dir + "/eval.yaml"
+        env_file = f_dir + "/env_params.toml"
+        eval_file = f_dir + "/eval.toml"
 
-        env_config = dl_utils.LoadYaml(env_file)
+        env_config = dl_utils.LoadToml(env_file)
         if env_config["pNumRobots"] != r:
             print("Incorrect number of robots: " + f_dir)
             exit(1)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             exit(1)
 
         eval_dir = f_dir + "/"
-        eval_config = dl_utils.LoadYaml(eval_file)
+        eval_config = dl_utils.LoadToml(eval_file)
         if eval_config["EvalDir"] != eval_dir:
             print("Incorrect eval directory: " + f_dir)
             exit(1)
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
 
     # config_file = sys.argv[1]
-    # config = dl_utils.LoadYaml(config_file)
+    # config = dl_utils.LoadToml(config_file)
     # orig_name = config["Controllers"][0]["Name"]
     # orig_dir = os.path.dirname(config["Controllers"][0]["ModelFile"])
 

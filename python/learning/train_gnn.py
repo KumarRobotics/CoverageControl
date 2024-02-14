@@ -16,7 +16,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 config_file = sys.argv[1]
 world_size = int(sys.argv[2])
-config = dl_utils.LoadYaml(config_file)
+config = dl_utils.LoadToml(config_file)
 dataset_path = config["DataDir"]
 data_dir = dataset_path + "/data/"
 

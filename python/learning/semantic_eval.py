@@ -107,7 +107,7 @@ class Evaluator:
                 os.makedirs(controller_dir)
 
         self.env_config_file = self.config['EnvironmentConfig']
-        self.env_config = dl_utils.LoadYaml(self.env_config_file)
+        self.env_config = dl_utils.LoadToml(self.env_config_file)
         self.cc_params = cc.Parameters(self.env_config_file)
 
         self.num_robots = self.env_config['pNumRobots']
@@ -193,7 +193,7 @@ class Evaluator:
 if __name__ == "__main__":
 
     config_file = sys.argv[1]
-    config = dl_utils.LoadYaml(config_file)
+    config = dl_utils.LoadToml(config_file)
 
     evaluator = Evaluator(config)
     evaluator.Evaluate()
