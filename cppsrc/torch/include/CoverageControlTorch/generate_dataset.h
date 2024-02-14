@@ -75,13 +75,24 @@ namespace CoverageControlTorch {
 				data_dir_append_ = data_dir_append;
 
 				LoadConfigs(config_file);
-				dataset_size_ = config_["NumDataset"].as<size_t>();
+				auto toml_NumDataset = config_["NumDataset"].value<int>();
+				if(toml_NumDataset) {
+					dataset_size_ = toml_NumDataset.value();
+				} else {
+					throw std::runtime_error("Could not find NumDataset in config file: " + config_file);
+				}
+				auto toml_converged_data_ratio = config_["ConvergedDataRatio"].value<float>();
+				if(toml_converged_data_ratio) {
+					converged_data_ratio_ = toml_converged_data_ratio.value_or(0.0);
+				}
+
 				num_robots_ = env_params_.pNumRobots;
 				comm_range_ = (float)env_params_.pCommunicationRange;
 				env_resolution_ = (float)env_params_.pResolution;
-				map_size_ = config_["CNNMapSize"].as<int>();
-				every_num_step_ = config_["EveryNumSteps"].as<size_t>();
-				trigger_size_ = config_["TriggerPostProcessing"].as<size_t>();
+
+				map_size_ = config_["MapSize"].value<int>().value_or(map_size_);
+				every_num_step_ = config_["EveryNumStep"].value<size_t>().value_or(every_num_step_);
+				trigger_size_ = config_["TriggerPostProcessing"].value<size_t>().value_or(trigger_size_);
 				if(trigger_size_ == 0 or trigger_size_ > dataset_size_ ) {
 					trigger_size_ = dataset_size_;
 				}
@@ -209,7 +220,7 @@ namespace CoverageControlTorch {
 				torch::Tensor diagonal_mask = torch::eye(edge_weights.size(1)).repeat({edge_weights.size(0), 1, 1}).to(torch::kBool);
 				edge_weights.masked_fill_(diagonal_mask, 0);
 				edge_weights.to(torch::kCPU);
-				if(config_["SaveAsSparseQ"].as<bool>()){
+				if(config_["SaveAsSparseQ"].value<bool>().value_or(true)) {
 					torch::save(edge_weights.to_sparse(), data_folder_ + "edge_weights.pt");
 				} else {
 					torch::save(edge_weights, data_folder_ + "edge_weights.pt");
@@ -260,15 +271,14 @@ namespace CoverageControlTorch {
 				torch::save(actions_, data_folder_ + "/actions.pt");
 				torch::save(coverage_features_, data_folder_ + "/coverage_features.pt");
 
-				if(config_["SaveAsSparseQ"].as<bool>()) {
+				if(config_["SaveAsSparseQ"].value<bool>().value_or(true)) {
 					torch::save(comm_maps_.to_sparse(), data_folder_ + "/comm_maps.pt");
 					torch::save(obstacle_maps_.to_sparse(), data_folder_ + "/obstacle_maps.pt");
-				}
-				else {
+				} else {
 					torch::save(comm_maps_, data_folder_ + "/comm_maps.pt");
 					torch::save(obstacle_maps_, data_folder_ + "/obstacle_maps.pt");
 				}
-				if(config_["NormalizeQ"].as<bool>()) {
+				if(config_["NormalizeQ"].value<bool>().value_or(true)) {
 					torch::Tensor actions_mean = at::mean(actions_.view({-1,2}), 0);
 					torch::Tensor actions_std = at::std(actions_.view({-1,2}), 0);
 					torch::Tensor normalized_actions = (actions_ - actions_mean)/actions_std;
@@ -311,13 +321,13 @@ namespace CoverageControlTorch {
 				}
 
 				config_ = toml::parse_file(config_file);
-				if(config_["DataDir"].value<std::string>()) {
-					data_dir_ = config_["DataDir"].value<std::string>();
+				auto toml_DataDir = config_["DataDir"].value<std::string>();
+				if(toml_DataDir) {
+					data_dir_ = toml_DataDir.value();
 				} else {
 					throw std::runtime_error("Could not find DataDir in config file: " + config_file);
 				}
-				/* data_dir_ = config_["DataDir"].as<std::string>(); */
-				/* data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/"; */
+				data_folder_ = data_dir_ + "/data/" + data_dir_append_ + "/";
 
 				// Check if config_["DataDir"] directory exists
 				if(not std::filesystem::exists(data_dir_)) {
@@ -328,13 +338,22 @@ namespace CoverageControlTorch {
 					std::filesystem::create_directories(data_folder_);
 				}
 				// Check if config_["EnvironmentConfig"] file exists
-				std::string env_config_file = data_dir_ + "/" + config_["EnvironmentConfig"].as<std::string>();
+				auto toml_EnvConfig = config_["EnvironmentConfig"].value<std::string>();
+				if(not toml_EnvConfig) {
+					throw std::runtime_error("Could not find EnvironmentConfig in config file: " + config_file);
+				}
+				std::string env_config_file = data_dir_ + "/" + toml_EnvConfig.value();
 				if(not std::filesystem::exists(env_config_file)) {
 					throw std::runtime_error("Could not find environment config file: " + env_config_file);
 				}
 				env_params_ = CoverageControl::Parameters(env_config_file);
 
-				std::string resizer_model_path = data_dir_ + "/" + config_["TorchVisionTransformJIT"].as<std::string>();
+				auto toml_ResizerModel = config_["TorchVisionTransformJIT"].value<std::string>();
+				if(not toml_ResizerModel) {
+					throw std::runtime_error("Could not find TorchVisionTransformJIT in config file: " + config_file);
+				}
+				std::string resizer_model_path = data_dir_ + "/" + toml_ResizerModel.value();
+
 				// Check if config_["ResizerModel"] file exists
 				if(not std::filesystem::exists(resizer_model_path)) {
 					throw std::runtime_error("Could not find resizer model file: " + resizer_model_path);
