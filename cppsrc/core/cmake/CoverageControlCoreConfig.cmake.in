@@ -1,0 +1,19 @@
+@PACKAGE_INIT@
+
+set(PN CoverageControlCore)
+set(${PN}_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
+set(${PN}_LIBRARY_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@")
+set(${PN}_LIBRARY "${${PN}_LIBRARY_DIR}/lib${PN}.so")
+set(${PN}_DEFINITIONS USING_${PN})
+
+if(NOT TARGET CoverageControl::${PN})
+include("${CMAKE_CURRENT_LIST_DIR}/${PN}Targets.cmake")
+
+find_package(OpenMP REQUIRED)
+find_package(Eigen3 3.4 REQUIRED)
+
+set(dependencies_list Eigen3::Eigen m stdc++fs OpenMP::OpenMP_CXX pthread)
+target_link_libraries(CoverageControl::${PN} INTERFACE ${${PN}_LIBRARY} ${dependencies_list})
+
+endif()
+check_required_components(${PN})

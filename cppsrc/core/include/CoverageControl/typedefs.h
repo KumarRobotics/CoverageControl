@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <queue>
+#define EIGEN_NO_CUDA // Don't use eigen's cuda facility
 #include <Eigen/Dense> // Eigen is used for maps
 
 namespace CoverageControl {

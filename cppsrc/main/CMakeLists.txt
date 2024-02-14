@@ -1,15 +1,23 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.16)
+project(CoverageControlMain VERSION 0.3 LANGUAGES CXX)
+
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
 
 option(WITH_CUDA "Build with CUDA support" ON)
-project(CoverageControlMain VERSION 0.3 LANGUAGES CXX)
+
 if(WITH_CUDA)
-	enable_language(CUDA)
 	cmake_minimum_required(VERSION 3.24)
+	enable_language(CUDA)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
+
+include(CheckCXXCompilerFlag)
+include(GNUInstallDirs)
 
 if(NOT DEFINED WITH_TORCH)
 	set(WITH_TORCH OFF)
@@ -19,18 +27,11 @@ if(WITH_TORCH)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 endif()
 
-find_package(OpenMP REQUIRED)
-find_package(Eigen3 3.4 REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
 if(WITH_TORCH)
 	find_package(CoverageControlTorch REQUIRED)
 endif()
-
-
-#################
-## Executables ##
-#################
 
 add_library(compiler_flags INTERFACE)
 target_compile_features(compiler_flags INTERFACE cxx_std_17)
@@ -42,8 +43,12 @@ target_compile_options(compiler_flags INTERFACE
 	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
 
+#################
+## Executables ##
+#################
+
 add_executable(coverage_algorithm coverage_algorithm.cpp)
-target_link_libraries(coverage_algorithm PRIVATE CoverageControlCore)
+target_link_libraries(coverage_algorithm PRIVATE CoverageControl::CoverageControlCore)
 install(TARGETS coverage_algorithm DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(data_generation data_generation.cpp)

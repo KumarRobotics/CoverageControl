@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.16)
 project(CoverageControlTorch VERSION 0.3 LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -21,14 +21,14 @@ include(GNUInstallDirs)
 
 find_package(Torch REQUIRED)
 # find_package(TorchVision REQUIRED)
+message(STATUS "Torch library status:" ${TORCH_FOUND})
+message(STATUS "Torch libraries: ${TORCH_LIBRARIES}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-# find_package(OpenCV REQUIRED)
-find_package(OpenMP REQUIRED)
-find_package(Eigen3 3.4 REQUIRED)
 find_package(CoverageControlCore REQUIRED)
-
-configure_file(cmake/CoverageControlTorchConfig.h.in CoverageControlTorchConfig.h)
+get_filename_component(TORCH_LIBRARY_DIR "${TORCH_LIBRARIES}" DIRECTORY)
+message(STATUS "Torch library dir: ${TORCH_LIBRARY_DIR}")
+configure_file(cmake/${PROJECT_NAME}Config.h.in ${PROJECT_NAME}Config.h)
 
 add_library(compiler_flags INTERFACE)
 target_compile_features(compiler_flags INTERFACE cxx_std_17)
@@ -40,7 +40,6 @@ target_compile_options(compiler_flags INTERFACE
 	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
 
-
 #################################
 ## CoverageControlTorch library ##
 #################################
@@ -48,52 +47,51 @@ target_compile_options(compiler_flags INTERFACE
 set(sources_list base.cpp)
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list CoverageControlCore ${TORCH_LIBRARIES})
+set(dependencies_list CoverageControl::CoverageControlCore ${TORCH_LIBRARIES})
 
-add_library(CoverageControl_torch SHARED ${sources_list})
+add_library(${PROJECT_NAME} SHARED ${sources_list})
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS} ${CoverageControlCore_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
+set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
+set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "$ORIGIN;${TORCH_LIBRARY_DIR}")
 
-add_library(CoverageControlTorch INTERFACE)
-target_include_directories(CoverageControlTorch INTERFACE
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_link_libraries(CoverageControlTorch INTERFACE ${dependencies_list} CoverageControlCore CoverageControl_torch)
-
-target_include_directories(CoverageControl_torch PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS})
-target_link_libraries(CoverageControl_torch PRIVATE compiler_flags)
-target_link_libraries(CoverageControl_torch PUBLIC ${dependencies_list})
 if (WITH_CUDA)
-	set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
-	else()
-	set_target_properties(CoverageControl_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+	set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+else()
+	set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
+target_include_directories(${PROJECT_NAME} INTERFACE
+	"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_link_libraries(${PROJECT_NAME} INTERFACE ${dependencies_list} CoverageControl::CoverageControlCore)
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES ${PROJECT_BINARY_DIR}/CoverageControlTorchConfig.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(TARGETS CoverageControl_torch CoverageControlTorch EXPORT CoverageControlTorchTargets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-set(CMAKEPACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControlTorch)
+set(CMAKEPACKAGE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/cmake/${PROJECT_NAME}")
 
 include(CMakePackageConfigHelpers)
 # generate the config file that includes the exports
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
-	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlTorchConfig.cmake
-	INSTALL_DESTINATION "${CMAKEPACKAGE_INSTALL_DIR}"
-	NO_SET_AND_CHECK_MACRO
-	NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+	INSTALL_DESTINATION "${CMAKEPACKAGE_INSTALL_DIR}")
 
 write_basic_package_version_file(
-	"${CMAKE_CURRENT_BINARY_DIR}/CoverageControlTorchConfigVersion.cmake"
-	VERSION "${CoverageControlTorch_VERSION_MAJOR}.${CoverageControlTorch_VERSION_MINOR}"
-	COMPATIBILITY AnyNewerVersion
-)
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+	VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}"
+	COMPATIBILITY AnyNewerVersion)
 
-export (PACKAGE CoverageControlTorch)
-install(EXPORT CoverageControlTorchTargets FILE CoverageControlTorchTargets.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControlTorch)
+export (PACKAGE ${PROJECT_NAME})
 
 install(FILES
-	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlTorchConfig.cmake
-	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlTorchConfigVersion.cmake
-	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR}
-)
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR})
+
+install(EXPORT ${PROJECT_NAME}Targets
+	FILE ${PROJECT_NAME}Targets.cmake
+	NAMESPACE CoverageControl::
+	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR})

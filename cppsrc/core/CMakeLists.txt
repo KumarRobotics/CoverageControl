@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.16)
 project(CoverageControlCore VERSION 0.3 LANGUAGES CXX)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -23,7 +23,7 @@ find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
 find_package(CGAL 5.6 REQUIRED)
 
-configure_file(cmake/CoverageControlCoreConfig.h.in CoverageControlCoreConfig.h)
+configure_file(cmake/${PROJECT_NAME}Config.h.in ${PROJECT_NAME}Config.h)
 
 add_library(compiler_flags INTERFACE)
 target_compile_features(compiler_flags INTERFACE cxx_std_17)
@@ -35,69 +35,67 @@ target_compile_options(compiler_flags INTERFACE
 	"$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
 )
 
-
 #################################
 ## CoverageControlCore library ##
 #################################
 
 set(sources_list
-	generate_world_map.cu
 	polygon_utils.cpp
 	parameters.cpp
 	voronoi.cpp
 	coverage_system.cpp
 	plotter.cpp
 	extern/Hungarian.cpp)
+
+if (WITH_CUDA)
+	list(APPEND sources_list
+	generate_world_map.cu)
+endif()
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 set(dependencies_list Eigen3::Eigen m stdc++fs OpenMP::OpenMP_CXX pthread boost_iostreams boost_system boost_filesystem)
 
-add_library(CoverageControl_core SHARED ${sources_list})
-
-add_library(CoverageControlCore INTERFACE)
-target_include_directories(CoverageControlCore INTERFACE
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_link_libraries(CoverageControlCore INTERFACE ${dependencies_list} CoverageControl_core)
-
-target_include_directories(CoverageControl_core PRIVATE "${PROJECT_BINARY_DIR}")
-target_link_libraries(CoverageControl_core PRIVATE compiler_flags CGAL::CGAL)
-target_link_libraries(CoverageControl_core PUBLIC ${dependencies_list})
+add_library(${PROJECT_NAME} SHARED ${sources_list})
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_BINARY_DIR}")
+target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags CGAL::CGAL)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
+set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
 
 if (WITH_CUDA)
-	set_target_properties(CoverageControl_core PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+	set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
 	else()
-	set_target_properties(CoverageControl_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+		set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
+target_include_directories(${PROJECT_NAME} INTERFACE
+	"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(TARGETS CoverageControl_core CoverageControlCore EXPORT CoverageControlCoreTargets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-install(FILES "${PROJECT_BINARY_DIR}/CoverageControlCoreConfig.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-set(CMAKEPACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControlCore)
+set(CMAKEPACKAGE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/cmake/${PROJECT_NAME}")
 
 include(CMakePackageConfigHelpers)
 # generate the config file that includes the exports
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
-	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlCoreConfig.cmake
-	INSTALL_DESTINATION "${CMAKEPACKAGE_INSTALL_DIR}"
-	NO_SET_AND_CHECK_MACRO
-	NO_CHECK_REQUIRED_COMPONENTS_MACRO
-)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+	INSTALL_DESTINATION "${CMAKEPACKAGE_INSTALL_DIR}")
 
 write_basic_package_version_file(
-	"${CMAKE_CURRENT_BINARY_DIR}/CoverageControlCoreConfigVersion.cmake"
-	VERSION "${CoverageControlCore_VERSION_MAJOR}.${CoverageControlCore_VERSION_MINOR}"
-	COMPATIBILITY AnyNewerVersion
-)
+	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+	VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}"
+	COMPATIBILITY AnyNewerVersion)
 
-export (PACKAGE CoverageControlCore)
-install(EXPORT CoverageControlCoreTargets FILE CoverageControlCoreTargets.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CoverageControlCore)
+export (PACKAGE ${PROJECT_NAME})
 
 install(FILES
-	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlCoreConfig.cmake
-	${CMAKE_CURRENT_BINARY_DIR}/CoverageControlCoreConfigVersion.cmake
-	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR}
-)
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR})
+
+install(EXPORT ${PROJECT_NAME}Targets
+	FILE ${PROJECT_NAME}Targets.cmake
+	NAMESPACE CoverageControl::
+	DESTINATION ${CMAKEPACKAGE_INSTALL_DIR})
