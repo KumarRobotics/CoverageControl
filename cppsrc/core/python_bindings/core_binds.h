@@ -10,7 +10,7 @@
 #include <CoverageControl/robot_model.h>
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/voronoi.h>
-#include <CoverageControl/geographiclib_wrapper.h>
+/* #include <CoverageControl/geographiclib_wrapper.h> */
 #include <CoverageControl/algorithms/oracle_global_offline.h>
 #include <CoverageControl/algorithms/lloyd_local_voronoi.h>
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
@@ -198,12 +198,12 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def_readwrite("pNumFrontiers", &Parameters::pNumFrontiers)
 			;
 
-		py::class_<GeoLocalTransform>(m, "GeoLocalTransform")
-			.def(py::init<double, double, double>())
-			.def("Reset", &GeoLocalTransform::Reset)
-			.def("Forward", &GeoLocalTransform::Forward)
-			.def("Reverse", &GeoLocalTransform::Reverse)
-			;
+		/* py::class_<GeoLocalTransform>(m, "GeoLocalTransform") */
+		/* 	.def(py::init<double, double, double>()) */
+		/* 	.def("Reset", &GeoLocalTransform::Reset) */
+		/* 	.def("Forward", &GeoLocalTransform::Forward) */
+		/* 	.def("Reverse", &GeoLocalTransform::Reverse) */
+		/* 	; */
 	}
 
 	void pyCoverageControl_core_coverage_system(py::module &m) {

@@ -14,7 +14,7 @@ find_package(pybind11 REQUIRED)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
-find_package(GeographicLib REQUIRED)
+find_package(CGAL 5.6 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 find_package(CoverageControlTorch REQUIRED)

@@ -10,10 +10,6 @@ find_package(pybind11 CONFIG REQUIRED)
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
-find_package(OpenMP REQUIRED)
-# find_package(yaml-cpp REQUIRED)
-# find_package(CGAL REQUIRED)
-find_package(GeographicLib REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
 pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)

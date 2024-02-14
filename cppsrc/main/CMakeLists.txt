@@ -21,7 +21,6 @@ endif()
 
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
-find_package(GeographicLib REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
 if(WITH_TORCH)

@@ -175,7 +175,7 @@ InstallEigen3
 # InstallPybind11
 InstallCGAL
 InstallYamlCPP
-InstallGeoGraphicLib
+# InstallGeoGraphicLib
 # InstallOpenCV
 # InstallTorchVision
 # InstallTorchSparse

@@ -23,7 +23,6 @@ find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
 find_package(CGAL 5.6 REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(GeographicLib REQUIRED)
 
 configure_file(cmake/CoverageControlCoreConfig.h.in CoverageControlCoreConfig.h)
 

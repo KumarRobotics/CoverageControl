@@ -26,7 +26,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 # find_package(OpenCV REQUIRED)
 find_package(OpenMP REQUIRED)
 find_package(Eigen3 3.4 REQUIRED)
-find_package(GeographicLib REQUIRED)
 find_package(CoverageControlCore REQUIRED)
 
 configure_file(cmake/CoverageControlTorchConfig.h.in CoverageControlTorchConfig.h)
