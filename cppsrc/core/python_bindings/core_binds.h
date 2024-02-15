@@ -12,12 +12,12 @@
 #include <CoverageControl/voronoi.h>
 /* #include <CoverageControl/geographiclib_wrapper.h> */
 #include <CoverageControl/algorithms/oracle_global_offline.h>
-#include <CoverageControl/algorithms/lloyd_local_voronoi.h>
+#include <CoverageControl/algorithms/decentralized_cvt.h>
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
 #include <CoverageControl/algorithms/oracle_bang_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
-#include <CoverageControl/algorithms/lloyd_global_online.h>
-#include <CoverageControl/algorithms/lloyd_local_sensor_global_comm.h>
+#include <CoverageControl/algorithms/clairvyont_cvt.h>
+#include <CoverageControl/algorithms/centralized_cvt.h>
 
 #include <iostream>
 
@@ -53,15 +53,6 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def_readwrite("size", &PolygonFeature::size)
 			;
 		py::bind_vector<std::vector<PolygonFeature>>(m, "PolygonVector");
-
-		py::class_<Edge>(m, "Edge")
-			.def(py::init<double const, double const, double const, double const>())
-			.def_readwrite("x1", &Edge::x1)
-			.def_readwrite("y1", &Edge::y1)
-			.def_readwrite("x2", &Edge::x2)
-			.def_readwrite("y2", &Edge::y2)
-			;
-		py::bind_vector<std::vector<Edge>>(m, "EdgeList");
 
 		py::class_<VoronoiCell>(m, "VoronoiCell")
 			.def_readonly("cell", &VoronoiCell::cell)
@@ -134,27 +125,27 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("GetVoronoi", &OracleGlobalOffline::GetVoronoi)
 			;
 
-		py::class_<LloydGlobalOnline>(m, "LloydGlobalOnline")
+		py::class_<ClairvyontCVT>(m, "ClairvyontCVT")
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &LloydGlobalOnline::Step)
-			.def("GetActions", &LloydGlobalOnline::GetActions)
-			.def("GetGoals", &LloydGlobalOnline::GetGoals)
-			.def("GetVoronoi", &LloydGlobalOnline::GetVoronoi)
+			.def("Step", &ClairvyontCVT::Step)
+			.def("GetActions", &ClairvyontCVT::GetActions)
+			.def("GetGoals", &ClairvyontCVT::GetGoals)
+			.def("GetVoronoi", &ClairvyontCVT::GetVoronoi)
 			;
 
-		py::class_<LloydLocalVoronoi>(m, "LloydLocalVoronoi")
+		py::class_<DecentralizedCVT>(m, "DecentralizedCVT")
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &LloydLocalVoronoi::Step)
-			.def("GetActions", &LloydLocalVoronoi::GetActions)
-			.def("GetGoals", &LloydLocalVoronoi::GetGoals)
+			.def("Step", &DecentralizedCVT::Step)
+			.def("GetActions", &DecentralizedCVT::GetActions)
+			.def("GetGoals", &DecentralizedCVT::GetGoals)
 			;
 
-		py::class_<LloydLocalSensorGlobalComm>(m, "LloydLocalSensorGlobalComm")
+		py::class_<CentralizedCVT>(m, "CentralizedCVT")
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &LloydLocalSensorGlobalComm::Step)
-			.def("GetActions", &LloydLocalSensorGlobalComm::GetActions)
-			.def("GetGoals", &LloydLocalSensorGlobalComm::GetGoals)
-			.def("GetVoronoi", &LloydLocalSensorGlobalComm::GetVoronoi)
+			.def("Step", &CentralizedCVT::Step)
+			.def("GetActions", &CentralizedCVT::GetActions)
+			.def("GetGoals", &CentralizedCVT::GetGoals)
+			.def("GetVoronoi", &CentralizedCVT::GetVoronoi)
 			;
 
 		py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")

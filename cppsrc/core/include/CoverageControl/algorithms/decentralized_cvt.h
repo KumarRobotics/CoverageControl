@@ -1,12 +1,26 @@
-/**
- * The coverage control algorithm uses Lloyd's algorithm on accumulated local map of individual robots, i.e., a robot has knowledge only about the regions it has visited.
+/*!
+ * This file is part of the CoverageControl library
+ *
+ * The coverage control algorithm uses Centroidal Voronoi Tessellation (CVT)  or Lloyd's algorithm on accumulated local map of individual robots, i.e., a robot has knowledge only about the regions it has visited.
  * Communication limitations are considered in the computation of voronoi.
  * Each robot computes the voronoi based on its local map and the positions of other robots within its communication range.
  * The algorithm is online---it takes localized actions based on the current robot positions.
- **/
+ *
+ * @author Saurav Agarwal
+ * @contact sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * DISCLAIMER OF WARRANTIES: THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND INCLUDING ANY WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE OR OF NON-INFRINGEMENT. YOU BEAR ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE OR HARDWARE.
+ *
+ * SUPPORT AND MAINTENANCE: No support, installation, or training is provided.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#ifndef COVERAGECONTROL_ALGORITHMS_LLOYD_LOCAL_VORONOI_H_
-#define COVERAGECONTROL_ALGORITHMS_LLOYD_LOCAL_VORONOI_H_
+#ifndef COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_
+#define COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_
 
 #include <vector>
 #include <fstream>
@@ -21,12 +35,16 @@
 #include "../typedefs.h"
 #include "../coverage_system.h"
 #include "../map_utils.h"
-#include "lloyd_algorithms.h"
 #include "../extern/lsap/Hungarian.h"
 
 namespace CoverageControl {
 
-	class LloydLocalVoronoi {
+	/*!
+	 * This class implements the decentralized CVT algorithm.
+	 * The algorithm uses the local map of each robot and the positions of other robots within its communication range to compute the voronoi.
+	 * The algorithm is online---it takes localized actions based on the current robot positions.
+	 */
+	class DecentralizedCVT  {
 		private:
 			Parameters const params_;
 			size_t num_robots_ = 0;
@@ -38,7 +56,7 @@ namespace CoverageControl {
 			bool continue_flag_ = false;
 
 		public:
-			LloydLocalVoronoi(
+			DecentralizedCVT (
 					Parameters const &params,
 					size_t const &num_robots,
 					CoverageSystem &env) :
@@ -138,4 +156,4 @@ namespace CoverageControl {
 	};
 
 } /* namespace CoverageControl */
-#endif /* COVERAGECONTROL_ALGORITHMS_LLOYD_LOCAL_VORONOI_H_ */
+#endif /* COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_ */

@@ -1,6 +1,21 @@
-/**
- * A struct for 2D vector
- **/
+/*!
+ * This file is part of the CoverageControl library
+ * Vec2d class for 2D vector
+ *
+ * TODO:
+ *
+ * @author Saurav Agarwal
+ * @contact sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * DISCLAIMER OF WARRANTIES: THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND INCLUDING ANY WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE OR OF NON-INFRINGEMENT. YOU BEAR ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE OR HARDWARE.
+ *
+ * SUPPORT AND MAINTENANCE: No support, installation, or training is provided.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #ifndef COVERAGECONTROL_VEC2D_H_
 #define COVERAGECONTROL_VEC2D_H_
@@ -12,6 +27,7 @@
 
 namespace CoverageControl {
 
+	/*! \brief A class for 2D vector */
 	class Vec2d {
 
 		private:
@@ -29,19 +45,19 @@ namespace CoverageControl {
 			void SetX(double x) { x_ = x; }
 			void SetY(double y) { y_ = y; }
 
-			/*! Computes perpendicular Vector */
+			/*! \brief Computes perpendicular Vector */
 			Vec2d Perpendicular() const{
 				Vec2d v_perpendicular;
 				v_perpendicular = Vec2d(-y_, x_);
 				return v_perpendicular;
 			}
 
-			/*! Adds two vectors */
+			/*! \brief Adds two vectors */
 			void Add(Vec2d const &v) {
 				x_ += v.x(); y_ += v.y();
 			}
 
-			/*! Divide vector by a scalar */
+			/*! \brief Divide vector by a scalar */
 			int Divide(const double scalar) {
 				if(std::abs(scalar) < kEps) {
 					return 1;
@@ -50,22 +66,22 @@ namespace CoverageControl {
 				return 0;
 			}
 
-			/*! Computes dot product of two Vectors */
+			/*! \brief Computes dot product of two Vectors */
 			double Dot(Vec2d const &v) const{
 				return v.x() * x_ + v.y() * y_;
 			}
 
-			/*! Returns square of Euclidean distance from origin */
+			/*! \brief Returns square of Euclidean distance from origin */
 			double NormSqr() const{
 				return x_ * x_ + y_ *y_;
 			}
 
-			/*! Returns Euclidean distance from origin */
+			/*! \brief Returns Euclidean distance from origin */
 			double Norm() const{
 				return std::sqrt(NormSqr());
 			}
 
-			/*! Gives cosine of the angle between this and Vector v */
+			/*! \brief Gives cosine of the angle between this and Vector v */
 			int CosAngle(Vec2d const &v, double &ang) const{
 				if (std::abs(Norm()) < 1e-10 || std::abs(v.Norm()) < 1e-10)
 					return 1;
@@ -73,7 +89,7 @@ namespace CoverageControl {
 				return 0;
 			}
 
-			/*! Gives the distance between the Vector and another Vector v */
+			/*! \brief Gives the distance between the Vector and another Vector v */
 			double DistSqr(Vec2d const &v) const{
 				double del_x = x_ - v.x();
 				double del_y = y_ - v.y();
@@ -85,7 +101,7 @@ namespace CoverageControl {
 				return std::sqrt(DistSqr(v));
 			}
 
-			/*! Computes distance and angle with another Vector (v-this)*/
+			/*! \brief Computes distance and angle with another Vector (v-this)*/
 			void DistTht(Vec2d const &v, double &d, double &tht) const{
 				d = std::sqrt(DistSqr(v));
 				double del_x = -x_ + v.x();

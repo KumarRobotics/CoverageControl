@@ -1,9 +1,26 @@
-/**
+/*!
+ * This file is part of the CoverageControl library
+ * Near-optimal Centroidal Voronoi Tessellation (CVT) algorithms.
+ * The algorithm has knowledge of the entire map in a centralized manner.
+ * It spawns random sites and iteratively moves them to the centroid of the Voronoi cell, until convergence.
+ * Hungarian algorithm is used to assign the robots to the sites.
+ * Out of the multiple tries, the best Voronoi is selected based on the objective function.
  *
- **/
+ * @author Saurav Agarwal
+ * @contact sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * DISCLAIMER OF WARRANTIES: THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND INCLUDING ANY WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE OR OF NON-INFRINGEMENT. YOU BEAR ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE OR HARDWARE.
+ *
+ * SUPPORT AND MAINTENANCE: No support, installation, or training is provided.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#ifndef COVERAGECONTROL_ALGORITHMS_LLOYD_ALGORITHMS_H_
-#define COVERAGECONTROL_ALGORITHMS_LLOYD_ALGORITHMS_H_
+#ifndef COVERAGECONTROL_ALGORITHMS_NEAR_OPTIMAL_CVT_H_
+#define COVERAGECONTROL_ALGORITHMS_NEAR_OPTIMAL_CVT_H_
 
 #include <vector>
 #include <fstream>
@@ -20,7 +37,7 @@
 
 namespace CoverageControl {
 
-	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res) {
+	inline auto NearOptimalCVT(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res) {
 		std::random_device rd_;  //Will be used to obtain a seed for the random number engine
 		std::mt19937 gen_;
 		std::srand(time(NULL));
@@ -73,9 +90,9 @@ namespace CoverageControl {
 		return all_voronoi_cells[best_vornoi_idx];
 	}
 
-	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions, Voronoi &voronoi) {
+	inline auto NearOptimalCVT(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions, Voronoi &voronoi) {
 
-		voronoi = LloydOffline(num_tries, max_iterations, num_sites, map, map_size, res);
+		voronoi = NearOptimalCVT(num_tries, max_iterations, num_sites, map, map_size, res);
 		auto voronoi_cells = voronoi.GetVoronoiCells();
 		std::vector <std::vector<double>> cost_matrix;
 		cost_matrix.resize(num_sites, std::vector<double>(num_sites));
@@ -98,10 +115,10 @@ namespace CoverageControl {
 		return goals;
 	}
 
-	inline auto LloydOffline(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions) {
+	inline auto NearOptimalCVT(int const num_tries, int const max_iterations, int const num_sites, MapType const &map, int const map_size, double const res, PointVector const &positions) {
 		Voronoi voronoi;
-		return LloydOffline(num_tries, max_iterations, num_sites, map, map_size, res, positions, voronoi);
+		return NearOptimalCVT(num_tries, max_iterations, num_sites, map, map_size, res, positions, voronoi);
 	}
 
 } /* namespace CoverageControl */
-#endif /* COVERAGECONTROL_ALGORITHMS_LLOYD_ALGORITHMS_H_ */
+#endif /* COVERAGECONTROL_ALGORITHMS_NEAR_OPTIMAL_CVT_H_ */

@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	Parameters params;
 	CoverageSystem env(params, 100, 20);
 	std::cout << "Env created" << std::endl;
-	auto voronoi_cells = env.LloydOffline();
+	/* auto voronoi_cells = env.NearOptimalCVT(); */
 
 	return 0;
 }

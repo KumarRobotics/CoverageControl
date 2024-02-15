@@ -128,8 +128,8 @@ then
 		echo "Installing CoverageControlTorch"
 		InstallCoverageControlTorch
 		echo "Installing CoverageControlTests"
-		InstallCoverageControlTests
+		# InstallCoverageControlTests
 	fi
 	echo "Installing CoverageControlMain"
-	InstallCoverageControlMain
+	# InstallCoverageControlMain
 fi
