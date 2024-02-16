@@ -1,20 +1,20 @@
-/*!
+/*
  * This file is part of the CoverageControl library
- * A class for Importance Density Function (IDF) for the world
  *
- * TODO: Add functionalities for importance features that are expressed as rectangles and circles
- *
- * @author Saurav Agarwal
- * @contact sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
  * Repository: https://github.com/KumarRobotics/CoverageControl
  *
  * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * DISCLAIMER OF WARRANTIES: THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND INCLUDING ANY WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE OR OF NON-INFRINGEMENT. YOU BEAR ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE OR HARDWARE.
- *
- * SUPPORT AND MAINTENANCE: No support, installation, or training is provided.
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file world_idf.h
+ * \brief Contains the class for Importance Density Function (IDF) for the world
  */
 
 #ifndef COVERAGECONTROL_WORLDIDF_H_
@@ -28,7 +28,7 @@
 #include <Eigen/Dense> // Eigen is used for maps
 
 #ifdef WITH_CUDA
-#include "generate_world_map.ch"
+#include "generate_world_map.h"
 #endif
 #include "constants.h"
 #include "parameters.h"

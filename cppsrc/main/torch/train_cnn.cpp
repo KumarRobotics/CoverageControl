@@ -12,11 +12,19 @@
  * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <torch/torch.h>
 #include <iostream>
-#include <CoverageControl/coverage_system.h>
+#include <CoverageControlTorch/train_cnn.h>
 
+int main(int argc, char* argv[]) {
 
-namespace CoverageControlTorch {
-	int base();
-} /* namespace CoverageControlTorch */
+	if (argc < 2) {
+		std::cout << "Usage: ./train_cnn <dataset_dir>" << std::endl;
+		return 1;
+	}
+
+	std::string config_file = std::string(argv[1]);
+	CoverageControlTorch::TrainCNN train_cnn(config_file);
+	train_cnn.Train();
+
+	return 0;
+}

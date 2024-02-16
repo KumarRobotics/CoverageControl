@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 project(CoverageControlTests VERSION 0.3 LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -21,59 +21,58 @@ include(GNUInstallDirs)
 
 find_package(CoverageControlCore REQUIRED)
 
+set(dependencies_list CoverageControl::CoverageControlCore)
 if(NOT DEFINED WITH_TORCH)
 	set(WITH_TORCH OFF)
+endif()
+if(WITH_TORCH)
+	find_package(Torch REQUIRED)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+	get_filename_component(TORCH_LIBRARY_DIR "${TORCH_LIBRARIES}" DIRECTORY)
+	set(CMAKE_INSTALL_RPATH "${ORIGIN};${CMAKE_INSTALL_LIBDIR};${TORCH_LIBRARY_DIR}")
 endif()
 
 ###########
 ## Tests ##
 ###########
 
-add_executable(system_map system_map.cpp)
-target_link_libraries(system_map PRIVATE CoverageControl::CoverageControlCore)
-install(TARGETS system_map DESTINATION ${CMAKE_INSTALL_BINDIR})
-# set_target_properties(system_map PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
-
-if(WITH_TORCH)
-	find_package(Torch REQUIRED)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-	get_filename_component(TORCH_LIBRARY_DIR "${TORCH_LIBRARIES}" DIRECTORY)
-endif()
 
 if(WITH_TORCH)
 	find_package(CoverageControlTorch REQUIRED)
+	set(dependencies_list ${dependencies_list} CoverageControl::CoverageControlTorch ${TORCH_LIBRARIES})
 endif()
+
+add_executable(simultaneous_explore_exploit simultaneous_explore_exploit.cpp)
+target_link_libraries(simultaneous_explore_exploit PRIVATE CoverageControl::CoverageControlCore)
+install(TARGETS simultaneous_explore_exploit DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(map_generation map_generation.cpp)
+target_link_libraries(map_generation PRIVATE CoverageControl::CoverageControlCore)
+install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)
 # target_include_directories(geo_transforms PRIVATE ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/extern)
 # target_link_libraries(geo_transforms PRIVATE Eigen3::Eigen CoverageControlTorch OpenMP::OpenMP_CXX ${GeographicLib_LIBRARIES})
 # install(TARGETS geo_transforms DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-# add_executable(robot_map ${PROJECT_SOURCE_DIR}/test/robot_map.cpp)
-# target_include_directories(robot_map PRIVATE ${PROJECT_SOURCE_DIR}/include)
-# target_link_libraries(robot_map PRIVATE Eigen3::Eigen CoverageControlTorch)
-# install(TARGETS robot_map DESTINATION ${CMAKE_INSTALL_BINDIR})
-
 if(WITH_TORCH)
-	set(dependencies_list CoverageControl::CoverageControlTorch ${TORCH_LIBRARIES})
-
-	add_executable(map_generation map_generation.cpp)
-	target_link_libraries(map_generation PRIVATE ${dependencies_list})
-	install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-	add_executable(torch_test torch_test.cpp)
+	add_executable(torch_test torch/torch_test.cpp)
 	target_link_libraries(torch_test PRIVATE ${dependencies_list})
 	install(TARGETS torch_test DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-	add_executable(torch_map_conversion torch_map_conversion.cpp)
+	add_executable(torch_map_conversion torch/torch_map_conversion.cpp)
 	target_link_libraries(torch_map_conversion PRIVATE ${dependencies_list})
 	install(TARGETS torch_map_conversion DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-	add_executable(test_maps test_maps.cpp)
-	target_link_libraries(test_maps PRIVATE ${dependencies_list})
-	install(TARGETS test_maps DESTINATION ${CMAKE_INSTALL_BINDIR})
+	add_executable(torch_scripting torch/torch_scripting.cpp)
+	target_link_libraries(torch_scripting PRIVATE ${dependencies_list})
+	install(TARGETS torch_scripting DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-	add_executable(torch_data_loader torch_data_loader.cpp)
+	add_executable(torch_data_loader torch/torch_data_loader.cpp)
 	target_link_libraries(torch_data_loader PRIVATE ${dependencies_list})
 	install(TARGETS torch_data_loader DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+	add_executable(torch_normalization torch/torch_normalization.cpp)
+	target_link_libraries(torch_normalization PRIVATE ${dependencies_list})
+	install(TARGETS torch_normalization DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()

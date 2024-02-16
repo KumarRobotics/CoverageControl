@@ -1,27 +1,30 @@
-/*!
+/*
  * This file is part of the CoverageControl library
- * CoverageSystem class is the main class that contains the robots and the world IDF
  *
- * TODO:
- *
- * @author Saurav Agarwal
- * @contact sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
  * Repository: https://github.com/KumarRobotics/CoverageControl
  *
  * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * DISCLAIMER OF WARRANTIES: THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND INCLUDING ANY WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE OR OF NON-INFRINGEMENT. YOU BEAR ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE OR HARDWARE.
- *
- * SUPPORT AND MAINTENANCE: No support, installation, or training is provided.
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
  */
+
+/*!
+ * \file coverage_system.cpp
+ * \brief Contains the implementation of the CoverageSystem class.
+ */
+
 
 #include "../include/CoverageControl/coverage_system.h"
 #include "../include/CoverageControl/plotter.h"
 #include <thread>
 
 namespace CoverageControl {
+
+	CoverageSystem::CoverageSystem(Parameters const &params) : CoverageSystem(params, params.pNumFeatures, params.pNumRobots) { }
 
 	CoverageSystem::CoverageSystem(Parameters const &params, int const num_gaussians, int const num_robots) : params_{params}, world_idf_{WorldIDF(params_)}{
 		// Generate Bivariate Normal Distribution from random numbers

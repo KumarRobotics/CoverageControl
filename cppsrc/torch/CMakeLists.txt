@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 project(CoverageControlTorch VERSION 0.3 LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -21,13 +21,10 @@ include(GNUInstallDirs)
 
 find_package(Torch REQUIRED)
 # find_package(TorchVision REQUIRED)
-message(STATUS "Torch library status:" ${TORCH_FOUND})
-message(STATUS "Torch libraries: ${TORCH_LIBRARIES}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 find_package(CoverageControlCore REQUIRED)
 get_filename_component(TORCH_LIBRARY_DIR "${TORCH_LIBRARIES}" DIRECTORY)
-message(STATUS "Torch library dir: ${TORCH_LIBRARY_DIR}")
 configure_file(cmake/${PROJECT_NAME}Config.h.in ${PROJECT_NAME}Config.h)
 
 add_library(compiler_flags INTERFACE)
@@ -53,8 +50,7 @@ add_library(${PROJECT_NAME} SHARED ${sources_list})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS} ${CoverageControlCore_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
-set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
-set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "$ORIGIN;${TORCH_LIBRARY_DIR}")
+set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${ORIGIN};${CMAKE_INSTALL_LIBDIR};${TORCH_LIBRARY_DIR}")
 
 if (WITH_CUDA)
 	set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
@@ -65,7 +61,7 @@ endif()
 target_include_directories(${PROJECT_NAME} INTERFACE
 	"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-target_link_libraries(${PROJECT_NAME} INTERFACE ${dependencies_list} CoverageControl::CoverageControlCore)
+target_link_libraries(${PROJECT_NAME} INTERFACE ${dependencies_list})
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

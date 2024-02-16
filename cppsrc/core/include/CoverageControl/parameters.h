@@ -1,28 +1,23 @@
-/*!
- * This file is part of the CoverageControl library.
+/*
+ * This file is part of the CoverageControl library
  *
- * Contains parameters. These are const and variable names start with lower-case p and use CamelCase
- * Primarily used by the RobotModel class, see robot_model.h
- *
- * Generally parameters are set during runtime through configuration files.
- * However, that may cause decrease in speed.
- * To favor highly efficient data generation, I have added the parameters as a header file, which is used during compilation time.
- *
- * Cons: requires compilation whenever there is a change in the model.
- *
- * TODO:
- *
- * @author Saurav Agarwal
- * @contact sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
  * Repository: https://github.com/KumarRobotics/CoverageControl
  *
  * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * DISCLAIMER OF WARRANTIES: THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT WARRANTY OF ANY KIND INCLUDING ANY WARRANTIES OF PERFORMANCE OR MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE OR PURPOSE OR OF NON-INFRINGEMENT. YOU BEAR ALL RISK RELATING TO QUALITY AND PERFORMANCE OF THE SOFTWARE OR HARDWARE.
- *
- * SUPPORT AND MAINTENANCE: No support, installation, or training is provided.
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file parameters.h
+ * \brief Contains parameters.
+ *
+ * These are const and variable names start with lower-case p and use CamelCase
+ * Primarily used by the RobotModel class, see robot_model.h
  */
 
 #ifndef COVERAGECONTROL_PARAMETERS_H_
@@ -44,8 +39,8 @@ namespace CoverageControl {
 
 			std::string config_file_;
 
-			int pNumRobots = 10; //!< Number of robots
-			int pNumFeatures = 5; //!< Number of features
+			int pNumRobots = 32; //!< Number of robots
+			int pNumFeatures = 32; //!< Number of features
 
 			//! Assuming same resolution in both the directions in meters. Pixel area = pResolution^2
 			double pResolution = 1.0;
@@ -86,8 +81,8 @@ namespace CoverageControl {
 			// Robot is placed at the center of FOV
 			// Make it even so that I don't have to deal with substracting by half-resolution.
 			// Have made it to half of (pWorldMapSize - 1000 / pResolution)/2
-			int pSensorSize = 32; //! \warning Positive integer. NOTE: Needs to be even
-			double pCommunicationRange = 256; //!< Radius of communication (in meters)
+			int pSensorSize = 64; //! \warning Positive integer. NOTE: Needs to be even
+			double pCommunicationRange = 128; //!< Radius of communication (in meters)
 			// in m/s. Make sure pMaxRobotSpeed * pTimeStep / pResolution < pSensorSize/2
 			double pMaxRobotSpeed = 5;
 			double pRobotInitDist = 1024; //!< Distance from the origin within which to initialize the position of the robots

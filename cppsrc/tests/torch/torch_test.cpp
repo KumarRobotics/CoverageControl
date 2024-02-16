@@ -14,9 +14,8 @@
 
 #include <torch/torch.h>
 #include <iostream>
-#include <CoverageControl/coverage_system.h>
+#include <CoverageControlTorch/base.h>
 
-
-namespace CoverageControlTorch {
-	int base();
-} /* namespace CoverageControlTorch */
+int main() {
+	CoverageControlTorch::base();
+}
