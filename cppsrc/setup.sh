@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-echo "params: $@"
-params="$(getopt -o d:ictpg -l directory:,install,clean,torch,python,global,nocuda --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d:ictpg -l directory:,install,clean,torch,python,global,no-cuda,no-deps --name "$(basename "$0")" -- "$@")"
 
-echo "params: $params"
 if [ $? -ne 0 ]
 then
     print_usage
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <workspace directory>] [-i|--install] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--nocuda <cpu only>]\n"
+	printf "bash $0 [-d|--directory <workspace directory>] [-i|--install] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--no-cuda <cpu only>] [--no-deps <do not install dependencies>]\n"
 }
 
 # Get directory of script
@@ -28,21 +26,14 @@ while true; do
 		-p|--python) WITH_PYTHON=true;shift;;
 		-d|--directory) WS_DIR+=("${2}");shift 2;;
 		-g|--global) GLOBAL=true;shift;;
-		--nocuda) NOCUDA=true;shift;;
+		--no-cuda) NOCUDA=true;shift;;
+		--no-deps) WITH_DEPS=false;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;
 	esac
 done
 
-if [[ ${NOCUDA} ]]
-then
-	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DWITH_CUDA=OFF"
-fi
-if [[ ${WITH_TORCH} == "ON" ]]
-then
-	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_PREFIX_PATH=${Torch_DIR}"
-fi
 if [[ ${WS_DIR} ]]
 then
 	BUILD_DIR=${WS_DIR}/build/
@@ -55,6 +46,15 @@ then
 else
 	TMP_DIR=$(mktemp -d)
 	BUILD_DIR=${TMP_DIR}/build
+fi
+
+if [[ ${NOCUDA} ]]
+then
+	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DWITH_CUDA=OFF"
+fi
+if [[ ${WITH_TORCH} == "ON" ]]
+then
+	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_PREFIX_PATH=${Torch_DIR}"
 fi
 
 InstallCoverageControlCore () {
@@ -127,9 +127,9 @@ then
 	then
 		echo "Installing CoverageControlTorch"
 		InstallCoverageControlTorch
-		echo "Installing CoverageControlTests"
-		InstallCoverageControlTests
 	fi
+	# echo "Installing CoverageControlTests"
+	InstallCoverageControlTests
 	echo "Installing CoverageControlMain"
 	InstallCoverageControlMain
 fi

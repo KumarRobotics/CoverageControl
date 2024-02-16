@@ -1,0 +1,33 @@
+DataDir = "/root/CoverageControl_ws/data/pure_coverage" # Absolute location
+EnvironmentConfig = "./env_params.yaml" # Relative to DataDir
+
+# The generator requires a TorchVision JIT transformer model
+# for resizing robot local maps on the GPU
+# The python script for generating the model is located at
+# CoverageControl/cppsrc/torch/resize.py
+# resize.pt is also present for CNNMapSize of 32
+TorchVisionTransformJIT = "./TorchVisionResize_32.pt" # Relative to DataDir
+
+NumDataset = 1000
+
+# Number of steps to take before data is stores
+# This helps in creating a more diverse dataset
+EveryNumSteps = 5
+
+# The robots stop moving once the algorithm has converged
+# Having some of these converged steps can help in stabilizing robot actions
+ConvergedDataRatio = .25
+
+# Resizing of maps and Sparsification of tensors are triggered every TriggerPostProcessing dataset
+# This should be set based on RAM resources available on the system
+TriggerPostProcessing = 1000
+
+CNNMapSize = 32
+SaveAsSparseQ = true
+NormalizeQ = true
+
+[DataSetSplit]
+TrainRatio = .7
+ValRatio =  .2
+TestRatio = .1
+

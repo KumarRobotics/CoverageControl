@@ -1,14 +1,33 @@
-/**
+/*
+ * This file is part of the CoverageControl library
+ *
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file generate_world_map.cu
+ * \brief File for generating the world map IDF using CUDA
+ */
+
+/*
  * RTX 2080 Ti: CUDA Cores 4352, compute capablity: 7.5
  * 68 SMs, 64 CUDA Cores/SM
  * Block size: 32 x 32 = 1024 threads
  * mean_x, mean_y, sigma, scale, rho: 5 * # of distributions
  * resolution, size: 2
  * map: pWorldMapSize * pWorldMapSize
- **/
+ */
 
-#include "../include/CoverageControl/generate_world_map.ch"
-#include "../include/CoverageControl/geometry_utils.ch"
+#include "../include/CoverageControl/generate_world_map.h"
+#include "../include/CoverageControl/geometry_utils.cuh"
 #include <cuda_runtime.h>
 #include <cmath>
 #include "../include/CoverageControl/extern/cuda_helpers/helper_cuda.h"

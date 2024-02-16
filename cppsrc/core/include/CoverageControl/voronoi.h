@@ -1,6 +1,21 @@
-/**
- * Contains class for computing Voronoi cells
- **/
+/*
+ * This file is part of the CoverageControl library
+ *
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file voronoi.h
+ * \brief Class for computing Voronoi cells
+ */
 
 #ifndef COVERAGECONTROL_VORONOI_H_
 #define COVERAGECONTROL_VORONOI_H_
@@ -14,6 +29,12 @@
 
 namespace CoverageControl {
 
+	/*! \brief Struct for Voronoi cell
+	 *
+	 * This struct contains the site of the Voronoi cell and the points that make up the cell.
+	 * Functions are provided to compute the mass and centroid of the cell.
+	 *
+	 */
 	struct VoronoiCell {
 		Point2 site;
 		PointVector cell;
@@ -60,6 +81,11 @@ namespace CoverageControl {
 		void ComputeFinalCentroid();
 	};
 
+	/*! \brief Class for computing Voronoi cells
+	 *
+	 * This class contains the sites of the Voronoi cells and the map. It computes the Voronoi cells and stores the mass and centroid of each cell.
+	 *
+	 */
 	class Voronoi {
 		private:
 			PointVector sites_;

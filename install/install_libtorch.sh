@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 TMP_DIR=`mktemp -d`
-params="$(getopt -o d: -l directory:,nocuda --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d: -l directory:,no-cuda --name "$(basename "$0")" -- "$@")"
 if [ $? -ne 0 ]
 then
     print_usage
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <specify install directory>] [--nocuda <to install cpu version>]\n"
+	printf "bash $0 [-d|--directory <specify install directory>] [--no-cuda <to install cpu version>]\n"
 }
 eval set -- "$params"
 unset params
@@ -16,7 +16,7 @@ unset params
 while true; do
 	case ${1} in
 		-d|--directory) INSTALL_DIR+=("${2}");shift 2;;
-		--nocuda) NOCUDA=true;shift;;
+		--no-cuda) NOCUDA=true;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;

@@ -1,6 +1,6 @@
 import os
 import sys
-import yaml
+import tomllib
 import torch
 import torch_geometric
 import CoverageControlTorch

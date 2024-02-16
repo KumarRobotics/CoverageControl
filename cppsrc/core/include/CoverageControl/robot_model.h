@@ -1,8 +1,25 @@
-/**
- * Class file for robot model
- * Makes heavy use of paramters.h, so please ensure that the parameters are set appropriately.
- * The names of the parameters start with lower-case p and use CamelCase
- **/
+/*
+ * This file is part of the CoverageControl library
+ *
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file robot_model.h
+ * \brief Class for handling the robot model
+ *
+ * The robot model is used to simulate the robot's movement and sensor data.
+ * Makes heavy use of \ref parameters.h
+ *
+ */
 
 #ifndef COVERAGECONTROL_ROBOTMODEL_H_
 #define COVERAGECONTROL_ROBOTMODEL_H_
@@ -20,6 +37,12 @@
 
 namespace CoverageControl {
 
+	/*!
+	 * \brief Class for handling the robot model
+	 *
+	 * The robot model is used to simulate the robot's movement and sensor data.
+	 *
+	 */
 	class RobotModel {
 
 		private:
@@ -30,14 +53,14 @@ namespace CoverageControl {
 			Point2 local_start_position_, local_current_position_;
 			double normalization_factor_ = 0;
 
-			MapType robot_map_; // Stores what the robot has seen. Has the same reference as world map.
-			MapType sensor_view_; // Stores the current sensor view of the robot
-			MapType local_map_; // Stores the local map of the robot
-			MapType obstacle_map_; // Stores the obstacle map
-			MapType system_map_; // Stores the obstacle map
-			MapType local_exploration_map_; // Binary map: true for unexplored locations
-			MapType exploration_map_; // Binary map: true for unexplored locations
-			std::shared_ptr <const WorldIDF> world_idf_; // Robots cannot change the world
+			MapType robot_map_; //!< Stores what the robot has seen. Has the same reference as world map.
+			MapType sensor_view_; //!< Stores the current sensor view of the robot
+			MapType local_map_; //!< Stores the local map of the robot
+			MapType obstacle_map_; //!< Stores the obstacle map
+			MapType system_map_; //!< Stores the obstacle map
+			MapType local_exploration_map_; //!< Binary map: true for unexplored locations
+			MapType exploration_map_; //!< Binary map: true for unexplored locations
+			std::shared_ptr <const WorldIDF> world_idf_; //!< Robots cannot change the world
 			double time_step_dist_ = 0;
 			double sensor_area_ = 0;
 
@@ -67,7 +90,13 @@ namespace CoverageControl {
 
 		public:
 
-			// Constructor: requires global_start_position_ and world_idf_
+			/*!
+			 * \brief Constructor for the robot model
+			 *
+			 * \param params Parameters for the robot model
+			 * \param global_start_position The global start position of the robot
+			 * \param world_idf The world IDF object
+			 */
 			RobotModel (Parameters const &params, Point2 const &global_start_position, WorldIDF const &world_idf): params_{params}, global_start_position_{global_start_position} {
 				world_idf_ = std::make_shared<const WorldIDF> (world_idf);
 				normalization_factor_ = world_idf_->GetNormalizationFactor();
@@ -108,9 +137,9 @@ namespace CoverageControl {
 
 			}
 
-			// Time step robot with the given control direction and speed
-			// Direction cannot be zero-vector is speed is not zero
-			// speed needs to be positive
+			//! \note Time step robot with the given control direction and speed.
+			//! \note Direction cannot be zero-vector is speed is not zero.
+			//! \note Speed needs to be positive
 			int StepControl(Point2 const &direction, double const &speed) {
 				auto dir = direction;
 				auto sp = speed;
@@ -135,6 +164,7 @@ namespace CoverageControl {
 				return 0;
 			}
 
+			//! Set robot position relative to the current position
 			void SetRobotPosition(Point2 const &pos) {
 				Point2 new_global_pos = pos + global_start_position_;
 				if(new_global_pos.x() <= 0) { new_global_pos[0] = 0 + kLargeEps; }
@@ -262,7 +292,7 @@ namespace CoverageControl {
 
 			/* The centroid is computed with orgin of the map, i.e., the lower left corner of the map. */
 			/* Only the local map is considered for the computation of the centroid. */
-			auto GetVoronoiFeatures() { 
+			auto GetVoronoiFeatures() {
 				auto const &pos = global_current_position_;
 				MapUtils::MapBounds index, offset;
 				MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize, params_.pWorldMapSize, index, offset);

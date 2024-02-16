@@ -1,6 +1,0 @@
-@PACKAGE_INIT@
-include ( "${CMAKE_CURRENT_LIST_DIR}/CoverageControlTorchTargets.cmake" )
-
-get_filename_component(CoverageControlTorch_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-set(CoverageControlTorch_INCLUDE_DIR "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
-set(CoverageControlTorch_LIB_DIR "@CMAKE_INSTALL_FULL_LIBDIR@")

@@ -1,8 +1,21 @@
-/**
- * A class for Importance Density Function (IDF) for the world
+/*
+ * This file is part of the CoverageControl library
  *
- * TODO: Add functionalities for importance features that are expressed as rectangles, simple polygons, and circles
- **/
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file world_idf.h
+ * \brief Contains the class for Importance Density Function (IDF) for the world
+ */
 
 #ifndef COVERAGECONTROL_WORLDIDF_H_
 #define COVERAGECONTROL_WORLDIDF_H_
@@ -15,7 +28,7 @@
 #include <Eigen/Dense> // Eigen is used for maps
 
 #ifdef WITH_CUDA
-#include "generate_world_map.ch"
+#include "generate_world_map.h"
 #endif
 #include "constants.h"
 #include "parameters.h"
@@ -26,6 +39,12 @@
 
 namespace CoverageControl {
 
+	/*! \brief Class for Importance Density Function (IDF) for the world
+	 *
+	 * This class contains the world IDF as a 2D map. The world IDF is computed by integrating the normal distributions over the world.
+	 * The world IDF is used to compute the importance of each cell in the world.
+	 * Can use CUDA for faster computation of cell importance.
+	 */
 	class WorldIDF {
 		private:
 			std::vector <BivariateNormalDistribution> normal_distributions_;

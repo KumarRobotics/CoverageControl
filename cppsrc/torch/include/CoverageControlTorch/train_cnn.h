@@ -1,11 +1,24 @@
-/** This file contains the declaration of the class TrainCNN using Torch C++ API.
+/*
+ * This file is part of the CoverageControl library
+ *
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/* This file contains the declaration of the class TrainCNN using Torch C++ API.
  * The class TrainCNN takes local maps, communication maps, and obstacles maps as input, and
  * predicts the voronoi coverage features.
- *
- **/
+ */
 
-#ifndef COVERAGECONTROL_TRAIN_CNN_H_
-#define COVERAGECONTROL_TRAIN_CNN_H_
+#ifndef COVERAGECONTROLTORCH_TRAIN_CNN_H_
+#define COVERAGECONTROLTORCH_TRAIN_CNN_H_
 
 
 #include <iostream>
@@ -185,4 +198,4 @@ namespace CoverageControlTorch {
 
 } // namespace CoverageControlTorch
 
-#endif //COVERAGECONTROL_TRAIN_CNN_H_
+#endif //COVERAGECONTROLTORCH_TRAIN_CNN_H_

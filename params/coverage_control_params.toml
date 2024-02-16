@@ -1,0 +1,88 @@
+# Specify parameters for coverage control in toml format
+
+NumRobots = 32
+NumFeatures = 32
+
+# Parameters for the environment
+[Environment]
+
+[Environment.Maps]
+# Assuming same resolution in both the directions. Pixel area = Resolution^2
+Resolution = 1
+
+# Actual size of maps is size * Resolution, e.g.,  WorldMapSize * Resolution
+WorldMapSize = 1024
+
+# Robot map saves what the robot has seen
+RobotMapSize = 1024
+
+# Local map is used for computing mass. Actual area would be LocalMapSize * Resolution
+# Should be greater than CommunicationRange so that they can form different channels of the same image.
+LocalMapSize = 256
+
+# Map update settings
+[Environment.Maps.UpdateSettings]
+
+UpdateRobotMap = true # Set UpdateRobotMap to false for centralized known world
+UpdateSensorView = true
+UpdateExplorationMap = false
+UpdateSystemMap = true
+
+# Parameters for the IDF
+[Environment.IDF]
+
+# Bivariate Normal Distribution truncated after TruncationBND * sigma
+# Makes it more realistic and reduces the number of erfc evaluations
+TruncationBND = 2
+
+# Used to normalize map. Max value will be scaled to Norm.
+Norm = 1
+
+# These settings are only relevant if the IDF is generated using random gaussians
+MinSigma = 40
+MaxSigma = 60
+MinPeak = 6
+MaxPeak = 10
+
+# Add importance to unknown regions
+UnknownImportance = 0.5 # fraction of the largest imaportance of a grid cell
+RobotMapUseUnknownImportance = false
+
+# Parameters for the robot
+[RobotModel]
+
+# Assuming square sensor FOV.
+# Actual FOV: square with side Resolution * SensorSize
+# Robot is placed at the center of FOV
+# Make it even so that I don't have to deal with substracting by half-resolution.
+SensorSize = 64 # Positive integer. NOTE: Needs to be even
+
+# Radius of communication (in meters)
+CommunicationRange = 128
+
+MaxRobotSpeed = 5 # in m/s. Make sure MaxRobotSpeed * TimeStep / Resolution < SensorSize/2
+RobotInitDist = 1024 # Distance from the origin within which to initialize the position of the robots
+RobotPosHistorySize = 40 # For plotting and checking oscillations
+
+TimeStep = 0.2 # in seconds
+
+[RobotModel.AddNoise]
+
+# Add noise to the robot's position and sensor readings
+AddNoisePositions = false
+PositionsNoiseSigma = 0.1
+
+# Parameters for the standard baseline coverage control algorithms
+[Algorithm]
+
+# Number of steps in an episode
+EpisodeSteps = 2000
+
+[Algorithm.Global-CVT]
+# Settings for Global-CVT algorithm
+LloydMaxIterations = 1000
+LloydNumTries = 20
+
+[Algorithm.Exploration]
+# Number of frontiers to be selected (not used currently)
+NumFrontiers = 10

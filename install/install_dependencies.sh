@@ -2,7 +2,7 @@
 
 TMP_DIR=`mktemp -d`
 
-params="$(getopt -o d: -l directory:,nocuda --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d: -l directory:,no-cuda --name "$(basename "$0")" -- "$@")"
 if [ $? -ne 0 ]
 then
     print_usage
@@ -17,7 +17,7 @@ unset params
 while true; do
 	case ${1} in
 		-d|--directory) INSTALL_DIR+=("${2}");shift 2;;
-		--nocuda) NOCUDA=true;shift;;
+		--no-cuda) NOCUDA=true;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;
@@ -82,7 +82,7 @@ InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
 	wget https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz -P ${MAIN_DIR}/src
 	tar -xf ${MAIN_DIR}/src/0.8.0.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/yaml-cpp-0.8.0 -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=OFF  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+	cmake -S ${MAIN_DIR}/src/yaml-cpp-0.8.0 -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "YAML build failed"
@@ -174,8 +174,8 @@ InstallOpenCV () {
 InstallEigen3
 # InstallPybind11
 InstallCGAL
-InstallYamlCPP
-InstallGeoGraphicLib
+# InstallYamlCPP
+# InstallGeoGraphicLib
 # InstallOpenCV
 # InstallTorchVision
 # InstallTorchSparse

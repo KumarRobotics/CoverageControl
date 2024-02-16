@@ -1,6 +1,21 @@
-/**
- * Contains utility functins for transforming maps
- **/
+/*
+ * This file is part of the CoverageControl library
+ *
+ * Author: Saurav Agarwal
+ * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+ * Repository: https://github.com/KumarRobotics/CoverageControl
+ *
+ * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*!
+ * \file map_utils.h
+ * \brief Utility functions for transforming maps
+ */
 
 #ifndef COVERAGECONTROL_MAP_UTILS_H_
 #define COVERAGECONTROL_MAP_UTILS_H_
@@ -9,6 +24,9 @@
 #include "parameters.h"
 
 namespace CoverageControl {
+	/*!
+	 * \brief Namespace for map utilities functions
+	 */
 	namespace MapUtils {
 		struct MapBounds {
 			int left = 0, right = 0, bottom = 0, top = 0;
@@ -18,13 +36,13 @@ namespace CoverageControl {
 			}
 		};
 
-		// Gets the closest point on the grid
+		//! Gets the closest point on the grid
 		inline void GetClosestGridCoordinate(double const resolution, Point2 const &pt, int &idx, int &idy) {
 			idx = std::round(pt.x()/resolution);
 			idy = std::round(pt.y()/resolution);
 		}
 
-		// Compute necessary map transformations when the point is close to the boundary
+		//! Compute necessary map transformations when the point is close to the boundary
 		inline void ComputeOffsets(double const resolution, Point2 const &pos, int const submap_size, int const map_size, MapBounds &index, MapBounds &offset) {
 			int pos_idx = 0, pos_idy = 0;
 			GetClosestGridCoordinate(resolution, pos, pos_idx, pos_idy);
@@ -58,7 +76,7 @@ namespace CoverageControl {
 			return map.block(index.left + offset.left, index.bottom + offset.bottom, offset.width, offset.height);
 		}
 
-		/** Write the world map to a file **/
+		//! Write the world map to a file
 		inline int WriteMap(MapType const &map, std::string const &file_name) {
 			std::ofstream file_obj(file_name);
 			if(!file_obj) {
@@ -70,7 +88,7 @@ namespace CoverageControl {
 			return 0;
 		}
 
-		/** Write the world map to a file **/
+		//! Write the world map to a file
 		inline int WriteMapSparse(MapType const &map, std::string const &file_name) {
 			std::ofstream file_obj(file_name);
 			if(!file_obj) {
