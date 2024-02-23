@@ -26,7 +26,7 @@
 #include <CoverageControl/coverage_system.h>
 using namespace CoverageControl;
 
-PYBIND11_MODULE(pyCoverageControl, m) {
+PYBIND11_MODULE(CoverageControl, m) {
 	pyCoverageControl_core(m);
 	pyCoverageControl_core_coverage_system(m);
 }

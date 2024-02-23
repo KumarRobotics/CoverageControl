@@ -3,10 +3,6 @@
 TMP_DIR=`mktemp -d`
 
 params="$(getopt -o d: -l directory:,no-cuda --name "$(basename "$0")" -- "$@")"
-if [ $? -ne 0 ]
-then
-    print_usage
-fi
 
 print_usage() {
 	printf "bash $0 [-d|--directory <specify install directory>]\n"
@@ -171,7 +167,7 @@ InstallOpenCV () {
 	fi
 }
 
-InstallEigen3
+# InstallEigen3
 # InstallPybind11
 InstallCGAL
 # InstallYamlCPP

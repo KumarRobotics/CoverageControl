@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ORIG_INPUT_PARAMS="$@"
-params="$(getopt -o d:ictpg -l directory:,install,clean,torch,python,global,no-cuda,no-deps --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d:ctpg -l directory:,clean,torch,python,global,with-cuda,with-deps --name "$(basename "$0")" -- "$@")"
 
 if [ $? -ne 0 ]
 then
@@ -8,25 +8,24 @@ then
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <workspace directory>] [-i|--install] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--no-cuda <cpu only>][--no-deps <do not install dependencies>]\n"
+	printf "bash $0 [-d|--directory <workspace directory>] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--with-cuda <cpu only>][--with-deps <install dependencies>]\n"
 }
 
 eval set -- "$params"
 unset params
 
 WITH_TORCH=0
-WITH_DEPS=true # default is to build with deps
-
+INSTALL=true
+WITH_DEPS=false
 while true; do
 	case ${1} in
-		-i|--install) INSTALL=true;shift;;
-		-c|--clean) CLEAN=true;shift;;
+		-c|--clean) CLEAN=true;INSTALL=false;shift;;
 		-t|--torch) WITH_TORCH=ON; shift;;
 		-p|--python) WITH_PYTHON=true;shift;;
 		-d|--directory) WS_DIR+=("${2}");shift 2;;
 		-g|--global) GLOBAL=true;shift;;
-		--no-cuda) NOCUDA=true;shift;;
-		--no-deps) WITH_DEPS=false;shift;;
+		--with-cuda) WITH_CUDA=ON;shift;;
+		--with-deps) WITH_DEPS=true;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;
@@ -37,12 +36,16 @@ done
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# install dependencies
 if [[ ${WITH_DEPS} == "true" ]]
 then
 	echo "Installing dependencies"
-	INSTALL_DIR=${WS_DIR}/install/CoverageControl/
-	bash ${DIR}/install/install_dependencies.sh -d ${INSTALL_DIR} ${ORIG_INPUT_PARAMS}
+	if [[ ${WS_DIR} ]]
+	then
+		INSTALL_DIR=${WS_DIR}/install/
+		bash ${DIR}/setup_utils/install_dependencies.sh -d ${INSTALL_DIR}
+	else
+		bash ${DIR}/setup_utils/install_dependencies.sh
+	fi
 	if [ $? -ne 0 ]; then
 		echo "deps build failed"
 		exit 1

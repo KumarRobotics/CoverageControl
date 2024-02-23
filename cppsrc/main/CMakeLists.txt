@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 project(CoverageControlMain VERSION 0.3 LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -8,7 +8,6 @@ endif()
 option(WITH_CUDA "Build with CUDA support" ON)
 
 if(WITH_CUDA)
-	cmake_minimum_required(VERSION 3.24)
 	enable_language(CUDA)
 endif()
 
@@ -29,7 +28,7 @@ if(WITH_TORCH)
 	set(CMAKE_INSTALL_RPATH "${ORIGIN};${CMAKE_INSTALL_LIBDIR};${TORCH_LIBRARY_DIR}")
 endif()
 
-find_package(CoverageControlCore REQUIRED)
+find_package(CoverageControl REQUIRED)
 
 if(WITH_TORCH)
 	find_package(CoverageControlTorch REQUIRED)
@@ -50,11 +49,11 @@ target_compile_options(compiler_flags INTERFACE
 #################
 
 add_executable(coverage_algorithm coverage_algorithm.cpp)
-target_link_libraries(coverage_algorithm PRIVATE CoverageControl::CoverageControlCore)
+target_link_libraries(coverage_algorithm PRIVATE CoverageControl::CoverageControl)
 install(TARGETS coverage_algorithm DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # if(WITH_TORCH)
 # 	add_executable(eval_dist_gnn torch/eval_dist_gnn.cpp)
-# 	target_link_libraries(eval_dist_gnn PRIVATE compiler_flags CoverageControlCore CoverageControlTorch ${CUDA_cusparse_LIBRARY})
+# 	target_link_libraries(eval_dist_gnn PRIVATE compiler_flags CoverageControl CoverageControlTorch ${CUDA_cusparse_LIBRARY})
 # 	install(TARGETS eval_dist_gnn DESTINATION ${CMAKE_INSTALL_BINDIR})
 # endif()

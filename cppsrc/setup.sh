@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-params="$(getopt -o d:ictpg -l directory:,install,clean,torch,python,global,no-cuda,no-deps --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d:ctpg -l directory:,clean,torch,python,global,with-cuda,with-deps --name "$(basename "$0")" -- "$@")"
 
 if [ $? -ne 0 ]
 then
@@ -7,7 +7,7 @@ then
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <workspace directory>] [-i|--install] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--no-cuda <cpu only>] [--no-deps <do not install dependencies>]\n"
+	printf "bash $0 [-d|--directory <workspace directory>] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--with-cuda <cpu only>] [--with-deps <install dependencies>]\n"
 }
 
 # Get directory of script
@@ -18,16 +18,17 @@ WITH_TORCH=0
 eval set -- "$params"
 unset params
 
+INSTALL=true
 while true; do
 	case ${1} in
 		-i|--install) INSTALL=true;shift;;
-		-c|--clean) CLEAN=true;shift;;
+		-c|--clean) CLEAN=true;INSTALL=false;shift;;
 		-t|--torch) WITH_TORCH=ON; shift;;
 		-p|--python) WITH_PYTHON=true;shift;;
 		-d|--directory) WS_DIR+=("${2}");shift 2;;
 		-g|--global) GLOBAL=true;shift;;
-		--no-cuda) NOCUDA=true;shift;;
-		--no-deps) WITH_DEPS=false;shift;;
+		--with-cuda) WITH_CUDA=ON;shift;;
+		--with-deps) WITH_DEPS=true;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;
@@ -40,7 +41,7 @@ then
 	# If not global then install to workspace
 	if [[ ! ${GLOBAL} ]]
 	then
-		INSTALL_DIR=${WS_DIR}/install/CoverageControl/
+		INSTALL_DIR=${WS_DIR}/install/
 		CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
 	fi
 else
@@ -48,28 +49,32 @@ else
 	BUILD_DIR=${TMP_DIR}/build
 fi
 
-if [[ ${NOCUDA} ]]
+# Check WITH_CUDA
+if [[ ${WITH_CUDA} == "ON" ]]
 then
+	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DWITH_CUDA=ON"
+else
 	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DWITH_CUDA=OFF"
 fi
+
 if [[ ${WITH_TORCH} == "ON" ]]
 then
 	CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_PREFIX_PATH=${Torch_DIR}"
 fi
 
-InstallCoverageControlCore () {
-	cmake -S ${DIR}/core -B ${BUILD_DIR}/CoverageControlCore ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/CoverageControlCore -j$(nproc)
+InstallCoverageControl () {
+	cmake -S ${DIR}/core -B ${BUILD_DIR}/CoverageControl ${CMAKE_END_FLAGS}
+	cmake --build ${BUILD_DIR}/CoverageControl -j$(nproc)
 	if [ $? -ne 0 ]; then
-		echo "CoverageControlCore build failed"
+		echo "CoverageControl build failed"
 		exit 1
 	fi
-	cmake --install ${BUILD_DIR}/CoverageControlCore
+	cmake --install ${BUILD_DIR}/CoverageControl
 	if [ $? -ne 0 ]; then
-		echo "CoverageControlCore install failed"
+		echo "CoverageControl install failed"
 	fi
 
-	echo "Successfully built and installed CoverageControlCore"
+	echo "Successfully built and installed CoverageControl"
 }
 
 InstallCoverageControlTorch () {
@@ -121,15 +126,15 @@ InstallCoverageControlMain () {
 
 if [[ ${INSTALL} ]]
 then
-	echo "Installing CoverageControlCore"
-	InstallCoverageControlCore
+	echo "Installing CoverageControl"
+	InstallCoverageControl
 	if [[ ${WITH_TORCH} == "ON" ]]
 	then
 		echo "Installing CoverageControlTorch"
 		InstallCoverageControlTorch
 	fi
 	# echo "Installing CoverageControlTests"
-	InstallCoverageControlTests
+	# InstallCoverageControlTests
 	echo "Installing CoverageControlMain"
 	InstallCoverageControlMain
 fi

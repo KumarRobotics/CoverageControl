@@ -3,10 +3,11 @@ requires = ["scikit-build-core", "pybind11", "cmake >= 3.24"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "pyCoverageControl"
+name = "CoverageControl"
 version = "0.4.0"
 description="Project for Coverage Control"
 requires-python = ">=3.10"
+dependencies = [ "numpy" ]
 authors = [
   {name = "Saurav Agarwal", email = "SauravAg@UPenn.edu" } # Optional
 ]

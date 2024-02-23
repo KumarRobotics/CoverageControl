@@ -3,24 +3,24 @@ import os
 import math
 import time
 import numpy as np
-import pyCoverageControl # Main library
-from pyCoverageControl import Point2 # for defining points
-from pyCoverageControl import PointVector # for defining list of points
-from pyCoverageControl import CoverageSystem
+import CoverageControl # Main library
+from CoverageControl import Point2 # for defining points
+from CoverageControl import PointVector # for defining list of points
+from CoverageControl import CoverageSystem
 # Algorithms available:
 # LloydGlobalOnline
 # LloydLocalVornoi
 # OracleGlobalOffline
 # OracleSimulExploreExploit
-from pyCoverageControl import OracleSimulExploreExploit as CoverageAlgorithm
+from CoverageControl import OracleSimulExploreExploit as CoverageAlgorithm
 
 class RunCoverageAlgorithm:
 
     def __init__(self, params_filename=None, num_gaussians=5, num_robots=15, num_steps_per_dataset=1, stable_dataset_count=90):
         if params_filename is not None:
-            self.params_ = pyCoverageControl.Parameters(params_filename)
+            self.params_ = CoverageControl.Parameters(params_filename)
         else:
-            self.params_ = pyCoverageControl.Parameters()
+            self.params_ = CoverageControl.Parameters()
 
         self.num_gaussians = num_gaussians
         self.num_robots = num_robots

@@ -20,7 +20,7 @@
 #ifndef COVERAGECONTROL_WORLDIDF_H_
 #define COVERAGECONTROL_WORLDIDF_H_
 
-#include "CoverageControlCoreConfig.h"
+#include "CoverageControlConfig.h"
 #include <vector>
 #include <fstream>
 #include <iostream>

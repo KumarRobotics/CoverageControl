@@ -8,9 +8,9 @@ set(CMAKE_COLOR_DIAGNOSTICS True)
 set(PYBIND11_NEWPYTHON True)
 find_package(pybind11 CONFIG REQUIRED)
 
-find_package(CoverageControlCore REQUIRED)
+find_package(CoverageControl REQUIRED)
 
-pybind11_add_module(pyCoverageControl MODULE src/coverage_control_python_binds.cpp)
-target_link_libraries(pyCoverageControl PRIVATE CoverageControl::CoverageControlCore)
-install(TARGETS pyCoverageControl LIBRARY DESTINATION .)
+pybind11_add_module(CoverageControl MODULE src/coverage_control_python_binds.cpp)
+target_link_libraries(CoverageControl PRIVATE CoverageControl::CoverageControl)
+install(TARGETS CoverageControl LIBRARY DESTINATION .)
 

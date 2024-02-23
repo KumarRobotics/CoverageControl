@@ -23,7 +23,7 @@ find_package(Torch REQUIRED)
 # find_package(TorchVision REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
-find_package(CoverageControlCore REQUIRED)
+find_package(CoverageControl REQUIRED)
 get_filename_component(TORCH_LIBRARY_DIR "${TORCH_LIBRARIES}" DIRECTORY)
 configure_file(cmake/${PROJECT_NAME}Config.h.in ${PROJECT_NAME}Config.h)
 
@@ -44,10 +44,10 @@ target_compile_options(compiler_flags INTERFACE
 set(sources_list base.cpp)
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list CoverageControl::CoverageControlCore ${TORCH_LIBRARIES})
+set(dependencies_list CoverageControl::CoverageControl ${TORCH_LIBRARIES})
 
 add_library(${PROJECT_NAME} SHARED ${sources_list})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS} ${CoverageControlCore_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR} ${TORCH_INCLUDE_DIRS} ${CoverageControl_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${ORIGIN};${CMAKE_INSTALL_LIBDIR};${TORCH_LIBRARY_DIR}")

@@ -1,6 +1,6 @@
 @PACKAGE_INIT@
 
-set(PN CoverageControlCore)
+set(PN CoverageControl)
 set(${PN}_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
 set(${PN}_LIBRARY_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@")
 set(${PN}_LIBRARY "${${PN}_LIBRARY_DIR}/lib${PN}.so")

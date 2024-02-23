@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
-project(CoverageControlCore VERSION 0.3 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.22)
+project(CoverageControl VERSION 0.3 LANGUAGES CXX)
 
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
@@ -36,7 +36,7 @@ target_compile_options(compiler_flags INTERFACE
 )
 
 #################################
-## CoverageControlCore library ##
+## CoverageControl library ##
 #################################
 
 set(sources_list
@@ -62,7 +62,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
 
 if (WITH_CUDA)
-	set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON)
+	set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES native POSITION_INDEPENDENT_CODE ON CUDA_SEPARABLE_COMPILATION ON)
 	else()
 		set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()

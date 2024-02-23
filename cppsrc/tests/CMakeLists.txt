@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 project(CoverageControlTests VERSION 0.3 LANGUAGES CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -8,7 +8,6 @@ endif()
 option(WITH_CUDA "Build with CUDA support" ON)
 
 if(WITH_CUDA)
-	cmake_minimum_required(VERSION 3.24)
 	enable_language(CUDA)
 endif()
 
@@ -19,9 +18,9 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 include(CheckCXXCompilerFlag)
 include(GNUInstallDirs)
 
-find_package(CoverageControlCore REQUIRED)
+find_package(CoverageControl REQUIRED)
 
-set(dependencies_list CoverageControl::CoverageControlCore)
+set(dependencies_list CoverageControl::CoverageControl)
 if(NOT DEFINED WITH_TORCH)
 	set(WITH_TORCH OFF)
 endif()
@@ -43,11 +42,11 @@ if(WITH_TORCH)
 endif()
 
 add_executable(simultaneous_explore_exploit simultaneous_explore_exploit.cpp)
-target_link_libraries(simultaneous_explore_exploit PRIVATE CoverageControl::CoverageControlCore)
+target_link_libraries(simultaneous_explore_exploit PRIVATE CoverageControl::CoverageControl)
 install(TARGETS simultaneous_explore_exploit DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 add_executable(map_generation map_generation.cpp)
-target_link_libraries(map_generation PRIVATE CoverageControl::CoverageControlCore)
+target_link_libraries(map_generation PRIVATE CoverageControl::CoverageControl)
 install(TARGETS map_generation DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # add_executable(geo_transforms ${PROJECT_SOURCE_DIR}/test/geo_transforms.cpp)

@@ -1,7 +1,5 @@
-# Start with cuda image
-FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
+FROM ubuntu:22.04
 
-# CMD ["/bin/bash"]
 SHELL ["/bin/bash", "-c"]
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -24,35 +22,34 @@ RUN apt-get	-y update; \
 											 curl \
 											 gdb \
 											 software-properties-common \
-											 ca-certificates \
-											 gpg
+											 ca-certificates
 
 # Add repo for installing latest version of cmake
-# RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
-# 		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
-# 		apt-get update; \
-# 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
+		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
+		apt-get update; \
+		rm /usr/share/keyrings/kitware-archive-keyring.gpg
+
+RUN apt install -y kitware-archive-keyring
 
 RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
 RUN apt-get -y install \
 											 cmake \
-											 libboost-dev \
+											 libgmp-dev \
+											 libmpfr-dev \
 											 libboost-all-dev \
-											 libcgal-dev \
+											 libeigen3-dev \
 											 python3.11 \
 											 python3.11-dev \
 											 python3.11-venv \
 											 python-is-python3 \
-											 python3-numpy \
 											 libgeos-dev \
 											 libyaml-cpp-dev \
 											 vim \
 											 tmux \
 											 ffmpeg \
 											 gnuplot-nox \
-											 texlive-base texlive-latex-extra texlive-science \
-											 dvipng texlive-fonts-recommended cm-super \
 											 ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
 # Remove cache to reduce image size
@@ -63,16 +60,8 @@ RUN rm -rf /var/lib/apt/lists/*; \
 
 COPY requirements.txt /opt/requirements.txt
 RUN python3.11 -m venv /opt/venv
+RUN /opt/venv/bin/pip install --no-cache-dir wheel
 RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
-
-RUN mkdir download; \
-		wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip -O download/libtorch.zip; \
-		unzip download/libtorch.zip -d /opt/; \
-		rm -r download
-
-ENV LD_LIBRARY_PATH /usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}
-ENV Torch_ROOT /opt/libtorch/
-ENV Torch_DIR /opt/libtorch/share/cmake/
 
 RUN mkdir -p /opt/dependencies/build; \
 		mkdir -p /opt/dependencies/src
@@ -80,13 +69,11 @@ COPY install_dependencies.sh /opt/dependencies/install_dependencies.sh
 RUN ["/bin/bash", "-c", "/opt/dependencies/install_dependencies.sh"]
 RUN rm -r /opt/dependencies
 
-ENV COVERAGECONTROL_WS /opt/CoverageControl_ws
-ENV LD_LIBRARY_PATH ${COVERAGECONTROL_WS}/install/CoverageControl/lib:${LD_LIBRARY_PATH}
-ENV PATH ${COVERAGECONTROL_WS}/install/bin:${PATH}
-ENV LIBTORCH_PYTHON_PATH /opt/libtorch/lib/libtorch_python.so
+ENV CoverageControl_ws /opt/CoverageControl_ws
+ENV LD_LIBRARY_PATH ${CoverageControl_ws}/install/lib:/usr/local/lib:${LD_LIBRARY_PATH}
+ENV PATH ${CoverageControl_ws}/install/bin:${PATH}
 COPY .bashrc /root/.bashrc
-COPY .bashrc /opt/.bashrc
 RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc
 
-RUN mkdir -p ${COVERAGECONTROL_WS}
-WORKDIR ${COVERAGECONTROL_WS}
+RUN mkdir -p ${CoverageControl_ws}
+WORKDIR ${CoverageControl_ws}
