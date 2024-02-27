@@ -1,0 +1,48 @@
+name: ci
+on:
+  release:
+    types: [published]
+
+jobs:
+  docker-deploy:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@v1.3.1
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: pytorch2.2.1
+          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: pytorch2.2.1-cuda12.3.1
+          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: pytorch2.2.1-cuda12.3.1-ros2humble
+          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: pytorch2.2.1-ros2humble
+          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
