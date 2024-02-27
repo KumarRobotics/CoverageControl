@@ -32,10 +32,10 @@ fi
 
 InstallCGAL () {
 	echo "Setting up CGAL"
-	wget https://github.com/CGAL/cgal/releases/download/v5.6/CGAL-5.6-library.tar.xz -P ${MAIN_DIR}/src
+	wget https://github.com/CGAL/cgal/releases/download/v5.6/CGAL-5.6-library.tar.xz -P ${MAIN_DIR}/src > /dev/null
 	tar -xf ${MAIN_DIR}/src/CGAL-5.6-library.tar.xz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/CGAL-5.6 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS}
-	cmake --install ${BUILD_DIR}/cgal
+	cmake -S ${MAIN_DIR}/src/CGAL-5.6 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS} > /dev/null
+	cmake --install ${BUILD_DIR}/cgal > /dev/null
 	if [ $? -eq 0 ]; then
 		echo "cgal install succeeded"
 	else

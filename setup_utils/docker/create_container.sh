@@ -8,13 +8,13 @@ then
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <workspace directory>] [--with-cuda <cuda image>][--with-ros <with ros2 iron>]\n"
+	printf "bash $0 [-d|--directory <workspace directory>] [--with-cuda] [--with-ros]\n"
 }
 
 eval set -- "$params"
 unset params
 
-IMAGE_BASE_NAME=agarwalsaurav/coverage-control
+IMAGE_BASE_NAME=ghcr.io/agarwalsaurav/coveragecontrol
 IMAGE_TAG=latest
 
 while true; do
@@ -29,23 +29,24 @@ while true; do
 	esac
 done
 
-if [ -z ${WS_DIR} ]; then
-	echo "Workspace directory not provided"
-	print_usage
-	exit 1
-fi
+# if [ -z ${WS_DIR} ]; then
+# 	echo "Workspace directory not provided"
+# 	print_usage
+# 	exit 1
+# fi
 
 if [[ ${CUDA_IMAGE} == true ]]; then
+	CONTAINER_OPTIONS+="--gpus all "
 	if [[ ${ROS_IMAGE} == true ]]; then
-		IMAGE_TAG="ubuntu22.04-cuda12.3.1-ros2iron"
+		IMAGE_TAG="pytorch2.2.1-cuda12.3.1-ros2humble"
 	else
-		IMAGE_TAG="ubuntu22.04-cuda12.3.1"
+		IMAGE_TAG="pytorch2.2.1-cuda12.3.1"
 	fi
 else
 	if [[ ${ROS_IMAGE} == true ]]; then
-		IMAGE_TAG="ubuntu22.04-ros2iron"
+		IMAGE_TAG="pytorch2.2.1-ros2humble"
 	else
-		IMAGE_TAG="ubuntu22.04"
+		IMAGE_TAG="pytorch2.2.1"
 	fi
 fi
 
@@ -55,14 +56,15 @@ if [ -z ${CONTAINER_NAME} ]; then
 	CONTAINER_NAME="coverage-control-${USER}"
 fi
 
-CONTAINER_CC_WS="/opt/CoverageControl_ws"
+CONTAINER_CC_WS="/workspace"
 
 docker run -it \
 	--name=${CONTAINER_NAME} \
-	--gpus all \
+	${CONTAINER_OPTIONS} \
 	--net=host \
 	--privileged \
 	--ipc=host \
 	--volume=${WS_DIR}:${CONTAINER_CC_WS}:rw \
+	--workdir=${CONTAINER_CC_WS} \
 	${IMAGE_NAME} \
 	bash

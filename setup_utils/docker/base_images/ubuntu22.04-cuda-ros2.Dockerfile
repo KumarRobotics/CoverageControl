@@ -1,4 +1,5 @@
-FROM ubuntu:22.04
+# Start with cuda image
+FROM nvidia/cuda:12.3.1-devel-ubuntu22.04
 
 SHELL ["/bin/bash", "-c"]
 
@@ -32,12 +33,11 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
 		apt-get update; \
 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
+
 RUN apt install -y kitware-archive-keyring
 
 RUN apt-get -y install cmake
-
 RUN apt-get -y install \
-											 cmake \
 											 libgmp-dev \
 											 libmpfr-dev \
 											 libboost-all-dev \
@@ -72,18 +72,8 @@ COPY requirements.txt /opt/requirements.txt
 RUN python3.10 -m venv /opt/venv
 RUN /opt/venv/bin/pip install --no-cache-dir wheel
 RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
+ENV VENV_PATH /opt/venv
 
-RUN mkdir -p /opt/dependencies/build; \
-		mkdir -p /opt/dependencies/src
-COPY install_dependencies.sh /opt/dependencies/install_dependencies.sh
-RUN ["/bin/bash", "-c", "/opt/dependencies/install_dependencies.sh"]
-RUN rm -r /opt/dependencies
-
-ENV CoverageControl_ws /opt/CoverageControl_ws
-ENV LD_LIBRARY_PATH ${CoverageControl_ws}/install/lib:/usr/local/lib:${LD_LIBRARY_PATH}
-ENV PATH ${CoverageControl_ws}/install/bin:${PATH}
-COPY .bashrc /root/.bashrc
+ENV LD_LIBRARY_PATH /usr/local/lib:${LD_LIBRARY_PATH}
+COPY .ros.bashrc /root/.bashrc
 RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc
-
-RUN mkdir -p ${CoverageControl_ws}
-WORKDIR ${CoverageControl_ws}

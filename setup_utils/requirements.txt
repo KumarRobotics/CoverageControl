@@ -13,3 +13,10 @@ torch_cluster
 torch_spline_conv
 torch_geometric
 torch-geometric-temporal
+
+scikit-build-core
+pyproject_metadata
+pathspec
+hatchling
+pylint
+argcomplete

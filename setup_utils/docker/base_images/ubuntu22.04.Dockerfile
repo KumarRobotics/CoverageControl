@@ -1,5 +1,4 @@
-# Start with cuda image
-FROM nvidia/cuda:12.3.1-devel-ubuntu22.04
+FROM ubuntu:22.04
 
 SHELL ["/bin/bash", "-c"]
 
@@ -32,6 +31,7 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 
 RUN apt install -y kitware-archive-keyring
+
 RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
 RUN apt-get -y install \
@@ -58,22 +58,12 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/archives/parital/*.deb; \
 		rm -f /var/cache/apt/*.bin
 
-COPY requirements.txt /opt/requirements.txt
+COPY requirements_cpu.txt /opt/requirements.txt
 RUN python3.11 -m venv /opt/venv
 RUN /opt/venv/bin/pip install --no-cache-dir wheel
 RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
+ENV VENV_PATH /opt/venv
 
-RUN mkdir -p /opt/dependencies/build; \
-		mkdir -p /opt/dependencies/src
-COPY install_dependencies.sh /opt/dependencies/install_dependencies.sh
-RUN ["/bin/bash", "-c", "/opt/dependencies/install_dependencies.sh"]
-RUN rm -r /opt/dependencies
-
-ENV CoverageControl_ws /opt/CoverageControl_ws
-ENV LD_LIBRARY_PATH ${CoverageControl_ws}/install/lib:/usr/local/lib:${LD_LIBRARY_PATH}
-ENV PATH ${CoverageControl_ws}/install/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/lib:${LD_LIBRARY_PATH}
 COPY .bashrc /root/.bashrc
 RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc
-
-RUN mkdir -p ${CoverageControl_ws}
-WORKDIR ${CoverageControl_ws}
