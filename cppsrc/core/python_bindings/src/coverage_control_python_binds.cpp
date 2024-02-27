@@ -23,10 +23,19 @@
 
 #include "../core_binds.h"
 
+#include <CoverageControlConfig.h>
 #include <CoverageControl/coverage_system.h>
 using namespace CoverageControl;
 
 PYBIND11_MODULE(CoverageControl, m) {
 	pyCoverageControl_core(m);
 	pyCoverageControl_core_coverage_system(m);
+
+	/* m.attr("__version__") = CoverageControl_VERSION_MAJOR "." CoverageControl_VERSION_MINOR "." CoverageControl_VERSION_PATCH; */
+#ifdef CoverageControl_VERSION
+	m.attr("__version__") = CoverageControl_VERSION;
+#else
+	m.attr("__version__") = "dev";
+#endif
+
 }

@@ -4,12 +4,12 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "CoverageControl"
-version = "0.4.0"
+version = "1.0"
 description="Project for Coverage Control"
 requires-python = ">=3.10"
 dependencies = [ "numpy" ]
 authors = [
-  {name = "Saurav Agarwal", email = "SauravAg@UPenn.edu" } # Optional
+  {name = "Saurav Agarwal", email = "SauravAg@UPenn.edu" }
 ]
 
 [tool.setuptools]

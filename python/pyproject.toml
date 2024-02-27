@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "CoverageControlTorch"
-version = "0.0.1"
+version = "1.0"
 authors = [
   { name="Saurav Agarwal", email="SauravAg@upenn.edu" },
 ]

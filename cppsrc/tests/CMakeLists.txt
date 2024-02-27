@@ -1,5 +1,15 @@
-cmake_minimum_required(VERSION 3.22)
-project(CoverageControlTests VERSION 0.3 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
+project(CoverageControlTests LANGUAGES CXX)
+
+# Check if file VERSION exists
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../VERSION")
+	file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../../VERSION" VERSION)
+	string(STRIP ${VERSION} VERSION)
+	set(${PROJECT_NAME}_VERSION ${VERSION})
+else()
+	message(WARNING "VERSION file not found, using 0.0 as default version")
+	set(${PROJECT_NAME}_VERSION 0.0)
+endif()
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)

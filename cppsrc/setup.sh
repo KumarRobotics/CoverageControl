@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
-params="$(getopt -o d:ctpg -l directory:,clean,torch,python,global,with-cuda,with-deps --name "$(basename "$0")" -- "$@")"
+ORIG_INPUT_PARAMS="$@"
+params="$(getopt -o d:hctpg -l directory:,help,clean,torch,python,global,with-cuda,with-deps --name "$(basename "$0")" -- "$@")"
 
 if [ $? -ne 0 ]
 then
-    print_usage
+	print_usage
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <workspace directory>] [-c|--clean] [-t|--torch <build with libtorch>] [-p|--python <install python bindings>] [-g|--global] [--with-cuda <cpu only>] [--with-deps <install dependencies>]\n"
+	printf "bash $0 [-h|--help] [-d|--directory <workspace directory>] [-p|--python] [--with-cuda] [--with-deps] [-g|--global] [-c|--clean] [-t|--torch]\n"
+	printf "Options:\n"
+	printf "  -h, --help                             : Prints this help message\n"
+	printf "  -d, --directory <workspace directory>  : Builds and installs the package in the specified directory\n"
+	printf "  -p, --python                           : Installs the python bindings\n"
+	printf "  --with-cuda                            : Builds the package with CUDA support\n"
+	printf "  --with-deps                            : Installs the dependencies\n"
+	printf "  -g, --global                           : Installs the package globally. Needs sudo permissions\n"
 }
 
 # Get directory of script
@@ -21,7 +29,7 @@ unset params
 INSTALL=true
 while true; do
 	case ${1} in
-		-i|--install) INSTALL=true;shift;;
+		-h|--help) print_usage; exit 0;;
 		-c|--clean) CLEAN=true;INSTALL=false;shift;;
 		-t|--torch) WITH_TORCH=ON; shift;;
 		-p|--python) WITH_PYTHON=true;shift;;
