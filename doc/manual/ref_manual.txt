@@ -1,0 +1,19 @@
+/*! \addtogroup cpp_api Core API
+\brief Core C++ API with python bindings.
+*/
+
+/*! \addtogroup cpp_api_constants Constants
+\ingroup cpp_api
+- `CoverageControl::kEps` (A small positive number, used for floating point comparisons.)
+- `CoverageControl::kLargeEps` (A large positive number, used for floating point comparisons.)
+- `CoverageControl::kSqrt2` (The square root of 2.)
+- `CoverageControl::kOneBySqrt2` (1 divided by the square root of 2.)
+- `CoverageControl::kInfD` (Double precision infinity.)
+- `CoverageControl::kMaxPrecision` (The maximum precision for long double.)
+*/
+
+/*! \addtogroup cpp_api_typedefs Typedefs
+\ingroup cpp_api
+*/
+
+
