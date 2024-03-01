@@ -1,0 +1,11 @@
+<map id="generate_world_map.h" name="generate_world_map.h">
+<area shape="rect" id="Node000001" title="Contains structs and functions to interface with the CUDA code to generate the world map." alt="" coords="92,5,243,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,77,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,33,76,72,74,68,145,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="100,78,153,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="163,32,143,66,138,63,159,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="176,78,245,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,29,198,63,193,66,172,32"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="269,78,325,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="190,28,264,68,261,73,188,33"/>
+</map>

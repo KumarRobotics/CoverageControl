@@ -1,0 +1,11 @@
+<map id="core" name="core">
+<area shape="rect" id="node2" href="dir_32e00a02bd35315f00279c2579c6e010.html" title="include" alt="" coords="180,135,242,159"/>
+<area shape="rect" id="node3" href="dir_1b3b923e299a6962ed3e6e499118be99.html" title="python_bindings" alt="" coords="108,62,223,87"/>
+<area shape="poly" id="edge1" href="dir_000014_000008.html" alt="" coords="175,86,197,120,193,123,171,89"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000014_000008.html" title="16" alt="" coords="194,108,208,122"/>
+<area shape="rect" id="node4" href="dir_630b164857831a1f7881911df6d7a151.html" title="src" alt="" coords="247,62,286,87"/>
+<area shape="poly" id="edge2" href="dir_000015_000008.html" alt="" coords="260,89,231,124,227,121,255,86"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000015_000008.html" title="12" alt="" coords="231,118,245,132"/>
+<area shape="rect" id="clust2" href="dir_1181669f95fd2a7a11883fc75fa90065.html" alt="" coords="27,51,297,170"/>
+<area shape="rect" id="clust1" href="dir_9aa136d74bca50e33ec77b17c8a7ddef.html" title="cppsrc" alt="" coords="16,16,308,181"/>
+</map>

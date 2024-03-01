@@ -1,0 +1,7 @@
+<map id="utilities.h" name="utilities.h">
+<area shape="rect" id="Node000001" title="Contains utility functions for CGAL." alt="" coords="93,5,167,30"/>
+<area shape="rect" id="Node000002" href="$polygon__utils_8cpp.html" title="Helper functions for polygon operations using CGAL." alt="" coords="5,78,127,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,43,78,79,74,76,107,40"/>
+<area shape="rect" id="Node000003" href="$voronoi_8cpp.html" title="Functions to compute Centroidal Voronoi Tessellation." alt="" coords="150,78,238,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,40,186,76,182,79,149,43"/>
+</map>

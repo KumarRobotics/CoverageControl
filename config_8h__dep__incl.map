@@ -1,0 +1,11 @@
+<map id="config.h" name="config.h">
+<area shape="rect" id="Node000001" title="Contains the configuration for the CGAL library." alt="" coords="96,5,164,30"/>
+<area shape="rect" id="Node000002" href="$polygon__utils_8cpp.html" title="Helper functions for polygon operations using CGAL." alt="" coords="5,151,127,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,43,95,60,83,79,72,117,69,151,63,150,67,116,78,77,90,57,105,39"/>
+<area shape="rect" id="Node000003" href="$utilities_8h.html" title="Contains utility functions for CGAL." alt="" coords="93,78,167,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,46,133,78,127,78,127,46"/>
+<area shape="rect" id="Node000004" href="$voronoi_8cpp.html" title="Functions to compute Centroidal Voronoi Tessellation." alt="" coords="156,151,243,175"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="155,40,182,77,195,116,201,150,196,151,190,118,177,79,151,43"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="111,116,78,152,74,149,107,112"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="154,112,190,148,186,152,150,116"/>
+</map>

@@ -1,0 +1,31 @@
+<map id="bivariate_normal_distribution.h" name="bivariate_normal_distribution.h">
+<area shape="rect" id="Node000001" title="Class for Bivariate Normal Distribution." alt="" coords="394,5,590,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="351,151,408,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="447,33,411,51,395,64,382,79,374,107,376,135,370,136,369,106,377,77,391,60,408,46,445,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="547,151,618,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="539,28,576,46,593,60,606,77,611,92,611,108,601,138,596,136,606,107,606,93,601,79,589,64,573,51,536,33"/>
+<area shape="rect" id="Node000004" href="$constants_8h.html" title="Constants for the CoverageControl library." alt="" coords="127,78,318,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="448,33,282,76,281,71,447,28"/>
+<area shape="rect" id="Node000008" href="$parameters_8h.html" title="Contains parameters." alt="" coords="392,78,591,103"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="494,31,494,62,489,62,489,31"/>
+<area shape="rect" id="Node000010" href="$typedefs_8h.html" title="Contains typedefs for the library." alt="" coords="687,78,870,103"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="540,28,717,71,716,76,538,33"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="249,101,341,142,339,146,247,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,151,173,175"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="202,106,126,145,123,141,199,101"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="196,151,249,175"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="225,103,225,135,220,135,220,103"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="273,151,326,175"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="237,101,278,138,274,142,233,105"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="475,105,412,144,410,140,472,101"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="508,101,557,139,554,143,505,105"/>
+<area shape="poly" id="edge12_Node000008_Node000007" title=" " alt="" coords="461,106,342,149,340,144,459,101"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="443,151,522,175"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="493,104,489,135,483,135,487,103"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="642,151,739,175"/>
+<area shape="poly" id="edge14_Node000010_Node000011" title=" " alt="" coords="765,105,718,143,715,139,762,101"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="762,151,819,175"/>
+<area shape="poly" id="edge15_Node000010_Node000012" title=" " alt="" coords="783,103,788,135,783,136,778,104"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="842,151,899,175"/>
+<area shape="poly" id="edge16_Node000010_Node000013" title=" " alt="" coords="795,101,845,139,842,143,792,105"/>
+</map>

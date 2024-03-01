@@ -1,0 +1,5 @@
+<map id="generate_world_map.h" name="generate_world_map.h">
+<area shape="rect" id="Node000001" title="Contains structs and functions to interface with the CUDA code to generate the world map." alt="" coords="9,5,160,30"/>
+<area shape="rect" id="Node000002" href="$generate__world__map_8cu.html" title="File for generating the world map IDF using CUDA." alt="" coords="5,78,164,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,46,87,78,82,78,82,46"/>
+</map>

@@ -1,0 +1,48 @@
+<map id="plotter.h" name="plotter.h">
+<area shape="rect" id="Node000001" title="Class to plot the map." alt="" coords="610,5,678,30"/>
+<area shape="rect" id="Node000002" href="$coverage__system_8cpp.html" title="Contains the implementation of the CoverageSystem class." alt="" coords="5,151,152,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="595,34,125,153,124,147,594,29"/>
+<area shape="rect" id="Node000003" href="$coverage__system_8h.html" title="The file contains the CoverageSystem class, which is the main class for the coverage control library." alt="" coords="578,78,710,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="647,46,647,78,641,78,641,46"/>
+<area shape="rect" id="Node000015" href="$plotter_8cpp.html" title="Helper function to plot maps." alt="" coords="735,78,817,103"/>
+<area shape="poly" id="edge31_Node000001_Node000015" title=" " alt="" coords="680,35,755,75,753,80,678,40"/>
+<area shape="poly" id="edge24_Node000003_Node000002" title=" " alt="" coords="563,104,152,155,152,150,562,99"/>
+<area shape="rect" id="Node000004" href="$abstract__controller_8h.html" title="Contains the abstract class for coverage control algorithms." alt="" coords="744,151,883,175"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="687,106,786,148,784,153,685,111"/>
+<area shape="rect" id="Node000005" href="$centralized__cvt_8h.html" title="Contains the class CentralizedCVT." alt="" coords="1103,230,1222,255"/>
+<area shape="poly" id="edge20_Node000003_Node000005" title=" " alt="" coords="726,102,825,121,933,148,1049,189,1138,227,1136,232,1047,194,931,153,824,126,725,107"/>
+<area shape="rect" id="Node000006" href="$core__binds_8h.html" title="Provides python bindings for the core CoverageControl library using pybind11." alt="" coords="771,310,866,335"/>
+<area shape="poly" id="edge22_Node000003_Node000006" title=" " alt="" coords="726,100,1055,148,1108,154,1157,154,1243,150,1282,153,1320,163,1356,185,1393,222,1402,243,1399,253,1392,264,1364,278,1313,289,1165,306,999,317,867,322,867,317,999,312,1165,301,1312,284,1362,273,1389,260,1394,251,1396,243,1388,225,1353,189,1318,168,1281,158,1243,155,1157,159,1108,159,1054,153,725,106"/>
+<area shape="rect" id="Node000007" href="$python__binds_8cpp.html" title="Python bindings for the CoverageControl library using pybind11 (core_binds.h)" alt="" coords="442,383,566,407"/>
+<area shape="poly" id="edge29_Node000003_Node000007" title=" " alt="" coords="563,102,419,121,354,136,309,153,271,184,251,218,240,259,233,310,230,323,233,333,246,344,265,353,320,369,383,380,442,387,442,392,382,385,318,374,263,358,243,348,228,336,225,323,228,310,235,258,246,216,267,180,306,148,352,130,418,116,562,96"/>
+<area shape="rect" id="Node000008" href="$clairvoyant__cvt_8h.html" title="Clairvoyant CVT algorithm." alt="" coords="277,230,395,255"/>
+<area shape="poly" id="edge21_Node000003_Node000008" title=" " alt="" coords="608,112,361,232,358,227,605,107"/>
+<area shape="rect" id="Node000009" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="242,310,400,335"/>
+<area shape="poly" id="edge23_Node000003_Node000009" title=" " alt="" coords="563,97,488,107,406,129,366,145,329,167,295,193,267,225,263,235,262,246,271,269,289,290,308,307,304,311,285,294,267,272,257,247,257,234,263,222,292,189,326,162,364,140,404,124,487,102,562,91"/>
+<area shape="rect" id="Node000010" href="$decentralized__cvt_8h.html" title="Contains the DecentralizedCVT class." alt="" coords="1246,230,1378,255"/>
+<area shape="poly" id="edge25_Node000003_Node000010" title=" " alt="" coords="726,101,849,121,987,148,1149,190,1276,227,1274,232,1147,195,986,153,848,126,725,106"/>
+<area shape="rect" id="Node000011" href="$near__optimal__cvt_8h.html" title="NearOptimalCVT class Global offline oracle: has complete information about the environment...." alt="" coords="419,230,549,255"/>
+<area shape="poly" id="edge26_Node000003_Node000011" title=" " alt="" coords="623,115,498,232,494,228,619,111"/>
+<area shape="rect" id="Node000012" href="$oracle__bang__explore__exploit_8h.html" title="First trial of oracle with exploration and exploitation. The oracle uses complete information about t..." alt="" coords="574,223,714,262"/>
+<area shape="poly" id="edge27_Node000003_Node000012" title=" " alt="" coords="647,118,647,223,641,223,641,118"/>
+<area shape="rect" id="Node000013" href="$oracle__explore__exploit_8h.html" title="Old trial of exploration and exploitation Uses system map for exploration as well." alt="" coords="738,230,899,255"/>
+<area shape="poly" id="edge28_Node000003_Node000013" title=" " alt="" coords="667,112,734,173,804,228,800,232,730,177,664,116"/>
+<area shape="rect" id="Node000014" href="$simul__explore__exploit_8h.html" title="Simultaneous exploration and exploitation algorithm Uses frontier&#45;based exploration with bias towards..." alt="" coords="923,230,1079,255"/>
+<area shape="poly" id="edge30_Node000003_Node000014" title=" " alt="" coords="724,104,822,125,896,148,926,167,953,189,993,228,989,232,950,193,923,171,893,153,820,130,723,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="887,176,1092,221,1119,227,1117,232,1091,226,886,182"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="728,177,578,197,407,226,379,232,378,227,406,221,577,192,728,171"/>
+<area shape="poly" id="edge10_Node000004_Node000010" title=" " alt="" coords="898,171,1055,192,1234,221,1265,227,1264,232,1233,226,1054,197,898,177"/>
+<area shape="poly" id="edge12_Node000004_Node000011" title=" " alt="" coords="749,182,534,232,533,227,748,177"/>
+<area shape="poly" id="edge14_Node000004_Node000012" title=" " alt="" coords="775,185,686,225,683,220,773,180"/>
+<area shape="poly" id="edge16_Node000004_Node000013" title=" " alt="" coords="818,191,820,230,815,230,812,191"/>
+<area shape="poly" id="edge18_Node000004_Node000014" title=" " alt="" coords="856,179,974,227,972,232,854,184"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1104,262,1092,265,867,314,866,309,1091,259,1103,257"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="756,340,557,385,556,379,755,335"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="393,256,407,259,609,293,771,313,770,318,608,298,406,265,392,262"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="333,271,326,310,321,309,328,270"/>
+<area shape="poly" id="edge11_Node000010_Node000006" title=" " alt="" coords="1250,261,1234,265,1030,297,867,318,866,313,1029,292,1233,259,1249,256"/>
+<area shape="poly" id="edge13_Node000011_Node000006" title=" " alt="" coords="549,256,562,259,771,307,770,313,561,265,548,262"/>
+<area shape="poly" id="edge15_Node000012_Node000006" title=" " alt="" coords="701,266,793,307,791,312,699,271"/>
+<area shape="poly" id="edge17_Node000013_Node000006" title=" " alt="" coords="821,271,821,310,816,310,816,271"/>
+<area shape="poly" id="edge19_Node000014_Node000006" title=" " alt="" coords="961,264,847,312,845,307,959,259"/>
+</map>

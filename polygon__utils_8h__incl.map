@@ -1,0 +1,12 @@
+<map id="polygon_utils.h" name="polygon_utils.h">
+<area shape="rect" id="Node000001" title="Provides utilities for polygon manipulation using CGAL." alt="" coords="29,5,137,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,151,62,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,32,60,53,47,79,39,108,36,135,31,135,34,107,42,77,55,50,71,29"/>
+<area shape="rect" id="Node000003" href="$typedefs_8h.html" title="Contains typedefs for the library." alt="" coords="57,78,240,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="96,29,129,65,125,68,92,32"/>
+<area shape="poly" id="edge5_Node000003_Node000002" title=" " alt="" coords="131,106,66,145,64,140,128,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="92,151,188,175"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="149,104,146,135,141,135,144,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="212,151,268,175"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="165,101,215,139,212,143,162,105"/>
+</map>

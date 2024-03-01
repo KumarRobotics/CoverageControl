@@ -1,0 +1,16 @@
+<map id="vec2d.h" name="vec2d.h">
+<area shape="rect" id="Node000001" title="Contains Vec2d class for 2D vector." alt="" coords="73,5,139,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,151,63,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,32,79,53,62,79,50,108,42,136,37,135,45,106,57,77,75,50,93,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="72,78,140,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,31,109,62,103,62,103,31"/>
+<area shape="rect" id="Node000004" href="$constants_8h.html" title="Constants for the CoverageControl library." alt="" coords="164,78,355,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="132,28,221,69,219,74,130,33"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="223,106,78,151,77,146,221,101"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="86,151,254,175"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="246,105,198,143,194,139,243,101"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="277,151,330,175"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="269,102,290,136,286,139,264,105"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="354,151,407,175"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="281,101,349,140,347,145,278,106"/>
+</map>
