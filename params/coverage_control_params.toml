@@ -76,7 +76,7 @@ PositionsNoiseSigma = 0.1
 [Algorithm]
 
 # Number of steps in an episode
-EpisodeSteps = 2000
+EpisodeSteps = 2100
 
 [Algorithm.Global-CVT]
 # Settings for Global-CVT algorithm

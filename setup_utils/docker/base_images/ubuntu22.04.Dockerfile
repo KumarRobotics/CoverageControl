@@ -58,6 +58,14 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/archives/parital/*.deb; \
 		rm -f /var/cache/apt/*.bin
 
+RUN mkdir download; \
+		wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.1%2Bcpu.zip -O download/libtorch.zip; \
+		unzip download/libtorch.zip -d /opt/; \
+		rm -r download
+
+ENV LD_LIBRARY_PATH /usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}
+ENV Torch_DIR /opt/libtorch/share/cmake/
+
 COPY requirements_cpu.txt /opt/requirements.txt
 RUN python3.11 -m venv /opt/venv
 RUN /opt/venv/bin/pip install --no-cache-dir wheel

@@ -5,11 +5,20 @@
  * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
  * Repository: https://github.com/KumarRobotics/CoverageControl
  *
- * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * Copyright (c) 2024, Saurav Agarwal
  *
- * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * The CoverageControl library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ * The CoverageControl library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*!
@@ -17,8 +26,8 @@
  * \brief Provides python bindings for the core CoverageControl library using pybind11
  */
 
-#ifndef COVERAGECONTROL_PYTHON_BINDS_H_
-#define COVERAGECONTROL_PYTHON_BINDS_H_
+#ifndef CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
+#define CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
 
 #include <vector>
 #include <CoverageControl/vec2d.h>
@@ -30,12 +39,12 @@
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/voronoi.h>
 /* #include <CoverageControl/geographiclib_wrapper.h> */
-#include <CoverageControl/algorithms/oracle_global_offline.h>
+#include <CoverageControl/algorithms/near_optimal_cvt.h>
 #include <CoverageControl/algorithms/decentralized_cvt.h>
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
 #include <CoverageControl/algorithms/oracle_bang_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
-#include <CoverageControl/algorithms/clairvyont_cvt.h>
+#include <CoverageControl/algorithms/clairvoyant_cvt.h>
 #include <CoverageControl/algorithms/centralized_cvt.h>
 
 #include <iostream>
@@ -50,16 +59,13 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 	void pyCoverageControl_core(py::module &m) {
 		m.doc() = "CoverageControl library";
 
-		m.def("Point2", []() {return Point2(0, 0);});
-		m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
+		m.def("Point2", []() {return Point2(0, 0);}, "Create a Point2 object with both values 0");
+		m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);}, "Create a Point2 object with values a and b");
 
 
 		py::bind_vector<std::vector<double>>(m, "DblVector");
 		py::bind_vector<std::vector<std::vector<double>>>(m, "DblVectorVector");
 		py::bind_vector<std::vector<int>>(m, "intVector");
-
-		m.def("Point2", []() {return Point2(0, 0);});
-		m.def("Point2", [](double const &a, double const &b) { return Point2(a, b);});
 
 		py::bind_vector<PointVector>(m, "PointVector");
 		py::bind_vector<std::vector<Point3>>(m, "Point3Vector");
@@ -85,6 +91,12 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def(py::init<>())
 			.def(py::init<Point2 const, double const, double const>())
 			.def(py::init<Point2 const, Point2 const, double const, double const>())
+			.def("GetMean", &BivariateNormalDistribution::GetMean)
+			.def("GetSigma", &BivariateNormalDistribution::GetSigma)
+			.def("GetRho", &BivariateNormalDistribution::GetRho)
+			.def("GetScale", &BivariateNormalDistribution::GetScale)
+			.def("TransformPoint", &BivariateNormalDistribution::TransformPoint)
+			.def("IntegrateQuarterPlane", &BivariateNormalDistribution::IntegrateQuarterPlane)
 			;
 
 		py::bind_vector<BNDVector>(m, "BNDVector");
@@ -96,30 +108,34 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 			.def("AddNormalDistribution", py::overload_cast<BivariateNormalDistribution const &>(&WorldIDF::AddNormalDistribution))
 			.def("AddNormalDistribution", py::overload_cast<BNDVector const &>(&WorldIDF::AddNormalDistribution))
 			.def("GenerateMap", &WorldIDF::GenerateMap)
-			.def("GenerateMap", py::overload_cast<>(&WorldIDF::GenerateMap))
-			/* .def("GenerateMapCuda", py::overload_cast<float const, float const, int const>(&WorldIDF::GenerateMapCuda)) */
 			.def("GetWorldMap", &WorldIDF::GetWorldMap, py::return_value_policy::reference_internal)
 			.def("WriteWorldMap", &WorldIDF::WriteWorldMap)
 			.def("GetNormalizationFactor", &WorldIDF::GetNormalizationFactor)
 			.def("PrintMapSize", &WorldIDF::PrintMapSize)
 			.def("LoadMap", &WorldIDF::LoadMap)
+			.def("WriteDistributions", &WorldIDF::WriteDistributions)
+			.def("GetNumFeatures", &WorldIDF::GetNumFeatures)
 			;
 
 		py::class_<RobotModel>(m, "RobotModel")
 			.def(py::init<Parameters const &, Point2 const, WorldIDF const>())
 			.def("StepControl", &RobotModel::StepControl)
 			.def("SetRobotPosition", &RobotModel::SetRobotPosition)
+			.def("SetGlobalRobotPosition", &RobotModel::SetGlobalRobotPosition)
 			.def("GetGlobalStartPosition", &RobotModel::GetGlobalStartPosition)
 			.def("GetGlobalCurrentPosition", &RobotModel::GetGlobalCurrentPosition)
 			.def("GetRobotMap", &RobotModel::GetRobotMap, py::return_value_policy::reference_internal)
 			.def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap, py::return_value_policy::reference_internal)
+			.def("GetRobotSystemMap", &RobotModel::GetRobotSystemMap, py::return_value_policy::reference_internal)
 			.def("GetSensorView", &RobotModel::GetSensorView, py::return_value_policy::reference_internal)
 			.def("GetExplorationMap", &RobotModel::GetExplorationMap, py::return_value_policy::reference_internal)
+			.def("GetObstacleMap", &RobotModel::GetObstacleMap, py::return_value_policy::reference_internal)
 			;
 
 		py::class_<OracleExploreExploit>(m, "OracleExploreExploit")
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &OracleExploreExploit::Step)
+			.def("ComputeActions", &OracleExploreExploit::ComputeActions)
+			.def("IsConverged", &OracleExploreExploit::IsConverged)
 			.def("GetActions", &OracleExploreExploit::GetActions)
 			.def("SetGoals", &OracleExploreExploit::SetGoals)
 			.def("GetGoals", &OracleExploreExploit::GetGoals)
@@ -129,39 +145,48 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 
 		py::class_<OracleSimulExploreExploit>(m, "OracleSimulExploreExploit")
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &OracleSimulExploreExploit::Step)
+			.def("ComputeActions", &OracleSimulExploreExploit::ComputeActions)
+			.def("IsConverged", &OracleSimulExploreExploit::IsConverged)
 			.def("GetActions", &OracleSimulExploreExploit::GetActions)
 			.def("GetRobotStatus", &OracleSimulExploreExploit::GetRobotStatus)
 			.def("SetGoals", &OracleSimulExploreExploit::SetGoals)
 			.def("GetGoals", &OracleSimulExploreExploit::GetGoals)
 			;
 
-		py::class_<OracleGlobalOffline>(m, "OracleGlobalOffline")
+		py::class_<NearOptimalCVT>(m, "NearOptimalCVT")
+			.def(py::init<Parameters const &, CoverageSystem &>())
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &OracleGlobalOffline::Step)
-			.def("GetActions", &OracleGlobalOffline::GetActions)
-			.def("GetGoals", &OracleGlobalOffline::GetGoals)
-			.def("GetVoronoi", &OracleGlobalOffline::GetVoronoi)
+			.def("ComputeActions", &NearOptimalCVT::ComputeActions)
+			.def("GetActions", &NearOptimalCVT::GetActions)
+			.def("IsConverged", &NearOptimalCVT::IsConverged)
+			.def("GetGoals", &NearOptimalCVT::GetGoals)
+			.def("GetVoronoi", &NearOptimalCVT::GetVoronoi)
 			;
 
-		py::class_<ClairvyontCVT>(m, "ClairvyontCVT")
+		py::class_<ClairvoyantCVT>(m, "ClairvoyantCVT")
+			.def(py::init<Parameters const &, CoverageSystem &>())
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &ClairvyontCVT::Step)
-			.def("GetActions", &ClairvyontCVT::GetActions)
-			.def("GetGoals", &ClairvyontCVT::GetGoals)
-			.def("GetVoronoi", &ClairvyontCVT::GetVoronoi)
+			.def("ComputeActions", &ClairvoyantCVT::ComputeActions)
+			.def("IsConverged", &ClairvoyantCVT::IsConverged)
+			.def("GetActions", &ClairvoyantCVT::GetActions)
+			.def("GetGoals", &ClairvoyantCVT::GetGoals)
+			.def("GetVoronoi", &ClairvoyantCVT::GetVoronoi)
 			;
 
 		py::class_<DecentralizedCVT>(m, "DecentralizedCVT")
+			.def(py::init<Parameters const &, CoverageSystem &>())
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &DecentralizedCVT::Step)
+			.def("ComputeActions", &DecentralizedCVT::ComputeActions)
+			.def("IsConverged", &DecentralizedCVT::IsConverged)
 			.def("GetActions", &DecentralizedCVT::GetActions)
 			.def("GetGoals", &DecentralizedCVT::GetGoals)
 			;
 
 		py::class_<CentralizedCVT>(m, "CentralizedCVT")
+			.def(py::init<Parameters const &, CoverageSystem &>())
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &CentralizedCVT::Step)
+			.def("ComputeActions", &CentralizedCVT::ComputeActions)
+			.def("IsConverged", &CentralizedCVT::IsConverged)
 			.def("GetActions", &CentralizedCVT::GetActions)
 			.def("GetGoals", &CentralizedCVT::GetGoals)
 			.def("GetVoronoi", &CentralizedCVT::GetVoronoi)
@@ -169,7 +194,8 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 
 		py::class_<OracleBangExploreExploit>(m, "OracleBangExploreExploit")
 			.def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-			.def("Step", &OracleBangExploreExploit::Step)
+			.def("ComputeActions", &OracleBangExploreExploit::ComputeActions)
+			.def("IsConverged", &OracleBangExploreExploit::IsConverged)
 			.def("GetActions", &OracleBangExploreExploit::GetActions)
 			.def("GetRobotStatus", &OracleBangExploreExploit::GetRobotStatus)
 			.def("SetGoals", &OracleBangExploreExploit::SetGoals)
@@ -218,6 +244,7 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 
 	void pyCoverageControl_core_coverage_system(py::module &m) {
 		py::class_<CoverageSystem>(m, "CoverageSystem")
+			.def(py::init<Parameters const &>())
 			.def(py::init<Parameters const &, int const, int const>())
 			.def(py::init<Parameters const &, WorldIDF const &, PointVector const &>())
 			.def(py::init<Parameters const &, WorldIDF const &, std::string const &>())
@@ -276,6 +303,4 @@ typedef std::vector<BivariateNormalDistribution> BNDVector;
 
 }
 
-
-
-#endif
+#endif  // CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_

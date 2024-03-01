@@ -5,11 +5,20 @@
  * Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
  * Repository: https://github.com/KumarRobotics/CoverageControl
  *
- * The CoverageControl library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * Copyright (c) 2024, Saurav Agarwal
  *
- * The CoverageControl library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * The CoverageControl library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
  *
- * You should have received a copy of the GNU General Public License along with CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+ * The CoverageControl library is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*!
@@ -17,19 +26,20 @@
  * \brief Contains the configuration for the CGAL library.
  */
 
-#ifndef COVERAGECONTROL_CGAL_CONFIG_H_
-#define COVERAGECONTROL_CGAL_CONFIG_H_
+#ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_CONFIG_H_
+#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_CONFIG_H_
+
+#include <CGAL/Arr_linear_traits_2.h>
+#include <CGAL/Arr_walk_along_line_point_location.h>
+#include <CGAL/Arrangement_2.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Partition_traits_2.h>
+#include <CGAL/Polygon_with_holes_2.h>
+#include <CGAL/centroid.h>
+#include <CGAL/partition_2.h>
 
 #include <iterator>
-#include <CGAL/Polygon_with_holes_2.h>
-#include <CGAL/Arr_linear_traits_2.h>
-#include <CGAL/Arrangement_2.h>
-#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
-#include <CGAL/Delaunay_triangulation_2.h>
-#include <CGAL/Arr_walk_along_line_point_location.h>
-#include <CGAL/partition_2.h>
-#include <CGAL/Partition_traits_2.h>
-#include <CGAL/centroid.h>
 
 typedef CGAL::Exact_predicates_exact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point2;
@@ -37,7 +47,7 @@ typedef K::Iso_rectangle_2 Iso_rectangle_2;
 typedef K::Segment_2 Segment_2;
 typedef K::Ray_2 Ray_2;
 typedef K::Line_2 Line_2;
-typedef CGAL::Delaunay_triangulation_2<K>  Delaunay_triangulation_2;
+typedef CGAL::Delaunay_triangulation_2<K> Delaunay_triangulation_2;
 
 typedef CGAL::Polygon_2<K> Polygon_2;
 typedef CGAL::Polygon_with_holes_2<K> Polygon_with_holes_2;
@@ -48,4 +58,4 @@ typedef CGAL::Arr_walk_along_line_point_location<Arrangement_2> CGAL_pl;
 
 typedef CGAL::Partition_traits_2<K> Partition_traits_2;
 
-#endif /* COVERAGECONTROL_CGAL_CONFIG_H_ */
+#endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_CONFIG_H_

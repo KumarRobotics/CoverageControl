@@ -10,7 +10,7 @@ find_package(pybind11 CONFIG REQUIRED)
 
 find_package(CoverageControl REQUIRED)
 
-pybind11_add_module(CoverageControl MODULE src/coverage_control_python_binds.cpp)
+pybind11_add_module(CoverageControl MODULE python_binds.cpp)
 target_link_libraries(CoverageControl PRIVATE CoverageControl::CoverageControl)
 install(TARGETS CoverageControl LIBRARY DESTINATION .)
 

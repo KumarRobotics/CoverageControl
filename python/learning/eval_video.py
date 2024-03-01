@@ -4,10 +4,10 @@ import sys
 
 import torch
 
-import pyCoverageControl as cc# Main library
-from pyCoverageControl import CoverageSystem
-from pyCoverageControl import PointVector, Parameters, WorldIDF
-from pyCoverageControl import OracleGlobalOffline, LloydLocalVoronoi, LloydGlobalOnline, LloydLocalSensorGlobalComm
+import CoverageControl as cc# Main library
+from CoverageControl import CoverageSystem
+from CoverageControl import PointVector, Parameters, WorldIDF
+from CoverageControl import OracleGlobalOffline, LloydLocalVoronoi, LloydGlobalOnline, LloydLocalSensorGlobalComm
 
 import CoverageControlTorch as cct
 from CoverageControlTorch.data_loaders import data_loader_utils as dl_utils

@@ -22,27 +22,29 @@
  */
 
 /*!
- * \file polygon_utils.h
- * \brief Provides utilities for polygon manipulation using CGAL.
+ * \file python_binds.cpp
+ * \brief Python bindings for the CoverageControl library using pybind11 (\ref
+ * core_binds.h)
  */
 
-#ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_POLYGON_UTILS_H_
-#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_POLYGON_UTILS_H_
+#include <CoverageControl/coverage_system.h>
+#include <CoverageControlConfig.h>
+#include <pybind11/eigen.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl_bind.h>
 
-#include <vector>
+#include "core_binds.h"
+using namespace CoverageControl;
 
-#include "CoverageControl/typedefs.h"
+PYBIND11_MODULE(CoverageControl, m) {
+  pyCoverageControl_core(m);
+  pyCoverageControl_core_coverage_system(m);
 
-namespace CoverageControl {
-
-/*! \brief Partition a polygon into y-monotone polygons
- *
- * @param[in] polygon The input polygon
- * @param[out] y_monotone_polygons The output y-monotone polygons
- */
-void PolygonYMonotonePartition(PointVector const &polygon,
-                               std::vector<PointVector> &y_monotone_polygons);
-
-} /* namespace CoverageControl */
-
-#endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_POLYGON_UTILS_H_
+  /* m.attr("__version__") = CoverageControl_VERSION_MAJOR "."
+   * CoverageControl_VERSION_MINOR "." CoverageControl_VERSION_PATCH; */
+#ifdef CoverageControl_VERSION
+  m.attr("__version__") = CoverageControl_VERSION;
+#else
+  m.attr("__version__") = "dev";
+#endif
+}

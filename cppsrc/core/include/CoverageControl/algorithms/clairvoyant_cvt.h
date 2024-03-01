@@ -22,12 +22,12 @@
  */
 
 /*!
- * \file centralized_cvt.h
- * \brief Contains the class CentralizedCVT
+ * \file clairvoyant_cvt.h
+ * \brief Clairvoyant CVT algorithm
  */
 
-#ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_CENTRALIZED_CVT_H_
-#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_CENTRALIZED_CVT_H_
+#ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_CLAIRVOYANT_CVT_H_
+#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_CLAIRVOYANT_CVT_H_
 
 #include <omp.h>
 
@@ -39,26 +39,26 @@
 #include <set>
 #include <vector>
 
-#include "CoverageControl/algorithms/abstract_controller.h"
 #include "CoverageControl/coverage_system.h"
+#include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
+#include "CoverageControl/algorithms/abstract_controller.h"
 
 namespace CoverageControl {
 
 /*!
  * \addtogroup cpp_api
  * @{
- * \class CentralizedCVT
+ * \class ClairvoyantCVT
  * @}
- * The coverage control algorithm uses centralized Centroidal Voronoi
- *Tessellation (CVT) or Lloyd's algorithm on accumulated local map of individual
- *robots, i.e., a robot has knowledge only about the regions it has visited.
- * Communication radius is not considered.
- * The algorithm is online---it takes localized actions based on the current
- *robot positions.
- **/
-class CentralizedCVT : public AbstractController {
+ * Clairvoyant CVT algorithm
+ * The algorithm has knowledge of the entire map in a centralized manner.
+ * It uses the CVT to compute centroids of the Voronoi cells and assigns the
+ * robots to the centroids. The algorithm is online---it takes localized
+ * actions based on the current robot positions.
+ */
+class ClairvoyantCVT : public AbstractController {
  private:
   Parameters const params_;
   size_t num_robots_ = 0;
@@ -71,16 +71,16 @@ class CentralizedCVT : public AbstractController {
   bool is_converged_ = false;
 
  public:
-	CentralizedCVT(Parameters const &params, CoverageSystem &env)
-			: CentralizedCVT(params, params.pNumRobots, env) {}
-  CentralizedCVT(Parameters const &params, size_t const &num_robots,
-                 CoverageSystem &env)
+	ClairvoyantCVT(Parameters const &params, CoverageSystem &env)
+			: ClairvoyantCVT(params, params.pNumRobots, env) {}
+  ClairvoyantCVT(Parameters const &params, size_t const &num_robots,
+                CoverageSystem &env)
       : params_{params}, num_robots_{num_robots}, env_{env} {
     robot_global_positions_ = env_.GetRobotPositions();
     actions_.resize(num_robots_);
     goals_ = robot_global_positions_;
     voronoi_mass_.resize(num_robots_, 0);
-    voronoi_ = Voronoi(robot_global_positions_, env_.GetSystemExploredIDFMap(),
+    voronoi_ = Voronoi(robot_global_positions_, env_.GetWorldIDF(),
                        Point2(params_.pWorldMapSize, params_.pWorldMapSize),
                        params_.pResolution);
     ComputeGoals();
@@ -93,17 +93,13 @@ class CentralizedCVT : public AbstractController {
   auto &GetVoronoi() { return voronoi_; }
 
   void ComputeGoals() {
-    voronoi_ = Voronoi(robot_global_positions_, env_.GetSystemExploredIDFMap(),
-                       Point2(params_.pWorldMapSize, params_.pWorldMapSize),
-                       params_.pResolution);
+    voronoi_.UpdateSites(robot_global_positions_);
     auto voronoi_cells = voronoi_.GetVoronoiCells();
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
       goals_[iRobot] = voronoi_cells[iRobot].centroid();
       voronoi_mass_[iRobot] = voronoi_cells[iRobot].mass();
     }
   }
-
-  bool IsConverged() const { return is_converged_; }
 
   bool ComputeActions() {
     is_converged_ = true;
@@ -134,7 +130,8 @@ class CentralizedCVT : public AbstractController {
     return true;
   }
 
+  bool IsConverged() const { return is_converged_; }
 };
 
-} /* namespace CoverageControl */
-#endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_CENTRALIZED_CVT_H_
+}  // namespace CoverageControl
+#endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_CLAIRVOYANT_CVT_H_

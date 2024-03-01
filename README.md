@@ -1,11 +1,63 @@
-# CoverageControl
-The library provides a simulation environment, algorithms, and PyTorch models for the coverage control problem.  
-Key features:  
-- The core library `CoverageControlCore` is written in C++ and CUDA for fast computation
+See full documentation at [https://KumarRobotics.github.io/CoverageControl/](https://KumarRobotics.github.io/CoverageControl/)
+
+## Introduction
+
+Coverage control is the problem of navigating a robot swarm to collaboratively monitor features or a phenomenon of interest not known _a priori_.
+The library provides a simulation environment, algorithms, and GNN-based architectures for the coverage control problem.  
+<img align="right" width="300" src="doc/graphics/LPAC.gif">
+
+**Key features:**  
+- The core library `CoverageControlCore` is written in `C++` and `CUDA` to handle large-scale simulations
 - There are `python` bindings that interface with the core library
-- Several algorithms are implemented for comparison and baselines
-- PyTorch models in both `C++` and `python`
+- Several Centroidal Voronoi Tessellation (CVT)-based algorithms (aka Lloyd's algorithms)
+- Learnable Perception-Action-Communication (LPAC) architecture for the coverage control problem is implemented in `PyTorch` and `PyTorch Geometric`
+- GPU and CPU parallelization using `CUDA` and `OpenMP`
+
+---
+
+## Citation
+```
+@article{agarwal2024lpac,
+      title         =   {LPAC: Learnable Perception-Action-Communication Loops with
+                            Applications to Coverage Control}, 
+      author        =   {Saurav Agarwal and Ramya Muthukrishnan and 
+                            Walker Gosrich and Vijay Kumar and Alejandro Ribeiro},
+      year          =   {2024},
+      eprint        =   {2401.04855},
+      archivePrefix =   {arXiv},
+      primaryClass  =   {cs.RO}
+}
+```
+  
+> [LPAC: Learnable Perception-Action-Communication Loops with Applications to Coverage Control.](https://doi.org/10.48550/arXiv.2401.04855)  
+> Saurav Agarwal, Ramya Muthukrishnan, Walker Gosrich, Vijay Kumar, and Alejandro Ribeiro.  
+> arXiv preprint arXiv:2401.04855 (2024).
 
 
-## Installation
-See [Installation](https://github.com/AgarwalSaurav/CoverageControl/wiki)
+## Open Source Libraries
+- [PyTorch](https://pytorch.org/)
+- [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/)
+- [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [pybind11](https://pybind11.readthedocs.io/en/stable/)
+- [CGAL](https://www.cgal.org/)
+- [JSON for Modern C++](https://github.com/nlohmann/json)
+- [CUDA Samples](https://github.com/NVIDIA/cuda-samples)
+- [gnuplot-iostream](http://stahlke.org/dan/gnuplot-iostream/)
+- [hungarian-algorithm-cpp](https://github.com/mcximing/hungarian-algorithm-cpp)
+- [toml++](https://marzer.github.io/tomlplusplus/index.html)
+
+
+## Support and Funding
+The work was performed at the [GRASP Laboratory](https://www.grasp.upenn.edu/) and the [Alelab](https://alelab.seas.upenn.edu/), University of Pennsylvania, USA.
+
+This work was supported in part by grants ARL DCIST CRA W911NF-17-2-0181 and ONR N00014-20-1-2822.
+
+
+## Contributors
+- [Saurav Agarwal](https://www.saurav.fyi/)
+- Ramya Muthukrishnan
+
+
+## License
+The library is licensed under the [GPL-3.0 License](https://www.gnu.org/licenses/gpl-3.0.html).
+The documentation is not under the GPL-3.0 License and is licensed under the [CC BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/).

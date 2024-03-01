@@ -67,6 +67,7 @@ set(dependencies_list Eigen3::Eigen m stdc++fs OpenMP::OpenMP_CXX pthread boost_
 
 add_library(${PROJECT_NAME} SHARED ${sources_list})
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_BINARY_DIR}")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_INSTALL_INCLUDEDIR}")
 target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags CGAL::CGAL)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
