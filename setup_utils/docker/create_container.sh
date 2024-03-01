@@ -14,7 +14,7 @@ print_usage() {
 eval set -- "$params"
 unset params
 
-IMAGE_BASE_NAME=ghcr.io/agarwalsaurav/coveragecontrol
+IMAGE_BASE_NAME=ghcr.io/kumarrobotics/coveragecontrol
 IMAGE_TAG=latest
 
 while true; do

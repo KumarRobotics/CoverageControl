@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=agarwalsaurav/pytorch_base
+ARG BASE_IMAGE=ghcr.io/kumarrobotics/pytorch_base
 ARG BASE_TAG=pytorch2.2.1
 ARG SETUP_ARGS="-p"
 
