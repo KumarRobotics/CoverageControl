@@ -31,14 +31,15 @@
 
 namespace CoverageControl {
 
-void Plotter::GnuplotCommands(Gnuplot &gp) {
-  std::filesystem::path path{dir};
-  if (not std::filesystem::exists(path)) {
-    std::cerr << "Directory does not exist" << std::endl;
-    throw std::runtime_error{"Directory does not exist"};
+[[nodiscard]] bool Plotter::GnuplotCommands(Gnuplot &gp) {
+
+	std::filesystem::path map_filename{std::filesystem::weakly_canonical(dir + "/" + plot_name)};
+	std::filesystem::path dir_path{map_filename.parent_path()};
+	if (!std::filesystem::exists(dir_path)) {
+    std::cerr << "Directory does not exist: " << dir_path << std::endl;
+		return 1;
   }
-  std::string map_filename{std::filesystem::absolute(path / plot_name)};
-  gp << "set o '" << map_filename << "'\n";
+  gp << "set o '" << map_filename.string() << "'\n";
   gp << "set terminal pngcairo enhanced font 'Times," << font_sz << "' size "
      << image_sz << "," << image_sz << "\n";
   gp << "set palette defined (-5 'black', -1 '" << color_unknown
@@ -48,6 +49,7 @@ void Plotter::GnuplotCommands(Gnuplot &gp) {
   gp << "set xrange [0:" << range_max << "]\n";
   gp << "set yrange [0:" << range_max << "]\n";
   if (unset_colorbox) gp << "unset colorbox\n";
+	return 0;
 }
 
 void Plotter::StreamMap(Gnuplot &gp, MapType const &map) {
@@ -91,7 +93,10 @@ void Plotter::PlotPoints(Gnuplot &gp, int point_type, int marker_size,
 
 void Plotter::PlotMap(MapType const &map) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
   gp << "\n";
   StreamMap(gp, map);
@@ -99,7 +104,10 @@ void Plotter::PlotMap(MapType const &map) {
 
 void Plotter::PlotMap(MapType const &map, PointVector const &positions) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
   PlotPoints(gp, 7, marker_sz, color_robot);
   gp << "\n";
@@ -116,7 +124,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
                       std::vector<std::list<Point2>> const &trajectories,
                       std::vector<int> const &robot_status) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
 
   for (size_t i = 0; i < positions.size(); ++i) {
@@ -154,7 +165,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
                       std::vector<int> const &robot_status,
                       double const &communication_range) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
 
   for (size_t i = 0; i < positions.size(); ++i) {
@@ -202,7 +216,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
                       std::vector<std::list<Point2>> const &voronoi,
                       std::vector<std::list<Point2>> const &trajectories) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
 
   PlotLine(gp, marker_sz, color_robot, false);
@@ -238,7 +255,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
                       Voronoi const &voronoi,
                       std::vector<std::list<Point2>> const &trajectories) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
 
   PlotLine(gp, marker_sz, color_robot, false);
@@ -276,7 +296,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
 void Plotter::PlotMap(MapType const &map, PointVector const &positions,
                       PointVector const &goals, Voronoi const &voronoi) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
   PlotMap(gp);
 
   PlotLine(gp, half_marker_sz, color_voronoi, false);  // voronoi
@@ -322,7 +345,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
                       std::vector<std::list<Point2>> const &trajectories,
                       PointVector const &frontiers) {
   Gnuplot gp;
-  GnuplotCommands(gp);
+	if (GnuplotCommands(gp)) {
+		std::cerr << "Error in GnuplotCommands" << std::endl;
+		return;
+	}
 
   PlotMap(gp);
   PlotLine(gp, marker_sz, color_robot);

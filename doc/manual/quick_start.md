@@ -22,12 +22,17 @@ You can choose one of the following algorithms instead of `ClairvoyantCVT`:
 Create a `CoverageControl::Parameters` object and load the configuration file:
 ```python
 params = CoverageControl.Parameters() # for default parameters
-params.load("params/coverage_control_params.toml") # load the configuration file
+params.load("params/coverage_control_params.toml") # Alternatively, load a configuration file
 ```
 
 Create a simulation environment:
 ```python
-env = CoverageControl.Environment(params)
+env = CoverageControl.CoverageSystem(params)
+```
+
+Plot the initial environment:
+```python
+env.PlotInitMap("init_map");
 ```
 
 Print the initial coverage cost:
@@ -64,6 +69,12 @@ current_cost = env.GetObjectiveValue()
 print("Improvement %: " + str('{:.2f}'.format(100 * (init_cost - current_cost)/init_cost)))
 ```
 
+Plot the final state of the environment:
+```cpp
+env.PlotSystemMap("final_map");
+```
+
+
 See \ref python/tests/coverage_simple.py and \ref python/tests/coverage_class.py for complete examples.
 
 ---
@@ -77,7 +88,7 @@ Include the `CoverageControl` library, algorithms, and other necessary headers:
 #include <CoverageControl/world_idf.h>
 #include <CoverageControl/coverage_system.h>
 
-#include <CoverageControl/algorithms/near_optimal_cvt.h>
+#include <CoverageControl/algorithms/clairvoyant_cvt.h>
 
 #include <iostream>
 #include <memory>
@@ -103,30 +114,30 @@ Parameters params;
 Create coverage system environment:
 ```cpp
 CoverageSystem env(params);
-auto init_objective = env->GetObjectiveValue();
+auto init_objective = env.GetObjectiveValue();
 std::cout << "Initial objective: " << init_objective << std::endl;
 ```
 
-To plot the initial environment use the function `PlotInitMap(dir_name, init_map)` :
+Plot the initial environment:
 ```cpp
-env.PlotInitMap("./", "init_map");
+env.PlotInitMap("init_map"); // Creates "init_map.png"
 ```
 
 Create a controller using the `CoverageAlgorithm` and the environment:
 ```cpp
-CoverageAlgorithm algorithm(params, *env);
+CoverageAlgorithm algorithm(params, env);
 ```
 
 Execute the algorithm:
 ```cpp
-for (int ii = 0; ii < params.pEpisodeSteps; ++ii) {
+for (int i = 0; i < params.pEpisodeSteps; ++i) {
     algorithm.ComputeActions();
     auto actions = algorithm.GetActions();
-    if (env->StepActions(actions)) {
+    if (env.StepActions(actions)) {
         std::cout << "Invalid action" << std::endl;
         break;
     }
-    if (algorithm.IsConverged() {
+    if (algorithm.IsConverged()) {
         break;
     }
 }
@@ -134,16 +145,49 @@ for (int ii = 0; ii < params.pEpisodeSteps; ++ii) {
 
 Print improvement in cost:
 ```cpp
-auto current_objective = env->GetObjectiveValue();
+auto final_objective = env.GetObjectiveValue();
 std::cout << "Improvement %: "
           << (init_objective - final_objective) / init_objective * 100
           << std::endl;
 ```
 
+Plot the final state of the environment:
+```cpp
+env.PlotSystemMap("final_map"); // Creates "final_map.png"
+```
+
 See \ref cppsrc/main/coverage_algorithm.cpp for a complete example.
 
+### Compile and Run
 
+Create a `CMakeLists.txt` file with the following content:
+```python
+cmake_minimum_required(VERSION 3.16)
+project(coveragecontrol)
 
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+find_package(CoverageControl REQUIRED)
+
+add_executable(coveragecontrol coveragecontrol.cpp) # Replace with your source file
+target_link_libraries(coveragecontrol PRIVATE CoverageControl::CoverageControl)
+install(TARGETS coveragecontrol DESTINATION ${CMAKE_INSTALL_BINDIR})
+```
+
+Build the program:
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
+Run the program:
+```bash
+./coveragecontrol
+```
 
 
 

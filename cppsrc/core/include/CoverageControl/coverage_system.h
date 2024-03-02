@@ -66,7 +66,6 @@ namespace CoverageControl {
  * library.
  */
 class CoverageSystem {
- protected:
   Parameters const params_;         //!< Parameters for the coverage system
   WorldIDF world_idf_;              //!< World IDF
   size_t num_robots_ = 0;           //!< Number of robots
@@ -404,6 +403,7 @@ class CoverageSystem {
     std::vector<int> robot_status(num_robots_, 0);
     PlotSystemMap(dir_name, step, robot_status);
   }
+	void PlotSystemMap(std::string const &) const;
   void PlotSystemMap(std::string const &, int const &,
                      std::vector<int> const &) const;
   void PlotMapVoronoi(std::string const &, int const &);
@@ -411,6 +411,9 @@ class CoverageSystem {
                       PointVector const &) const;
   void PlotWorldMap(std::string const &, std::string const &) const;
   void PlotWorldMapRobots(std::string const &, std::string const &) const;
+  void PlotInitMap(std::string const &filename) const {
+		PlotInitMap("./", filename);
+	}
   void PlotInitMap(std::string const &, std::string const &) const;
   void PlotRobotLocalMap(std::string const &, int const &, int const &);
   void PlotRobotSystemMap(std::string const &, int const &, int const &);

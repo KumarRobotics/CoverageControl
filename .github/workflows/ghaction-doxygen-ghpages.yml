@@ -1,6 +1,9 @@
 on:
   release:
     types: [published]
+  push:
+    paths:
+      - 'doc/**'
 permissions:
   contents: write
 

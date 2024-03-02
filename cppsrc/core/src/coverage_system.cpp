@@ -34,8 +34,8 @@ namespace CoverageControl {
 CoverageSystem::CoverageSystem(Parameters const &params)
     : CoverageSystem(params, params.pNumFeatures, params.pNumRobots) {}
 
-CoverageSystem::CoverageSystem(Parameters const &params,
-                               int const num_features, int const num_robots)
+CoverageSystem::CoverageSystem(Parameters const &params, int const num_features,
+                               int const num_robots)
     : params_{params}, world_idf_{WorldIDF(params_)} {
   // Generate Bivariate Normal Distribution from random numbers
   std::srand(
@@ -464,6 +464,17 @@ void CoverageSystem::RecordPlotData(std::vector<int> const &robot_status,
   }
   data.voronoi = voronoi;
   plotter_data_.push_back(data);
+}
+
+void CoverageSystem::PlotSystemMap(std::string const &filename) const {
+  std::vector<int> robot_status(num_robots_, 0);
+  Plotter plotter("./", params_.pWorldMapSize * params_.pResolution,
+                  params_.pResolution);
+  plotter.SetScale(2);
+  plotter.SetPlotName(filename);
+  plotter.PlotMap(system_map_, robot_global_positions_,
+                  robot_positions_history_, robot_status,
+                  params_.pCommunicationRange);
 }
 
 void CoverageSystem::PlotSystemMap(std::string const &dir_name, int const &step,

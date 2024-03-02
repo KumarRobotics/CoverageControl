@@ -107,7 +107,7 @@ class Plotter {
    * Voronoi const &); */
   /* void PlotMap(MapType const &, PointVector const &, PointVector const &); */
 
-  void GnuplotCommands(Gnuplot &gp);
+  bool GnuplotCommands(Gnuplot &gp);
   void StreamMap(Gnuplot &gp, MapType const &map);
   void PlotMap(Gnuplot &gp, bool begin = true);
   void PlotLine(Gnuplot &gp, int marker_sz, std::string color,
