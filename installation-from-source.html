@@ -124,15 +124,15 @@ $(function(){initNavTree('installation-from-source.html',''); initResizable(); }
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><ul><li class="level2"><a href="#autotoc_md21">Prerequisites</a><ul><li class="level3"><a href="#autotoc_md22">CUDA Support (Optional but recommended for GPU acceleration)</a></li>
+<ul><ul><li class="level2"><a href="#autotoc_md22">Prerequisites</a><ul><li class="level3"><a href="#autotoc_md23">CUDA Support (Optional but recommended for GPU acceleration)</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md24">Building the Core Library</a></li>
-<li class="level2"><a href="#autotoc_md26">Python Packages</a></li>
+<li class="level2"><a href="#autotoc_md25">Building the Core Library</a></li>
+<li class="level2"><a href="#autotoc_md27">Python Packages</a></li>
 </ul>
 </ul>
 </div>
-<div class="textblock"><h2><a class="anchor" id="autotoc_md21"></a>
+<div class="textblock"><h2><a class="anchor" id="autotoc_md22"></a>
 Prerequisites</h2>
 <p>The following packages are required to build the library:  
 <div class="fragment">
@@ -144,7 +144,7 @@ Prerequisites</h2>
 <div class="line"><span class="keywordflow">sudo</span> <span class="keyword">apt</span> <span class="keywordtype">install</span> build-essential cmake git wget python3 python3-pip python3-venv python3-dev</div>
 </div>
  </p>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 CUDA Support (Optional but recommended for GPU acceleration)</h3>
 <p>The package also supports GPU acceleration using CUDA. To enable this feature, the following additional packages are required:</p><ul>
 <li><a href="https://cmake.org/download/"><code>cmake</code></a> (version 3.24 or higher)</li>
@@ -152,7 +152,7 @@ CUDA Support (Optional but recommended for GPU acceleration)</h3>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>On Ubuntu, latest <code>cmake</code> version can be installed from the official <a href="https://apt.kitware.com/">Kitware APT Repository</a>.</dd></dl>
 <hr  />
-<h2><a class="anchor" id="autotoc_md24"></a>
+<h2><a class="anchor" id="autotoc_md25"></a>
 Building the Core Library</h2>
 <p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws).</p>
 <p>Add the following lines to your <code>~/.bashrc</code> file.  
@@ -187,7 +187,7 @@ Building the Core Library</h2>
 </table>
 <dl class="section warning"><dt>Warning</dt><dd>Ubuntu 22.04 (Jammy) has CGAL 5.4 (libcgal-dev) in the official repositories, which has bugs and is not compatible with the library. The package requires <code>CGAL 5.6</code>, which is installed if <code>--with-deps</code> is used. The <code>--with-deps</code> option is only required for the first build as the downloaded files will persist in the workspace installation directory (<code>${CoverageControl_ws}/install</code>).</dd></dl>
 <hr  />
-<h2><a class="anchor" id="autotoc_md26"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 Python Packages</h2>
 <p>The library provides two <code>python</code> packages:</p><ul>
 <li><code>CoverageControl</code> (bindings for the core library)</li>

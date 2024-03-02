@@ -121,8 +121,6 @@ $(function(){initNavTree('classCoverageControl_1_1CoverageSystem.html',''); init
 
 <div class="header">
   <div class="summary">
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classCoverageControl_1_1CoverageSystem-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CoverageSystem Class Reference<div class="ingroups"><a class="el" href="group__cpp__api.html">Core API</a></div></div></div>
 </div><!--header-->
@@ -202,6 +200,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7b9dd844c8e4d064a2c7132c8894e736"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1d327b24eefd3cc9a6527f57aa20fa4" id="r_aa1d327b24eefd3cc9a6527f57aa20fa4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1d327b24eefd3cc9a6527f57aa20fa4">PlotSystemMap</a> (std::string const &amp;dir_name, int const &amp;step) const</td></tr>
 <tr class="separator:aa1d327b24eefd3cc9a6527f57aa20fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af278d7f481c7eee828378a3e510ef145" id="r_af278d7f481c7eee828378a3e510ef145"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af278d7f481c7eee828378a3e510ef145">PlotSystemMap</a> (std::string const &amp;) const</td></tr>
+<tr class="separator:af278d7f481c7eee828378a3e510ef145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fa9e007d0bc3b2350418af6b997764a" id="r_a0fa9e007d0bc3b2350418af6b997764a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fa9e007d0bc3b2350418af6b997764a">PlotSystemMap</a> (std::string const &amp;, int const &amp;, std::vector&lt; int &gt; const &amp;) const</td></tr>
 <tr class="separator:a0fa9e007d0bc3b2350418af6b997764a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f1a83cc67f1a5fd388410c8c0e1e27f" id="r_a3f1a83cc67f1a5fd388410c8c0e1e27f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f1a83cc67f1a5fd388410c8c0e1e27f">PlotMapVoronoi</a> (std::string const &amp;, int const &amp;)</td></tr>
@@ -212,6 +212,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a261807451d9545ec87b7d4c98ffada63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cf061dedf45e93c811c8b4feb65fd71" id="r_a7cf061dedf45e93c811c8b4feb65fd71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7cf061dedf45e93c811c8b4feb65fd71">PlotWorldMapRobots</a> (std::string const &amp;, std::string const &amp;) const</td></tr>
 <tr class="separator:a7cf061dedf45e93c811c8b4feb65fd71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cfd34e469543224ca6bab2aeb2df7e2" id="r_a8cfd34e469543224ca6bab2aeb2df7e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cfd34e469543224ca6bab2aeb2df7e2">PlotInitMap</a> (std::string const &amp;filename) const</td></tr>
+<tr class="separator:a8cfd34e469543224ca6bab2aeb2df7e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad29320f9fee3158569fc76e0176082e5" id="r_ad29320f9fee3158569fc76e0176082e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad29320f9fee3158569fc76e0176082e5">PlotInitMap</a> (std::string const &amp;, std::string const &amp;) const</td></tr>
 <tr class="separator:ad29320f9fee3158569fc76e0176082e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e236e1c9cd59996d8fce3247c4808db" id="r_a5e236e1c9cd59996d8fce3247c4808db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e236e1c9cd59996d8fce3247c4808db">PlotRobotLocalMap</a> (std::string const &amp;, int const &amp;, int const &amp;)</td></tr>
@@ -303,99 +305,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a19f56291a38dcb9a32b68dd80ab0f5ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6943bd84c1b27f004b85570eb8498004" id="r_a6943bd84c1b27f004b85570eb8498004"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6943bd84c1b27f004b85570eb8498004">GetNormalizationFactor</a> ()</td></tr>
 <tr class="separator:a6943bd84c1b27f004b85570eb8498004"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a4d4c24aa62bcdf3623f9fcca2abc3fef" id="r_a4d4c24aa62bcdf3623f9fcca2abc3fef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d4c24aa62bcdf3623f9fcca2abc3fef">InitSetup</a> ()</td></tr>
-<tr class="memdesc:a4d4c24aa62bcdf3623f9fcca2abc3fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the member variables.  <br /></td></tr>
-<tr class="separator:a4d4c24aa62bcdf3623f9fcca2abc3fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0c441e13c71467f687ffc607114539b" id="r_ad0c441e13c71467f687ffc607114539b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0c441e13c71467f687ffc607114539b">UpdateSystemMap</a> ()</td></tr>
-<tr class="memdesc:ad0c441e13c71467f687ffc607114539b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the exploration map, explored IDF map, and system map.  <br /></td></tr>
-<tr class="separator:ad0c441e13c71467f687ffc607114539b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1390853e1a26a1e4edecfd637b905777" id="r_a1390853e1a26a1e4edecfd637b905777"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1390853e1a26a1e4edecfd637b905777">PostStepCommands</a> (size_t robot_id)</td></tr>
-<tr class="separator:a1390853e1a26a1e4edecfd637b905777"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25c0d2ef8db513dab42b80584ee52828" id="r_a25c0d2ef8db513dab42b80584ee52828"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25c0d2ef8db513dab42b80584ee52828">PostStepCommands</a> ()</td></tr>
-<tr class="separator:a25c0d2ef8db513dab42b80584ee52828"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acff573c6715926291c234074b14965ae" id="r_acff573c6715926291c234074b14965ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acff573c6715926291c234074b14965ae">ComputeAdjacencyMatrix</a> ()</td></tr>
-<tr class="memdesc:acff573c6715926291c234074b14965ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the adjacency matrix for communication.  <br /></td></tr>
-<tr class="separator:acff573c6715926291c234074b14965ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af859236a6260da9d39ea52f7a1584ec5" id="r_af859236a6260da9d39ea52f7a1584ec5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af859236a6260da9d39ea52f7a1584ec5">UpdateRobotPositions</a> ()</td></tr>
-<tr class="memdesc:af859236a6260da9d39ea52f7a1584ec5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the positions of all robots from the <a class="el" href="classCoverageControl_1_1RobotModel.html" title="Class for handling the robot model.">RobotModel</a> objects.  <br /></td></tr>
-<tr class="separator:af859236a6260da9d39ea52f7a1584ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60eba6cb567486fda8228b022927545c" id="r_a60eba6cb567486fda8228b022927545c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60eba6cb567486fda8228b022927545c">UpdateNeighbors</a> ()</td></tr>
-<tr class="memdesc:a60eba6cb567486fda8228b022927545c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the neighbors of all robots.  <br /></td></tr>
-<tr class="separator:a60eba6cb567486fda8228b022927545c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:ad836798580ade8f7c6a4380574d1addb" id="r_ad836798580ade8f7c6a4380574d1addb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCoverageControl_1_1Parameters.html">Parameters</a> const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad836798580ade8f7c6a4380574d1addb">params_</a></td></tr>
-<tr class="memdesc:ad836798580ade8f7c6a4380574d1addb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCoverageControl_1_1Parameters.html" title="Class to store parameters.">Parameters</a> for the coverage system.  <br /></td></tr>
-<tr class="separator:ad836798580ade8f7c6a4380574d1addb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8abc5aa82f9d2445b34b8cd9a3edada9" id="r_a8abc5aa82f9d2445b34b8cd9a3edada9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCoverageControl_1_1WorldIDF.html">WorldIDF</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8abc5aa82f9d2445b34b8cd9a3edada9">world_idf_</a></td></tr>
-<tr class="memdesc:a8abc5aa82f9d2445b34b8cd9a3edada9"><td class="mdescLeft">&#160;</td><td class="mdescRight">World IDF.  <br /></td></tr>
-<tr class="separator:a8abc5aa82f9d2445b34b8cd9a3edada9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4db25a64835cc221d2d8c77a56cbedc7" id="r_a4db25a64835cc221d2d8c77a56cbedc7"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4db25a64835cc221d2d8c77a56cbedc7">num_robots_</a> = 0</td></tr>
-<tr class="memdesc:a4db25a64835cc221d2d8c77a56cbedc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of robots.  <br /></td></tr>
-<tr class="separator:a4db25a64835cc221d2d8c77a56cbedc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34e80f97c1c0d3c686a8ce624ccccc7d" id="r_a34e80f97c1c0d3c686a8ce624ccccc7d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classCoverageControl_1_1RobotModel.html">RobotModel</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34e80f97c1c0d3c686a8ce624ccccc7d">robots_</a></td></tr>
-<tr class="memdesc:a34e80f97c1c0d3c686a8ce624ccccc7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of robots of type <a class="el" href="classCoverageControl_1_1RobotModel.html" title="Class for handling the robot model.">RobotModel</a>.  <br /></td></tr>
-<tr class="separator:a34e80f97c1c0d3c686a8ce624ccccc7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa4755d09ceb9bfc1fb24859ee52aabc" id="r_afa4755d09ceb9bfc1fb24859ee52aabc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; <a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a>, <a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa4755d09ceb9bfc1fb24859ee52aabc">communication_maps_</a></td></tr>
-<tr class="memdesc:afa4755d09ceb9bfc1fb24859ee52aabc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Communication maps (2 channels) for each robot.  <br /></td></tr>
-<tr class="separator:afa4755d09ceb9bfc1fb24859ee52aabc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20926f1c213cc5e86dbe67a1519322a3" id="r_a20926f1c213cc5e86dbe67a1519322a3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20926f1c213cc5e86dbe67a1519322a3">normalization_factor_</a> = 0</td></tr>
-<tr class="memdesc:a20926f1c213cc5e86dbe67a1519322a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalization factor for the world IDF.  <br /></td></tr>
-<tr class="separator:a20926f1c213cc5e86dbe67a1519322a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6750b83d7ac56a0f2f737edcc088646" id="r_af6750b83d7ac56a0f2f737edcc088646"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCoverageControl_1_1Voronoi.html">Voronoi</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6750b83d7ac56a0f2f737edcc088646">voronoi_</a></td></tr>
-<tr class="memdesc:af6750b83d7ac56a0f2f737edcc088646"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCoverageControl_1_1Voronoi.html" title="Class for computing Voronoi cells.">Voronoi</a> object.  <br /></td></tr>
-<tr class="separator:af6750b83d7ac56a0f2f737edcc088646"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fe9bdeef2e92fceeede1a72e5da33c2" id="r_a8fe9bdeef2e92fceeede1a72e5da33c2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structCoverageControl_1_1VoronoiCell.html">VoronoiCell</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8fe9bdeef2e92fceeede1a72e5da33c2">voronoi_cells_</a></td></tr>
-<tr class="memdesc:a8fe9bdeef2e92fceeede1a72e5da33c2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCoverageControl_1_1Voronoi.html" title="Class for computing Voronoi cells.">Voronoi</a> cells for each robot.  <br /></td></tr>
-<tr class="separator:a8fe9bdeef2e92fceeede1a72e5da33c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58b35e105cb8b125ab10a169fc543a1b" id="r_a58b35e105cb8b125ab10a169fc543a1b"><td class="memItemLeft" align="right" valign="top">std::random_device&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58b35e105cb8b125ab10a169fc543a1b">rd_</a></td></tr>
-<tr class="memdesc:a58b35e105cb8b125ab10a169fc543a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Random device for random number generation.  <br /></td></tr>
-<tr class="separator:a58b35e105cb8b125ab10a169fc543a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a188feeb4118783569e3cf80ac61f015b" id="r_a188feeb4118783569e3cf80ac61f015b"><td class="memItemLeft" align="right" valign="top">std::mt19937&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a188feeb4118783569e3cf80ac61f015b">gen_</a></td></tr>
-<tr class="memdesc:a188feeb4118783569e3cf80ac61f015b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mersenne Twister random number generator.  <br /></td></tr>
-<tr class="separator:a188feeb4118783569e3cf80ac61f015b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f3c8fb171322a1312900ed26a18f161" id="r_a4f3c8fb171322a1312900ed26a18f161"><td class="memItemLeft" align="right" valign="top">std::uniform_real_distribution&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f3c8fb171322a1312900ed26a18f161">distrib_pts_</a></td></tr>
-<tr class="memdesc:a4f3c8fb171322a1312900ed26a18f161"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uniform distribution for generating random points.  <br /></td></tr>
-<tr class="separator:a4f3c8fb171322a1312900ed26a18f161"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac85c5227e811756ffa6bc1ecd6e7e24" id="r_aac85c5227e811756ffa6bc1ecd6e7e24"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac85c5227e811756ffa6bc1ecd6e7e24">robot_global_positions_</a></td></tr>
-<tr class="memdesc:aac85c5227e811756ffa6bc1ecd6e7e24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global positions of the robots.  <br /></td></tr>
-<tr class="separator:aac85c5227e811756ffa6bc1ecd6e7e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a224ea5c8de4cf9ad58dc36a5eec5a72b" id="r_a224ea5c8de4cf9ad58dc36a5eec5a72b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a224ea5c8de4cf9ad58dc36a5eec5a72b">system_map_</a></td></tr>
-<tr class="memdesc:a224ea5c8de4cf9ad58dc36a5eec5a72b"><td class="mdescLeft">&#160;</td><td class="mdescRight">System map contains explored and unexplored locations.  <br /></td></tr>
-<tr class="separator:a224ea5c8de4cf9ad58dc36a5eec5a72b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e1edaa35f9a7b2679d03ec170f0fb37" id="r_a2e1edaa35f9a7b2679d03ec170f0fb37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e1edaa35f9a7b2679d03ec170f0fb37">exploration_map_</a></td></tr>
-<tr class="memdesc:a2e1edaa35f9a7b2679d03ec170f0fb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exploration map contains the unexplored locations.  <br /></td></tr>
-<tr class="separator:a2e1edaa35f9a7b2679d03ec170f0fb37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d58eae11375882c0c88ec0be00798d5" id="r_a1d58eae11375882c0c88ec0be00798d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d58eae11375882c0c88ec0be00798d5">explored_idf_map_</a></td></tr>
-<tr class="memdesc:a1d58eae11375882c0c88ec0be00798d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explored IDF map contains the explored locations.  <br /></td></tr>
-<tr class="separator:a1d58eae11375882c0c88ec0be00798d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afef4e430d8eeb334ee59e4dba8ebeea1" id="r_afef4e430d8eeb334ee59e4dba8ebeea1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::list&lt; <a class="el" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afef4e430d8eeb334ee59e4dba8ebeea1">robot_positions_history_</a></td></tr>
-<tr class="memdesc:afef4e430d8eeb334ee59e4dba8ebeea1"><td class="mdescLeft">&#160;</td><td class="mdescRight">History of robot positions.  <br /></td></tr>
-<tr class="separator:afef4e430d8eeb334ee59e4dba8ebeea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c7ad6fa701f9eb04a206f7198f63194" id="r_a2c7ad6fa701f9eb04a206f7198f63194"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c7ad6fa701f9eb04a206f7198f63194">exploration_ratio_</a> = 0</td></tr>
-<tr class="memdesc:a2c7ad6fa701f9eb04a206f7198f63194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ratio of explored locations.  <br /></td></tr>
-<tr class="separator:a2c7ad6fa701f9eb04a206f7198f63194"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a105ce9965056446f4f8508050fa25449" id="r_a105ce9965056446f4f8508050fa25449"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a105ce9965056446f4f8508050fa25449">weighted_exploration_ratio_</a></td></tr>
-<tr class="memdesc:a105ce9965056446f4f8508050fa25449"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weighted ratio of explored locations.  <br /></td></tr>
-<tr class="separator:a105ce9965056446f4f8508050fa25449"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c58700fe3127386933b501ce4b90e51" id="r_a3c58700fe3127386933b501ce4b90e51"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c58700fe3127386933b501ce4b90e51">total_idf_weight_</a> = 0</td></tr>
-<tr class="memdesc:a3c58700fe3127386933b501ce4b90e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total weight of the world IDF.  <br /></td></tr>
-<tr class="separator:a3c58700fe3127386933b501ce4b90e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4c4ed45096ddc2b7d113272aa072a83" id="r_ac4c4ed45096ddc2b7d113272aa072a83"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structCoverageControl_1_1PlotterData.html">PlotterData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4c4ed45096ddc2b7d113272aa072a83">plotter_data_</a></td></tr>
-<tr class="memdesc:ac4c4ed45096ddc2b7d113272aa072a83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores data for plotting.  <br /></td></tr>
-<tr class="separator:ac4c4ed45096ddc2b7d113272aa072a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee68aad99ce5a2201fe74f0fb30a2225" id="r_aee68aad99ce5a2201fe74f0fb30a2225"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee68aad99ce5a2201fe74f0fb30a2225">adjacency_matrix_</a></td></tr>
-<tr class="memdesc:aee68aad99ce5a2201fe74f0fb30a2225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adjacency matrix for communication.  <br /></td></tr>
-<tr class="separator:aee68aad99ce5a2201fe74f0fb30a2225"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ba41a89418857c5e81e4a764b67255b" id="r_a8ba41a89418857c5e81e4a764b67255b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; <a class="el" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ba41a89418857c5e81e4a764b67255b">relative_positions_neighbors_</a></td></tr>
-<tr class="separator:a8ba41a89418857c5e81e4a764b67255b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a993c17e9c8202a1679d75e0c18a31b10" id="r_a993c17e9c8202a1679d75e0c18a31b10"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a993c17e9c8202a1679d75e0c18a31b10">neighbor_ids_</a></td></tr>
-<tr class="memdesc:a993c17e9c8202a1679d75e0c18a31b10"><td class="mdescLeft">&#160;</td><td class="mdescRight">IDs of neighboring robots for each robot.  <br /></td></tr>
-<tr class="separator:a993c17e9c8202a1679d75e0c18a31b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classCoverageControl_1_1CoverageSystem.html" title="The CoverageSystem class is the main class for the coverage control library.">CoverageSystem</a> class is the main class for the coverage control library. </p>
@@ -661,7 +570,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Check if the robot is oscillating about its current position </p><dl class="section warning"><dt>Warning</dt><dd>This function is dependent on the size of the robot positions history </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00333">333</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00332">332</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -688,36 +597,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00355">355</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="acff573c6715926291c234074b14965ae" name="acff573c6715926291c234074b14965ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acff573c6715926291c234074b14965ae">&#9670;&#160;</a></span>ComputeAdjacencyMatrix()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ComputeAdjacencyMatrix </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Compute the adjacency matrix for communication. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00246">246</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00354">354</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -744,7 +624,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00361">361</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00360">360</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -794,7 +674,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00548">548</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00551">551</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -821,7 +701,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00451">451</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00454">454</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -848,7 +728,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00584">584</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00587">587</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -870,7 +750,7 @@ Protected Attributes</h2></td></tr>
 <dd>
 Uses neighboring robots' positions to compute the centroid. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00636">636</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00647">647</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -897,7 +777,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00466">466</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00469">469</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -924,7 +804,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00598">598</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00601">601</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -951,7 +831,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00449">449</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00452">452</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -978,7 +858,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00448">448</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00451">451</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1005,7 +885,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00556">556</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00559">559</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +904,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00613">613</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00624">624</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1051,7 +931,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00561">561</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00564">564</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1078,7 +958,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00508">508</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00511">511</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1105,7 +985,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00498">498</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00501">501</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1012,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00503">503</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00506">506</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1159,7 +1039,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00517">517</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00520">520</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1190,7 +1070,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00489">489</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00492">492</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1226,7 +1106,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Vector of global positions of all robots </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00477">477</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00480">480</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1253,7 +1133,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00522">522</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00525">525</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1280,7 +1160,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00527">527</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00530">530</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1307,7 +1187,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00513">513</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00516">516</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1334,7 +1214,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00570">570</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00573">573</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1361,7 +1241,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00445">445</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00448">448</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1388,7 +1268,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00446">446</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00449">449</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1415,7 +1295,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00444">444</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00447">447</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1442,7 +1322,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00594">594</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00597">597</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1469,7 +1349,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00596">596</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00599">599</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1496,7 +1376,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00593">593</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00596">596</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1525,7 +1405,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 
 <p>Get the weighted (by IDF) exploration ratio. </p>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00459">459</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00462">462</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1552,7 +1432,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00443">443</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00446">446</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1579,36 +1459,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00442">442</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a4d4c24aa62bcdf3623f9fcca2abc3fef" name="a4d4c24aa62bcdf3623f9fcca2abc3fef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d4c24aa62bcdf3623f9fcca2abc3fef">&#9670;&#160;</a></span>InitSetup()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void InitSetup </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Initialize the member variables. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00154">154</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00445">445</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1636,12 +1487,12 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00529">529</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00540">540</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
 <a id="ad29320f9fee3158569fc76e0176082e5" name="ad29320f9fee3158569fc76e0176082e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad29320f9fee3158569fc76e0176082e5">&#9670;&#160;</a></span>PlotInitMap()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad29320f9fee3158569fc76e0176082e5">&#9670;&#160;</a></span>PlotInitMap() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1659,7 +1510,34 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00499">499</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00510">510</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a8cfd34e469543224ca6bab2aeb2df7e2" name="a8cfd34e469543224ca6bab2aeb2df7e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cfd34e469543224ca6bab2aeb2df7e2">&#9670;&#160;</a></span>PlotInitMap() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlotInitMap </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00414">414</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1682,7 +1560,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00508">508</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00519">519</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1715,7 +1593,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00519">519</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00530">530</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1748,7 +1626,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00596">596</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00607">607</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1776,7 +1654,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00561">561</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00572">572</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1804,7 +1682,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00552">552</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00563">563</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1832,7 +1710,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00578">578</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00589">589</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1860,7 +1738,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00586">586</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00597">597</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1888,7 +1766,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00570">570</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00581">581</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -1916,12 +1794,31 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00539">539</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00550">550</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af278d7f481c7eee828378a3e510ef145" name="af278d7f481c7eee828378a3e510ef145"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af278d7f481c7eee828378a3e510ef145">&#9670;&#160;</a></span>PlotSystemMap() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlotSystemMap </td>
+          <td>(</td>
+          <td class="paramtype">std::string const &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00469">469</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
 <a id="a0fa9e007d0bc3b2350418af6b997764a" name="a0fa9e007d0bc3b2350418af6b997764a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fa9e007d0bc3b2350418af6b997764a">&#9670;&#160;</a></span>PlotSystemMap() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fa9e007d0bc3b2350418af6b997764a">&#9670;&#160;</a></span>PlotSystemMap() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1944,12 +1841,12 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00469">469</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00480">480</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
 <a id="aa1d327b24eefd3cc9a6527f57aa20fa4" name="aa1d327b24eefd3cc9a6527f57aa20fa4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1d327b24eefd3cc9a6527f57aa20fa4">&#9670;&#160;</a></span>PlotSystemMap() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1d327b24eefd3cc9a6527f57aa20fa4">&#9670;&#160;</a></span>PlotSystemMap() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1975,7 +1872,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00403">403</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00402">402</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -1998,7 +1895,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00490">490</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00501">501</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -2021,63 +1918,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00479">479</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a25c0d2ef8db513dab42b80584ee52828" name="a25c0d2ef8db513dab42b80584ee52828"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25c0d2ef8db513dab42b80584ee52828">&#9670;&#160;</a></span>PostStepCommands() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void PostStepCommands </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Execute updates after a step for all robots </p><dl class="section note"><dt>Note</dt><dd>This function should be called after every step to update the state of the system </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00228">228</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a1390853e1a26a1e4edecfd637b905777" name="a1390853e1a26a1e4edecfd637b905777"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1390853e1a26a1e4edecfd637b905777">&#9670;&#160;</a></span>PostStepCommands() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void PostStepCommands </td>
-          <td>(</td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>robot_id</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Execute updates after a step for robot_id (avoid using this function, use <a class="el" href="#a25c0d2ef8db513dab42b80584ee52828">PostStepCommands()</a> instead). </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00184">184</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00490">490</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -2104,7 +1945,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00433">433</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00436">436</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2131,7 +1972,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00429">429</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00432">432</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2181,7 +2022,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00426">426</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00429">429</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2237,7 +2078,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 
 <p>Set the global position of robot_id. </p>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00233">233</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00232">232</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2270,7 +2111,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 
 <p>Set the position of robot_id with respect to its current position. </p>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00226">226</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00225">225</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2298,7 +2139,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </div><div class="memdoc">
 <p>Set the positions of all robots with respect to their current positions </p><dl class="section note"><dt>Note</dt><dd>Same as SetRobotPositions </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00221">221</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00220">220</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2326,7 +2167,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </div><div class="memdoc">
 <p>Set the positions of all robots with respect to their current positions </p><dl class="section note"><dt>Note</dt><dd>Same as SetLocalRobotPositions </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00240">240</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00239">239</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2355,7 +2196,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 
 <p>Set the world IDF and recompute the world map. </p>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00252">252</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00251">251</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2397,7 +2238,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if control is incorrect </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00295">295</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00294">294</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2434,7 +2275,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if control is incorrect </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00271">271</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00270">270</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2482,7 +2323,7 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if successful, 1 if control is incorrect </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00317">317</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00316">316</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>
@@ -2556,93 +2397,6 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 
 </div>
 </div>
-<a id="a60eba6cb567486fda8228b022927545c" name="a60eba6cb567486fda8228b022927545c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60eba6cb567486fda8228b022927545c">&#9670;&#160;</a></span>UpdateNeighbors()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UpdateNeighbors </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the neighbors of all robots. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00267">267</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
-
-</div>
-</div>
-<a id="af859236a6260da9d39ea52f7a1584ec5" name="af859236a6260da9d39ea52f7a1584ec5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af859236a6260da9d39ea52f7a1584ec5">&#9670;&#160;</a></span>UpdateRobotPositions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UpdateRobotPositions </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the positions of all robots from the <a class="el" href="classCoverageControl_1_1RobotModel.html" title="Class for handling the robot model.">RobotModel</a> objects. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00151">151</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="ad0c441e13c71467f687ffc607114539b" name="ad0c441e13c71467f687ffc607114539b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0c441e13c71467f687ffc607114539b">&#9670;&#160;</a></span>UpdateSystemMap()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UpdateSystemMap </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Update the exploration map, explored IDF map, and system map. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00111">111</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
 <a id="a8cd3088829ea66a9b5ae8ced5124a8fe" name="a8cd3088829ea66a9b5ae8ced5124a8fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cd3088829ea66a9b5ae8ced5124a8fe">&#9670;&#160;</a></span>WriteEnvironment()</h2>
 
@@ -2705,606 +2459,6 @@ Uses neighboring robots' positions to compute the centroid. </dd></dl>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="coverage__system_8cpp_source.html#l00375">375</a> of file <a class="el" href="coverage__system_8cpp_source.html">coverage_system.cpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="aee68aad99ce5a2201fe74f0fb30a2225" name="aee68aad99ce5a2201fe74f0fb30a2225"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee68aad99ce5a2201fe74f0fb30a2225">&#9670;&#160;</a></span>adjacency_matrix_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::vector&lt;int&gt; &gt; adjacency_matrix_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Adjacency matrix for communication. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00100">100</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="afa4755d09ceb9bfc1fb24859ee52aabc" name="afa4755d09ceb9bfc1fb24859ee52aabc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa4755d09ceb9bfc1fb24859ee52aabc">&#9670;&#160;</a></span>communication_maps_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::pair&lt;<a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a>, <a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a>&gt; &gt; communication_maps_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Communication maps (2 channels) for each robot. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00075">75</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a4f3c8fb171322a1312900ed26a18f161" name="a4f3c8fb171322a1312900ed26a18f161"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f3c8fb171322a1312900ed26a18f161">&#9670;&#160;</a></span>distrib_pts_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::uniform_real_distribution distrib_pts_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Uniform distribution for generating random points. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00084">84</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a2e1edaa35f9a7b2679d03ec170f0fb37" name="a2e1edaa35f9a7b2679d03ec170f0fb37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e1edaa35f9a7b2679d03ec170f0fb37">&#9670;&#160;</a></span>exploration_map_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a> exploration_map_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Exploration map contains the unexplored locations. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00089">89</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a2c7ad6fa701f9eb04a206f7198f63194" name="a2c7ad6fa701f9eb04a206f7198f63194"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c7ad6fa701f9eb04a206f7198f63194">&#9670;&#160;</a></span>exploration_ratio_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double exploration_ratio_ = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Ratio of explored locations. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00094">94</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a1d58eae11375882c0c88ec0be00798d5" name="a1d58eae11375882c0c88ec0be00798d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d58eae11375882c0c88ec0be00798d5">&#9670;&#160;</a></span>explored_idf_map_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a> explored_idf_map_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Explored IDF map contains the explored locations. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00091">91</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a188feeb4118783569e3cf80ac61f015b" name="a188feeb4118783569e3cf80ac61f015b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a188feeb4118783569e3cf80ac61f015b">&#9670;&#160;</a></span>gen_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::mt19937 gen_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Mersenne Twister random number generator. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00081">81</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a993c17e9c8202a1679d75e0c18a31b10" name="a993c17e9c8202a1679d75e0c18a31b10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a993c17e9c8202a1679d75e0c18a31b10">&#9670;&#160;</a></span>neighbor_ids_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::vector&lt;int&gt; &gt; neighbor_ids_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>IDs of neighboring robots for each robot. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00105">105</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a20926f1c213cc5e86dbe67a1519322a3" name="a20926f1c213cc5e86dbe67a1519322a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20926f1c213cc5e86dbe67a1519322a3">&#9670;&#160;</a></span>normalization_factor_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double normalization_factor_ = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Normalization factor for the world IDF. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00076">76</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a4db25a64835cc221d2d8c77a56cbedc7" name="a4db25a64835cc221d2d8c77a56cbedc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4db25a64835cc221d2d8c77a56cbedc7">&#9670;&#160;</a></span>num_robots_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t num_robots_ = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Number of robots. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00072">72</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="ad836798580ade8f7c6a4380574d1addb" name="ad836798580ade8f7c6a4380574d1addb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad836798580ade8f7c6a4380574d1addb">&#9670;&#160;</a></span>params_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classCoverageControl_1_1Parameters.html">Parameters</a> const params_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="classCoverageControl_1_1Parameters.html" title="Class to store parameters.">Parameters</a> for the coverage system. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00070">70</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="ac4c4ed45096ddc2b7d113272aa072a83" name="ac4c4ed45096ddc2b7d113272aa072a83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4c4ed45096ddc2b7d113272aa072a83">&#9670;&#160;</a></span>plotter_data_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="structCoverageControl_1_1PlotterData.html">PlotterData</a>&gt; plotter_data_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Stores data for plotting. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00098">98</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a58b35e105cb8b125ab10a169fc543a1b" name="a58b35e105cb8b125ab10a169fc543a1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58b35e105cb8b125ab10a169fc543a1b">&#9670;&#160;</a></span>rd_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::random_device rd_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Random device for random number generation. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00080">80</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a8ba41a89418857c5e81e4a764b67255b" name="a8ba41a89418857c5e81e4a764b67255b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ba41a89418857c5e81e4a764b67255b">&#9670;&#160;</a></span>relative_positions_neighbors_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::vector&lt;<a class="el" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a>&gt; &gt; relative_positions_neighbors_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Relative positions of neighboring robots for each robot </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00102">102</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="aac85c5227e811756ffa6bc1ecd6e7e24" name="aac85c5227e811756ffa6bc1ecd6e7e24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac85c5227e811756ffa6bc1ecd6e7e24">&#9670;&#160;</a></span>robot_global_positions_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> robot_global_positions_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Global positions of the robots. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00085">85</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="afef4e430d8eeb334ee59e4dba8ebeea1" name="afef4e430d8eeb334ee59e4dba8ebeea1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afef4e430d8eeb334ee59e4dba8ebeea1">&#9670;&#160;</a></span>robot_positions_history_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;std::list&lt;<a class="el" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a>&gt; &gt; robot_positions_history_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>History of robot positions. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00093">93</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a34e80f97c1c0d3c686a8ce624ccccc7d" name="a34e80f97c1c0d3c686a8ce624ccccc7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34e80f97c1c0d3c686a8ce624ccccc7d">&#9670;&#160;</a></span>robots_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="classCoverageControl_1_1RobotModel.html">RobotModel</a>&gt; robots_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Vector of robots of type <a class="el" href="classCoverageControl_1_1RobotModel.html" title="Class for handling the robot model.">RobotModel</a>. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00073">73</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a224ea5c8de4cf9ad58dc36a5eec5a72b" name="a224ea5c8de4cf9ad58dc36a5eec5a72b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a224ea5c8de4cf9ad58dc36a5eec5a72b">&#9670;&#160;</a></span>system_map_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957">MapType</a> system_map_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>System map contains explored and unexplored locations. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00087">87</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a3c58700fe3127386933b501ce4b90e51" name="a3c58700fe3127386933b501ce4b90e51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c58700fe3127386933b501ce4b90e51">&#9670;&#160;</a></span>total_idf_weight_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double total_idf_weight_ = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Total weight of the world IDF. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00097">97</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="af6750b83d7ac56a0f2f737edcc088646" name="af6750b83d7ac56a0f2f737edcc088646"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6750b83d7ac56a0f2f737edcc088646">&#9670;&#160;</a></span>voronoi_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classCoverageControl_1_1Voronoi.html">Voronoi</a> voronoi_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="classCoverageControl_1_1Voronoi.html" title="Class for computing Voronoi cells.">Voronoi</a> object. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00077">77</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a8fe9bdeef2e92fceeede1a72e5da33c2" name="a8fe9bdeef2e92fceeede1a72e5da33c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fe9bdeef2e92fceeede1a72e5da33c2">&#9670;&#160;</a></span>voronoi_cells_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="structCoverageControl_1_1VoronoiCell.html">VoronoiCell</a>&gt; voronoi_cells_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="classCoverageControl_1_1Voronoi.html" title="Class for computing Voronoi cells.">Voronoi</a> cells for each robot. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00078">78</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a105ce9965056446f4f8508050fa25449" name="a105ce9965056446f4f8508050fa25449"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a105ce9965056446f4f8508050fa25449">&#9670;&#160;</a></span>weighted_exploration_ratio_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double weighted_exploration_ratio_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">      0</div>
-</div><!-- fragment -->
-<p>Weighted ratio of explored locations. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00095">95</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
-
-</div>
-</div>
-<a id="a8abc5aa82f9d2445b34b8cd9a3edada9" name="a8abc5aa82f9d2445b34b8cd9a3edada9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8abc5aa82f9d2445b34b8cd9a3edada9">&#9670;&#160;</a></span>world_idf_</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classCoverageControl_1_1WorldIDF.html">WorldIDF</a> world_idf_</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>World IDF. </p>
-
-<p class="definition">Definition at line <a class="el" href="coverage__system_8h_source.html#l00071">71</a> of file <a class="el" href="coverage__system_8h_source.html">coverage_system.h</a>.</p>
 
 </div>
 </div>

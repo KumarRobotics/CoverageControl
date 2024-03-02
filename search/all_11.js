@@ -11,14 +11,13 @@ var searchData=
   ['source_8',['Installation From Source',['../installation-from-source.html',1,'installation']]],
   ['source_20libraries_9',['Open Source Libraries',['../index.html#autotoc_md3',1,'']]],
   ['start_10',['Quick Start',['../quick_start.html',1,'']]],
-  ['statement_11',['Statement',['../coverage-control-problem.html',1,'Problem Statement'],['../coverage-control-problem.html#autotoc_md13',1,'Problem Statement']]],
+  ['statement_11',['Statement',['../coverage-control-problem.html',1,'Problem Statement'],['../coverage-control-problem.html#autotoc_md14',1,'Problem Statement']]],
   ['stepaction_12',['StepAction',['../classCoverageControl_1_1CoverageSystem.html#adaa94a62ae93c17c1b76eaba5b47de89',1,'CoverageControl::CoverageSystem']]],
   ['stepactions_13',['StepActions',['../classCoverageControl_1_1CoverageSystem.html#a8c88e6de718c144dd6b3505390a74ebc',1,'CoverageControl::CoverageSystem']]],
   ['stepcontrol_14',['StepControl',['../classCoverageControl_1_1CoverageSystem.html#a29c3aef0048e7d322d201e96d52c2524',1,'CoverageControl::CoverageSystem::StepControl()'],['../classCoverageControl_1_1RobotModel.html#ab4858812357ee1150073add082541dd6',1,'CoverageControl::RobotModel::StepControl()']]],
   ['steprobotstogoals_15',['StepRobotsToGoals',['../classCoverageControl_1_1CoverageSystem.html#a61ecedaaa641b044ddd93eafe101edcc',1,'CoverageControl::CoverageSystem']]],
   ['steprobottogoal_16',['StepRobotToGoal',['../classCoverageControl_1_1CoverageSystem.html#ad1564d664d0a25a0a5b5a4a8b25df010',1,'CoverageControl::CoverageSystem']]],
   ['support_20and_20funding_17',['Support and Funding',['../index.html#autotoc_md4',1,'']]],
-  ['support_20optional_20but_20recommended_20for_20gpu_20acceleration_18',['CUDA Support (Optional but recommended for GPU acceleration)',['../installation-from-source.html#autotoc_md22',1,'']]],
-  ['swarms_19',['Navigation of Robot Swarms',['../lpac.html#autotoc_md27',1,'']]],
-  ['system_5fmap_5f_20',['system_map_',['../classCoverageControl_1_1CoverageSystem.html#a224ea5c8de4cf9ad58dc36a5eec5a72b',1,'CoverageControl::CoverageSystem']]]
+  ['support_20optional_20but_20recommended_20for_20gpu_20acceleration_18',['CUDA Support (Optional but recommended for GPU acceleration)',['../installation-from-source.html#autotoc_md23',1,'']]],
+  ['swarms_19',['Navigation of Robot Swarms',['../lpac.html#autotoc_md28',1,'']]]
 ];

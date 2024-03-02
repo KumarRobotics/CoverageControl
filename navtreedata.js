@@ -37,8 +37,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"____init_____8py_source.html",
-"structCoverageControl_1_1VoronoiCell.html"
+"____init_____8py_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
