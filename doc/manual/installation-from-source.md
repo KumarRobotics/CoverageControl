@@ -14,7 +14,9 @@ Additional dependencies (generally already installed):
 sudo apt install build-essential cmake git wget python3 python3-pip python3-venv python3-dev
 ```
 
-### CUDA Support (Optional but recommended for GPU acceleration)
+### CUDA Support
+(Optional but recommended for GPU acceleration)
+
 The package also supports GPU acceleration using CUDA. To enable this feature, the following additional packages are required:
 - [`cmake`](https://cmake.org/download/) (version 3.24 or higher)
 - `cuda` (version 11.8 or higher, 12.1 recommended)

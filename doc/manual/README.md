@@ -41,7 +41,7 @@ The library provides a simulation environment, algorithms, and GNN-based archite
 > arXiv preprint arXiv:2401.04855 (2024).
 
 
-## Open Source Libraries
+## External Dependencies
 - [PyTorch](https://pytorch.org/)
 - [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/)
 - [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)

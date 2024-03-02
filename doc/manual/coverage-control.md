@@ -37,7 +37,7 @@ This new cost function is a sum of integrals over disjoint regions and is much e
 Furthermore, if the Voronoi partition is known, the cost function can be computed in a decentralized manner, as each robot only needs to compute the integral over its own region \f$P_i\f$.
 
 ---
-## Problem Statement
+## The Problem
 We can now define the coverage control problem in the context of the navigation control problem:
 Find a decentralized control policy \f$\Pi\f$ that minimizes the expected cost \f$\mathcal J(\mathbf X)\f$.
 The policy \f$\Pi\f$ is defined over a space of all possible velocities, and each robot independently executes the same policy.

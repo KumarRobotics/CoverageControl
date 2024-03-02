@@ -1,10 +1,16 @@
 \page quick_start Quick Start
 \tableofcontents
 
-The library uses `toml` files to specify the configuration parameters for the environment and the robot models.
+# Parameters
+The library uses `toml` files to specify the configuration parameters for the environment and the robot models.  
+The class `CoverageControl::Parameters` is used to load the configuration file and access the parameters.
+
+```python
+params = CoverageControl.Parameters("params/coverage_control_params.toml")
+```
 See \ref params/coverage_control_params.toml for an example configuration file.
 
-## Python Interface
+# Python Interface
 
 Import the `CoverageControl` library and the `ClairvoyantCVT` algorithm.
 ```python
@@ -22,7 +28,6 @@ You can choose one of the following algorithms instead of `ClairvoyantCVT`:
 Create a `CoverageControl::Parameters` object and load the configuration file:
 ```python
 params = CoverageControl.Parameters() # for default parameters
-params.load("params/coverage_control_params.toml") # Alternatively, load a configuration file
 ```
 
 Create a simulation environment:
@@ -79,7 +84,7 @@ See \ref python/tests/coverage_simple.py and \ref python/tests/coverage_class.py
 
 ---
 
-## C++ Interface
+# C++ Interface
 
 Include the `CoverageControl` library, algorithms, and other necessary headers:
 ```cpp
@@ -158,7 +163,7 @@ env.PlotSystemMap("final_map"); // Creates "final_map.png"
 
 See \ref cppsrc/main/coverage_algorithm.cpp for a complete example.
 
-### Compile and Run
+## Compile and Run
 
 Create a `CMakeLists.txt` file with the following content:
 ```python
@@ -188,8 +193,4 @@ Run the program:
 ```bash
 ./coveragecontrol
 ```
-
-
-
-
 

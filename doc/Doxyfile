@@ -4,13 +4,11 @@
 PROJECT_NAME           = "Coverage Control Library"
 PROJECT_NUMBER         = 1.0.0
 USE_MDFILE_AS_MAINPAGE = doc/manual/README.md
-INPUT                  = doc/manual/ref_manual.txt \
-												 doc/manual/README.md \
+INPUT                  = doc/manual/README.md \
+												 doc/manual/ref_manual.txt \
 												 doc/manual/installation.md \
 												 doc/manual/quick_start.md \
 												 doc/manual/coverage-control.md \
-												 doc/manual/docker.md \
-												 doc/manual/installation-from-source.md \
 												 doc/manual/lpac.md \
 												 cppsrc/core python/src \
 												 params \
