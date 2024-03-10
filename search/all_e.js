@@ -33,6 +33,7 @@ var searchData=
   ['ptimestep_30',['pTimeStep',['../classCoverageControl_1_1Parameters.html#a1b37a3efdab146959388923831565c12',1,'CoverageControl::Parameters']]],
   ['ptruncationbnd_31',['pTruncationBND',['../classCoverageControl_1_1Parameters.html#ae226328e36dc112d58034b53fedbbe1a',1,'CoverageControl::Parameters']]],
   ['pworldmapsize_32',['pWorldMapSize',['../classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe',1,'CoverageControl::Parameters']]],
-  ['python_20interface_33',['Python Interface',['../quick_start.html#autotoc_md21',1,'']]],
-  ['python_20packages_34',['Python Packages',['../installation.html#autotoc_md19',1,'']]]
+  ['python_20api_33',['Python API',['../group__python__api.html',1,'']]],
+  ['python_20interface_34',['Python Interface',['../quick_start.html#autotoc_md21',1,'']]],
+  ['python_20packages_35',['Python Packages',['../installation.html#autotoc_md19',1,'']]]
 ];

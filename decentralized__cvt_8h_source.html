@@ -155,162 +155,164 @@ $(function(){initNavTree('decentralized__cvt_8h_source.html',''); initResizable(
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;omp.h&gt;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;queue&gt;</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;random&gt;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;set&gt;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="abstract__controller_8h.html">CoverageControl/algorithms/abstract_controller.h</a>&quot;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="coverage__system_8h.html">CoverageControl/coverage_system.h</a>&quot;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;CoverageControl/extern/lsap/Hungarian.h&quot;</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &quot;<a class="code" href="map__utils_8h.html">CoverageControl/map_utils.h</a>&quot;</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;<a class="code" href="parameters_8h.html">CoverageControl/parameters.h</a>&quot;</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="typedefs_8h.html">CoverageControl/typedefs.h</a>&quot;</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceCoverageControl.html">CoverageControl</a> {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="foldopen" id="foldopen00061" data-start="{" data-end="};">
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classCoverageControl_1_1DecentralizedCVT.html">   61</a></span><span class="keyword">class </span><a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a> : <span class="keyword">public</span> <a class="code hl_class" href="classCoverageControl_1_1AbstractController.html">AbstractController</a> {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> <span class="keyword">const</span> params_;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordtype">size_t</span> num_robots_ = 0;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a> &amp;env_;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> robot_global_positions_;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> goals_, actions_;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  std::vector&lt;double&gt; voronoi_mass_;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">bool</span> is_converged_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a>(<a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> <span class="keyword">const</span> &amp;params, <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a> &amp;env)</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            : <a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a>(params, params.pNumRobots, env) {}</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a>(<a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> <span class="keyword">const</span> &amp;params, <span class="keywordtype">size_t</span> <span class="keyword">const</span> &amp;num_robots,</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                   <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a> &amp;env)</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      : params_{params}, num_robots_{num_robots}, env_{env} {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    robot_global_positions_ = env_.<a class="code hl_function" href="classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3">GetRobotPositions</a>();</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    actions_.resize(num_robots_);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    goals_ = robot_global_positions_;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    voronoi_mass_.resize(num_robots_, 0);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    ComputeGoals();</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0">   85</a></span>  <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> <a class="code hl_function" href="classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0">GetActions</a>() { <span class="keywordflow">return</span> actions_; }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keyword">auto</span> GetGoals() { <span class="keywordflow">return</span> goals_; }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">void</span> ComputeGoals() {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#pragma omp parallel for num_threads(num_robots_)</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> iRobot = 0; iRobot &lt; num_robots_; ++iRobot) {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      <span class="keyword">auto</span> <span class="keyword">const</span> &amp;pos = robot_global_positions_[iRobot];</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      MapUtils::MapBounds index, offset;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      <a class="code hl_function" href="namespaceCoverageControl_1_1MapUtils.html#a74ee1b41afab01261eb3d6b55bc074c3">MapUtils::ComputeOffsets</a>(params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>, pos, params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#ac2469032dfa06a223ed3c2818643fc89">pLocalMapSize</a>,</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                               params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">pWorldMapSize</a>, index, offset);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>      <span class="keyword">auto</span> robot_map = env_.GetRobotMap(iRobot);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keyword">auto</span> robot_local_map = robot_map.block(index.left + offset.left,</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                                             index.bottom + offset.bottom,</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                                             offset.width, offset.height);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      Point2 map_translation(</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>          (index.left + offset.left) * params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>          (index.bottom + offset.bottom) * params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      PointVector robot_neighbors_pos;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> jRobot = 0; jRobot &lt; num_robots_; ++jRobot) {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keywordflow">if</span> (iRobot == jRobot) {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        Point2 relative_pos =</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            robot_global_positions_[jRobot] - robot_global_positions_[iRobot];</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span> (relative_pos.norm() &lt; params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#ad64f0471d84035f9821a8b7cc8ae0073">pCommunicationRange</a>) {</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>          robot_neighbors_pos.push_back(robot_global_positions_[jRobot]);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      }</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      PointVector robot_positions(robot_neighbors_pos.size() + 1);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>      robot_positions[0] = robot_global_positions_[iRobot] - map_translation;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>      <span class="comment">/* std::cout &lt;&lt; &quot;Voronoi: &quot; &lt;&lt; robot_positions[0][0] &lt;&lt; &quot; &quot; &lt;&lt;</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">       * robot_positions[0][1] &lt;&lt; std::endl; */</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>      <span class="keywordtype">int</span> count = 1;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pos : robot_neighbors_pos) {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        robot_positions[count] = pos - map_translation;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        ++count;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>      }</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>      Point2 map_size(offset.width, offset.height);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      Voronoi voronoi(robot_positions, robot_local_map, map_size,</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                      params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>, <span class="keyword">true</span>, 0);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      <span class="keyword">auto</span> vcell = voronoi.GetVoronoiCell();</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      voronoi_mass_[iRobot] = vcell.mass();</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>      goals_[iRobot] = vcell.centroid() + robot_positions[0] + map_translation;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      <span class="keywordflow">if</span> (goals_[iRobot][0] &lt; 0 or goals_[iRobot][0] &gt; params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">pWorldMapSize</a> or</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>          goals_[iRobot][1] &lt; 0 or goals_[iRobot][1] &gt; params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">pWorldMapSize</a>) {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        std::cout &lt;&lt; <span class="stringliteral">&quot;Goal out of bounds: &quot;</span> &lt;&lt; goals_[iRobot][0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                  &lt;&lt; goals_[iRobot][1] &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        std::cout &lt;&lt; robot_global_positions_[iRobot][0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                  &lt;&lt; robot_global_positions_[iRobot][1] &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        std::cout &lt;&lt; vcell.centroid()[0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; vcell.centroid()[1]</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                  &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        std::cout &lt;&lt; map_translation[0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; map_translation[1]</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                  &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        std::cout &lt;&lt; robot_local_map.sum() &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            <span class="stringliteral">&quot;Goal out of bounds: this should not have happened for convex &quot;</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <span class="stringliteral">&quot;environments&quot;</span>);</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>      }</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    }</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  }</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="foldopen" id="foldopen00149" data-start="{" data-end="}">
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">  149</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">ComputeActions</a>() {</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    is_converged_ = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    robot_global_positions_ = env_.<a class="code hl_function" href="classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3">GetRobotPositions</a>();</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    ComputeGoals();</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> iRobot = 0; iRobot &lt; num_robots_; ++iRobot) {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>      actions_[iRobot] = <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a>(0, 0);</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>      <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> diff = goals_[iRobot] - robot_global_positions_[iRobot];</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      <span class="keywordtype">double</span> dist = diff.norm();</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      <span class="comment">/* std::cout &lt;&lt; &quot;Robot &quot; &lt;&lt; iRobot &lt;&lt; &quot; goal: &quot; &lt;&lt; goals_[iRobot][0] &lt;&lt;</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="comment">       * &quot; &quot; &lt;&lt; goals_[iRobot][1] &lt;&lt; &quot; &quot; &lt;&lt; dist &lt;&lt; std::endl; */</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>      <span class="keywordflow">if</span> (dist &lt; <a class="code hl_variable" href="group__cpp__api__constants.html#ga5deba897e5581fb736ceb59c2a6feb5a">kEps</a>) {</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>      }</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      <span class="keywordflow">if</span> (env_.<a class="code hl_function" href="classCoverageControl_1_1CoverageSystem.html#a845b117e1f5170f6b13c29737f7b9c8a">CheckOscillation</a>(iRobot)) {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>      }</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>      <span class="keywordtype">double</span> speed = dist / params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a1b37a3efdab146959388923831565c12">pTimeStep</a>;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>      <span class="comment">/* double speed = 2 * dist * voronoi_mass_[iRobot]; */</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      <span class="comment">/* if (dist &gt; 0 and voronoi_mass_[iRobot] == 0) { */</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>      <span class="comment">/*   speed = dist / params_.pTimeStep; */</span></div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>      <span class="comment">/* } */</span></div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>      speed = std::min(params_.pMaxRobotSpeed, speed);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> direction(diff);</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      direction.normalize();</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      actions_[iRobot] = speed * direction;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>      is_converged_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  }</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;queue&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;random&gt;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;set&gt;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="abstract__controller_8h.html">CoverageControl/algorithms/abstract_controller.h</a>&quot;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="coverage__system_8h.html">CoverageControl/coverage_system.h</a>&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &quot;CoverageControl/extern/lsap/Hungarian.h&quot;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;<a class="code" href="map__utils_8h.html">CoverageControl/map_utils.h</a>&quot;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="parameters_8h.html">CoverageControl/parameters.h</a>&quot;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="typedefs_8h.html">CoverageControl/typedefs.h</a>&quot;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceCoverageControl.html">CoverageControl</a> {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="foldopen" id="foldopen00062" data-start="{" data-end="};">
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classCoverageControl_1_1DecentralizedCVT.html">   62</a></span><span class="keyword">class </span><a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a> : <span class="keyword">public</span> <a class="code hl_class" href="classCoverageControl_1_1AbstractController.html">AbstractController</a> {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> <span class="keyword">const</span> params_;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">size_t</span> num_robots_ = 0;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a> &amp;env_;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> robot_global_positions_;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> goals_, actions_;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  std::vector&lt;double&gt; voronoi_mass_;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">bool</span> is_converged_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a>(<a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> <span class="keyword">const</span> &amp;params, <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a> &amp;env)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      : <a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a>(params, params.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a26bf45b3c898fd1cbea54562f9095026">pNumRobots</a>, env) {}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <a class="code hl_class" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a>(<a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> <span class="keyword">const</span> &amp;params, <span class="keywordtype">size_t</span> <span class="keyword">const</span> &amp;num_robots,</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                   <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a> &amp;env)</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      : params_{params}, num_robots_{num_robots}, env_{env} {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    robot_global_positions_ = env_.<a class="code hl_function" href="classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3">GetRobotPositions</a>();</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    actions_.resize(num_robots_);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    goals_ = robot_global_positions_;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    voronoi_mass_.resize(num_robots_, 0);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    ComputeGoals();</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0">   86</a></span>  <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> <a class="code hl_function" href="classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0">GetActions</a>() { <span class="keywordflow">return</span> actions_; }</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keyword">auto</span> GetGoals() { <span class="keywordflow">return</span> goals_; }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">void</span> ComputeGoals() {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#pragma omp parallel for num_threads(num_robots_)</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> iRobot = 0; iRobot &lt; num_robots_; ++iRobot) {</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keyword">auto</span> <span class="keyword">const</span> &amp;pos = robot_global_positions_[iRobot];</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      MapUtils::MapBounds index, offset;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      <a class="code hl_function" href="namespaceCoverageControl_1_1MapUtils.html#a74ee1b41afab01261eb3d6b55bc074c3">MapUtils::ComputeOffsets</a>(params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>, pos, params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#ac2469032dfa06a223ed3c2818643fc89">pLocalMapSize</a>,</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                               params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">pWorldMapSize</a>, index, offset);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keyword">auto</span> robot_map = env_.GetRobotMap(iRobot);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      <span class="keyword">auto</span> robot_local_map = robot_map.block(index.left + offset.left,</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                                             index.bottom + offset.bottom,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                                             offset.width, offset.height);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      Point2 map_translation(</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>          (index.left + offset.left) * params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>          (index.bottom + offset.bottom) * params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      PointVector robot_neighbors_pos;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> jRobot = 0; jRobot &lt; num_robots_; ++jRobot) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">if</span> (iRobot == jRobot) {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>          <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        Point2 relative_pos =</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            robot_global_positions_[jRobot] - robot_global_positions_[iRobot];</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">if</span> (relative_pos.norm() &lt; params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#ad64f0471d84035f9821a8b7cc8ae0073">pCommunicationRange</a>) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>          robot_neighbors_pos.push_back(robot_global_positions_[jRobot]);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      }</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>      PointVector robot_positions(robot_neighbors_pos.size() + 1);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>      robot_positions[0] = robot_global_positions_[iRobot] - map_translation;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>      <span class="comment">/* std::cout &lt;&lt; &quot;Voronoi: &quot; &lt;&lt; robot_positions[0][0] &lt;&lt; &quot; &quot; &lt;&lt;</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment">       * robot_positions[0][1] &lt;&lt; std::endl; */</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      <span class="keywordtype">int</span> count = 1;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pos : robot_neighbors_pos) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        robot_positions[count] = pos - map_translation;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        ++count;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>      }</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      Point2 map_size(offset.width, offset.height);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      Voronoi voronoi(robot_positions, robot_local_map, map_size,</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                      params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">pResolution</a>, <span class="keyword">true</span>, 0);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      <span class="keyword">auto</span> vcell = voronoi.GetVoronoiCell();</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>      voronoi_mass_[iRobot] = vcell.mass();</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      goals_[iRobot] = vcell.centroid() + robot_positions[0] + map_translation;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      <span class="keywordflow">if</span> (goals_[iRobot][0] &lt; 0 or goals_[iRobot][0] &gt; params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">pWorldMapSize</a> or</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>          goals_[iRobot][1] &lt; 0 or goals_[iRobot][1] &gt; params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">pWorldMapSize</a>) {</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        std::cout &lt;&lt; <span class="stringliteral">&quot;Goal out of bounds: &quot;</span> &lt;&lt; goals_[iRobot][0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                  &lt;&lt; goals_[iRobot][1] &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        std::cout &lt;&lt; robot_global_positions_[iRobot][0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                  &lt;&lt; robot_global_positions_[iRobot][1] &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        std::cout &lt;&lt; vcell.centroid()[0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; vcell.centroid()[1]</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                  &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        std::cout &lt;&lt; map_translation[0] &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; map_translation[1]</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                  &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        std::cout &lt;&lt; robot_local_map.sum() &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <span class="keywordflow">throw</span> std::runtime_error(</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <span class="stringliteral">&quot;Goal out of bounds: this should not have happened for convex &quot;</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            <span class="stringliteral">&quot;environments&quot;</span>);</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>      }</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    }</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  }</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="foldopen" id="foldopen00150" data-start="{" data-end="}">
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">  150</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">ComputeActions</a>() {</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    is_converged_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    robot_global_positions_ = env_.<a class="code hl_function" href="classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3">GetRobotPositions</a>();</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    ComputeGoals();</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> iRobot = 0; iRobot &lt; num_robots_; ++iRobot) {</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>      actions_[iRobot] = <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a>(0, 0);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> diff = goals_[iRobot] - robot_global_positions_[iRobot];</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      <span class="keywordtype">double</span> dist = diff.norm();</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>      <span class="comment">/* std::cout &lt;&lt; &quot;Robot &quot; &lt;&lt; iRobot &lt;&lt; &quot; goal: &quot; &lt;&lt; goals_[iRobot][0] &lt;&lt;</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="comment">       * &quot; &quot; &lt;&lt; goals_[iRobot][1] &lt;&lt; &quot; &quot; &lt;&lt; dist &lt;&lt; std::endl; */</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>      <span class="keywordflow">if</span> (dist &lt; <a class="code hl_variable" href="group__cpp__api__constants.html#ga5deba897e5581fb736ceb59c2a6feb5a">kEps</a>) {</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>      <span class="keywordflow">if</span> (env_.<a class="code hl_function" href="classCoverageControl_1_1CoverageSystem.html#a845b117e1f5170f6b13c29737f7b9c8a">CheckOscillation</a>(iRobot)) {</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>      }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>      <span class="keywordtype">double</span> speed = dist / params_.<a class="code hl_variable" href="classCoverageControl_1_1Parameters.html#a1b37a3efdab146959388923831565c12">pTimeStep</a>;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      <span class="comment">/* double speed = 2 * dist * voronoi_mass_[iRobot]; */</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>      <span class="comment">/* if (dist &gt; 0 and voronoi_mass_[iRobot] == 0) { */</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>      <span class="comment">/*   speed = dist / params_.pTimeStep; */</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>      <span class="comment">/* } */</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      speed = std::min(params_.pMaxRobotSpeed, speed);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> direction(diff);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      direction.normalize();</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>      actions_[iRobot] = speed * direction;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      is_converged_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  }</div>
 </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="keywordtype">bool</span> IsConverged()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_converged_; }</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>};</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keywordtype">bool</span> IsConverged()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> is_converged_; }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>};</div>
 </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>}  <span class="comment">// namespace CoverageControl</span></div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="preprocessor">#endif  </span><span class="comment">// CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>}  <span class="comment">// namespace CoverageControl</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="preprocessor">#endif  </span><span class="comment">// CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_</span></div>
 <div class="ttc" id="aabstract__controller_8h_html"><div class="ttname"><a href="abstract__controller_8h.html">abstract_controller.h</a></div><div class="ttdoc">Contains the abstract class for coverage control algorithms.</div></div>
 <div class="ttc" id="aclassCoverageControl_1_1AbstractController_html"><div class="ttname"><a href="classCoverageControl_1_1AbstractController.html">CoverageControl::AbstractController</a></div><div class="ttdef"><b>Definition</b> <a href="abstract__controller_8h_source.html#l00047">abstract_controller.h:47</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1CoverageSystem_html"><div class="ttname"><a href="classCoverageControl_1_1CoverageSystem.html">CoverageControl::CoverageSystem</a></div><div class="ttdoc">The CoverageSystem class is the main class for the coverage control library.</div><div class="ttdef"><b>Definition</b> <a href="coverage__system_8h_source.html#l00068">coverage_system.h:68</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1CoverageSystem_html_a016b2199a409bc057e834a38eb14e6d3"><div class="ttname"><a href="classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3">CoverageControl::CoverageSystem::GetRobotPositions</a></div><div class="ttdeci">PointVector GetRobotPositions(bool force_no_noise=false)</div><div class="ttdoc">Get the global positions of all robots.</div><div class="ttdef"><b>Definition</b> <a href="coverage__system_8h_source.html#l00480">coverage_system.h:480</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1CoverageSystem_html_a845b117e1f5170f6b13c29737f7b9c8a"><div class="ttname"><a href="classCoverageControl_1_1CoverageSystem.html#a845b117e1f5170f6b13c29737f7b9c8a">CoverageControl::CoverageSystem::CheckOscillation</a></div><div class="ttdeci">bool CheckOscillation(size_t const robot_id) const</div><div class="ttdef"><b>Definition</b> <a href="coverage__system_8h_source.html#l00332">coverage_system.h:332</a></div></div>
-<div class="ttc" id="aclassCoverageControl_1_1DecentralizedCVT_html"><div class="ttname"><a href="classCoverageControl_1_1DecentralizedCVT.html">CoverageControl::DecentralizedCVT</a></div><div class="ttdef"><b>Definition</b> <a href="#l00061">decentralized_cvt.h:61</a></div></div>
-<div class="ttc" id="aclassCoverageControl_1_1DecentralizedCVT_html_a834d2cd09c9c88c91e727039f2cfcac0"><div class="ttname"><a href="classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0">CoverageControl::DecentralizedCVT::GetActions</a></div><div class="ttdeci">PointVector GetActions()</div><div class="ttdef"><b>Definition</b> <a href="#l00085">decentralized_cvt.h:85</a></div></div>
-<div class="ttc" id="aclassCoverageControl_1_1DecentralizedCVT_html_a93324c1cb821ae58acecca65beda970f"><div class="ttname"><a href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">CoverageControl::DecentralizedCVT::ComputeActions</a></div><div class="ttdeci">bool ComputeActions()</div><div class="ttdef"><b>Definition</b> <a href="#l00149">decentralized_cvt.h:149</a></div></div>
+<div class="ttc" id="aclassCoverageControl_1_1DecentralizedCVT_html"><div class="ttname"><a href="classCoverageControl_1_1DecentralizedCVT.html">CoverageControl::DecentralizedCVT</a></div><div class="ttdef"><b>Definition</b> <a href="#l00062">decentralized_cvt.h:62</a></div></div>
+<div class="ttc" id="aclassCoverageControl_1_1DecentralizedCVT_html_a834d2cd09c9c88c91e727039f2cfcac0"><div class="ttname"><a href="classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0">CoverageControl::DecentralizedCVT::GetActions</a></div><div class="ttdeci">PointVector GetActions()</div><div class="ttdef"><b>Definition</b> <a href="#l00086">decentralized_cvt.h:86</a></div></div>
+<div class="ttc" id="aclassCoverageControl_1_1DecentralizedCVT_html_a93324c1cb821ae58acecca65beda970f"><div class="ttname"><a href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">CoverageControl::DecentralizedCVT::ComputeActions</a></div><div class="ttdeci">bool ComputeActions()</div><div class="ttdef"><b>Definition</b> <a href="#l00150">decentralized_cvt.h:150</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html">CoverageControl::Parameters</a></div><div class="ttdoc">Class to store parameters.</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00050">parameters.h:50</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html_a003727b70c2e2cd53bfadf0ad5109ec1"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1">CoverageControl::Parameters::pResolution</a></div><div class="ttdeci">double pResolution</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00066">parameters.h:66</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html_a012d80426433506f0393a2d1ced26bfe"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe">CoverageControl::Parameters::pWorldMapSize</a></div><div class="ttdeci">int pWorldMapSize</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00070">parameters.h:70</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html_a1b37a3efdab146959388923831565c12"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html#a1b37a3efdab146959388923831565c12">CoverageControl::Parameters::pTimeStep</a></div><div class="ttdeci">double pTimeStep</div><div class="ttdoc">Each time step corresponds to pTimeStep seconds.</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00129">parameters.h:129</a></div></div>
+<div class="ttc" id="aclassCoverageControl_1_1Parameters_html_a26bf45b3c898fd1cbea54562f9095026"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html#a26bf45b3c898fd1cbea54562f9095026">CoverageControl::Parameters::pNumRobots</a></div><div class="ttdeci">int pNumRobots</div><div class="ttdoc">Number of robots.</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00058">parameters.h:58</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html_ac2469032dfa06a223ed3c2818643fc89"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html#ac2469032dfa06a223ed3c2818643fc89">CoverageControl::Parameters::pLocalMapSize</a></div><div class="ttdeci">int pLocalMapSize</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00079">parameters.h:79</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html_ad64f0471d84035f9821a8b7cc8ae0073"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html#ad64f0471d84035f9821a8b7cc8ae0073">CoverageControl::Parameters::pCommunicationRange</a></div><div class="ttdeci">double pCommunicationRange</div><div class="ttdoc">Radius of communication (in meters)</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00123">parameters.h:123</a></div></div>
 <div class="ttc" id="acoverage__system_8h_html"><div class="ttname"><a href="coverage__system_8h.html">coverage_system.h</a></div><div class="ttdoc">The file contains the CoverageSystem class, which is the main class for the coverage control library.</div></div>

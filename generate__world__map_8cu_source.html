@@ -252,8 +252,8 @@ $(function(){initNavTree('generate__world__map_8cu_source.html',''); initResizab
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="keyword">auto</span> &amp;y = device_polygons.y;</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; cu_num_polygons; ++i) {</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">auto</span> <span class="keyword">const</span> &amp;bounds = device_polygons.bounds[i];</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordflow">if</span> ((mid_pt_cell.x &lt; bounds.xmin) or (mid_pt_cell.x &gt; bounds.xmax) or</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        (mid_pt_cell.y &lt; bounds.ymin) or (mid_pt_cell.y &gt; bounds.ymax)) {</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordflow">if</span> ((mid_pt_cell.x &lt; bounds.xmin) || (mid_pt_cell.x &gt; bounds.xmax) ||</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        (mid_pt_cell.y &lt; bounds.ymin) || (mid_pt_cell.y &gt; bounds.ymax)) {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      start += device_polygons.sz[i];</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>      <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    }</div>

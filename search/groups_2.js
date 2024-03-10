@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['typedefs_0',['Typedefs',['../group__cpp__api__typedefs.html',1,'']]]
+  ['python_20api_0',['Python API',['../group__python__api.html',1,'']]]
 ];

@@ -123,6 +123,13 @@ $(function(){initNavTree('lpac.html',''); initResizable(); });
   <div class="headertitle"><div class="title">LPAC Architecture</div></div>
 </div><!--header-->
 <div class="contents">
+<div class="toc"><h3>Table of Contents</h3>
+<ul><ul><li class="level2"><a href="#autotoc_md31">Navigation of Robot Swarms</a></li>
+<li class="level2"><a href="#autotoc_md32">The Challenge</a></li>
+<li class="level2"><a href="#autotoc_md33">LPAC Architecture</a></li>
+</ul>
+</ul>
+</div>
 <div class="textblock"><h2><a class="anchor" id="autotoc_md31"></a>
 Navigation of Robot Swarms</h2>
 <p>Navigating a swarm of robots through an environment to achieve a common collaborative goal is a challenging problem, especially when the sensing and communication capabilities of the robots are limited. These problems require systems with high-fidelity algorithms comprising three key capabilities: perception, action, and communication, which are executed in a feedback loop, i.e., the Perception-Action-Communication (PAC) loop. To seamlessly scale the deployment of such systems across vast environments with large robot swarms, it is imperative to consider a decentralized system wherein each robot autonomously makes decisions, drawing upon its own observations and information received from neighboring robots.</p>
@@ -138,7 +145,9 @@ LPAC Architecture</h2>
 </ol>
 <p> 
 <img class="center" style="width: 80%; margin-left: auto; margin-right: auto;" src="learnable_pac.png"/>
-<figcaption>A near-optimal solution, along with Voronoi partition, to an instance of the coverage control problem with 32 robots and 32 features in a 1024 x 1024 environment.</figcaption>
+<figcaption>Learnable Perception-Action-Communication (LPAC) architecture:
+The three modules are executed on each robot independently, with the GNN in the communication module facilitating collaboration between robots.
+</figcaption>
 </p>
 <blockquote class="doxtable">
 <p>&zwj;<a href="https://doi.org/10.48550/arXiv.2401.04855">LPAC: Learnable Perception-Action-Communication Loops with Applications to Coverage Control.</a> <br  />

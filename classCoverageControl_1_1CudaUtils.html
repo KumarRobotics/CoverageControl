@@ -128,7 +128,7 @@ $(function(){initNavTree('classCoverageControl_1_1CudaUtils.html',''); initResiz
 </div><!--header-->
 <div class="contents">
 
-<p>Class for CUDA utilities.  
+<p>Static class for CUDA utilities This class provides utility functions for CUDA It is a static class and cannot be instantiated.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>&gt;</code></p>
@@ -151,12 +151,13 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a485d8843e8b96f69a627f49243e9b449" id="r_a485d8843e8b96f69a627f49243e9b449"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a485d8843e8b96f69a627f49243e9b449">IsCudaInitialized</a> ()</td></tr>
 <tr class="separator:a485d8843e8b96f69a627f49243e9b449"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4dadd4ca5b34fc6ed93444d18643274" id="r_ab4dadd4ca5b34fc6ed93444d18643274"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4dadd4ca5b34fc6ed93444d18643274">InitializeCUDA</a> ()</td></tr>
+<tr class="memdesc:ab4dadd4ca5b34fc6ed93444d18643274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a CUDA device <code>use_cuda_</code> must be set to true before calling this function.  <br /></td></tr>
 <tr class="separator:ab4dadd4ca5b34fc6ed93444d18643274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class for CUDA utilities. </p>
+<div class="textblock"><p>Static class for CUDA utilities This class provides utility functions for CUDA It is a static class and cannot be instantiated. </p>
 
-<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00042">42</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00046">46</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2aed527243b8a3679189531fb6292c5c" name="a2aed527243b8a3679189531fb6292c5c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2aed527243b8a3679189531fb6292c5c">&#9670;&#160;</a></span>CudaUtils()</h2>
@@ -234,7 +235,10 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00087">87</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
+<p>Initializes a CUDA device <code>use_cuda_</code> must be set to true before calling this function. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if successful </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00097">97</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
 
 </div>
 </div>
@@ -262,7 +266,7 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Check if CUDA enabled GPU is available </p><dl class="section return"><dt>Returns</dt><dd>True if CUDA enabled GPU is available </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00072">72</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00073">73</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
 
 </div>
 </div>
@@ -288,8 +292,9 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Check if CUDA is initialized </p><dl class="section return"><dt>Returns</dt><dd>True if CUDA is initialized </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00080">80</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00085">85</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
 
 </div>
 </div>
@@ -316,7 +321,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00064">64</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00067">67</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
 
 </div>
 </div>
@@ -343,7 +348,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00060">60</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8h_source.html#l00065">65</a> of file <a class="el" href="cuda__utils_8h_source.html">cuda_utils.h</a>.</p>
 
 </div>
 </div>

@@ -9,6 +9,6 @@ var searchData=
   ['and_20executing_6',['Building and Executing',['../installation.html#autotoc_md12',1,'']]],
   ['and_20funding_7',['Support and Funding',['../index.html#autotoc_md4',1,'']]],
   ['and_20run_8',['Compile and Run',['../quick_start.html#autotoc_md24',1,'']]],
-  ['api_9',['Core API',['../group__cpp__api.html',1,'']]],
+  ['api_9',['API',['../group__cpp__api.html',1,'Core API'],['../group__python__api.html',1,'Python API']]],
   ['architecture_10',['Architecture',['../lpac.html',1,'LPAC Architecture'],['../lpac.html#autotoc_md33',1,'LPAC Architecture']]]
 ];

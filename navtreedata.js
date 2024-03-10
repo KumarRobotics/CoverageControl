@@ -56,7 +56,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"abstract__controller_8h.html"
+"____init_____8py_source.html",
+"voronoi_8cpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
