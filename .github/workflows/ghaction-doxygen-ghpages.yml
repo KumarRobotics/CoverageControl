@@ -1,3 +1,4 @@
+name: doxygen-ghpages
 on:
   release:
     types: [published]

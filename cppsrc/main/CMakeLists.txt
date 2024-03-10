@@ -15,12 +15,6 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif()
 
-option(WITH_CUDA "Build with CUDA support" ON)
-
-if(WITH_CUDA)
-	enable_language(CUDA)
-endif()
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS ON)

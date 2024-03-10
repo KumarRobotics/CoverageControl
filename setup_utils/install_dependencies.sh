@@ -2,7 +2,7 @@
 
 TMP_DIR=`mktemp -d`
 
-params="$(getopt -o d: -l directory:,no-cuda --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d: -l directory:,no-cuda,boost,gmp,mpfr,eigen,cgal,pybind11,yaml-cpp,geographiclib,opencv --name "$(basename "$0")" -- "$@")"
 
 print_usage() {
 	printf "bash $0 [-d|--directory <specify install directory>]\n"
@@ -14,6 +14,15 @@ while true; do
 	case ${1} in
 		-d|--directory) INSTALL_DIR+=("${2}");shift 2;;
 		--no-cuda) NOCUDA=true;shift;;
+		--boost) BOOST=true;shift;;
+		--gmp) GMP=true;shift;;
+		--mpfr) MPFR=true;shift;;
+		--eigen) EIGEN=true;shift;;
+		--cgal) CGAL=true;shift;;
+		--pybind11) PYBIND11=true;shift;;
+		--yaml-cpp) YAML_CPP=true;shift;;
+		--geographiclib) GEOGRAPHICLIB=true;shift;;
+		--opencv) OPENCV=true;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;
@@ -27,14 +36,15 @@ if [ -z "$INSTALL_DIR" ]; then
 	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
 else
 	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR"
+	CONFIGURE_END_FLAGS="--prefix=$INSTALL_DIR"
 	echo "Installing to $INSTALL_DIR"
 fi
 
 InstallCGAL () {
 	echo "Setting up CGAL"
-	wget https://github.com/CGAL/cgal/releases/download/v5.6/CGAL-5.6-library.tar.xz -P ${MAIN_DIR}/src > /dev/null
-	tar -xf ${MAIN_DIR}/src/CGAL-5.6-library.tar.xz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/CGAL-5.6 -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS} > /dev/null
+	wget https://github.com/CGAL/cgal/releases/download/v${CGAL_VERSION}/CGAL-${CGAL_VERSION}-library.tar.xz -P ${MAIN_DIR}/src > /dev/null
+	tar -xf ${MAIN_DIR}/src/CGAL-${CGAL_VERSION}-library.tar.xz -C ${MAIN_DIR}/src/ > /dev/null
+	cmake -S ${MAIN_DIR}/src/CGAL-${CGAL_VERSION} -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS} > /dev/null
 	cmake --install ${BUILD_DIR}/cgal > /dev/null
 	if [ $? -eq 0 ]; then
 		echo "cgal install succeeded"
@@ -94,11 +104,11 @@ InstallYamlCPP () {
 
 InstallEigen3 () {
 	echo "Setting up eigen3"
-	wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz -P ${MAIN_DIR}/src
-	tar -xf ${MAIN_DIR}/src/eigen-3.4.0.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/eigen-3.4.0 -B ${BUILD_DIR}/eigen3 ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/eigen3
-	cmake --install ${BUILD_DIR}/eigen3
+	wget https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/${EIGEN_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/${EIGEN_TAR_NAME}.tar.gz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/${EIGEN_TAR_NAME} -B ${BUILD_DIR}/eigen3 ${CMAKE_END_FLAGS} > /dev/null
+	cmake --build ${BUILD_DIR}/eigen3 -j$(nproc) > /dev/null
+	cmake --install ${BUILD_DIR}/eigen3 > /dev/null
 	if [ $? -eq 0 ]; then
 		echo "eigen3 install succeeded"
 	else
@@ -167,9 +177,113 @@ InstallOpenCV () {
 	fi
 }
 
+InstallGMP () {
+	echo "Setting up gmp"
+	wget https://gmplib.org/download/gmp/${GMP_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+	tar -xf ${MAIN_DIR}/src/${GMP_TAR_NAME}.tar.xz -C ${MAIN_DIR}/src/ > /dev/null
+	cd ${MAIN_DIR}/src/${GMP_TAR_NAME}
+	./configure --enable-cxx --disable-shared --with-pic ${CONFIGURE_END_FLAGS}  > /dev/null
+	make -C ${MAIN_DIR}/src/${GMP_TAR_NAME} install -j$(nproc) > /dev/null
+	if [ $? -eq 0 ]; then
+		echo "gmp install succeeded"
+	else
+		echo "gmp install failed"
+		exit 1
+	fi
+}
+
+InstallMPFR() {
+	echo "Setting up mpfr"
+	wget https://www.mpfr.org/mpfr-current/${MPFR_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/${MPFR_TAR_NAME}.tar.xz -C ${MAIN_DIR}/src/
+	cd ${MAIN_DIR}/src/${MPFR_TAR_NAME}
+	# if ${INSTALL_DIR} is set, then we need to tell where gmp is installed
+	if [ -z "$INSTALL_DIR" ]; then
+		./configure --disable-shared --with-pic ${CONFIGURE_END_FLAGS}
+	else
+		./configure --disable-shared --with-pic --with-gmp=${INSTALL_DIR} ${CONFIGURE_END_FLAGS}
+	fi
+	make -C ${MAIN_DIR}/src/${MPFR_TAR_NAME} install -j$(nproc)
+	if [ $? -eq 0 ]; then
+		echo "mpfr install succeeded"
+	else
+		echo "mpfr install failed"
+		exit 1
+	fi
+}
+
+InstallBoost () {
+	echo "Setting up boost"
+	wget https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
+	tar -xf ${MAIN_DIR}/src/${BOOST_TAR_NAME}.tar.gz -C ${MAIN_DIR}/src/
+	cd ${MAIN_DIR}/src/${BOOST_TAR_NAME}
+	if [ -z "$INSTALL_DIR" ]; then
+		./bootstrap.sh
+	else
+		./bootstrap.sh --prefix=${INSTALL_DIR}
+	fi
+	./b2 cxxflags="-fPIC" cflags="-fPIC" -a link=static install -j$(nproc)
+	if [ $? -eq 0 ]; then
+		echo "boost install succeeded"
+	else
+		echo "boost install failed"
+		exit 1
+	fi
+}
+
+BOOST_VERSION=1.82.0
+BOOST_TAR_NAME=`echo boost_${BOOST_VERSION} | tr . _`
+GMP_VERSION=6.3.0
+GMP_TAR_NAME=`echo gmp-${GMP_VERSION}`
+MPFR_VERSION=4.2.1
+MPFR_TAR_NAME=`echo mpfr-${MPFR_VERSION}`
+EIGEN_VERSION=3.4.0
+EIGEN_TAR_NAME=`echo eigen-${EIGEN_VERSION}`
+CGAL_VERSION=5.6.1
+CGAL_TAR_NAME=`echo CGAL-${CGAL_VERSION}`
+
+if [ -n "$BOOST" ]; then
+	InstallBoost
+fi
+
+if [ -n "$GMP" ]; then
+	InstallGMP
+fi
+
+if [ -n "$MPFR" ]; then
+	InstallMPFR
+fi
+
+if [ -n "$EIGEN" ]; then
+	InstallEigen3
+fi
+
+if [ -n "$CGAL" ]; then
+	InstallCGAL
+fi
+
+if [ -n "$PYBIND11" ]; then
+	InstallPybind11
+fi
+
+if [ -n "$YAML_CPP" ]; then
+	InstallYamlCPP
+fi
+
+if [ -n "$GEOGRAPHICLIB" ]; then
+	InstallGeoGraphicLib
+fi
+
+if [ -n "$OPENCV" ]; then
+	InstallOpenCV
+fi
+
+
+# InstallGMP
+# InstallMPFR
 # InstallEigen3
+# InstallCGAL
 # InstallPybind11
-InstallCGAL
 # InstallYamlCPP
 # InstallGeoGraphicLib
 # InstallOpenCV

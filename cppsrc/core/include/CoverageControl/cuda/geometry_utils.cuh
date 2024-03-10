@@ -27,12 +27,12 @@
  * polygon
  */
 
-#ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_GEOMETRY_UTILS_CUH_
-#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_GEOMETRY_UTILS_CUH_
+#ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CUDA_GEOMETRY_UTILS_CUH_
+#define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CUDA_GEOMETRY_UTILS_CUH_
 
 #include <cuda_runtime.h>
 
-#include "CoverageControl/extern/cuda_helpers/helper_cuda.h"
+/* #include "CoverageControl/extern/cuda_helpers/helper_cuda.h" */
 
 namespace CoverageControl {
 /*!
@@ -100,4 +100,4 @@ __device__ bool IsPointInMonotonePolygon(float *x, float *y, int sz,
 }
 } /* namespace CoverageControl */
 
-#endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_GEOMETRY_UTILS_CUH_
+#endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CUDA_GEOMETRY_UTILS_CUH_

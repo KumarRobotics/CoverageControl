@@ -30,6 +30,7 @@
 #ifndef CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
 #define CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
 
+/* #include <CoverageControlConfig.h> */
 #include <CoverageControl/bivariate_normal_distribution.h>
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/parameters.h>

@@ -1,0 +1,89 @@
+[build-system]
+requires = [ "scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "coverage_control"
+authors = [
+  { name = "Saurav Agarwal", email = "agr.saurav1@gmail.com" },
+]
+description = "Library for large-scale coverage control using robot swarms"
+readme = "README.md"
+license.file = "LICENSE"
+requires-python = ">=3.10"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+	"Intended Audience :: Education",
+	"License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: OS Independent",
+	"Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+	"Framework :: Robot Framework",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+	"Environment :: GPU :: NVIDIA CUDA",
+]
+dynamic = ["version"]
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+nn = ["torch >=2.1", "torchvision >=2.1"]
+core_test = ["pytest >=6"]
+test = ["pytest >=6", "torch >=2.1", "torchvision"]
+
+[project.urls]
+Homepage = "https://github.com/KumarRobotics/CoverageControl"
+"Bug Tracker" = "https://github.com/KumarRobotics/CoverageControl/issues"
+Discussions = "https://github.com/KumarRobotics/CoverageControl/discussions"
+Changelog = "https://github.com/KumarRobotics/CoverageControl/releases"
+
+[tool.scikit-build]
+minimum-version = "0.8"
+# cmake.version = ">=3.28"
+metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+sdist.cmake = true
+sdist.include = [
+  "pybind11/third_party/tools",
+  "pybind11/third_party/include",
+  "pybind11/third_party/CMakeLists.txt",
+	"python/coverage_control/_version.py",
+]
+
+
+[tool.setuptools_scm]
+write_to = "python/coverage_control/_version.py"
+
+[tool.cibuildwheel]
+build = "*"
+skip = ["pp*", "*musllinux*"]
+test-skip = ""
+
+# archs = ["x86_64", "aarch64"]
+archs = ["x86_64"]
+build-frontend = "default"
+config-settings = {}
+dependency-versions = "pinned"
+environment-pass = []
+build-verbosity = 1
+
+repair-wheel-command = ""
+
+test-command = ""
+before-test = ""
+test-requires = []
+test-extras = []
+
+container-engine = "docker"
+
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+
+[tool.cibuildwheel.linux]
+environment = { PATH="/usr/local/cuda/bin:$PATH", LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" }
+before-all = "bash setup_utils/manylinux_2_28_before-all.sh"
+repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
+
+[tool.cibuildwheel.macos]
+repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
+
+[tool.cibuildwheel.windows]

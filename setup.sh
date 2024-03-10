@@ -52,9 +52,9 @@ then
 	if [[ ${WS_DIR} ]]
 	then
 		INSTALL_DIR=${WS_DIR}/install/
-		bash ${DIR}/setup_utils/install_dependencies.sh -d ${INSTALL_DIR}
+		bash ${DIR}/setup_utils/install_dependencies.sh -d ${INSTALL_DIR} --eigen --cgal
 	else
-		bash ${DIR}/setup_utils/install_dependencies.sh
+		bash ${DIR}/setup_utils/install_dependencies.sh --eigen --cgal
 	fi
 	if [ $? -ne 0 ]; then
 		echo "deps build failed"
@@ -77,7 +77,8 @@ then
 	echo "pip_path: $(which pip)"
 
 	# pip install --no-build-isolation ${DIR}/cppsrc/core/python_bindings/
-	pip install ${DIR}/cppsrc/core/python_bindings/
+	# pip install ${DIR}/cppsrc/core/python_bindings/
+  pip install .
 	if [ $? -ne 0 ]; then
 		echo "python bindings build failed"
 		exit 1

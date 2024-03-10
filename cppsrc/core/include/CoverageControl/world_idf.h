@@ -37,8 +37,9 @@
 #include <string>
 #include <vector>
 
-#include "CoverageControlConfig.h"
-#ifdef WITH_CUDA
+#include "CoverageControl/Config.h"
+#include "CoverageControl/cuda_utils.h"
+#ifdef COVERAGECONTROL_WITH_CUDA
 #include "CoverageControl/generate_world_map.h"
 #endif
 #include "CoverageControl/bivariate_normal_distribution.h"
@@ -69,10 +70,12 @@ class WorldIDF {
   MapType world_map_;
   Parameters params_;
   double normalization_factor_ = 0;
+	bool is_cuda_available_ = false;
 
   /*! Fills in values of the world_map_ with the total importance for each cell
    */
   void GenerateMapCPU() {
+		std::cout << "Generating map using CPU" << std::endl;
     float max_importance = 0;
     for (int i = 0; i < params_.pWorldMapSize; ++i) {  // Row (x index)
       float x1 = params_.pResolution * i;   // Left x-coordinate of pixel
@@ -106,8 +109,9 @@ class WorldIDF {
     }
   }
 
-#ifdef WITH_CUDA
+#ifdef COVERAGECONTROL_WITH_CUDA
   void GenerateMapCuda() {
+		std::cout << "Generating map using CUDA" << std::endl;
     GenerateMapCuda(static_cast<float>(params_.pResolution),
                     static_cast<float>(params_.pTruncationBND),
                     static_cast<int>(params_.pWorldMapSize));
@@ -176,15 +180,20 @@ class WorldIDF {
   }
 #endif
  public:
-  explicit WorldIDF(size_t sz) { world_map_ = MapType(sz, sz); }
+  explicit WorldIDF(size_t sz) { world_map_ = MapType(sz, sz);
+		if(CudaUtils::InitializeCUDA() == true) {
+			is_cuda_available_ = true;
+		} else {
+			is_cuda_available_ = false;
+		}
+	}
 
-  explicit WorldIDF(Parameters const &params) : params_{params} {
-    world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
-  }
+  explicit WorldIDF(Parameters const &params) : WorldIDF(params.pWorldMapSize) {
+		params_ = params;
+	}
 
   WorldIDF(Parameters const &params, std::string const &file_name)
-      : params_{params} {
-    world_map_ = MapType(params_.pWorldMapSize, params_.pWorldMapSize);
+      : WorldIDF(params) {
 
     // Load Bivariate Normal Distribution from file
     std::ifstream file(file_name);
@@ -278,8 +287,13 @@ class WorldIDF {
   }
 
   void GenerateMap() {
-#ifdef WITH_CUDA
-    GenerateMapCuda();
+#ifdef COVERAGECONTROL_WITH_CUDA
+    /* GenerateMapCuda(); */
+		if(is_cuda_available_) {
+			GenerateMapCuda();
+		} else {
+			GenerateMapCPU();
+		}
 #else
     GenerateMapCPU();
 #endif

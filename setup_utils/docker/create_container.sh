@@ -19,8 +19,8 @@ IMAGE_TAG=latest
 
 while true; do
 	case ${1} in
-		-d|--directory) WS_DIR+=("${2}");shift 2;;
-		-n|--name) CONTAINER_NAME+=("${2}");shift 2;;
+		-d|--directory) WS_DIR=("${2}");shift 2;;
+		-n|--name) CONTAINER_NAME=("${2}");shift 2;;
 		--with-cuda) CUDA_IMAGE=true;shift;;
 		--with-ros) ROS_IMAGE=true;shift;;
 		--) shift;break;;
@@ -29,11 +29,13 @@ while true; do
 	esac
 done
 
-# if [ -z ${WS_DIR} ]; then
-# 	echo "Workspace directory not provided"
-# 	print_usage
-# 	exit 1
-# fi
+CONTAINER_CC_WS="/workspace"
+
+if [ -z ${WS_DIR} ]; then
+	VOLUME_OPTION=""
+else
+	VOLUME_OPTION="-v ${WS_DIR}:${CONTAINER_CC_WS}:rw"
+fi
 
 if [[ ${CUDA_IMAGE} == true ]]; then
 	CONTAINER_OPTIONS+="--gpus all "
@@ -56,15 +58,13 @@ if [ -z ${CONTAINER_NAME} ]; then
 	CONTAINER_NAME="coverage-control-${USER}"
 fi
 
-CONTAINER_CC_WS="/workspace"
-
 docker run -it \
 	--name=${CONTAINER_NAME} \
 	${CONTAINER_OPTIONS} \
 	--net=host \
 	--privileged \
 	--ipc=host \
-	--volume=${WS_DIR}:${CONTAINER_CC_WS}:rw \
+	${VOLUME_OPTION} \
 	--workdir=${CONTAINER_CC_WS} \
 	${IMAGE_NAME} \
 	bash

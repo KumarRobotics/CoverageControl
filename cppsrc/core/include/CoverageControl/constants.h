@@ -29,11 +29,11 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CONSTANTS_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CONSTANTS_H_
 
-#include <CoverageControlConfig.h>
-
 #include <cmath>
 #include <limits>
 #include <string>
+
+#include "CoverageControl/Config.h"
 
 /*!
  * \namespace CoverageControl
