@@ -14,5 +14,7 @@ var searchData=
   ['getrobotpositions_11',['GetRobotPositions',['../classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3',1,'CoverageControl::CoverageSystem']]],
   ['getscale_12',['GetScale',['../classCoverageControl_1_1BivariateNormalDistribution.html#a073500c7bf85d4fed293f6e787a47c74',1,'CoverageControl::BivariateNormalDistribution']]],
   ['getsigma_13',['GetSigma',['../classCoverageControl_1_1BivariateNormalDistribution.html#a7b9d61f59fdc264a7fc9a114ad53a351',1,'CoverageControl::BivariateNormalDistribution']]],
-  ['getweightedexplorationratio_14',['GetWeightedExplorationRatio',['../classCoverageControl_1_1CoverageSystem.html#a17ef19df7a66f32777c5c871387401a4',1,'CoverageControl::CoverageSystem']]]
+  ['getweightedexplorationratio_14',['GetWeightedExplorationRatio',['../classCoverageControl_1_1CoverageSystem.html#a17ef19df7a66f32777c5c871387401a4',1,'CoverageControl::CoverageSystem']]],
+  ['gnnbackbone_15',['GNNBackBone',['../classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html',1,'coverage_control::nn::models::gnn_backbone']]],
+  ['gnnconfigparser_16',['GNNConfigParser',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html',1,'coverage_control::nn::models::config_parser']]]
 ];

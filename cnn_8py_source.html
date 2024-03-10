@@ -138,19 +138,20 @@ $(function(){initNavTree('cnn_8py_source.html',''); initResizable(); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="stringliteral">    Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="stringliteral">    This is the current architecture used in the hybrid CNN-GNN</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00011" data-start="" data-end="">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html">   11</a></span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">def </span>__init__(self, config):</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        super(CNN, self).__init__()</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        self.Parse(config)</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        self.cnn_backbone = CNNBackBone(self.config)</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        self.mlp = MLP([self.latent_size, 2 * self.latent_size, 2 * self.latent_size, self.latent_size])</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        self.linear = torch.nn.Linear(self.latent_size, self.output_dim)</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae4bb20419d685a1a3e50193133756ddd">cnn_backbone</a> = CNNBackBone(self.config)</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#a0de7ff39e186c08a0edd764ef7614581">mlp</a> = MLP([self.latent_size, 2 * self.latent_size, 2 * self.latent_size, self.latent_size])</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#a54d6246f3d7a6b1836d79d9294ab5c2c">linear</a> = torch.nn.Linear(self.latent_size, self.output_dim)</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">def </span>forward(self, x, return_embed=None):</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        x = self.cnn_backbone(x)</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        x = self.mlp(x)</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        x = self.linear(x)</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        x = self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae4bb20419d685a1a3e50193133756ddd">cnn_backbone</a>(x)</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        x = self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#a0de7ff39e186c08a0edd764ef7614581">mlp</a>(x)</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        x = self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#a54d6246f3d7a6b1836d79d9294ab5c2c">linear</a>(x)</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordflow">return</span> x</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">def </span>LoadModelCPP(self, model_path):</div>
@@ -159,6 +160,10 @@ $(function(){initNavTree('cnn_8py_source.html',''); initResizable(); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">def </span>LoadModel(self, model_path):</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        self.load_state_dict(torch.load(model_path), strict=<span class="keyword">False</span>)</div>
+</div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN_html_a0de7ff39e186c08a0edd764ef7614581"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#a0de7ff39e186c08a0edd764ef7614581">coverage_control.nn.models.cnn.CNN.mlp</a></div><div class="ttdeci">mlp</div><div class="ttdef"><b>Definition</b> <a href="#l00017">cnn.py:17</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN_html_a54d6246f3d7a6b1836d79d9294ab5c2c"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#a54d6246f3d7a6b1836d79d9294ab5c2c">coverage_control.nn.models.cnn.CNN.linear</a></div><div class="ttdeci">linear</div><div class="ttdef"><b>Definition</b> <a href="#l00018">cnn.py:18</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN_html_ae4bb20419d685a1a3e50193133756ddd"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae4bb20419d685a1a3e50193133756ddd">coverage_control.nn.models.cnn.CNN.cnn_backbone</a></div><div class="ttdeci">cnn_backbone</div><div class="ttdef"><b>Definition</b> <a href="#l00016">cnn.py:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

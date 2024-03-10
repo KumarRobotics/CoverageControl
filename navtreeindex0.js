@@ -90,6 +90,11 @@ var NAVTREEINDEX0 =
 "classCoverageControl_1_1WorldIDF.html#ad9d2b62c3f1125c5253bec8cc03092b5":[5,0,14,4],
 "classCoverageControl_1_1WorldIDF.html#ade6915e56b624b23dffc85f25c0f11c1":[5,0,14,2],
 "classCoverageControl_1_1WorldIDF.html#af913a85adce2dc93045e8754c13d8ba0":[5,0,14,3],
+"classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html":[5,1,1],
+"classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda":[5,1,1,0],
+"classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aaddbcd576820f208f49cb9c064785aaf":[5,1,1,1],
+"classcoverage__control_1_1nn_1_1data__loaders_1_1data__loaders_1_1LocalMapCNNDataset.html":[5,1,0,0],
+"classcoverage__control_1_1nn_1_1data__loaders_1_1data__loaders_1_1LocalMapGNNDataset.html":[5,1,0,1],
 "cnn_8py_source.html":[6,2,0,1,1,1],
 "cnn__backbone_8py_source.html":[6,2,0,1,1,2],
 "config_8h.html":[6,0,0,0,0,1,0],
@@ -171,6 +176,7 @@ var NAVTREEINDEX0 =
 "group__cpp__api__typedefs.html#gadf81a587ad324dad417f496ba8df2622":[5,0,1,5],
 "group__cpp__api__typedefs.html#gafb74cd37ffcdf39e89e52b7d18243822":[5,0,1,7],
 "group__python__api.html":[5,1],
+"group__python__api__data__loaders.html":[5,1,0],
 "index.html":[0],
 "index.html":[],
 "index.html#autotoc_md2":[0,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX0 =
 "to__tensor_8py_source.html":[6,2,0,1,3,2],
 "topics.html":[5],
 "trainer_8py_source.html":[6,2,0,1,2,2],
-"typedefs_8h.html":[6,0,0,0,0,13],
-"typedefs_8h_source.html":[6,0,0,0,0,13],
-"utilities_8h.html":[6,0,0,0,0,1,2],
-"utilities_8h_source.html":[6,0,0,0,0,1,2],
-"vec2d_8h.html":[6,0,0,0,0,14],
-"vec2d_8h_source.html":[6,0,0,0,0,14],
-"voronoi_8cpp.html":[6,0,0,1,6]
+"typedefs_8h.html":[6,0,0,0,0,13]
 };

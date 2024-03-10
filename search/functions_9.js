@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['robotmodel_0',['RobotModel',['../classCoverageControl_1_1RobotModel.html#afa6b3d4664d2ae39efa3a145c915dcf1',1,'CoverageControl::RobotModel']]]
+  ['perpendicular_0',['Perpendicular',['../classCoverageControl_1_1Vec2d.html#a069a23a0567e0253778cafc6efafeff7',1,'CoverageControl::Vec2d']]],
+  ['polygonymonotonepartition_1',['PolygonYMonotonePartition',['../namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042',1,'CoverageControl']]]
 ];
