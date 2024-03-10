@@ -1,29 +1,19 @@
 <map id="abstract_controller.h" name="abstract_controller.h">
-<area shape="rect" id="Node000001" title="Contains the abstract class for coverage control algorithms." alt="" coords="460,5,600,30"/>
+<area shape="rect" id="Node000001" title="Contains the abstract class for coverage control algorithms." alt="" coords="443,5,582,30"/>
 <area shape="rect" id="Node000002" href="$centralized__cvt_8h.html" title="Contains the class CentralizedCVT." alt="" coords="5,85,124,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="445,32,300,52,136,81,108,87,107,82,135,75,299,47,444,27"/>
-<area shape="rect" id="Node000005" href="$clairvoyant__cvt_8h.html" title="Clairvoyant CVT algorithm." alt="" coords="989,85,1108,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="616,25,784,44,978,75,1007,82,1006,87,977,81,783,50,615,30"/>
-<area shape="rect" id="Node000007" href="$decentralized__cvt_8h.html" title="Contains the DecentralizedCVT class." alt="" coords="148,85,280,110"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="468,37,262,87,261,82,467,32"/>
-<area shape="rect" id="Node000008" href="$near__optimal__cvt_8h.html" title="NearOptimalCVT class Global offline oracle: has complete information about the environment...." alt="" coords="305,85,435,110"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="494,39,395,87,393,82,491,35"/>
-<area shape="rect" id="Node000009" href="$oracle__bang__explore__exploit_8h.html" title="First trial of oracle with exploration and exploitation. The oracle uses complete information about t..." alt="" coords="460,78,600,117"/>
-<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="533,46,533,77,527,77,527,46"/>
-<area shape="rect" id="Node000010" href="$oracle__explore__exploit_8h.html" title="Old trial of exploration and exploitation Uses system map for exploration as well." alt="" coords="624,85,785,110"/>
-<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="571,34,679,82,677,87,569,39"/>
-<area shape="rect" id="Node000011" href="$simul__explore__exploit_8h.html" title="Simultaneous exploration and exploitation algorithm Uses frontier&#45;based exploration with bias towards..." alt="" coords="809,85,965,110"/>
-<area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="599,31,834,82,833,87,598,36"/>
-<area shape="rect" id="Node000003" href="$core__binds_8h.html" title="Provides python bindings for the core CoverageControl library using pybind11." alt="" coords="482,165,578,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="123,111,136,114,327,147,482,167,481,173,326,152,135,119,122,116"/>
-<area shape="rect" id="Node000004" href="$python__binds_8cpp.html" title="Python bindings for the CoverageControl library using pybind11 (core_binds.h)" alt="" coords="468,237,592,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="533,205,533,237,527,237,527,205"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="992,116,978,119,755,154,578,174,578,169,754,149,977,114,991,111"/>
-<area shape="rect" id="Node000006" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="969,165,1128,189"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="1051,125,1051,164,1046,164,1046,125"/>
-<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="277,111,483,161,482,167,276,116"/>
-<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="408,114,507,162,505,166,406,119"/>
-<area shape="poly" id="edge12_Node000009_Node000003" title=" " alt="" coords="533,133,533,164,527,164,527,133"/>
-<area shape="poly" id="edge14_Node000010_Node000003" title=" " alt="" coords="666,119,557,167,555,162,663,114"/>
-<area shape="poly" id="edge16_Node000011_Node000003" title=" " alt="" coords="819,116,578,168,577,163,818,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="428,33,291,53,137,81,109,87,108,82,136,75,290,48,427,28"/>
+<area shape="rect" id="Node000003" href="$clairvoyant__cvt_8h.html" title="Clairvoyant CVT algorithm." alt="" coords="148,85,266,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="452,37,278,81,253,87,252,82,277,75,451,32"/>
+<area shape="rect" id="Node000005" href="$decentralized__cvt_8h.html" title="Contains the DecentralizedCVT class." alt="" coords="290,85,423,110"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="477,40,381,87,379,82,474,35"/>
+<area shape="rect" id="Node000006" href="$near__optimal__cvt_8h.html" title="NearOptimalCVT class Global offline oracle: has complete information about the environment...." alt="" coords="447,85,578,110"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="515,46,515,85,510,85,510,46"/>
+<area shape="rect" id="Node000007" href="$oracle__bang__explore__exploit_8h.html" title="First trial of oracle with exploration and exploitation. The oracle uses complete information about t..." alt="" coords="602,78,743,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="551,35,635,75,633,80,549,39"/>
+<area shape="rect" id="Node000008" href="$oracle__explore__exploit_8h.html" title="Old trial of exploration and exploitation Uses system map for exploration as well." alt="" coords="767,85,927,110"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="578,31,797,82,796,87,577,37"/>
+<area shape="rect" id="Node000009" href="$simul__explore__exploit_8h.html" title="Simultaneous exploration and exploitation algorithm Uses frontier&#45;based exploration with bias towards..." alt="" coords="952,85,1108,110"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="598,27,757,48,940,75,974,82,973,87,939,81,756,53,597,32"/>
+<area shape="rect" id="Node000004" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="128,165,286,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="210,125,210,164,205,164,205,125"/>
 </map>

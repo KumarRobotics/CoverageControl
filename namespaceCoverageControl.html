@@ -161,6 +161,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCoverageControl_1_1CoverageSystem.html">CoverageSystem</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classCoverageControl_1_1CoverageSystem.html" title="The CoverageSystem class is the main class for the coverage control library.">CoverageSystem</a> class is the main class for the coverage control library.  <a href="classCoverageControl_1_1CoverageSystem.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCoverageControl_1_1CudaUtils.html">CudaUtils</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for CUDA utilities.  <a href="classCoverageControl_1_1CudaUtils.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCoverageControl_1_1DecentralizedCVT.html">DecentralizedCVT</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCoverageControl_1_1Frontier.html">Frontier</a></td></tr>
@@ -225,8 +228,6 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga3eb2c9229531009f43635928ad308da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafb74cd37ffcdf39e89e52b7d18243822" id="r_gafb74cd37ffcdf39e89e52b7d18243822"><td class="memItemLeft" align="right" valign="top">typedef std::priority_queue&lt; <a class="el" href="structCoverageControl_1_1Frontier.html">Frontier</a>, std::vector&lt; <a class="el" href="structCoverageControl_1_1Frontier.html">Frontier</a> &gt;, <a class="el" href="structCoverageControl_1_1FrontierCompare.html">FrontierCompare</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cpp__api__typedefs.html#gafb74cd37ffcdf39e89e52b7d18243822">queue_t</a></td></tr>
 <tr class="separator:gafb74cd37ffcdf39e89e52b7d18243822"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8cc15eb13445e1a11b409f1af35f705" id="r_ab8cc15eb13445e1a11b409f1af35f705"><td class="memItemLeft" align="right" valign="top">typedef std::vector&lt; <a class="el" href="classCoverageControl_1_1BivariateNormalDistribution.html">BivariateNormalDistribution</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8cc15eb13445e1a11b409f1af35f705">BNDVector</a></td></tr>
-<tr class="separator:ab8cc15eb13445e1a11b409f1af35f705"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -251,17 +252,15 @@ Functions</h2></td></tr>
 <tr class="separator:ad4d6a4f2b020a3c1db446e169da41287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23ff08617043e8e2346160a3c741ed8c" id="r_a23ff08617043e8e2346160a3c741ed8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23ff08617043e8e2346160a3c741ed8c">PrunePolygons</a> (std::list&lt; Polygon_2 &gt; &amp;polygon_list, int const &amp;map_size)</td></tr>
 <tr class="separator:a23ff08617043e8e2346160a3c741ed8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8efa372a0ff2cc930d9071434e40bea" id="r_af8efa372a0ff2cc930d9071434e40bea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8efa372a0ff2cc930d9071434e40bea">generate_world_map_cuda</a> (<a class="el" href="structCoverageControl_1_1BND__Cuda.html">BND_Cuda</a> *, <a class="el" href="structCoverageControl_1_1Polygons__Cuda__Host.html">Polygons_Cuda_Host</a> const &amp;, int const, int const, float const, float const, float const, float *importance_vec, float &amp;)</td></tr>
-<tr class="memdesc:af8efa372a0ff2cc930d9071434e40bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to generate the world map on the device.  <br /></td></tr>
-<tr class="separator:af8efa372a0ff2cc930d9071434e40bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63b1cbdc231f239e5124684a556f92eb" id="r_a63b1cbdc231f239e5124684a556f92eb"><td class="memItemLeft" align="right" valign="top">__device__ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63b1cbdc231f239e5124684a556f92eb">Orientation</a> (float2 const &amp;p, float2 const &amp;q, float2 const &amp;r)</td></tr>
 <tr class="separator:a63b1cbdc231f239e5124684a556f92eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebbc68be9e0fa66d1e34be175c8ecd18" id="r_aebbc68be9e0fa66d1e34be175c8ecd18"><td class="memItemLeft" align="right" valign="top">__device__ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebbc68be9e0fa66d1e34be175c8ecd18">IsPointInMonotonePolygon</a> (float *x, float *y, int sz, float2 const &amp;r)</td></tr>
 <tr class="separator:aebbc68be9e0fa66d1e34be175c8ecd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6add9b41883c01802e954d623b8bff71" id="r_a6add9b41883c01802e954d623b8bff71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6add9b41883c01802e954d623b8bff71">pyCoverageControl_core</a> (py::module &amp;m)</td></tr>
-<tr class="separator:a6add9b41883c01802e954d623b8bff71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0243779474f381afae1764d3d22e92f" id="r_ac0243779474f381afae1764d3d22e92f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0243779474f381afae1764d3d22e92f">pyCoverageControl_core_coverage_system</a> (py::module &amp;m)</td></tr>
-<tr class="separator:ac0243779474f381afae1764d3d22e92f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8efa372a0ff2cc930d9071434e40bea" id="r_af8efa372a0ff2cc930d9071434e40bea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8efa372a0ff2cc930d9071434e40bea">generate_world_map_cuda</a> (<a class="el" href="structCoverageControl_1_1BND__Cuda.html">BND_Cuda</a> *, <a class="el" href="structCoverageControl_1_1Polygons__Cuda__Host.html">Polygons_Cuda_Host</a> const &amp;, int const, int const, float const, float const, float const, float *importance_vec, float &amp;)</td></tr>
+<tr class="memdesc:af8efa372a0ff2cc930d9071434e40bea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to generate the world map on the device.  <br /></td></tr>
+<tr class="separator:af8efa372a0ff2cc930d9071434e40bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a182da6a9f9f5656d56a8a4e6fac3256f" id="r_a182da6a9f9f5656d56a8a4e6fac3256f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a182da6a9f9f5656d56a8a4e6fac3256f">CheckCudaErrors</a> (cudaError_t result)</td></tr>
+<tr class="separator:a182da6a9f9f5656d56a8a4e6fac3256f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3b8bc64c9f077cc8ea4ac9fd75c49bf" id="r_aa3b8bc64c9f077cc8ea4ac9fd75c49bf"><td class="memItemLeft" align="right" valign="top">__device__ float2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3b8bc64c9f077cc8ea4ac9fd75c49bf">TransformPoint</a> (<a class="el" href="structCoverageControl_1_1BND__Cuda.html">BND_Cuda</a> const *device_dists, int i, float2 const &amp;in_point)</td></tr>
 <tr class="separator:aa3b8bc64c9f077cc8ea4ac9fd75c49bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b83329ff2c5a5dcfcc38a8aa8a7a173" id="r_a9b83329ff2c5a5dcfcc38a8aa8a7a173"><td class="memItemLeft" align="right" valign="top">__device__ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b83329ff2c5a5dcfcc38a8aa8a7a173">IntegrateQuarterPlane</a> (<a class="el" href="structCoverageControl_1_1BND__Cuda.html">BND_Cuda</a> const &amp;bnd, float2 const &amp;in_point)</td></tr>
@@ -314,24 +313,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace for the <a class="el" href="namespaceCoverageControl.html" title="Namespace for the CoverageControl library.">CoverageControl</a> library. </p>
-</div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="ab8cc15eb13445e1a11b409f1af35f705" name="ab8cc15eb13445e1a11b409f1af35f705"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8cc15eb13445e1a11b409f1af35f705">&#9670;&#160;</a></span>BNDVector</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef std::vector&lt;<a class="el" href="classCoverageControl_1_1BivariateNormalDistribution.html">BivariateNormalDistribution</a>&gt; BNDVector</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="core__binds_8h_source.html#l00058">58</a> of file <a class="el" href="core__binds_8h_source.html">core_binds.h</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a333568eba0a2082154b1a6f049d611c7" name="a333568eba0a2082154b1a6f049d611c7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a333568eba0a2082154b1a6f049d611c7">&#9670;&#160;</a></span>CGAL_CCBTraversal()</h2>
 
@@ -422,6 +404,25 @@ template&lt;class Arrangement &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00044">44</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+
+</div>
+</div>
+<a id="a182da6a9f9f5656d56a8a4e6fac3256f" name="a182da6a9f9f5656d56a8a4e6fac3256f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a182da6a9f9f5656d56a8a4e6fac3256f">&#9670;&#160;</a></span>CheckCudaErrors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CheckCudaErrors </td>
+          <td>(</td>
+          <td class="paramtype">cudaError_t</td>          <td class="paramname"><span class="paramname"><em>result</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="cuda__utils_8cu_source.html#l00038">38</a> of file <a class="el" href="cuda__utils_8cu_source.html">cuda_utils.cu</a>.</p>
 
 </div>
 </div>
@@ -771,44 +772,6 @@ false otherwise </dd></dl>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00100">100</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
-
-</div>
-</div>
-<a id="a6add9b41883c01802e954d623b8bff71" name="a6add9b41883c01802e954d623b8bff71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6add9b41883c01802e954d623b8bff71">&#9670;&#160;</a></span>pyCoverageControl_core()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void pyCoverageControl_core </td>
-          <td>(</td>
-          <td class="paramtype">py::module &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="core__binds_8h_source.html#l00060">60</a> of file <a class="el" href="core__binds_8h_source.html">core_binds.h</a>.</p>
-
-</div>
-</div>
-<a id="ac0243779474f381afae1764d3d22e92f" name="ac0243779474f381afae1764d3d22e92f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0243779474f381afae1764d3d22e92f">&#9670;&#160;</a></span>pyCoverageControl_core_coverage_system()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void pyCoverageControl_core_coverage_system </td>
-          <td>(</td>
-          <td class="paramtype">py::module &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="core__binds_8h_source.html#l00250">250</a> of file <a class="el" href="core__binds_8h_source.html">core_binds.h</a>.</p>
 
 </div>
 </div>

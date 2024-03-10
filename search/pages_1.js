@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['docker_0',['Docker',['../docker.html',1,'installation']]]
+  ['home_0',['Home',['../index.html',1,'']]]
 ];

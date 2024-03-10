@@ -179,61 +179,62 @@ $(function(){initNavTree('coverage__algorithm_8cpp_source.html',''); initResizab
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">using </span><a class="code hl_class" href="classCoverageControl_1_1WorldIDF.html">CoverageControl::WorldIDF</a>;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv) {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> params;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="comment">/* params.pSensorSize = 16; */</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordflow">if</span> (argc &gt;= 2) {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    std::string parameter_file = argv[1];</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    params = <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a>(parameter_file);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  }</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  std::unique_ptr&lt;CoverageSystem&gt; env;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordflow">if</span> (argc == 3) {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;Please provide both position and IDF files&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;Usage: ./coverage_algorithm [parameter_file] &quot;</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                 <span class="stringliteral">&quot;[&lt;position_file&gt; &lt;idf_file&gt;]&quot;</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>              &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (argc == 4) {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    std::string pos_file = argv[2];</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    std::string idf_file = argv[3];</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <a class="code hl_class" href="classCoverageControl_1_1WorldIDF.html">WorldIDF</a> world_idf(params, idf_file);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    env = std::make_unique&lt;CoverageSystem&gt;(params, world_idf, pos_file);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    env = std::make_unique&lt;CoverageSystem&gt;(params);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">auto</span> init_objective = env-&gt;GetObjectiveValue();</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;Initial objective: &quot;</span> &lt;&lt; init_objective &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <a class="code hl_class" href="classCoverageControl_1_1ClairvoyantCVT.html">CoverageAlgorithm</a> algorithm(params, *env);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">auto</span> goals = algorithm.GetGoals();</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> ii = 0; ii &lt; params.pEpisodeSteps; ++ii) {</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    algorithm.ComputeActions();</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keyword">auto</span> actions = algorithm.GetActions();</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">if</span> (env-&gt;StepActions(actions)) {</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;Invalid action&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    }</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">if</span> (ii % 100 == 0) {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;Step: &quot;</span> &lt;&lt; ii &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    }</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordflow">if</span> (algorithm.IsConverged()) {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  }</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keyword">auto</span> final_objective = env-&gt;GetObjectiveValue();</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;Improvement %: &quot;</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            &lt;&lt; (init_objective - final_objective) / init_objective * 100</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>}</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    CoverageControl::CudaUtils::SetUseCuda(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a> params;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="comment">/* params.pSensorSize = 16; */</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordflow">if</span> (argc &gt;= 2) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::string parameter_file = argv[1];</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    params = <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">Parameters</a>(parameter_file);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  std::unique_ptr&lt;CoverageSystem&gt; env;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordflow">if</span> (argc == 3) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;Please provide both position and IDF files&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;Usage: ./coverage_algorithm [parameter_file] &quot;</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                 <span class="stringliteral">&quot;[&lt;position_file&gt; &lt;idf_file&gt;]&quot;</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>              &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (argc == 4) {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    std::string pos_file = argv[2];</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    std::string idf_file = argv[3];</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <a class="code hl_class" href="classCoverageControl_1_1WorldIDF.html">WorldIDF</a> world_idf(params, idf_file);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    env = std::make_unique&lt;CoverageSystem&gt;(params, world_idf, pos_file);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    env = std::make_unique&lt;CoverageSystem&gt;(params);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">auto</span> init_objective = env-&gt;GetObjectiveValue();</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;Initial objective: &quot;</span> &lt;&lt; init_objective &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <a class="code hl_class" href="classCoverageControl_1_1ClairvoyantCVT.html">CoverageAlgorithm</a> algorithm(params, *env);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keyword">auto</span> goals = algorithm.GetGoals();</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> ii = 0; ii &lt; params.pEpisodeSteps; ++ii) {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    algorithm.ComputeActions();</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">auto</span> actions = algorithm.GetActions();</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keywordflow">if</span> (env-&gt;StepActions(actions)) {</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;Invalid action&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">if</span> (ii % 100 == 0) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;Step: &quot;</span> &lt;&lt; ii &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">if</span> (algorithm.IsConverged()) {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    }</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keyword">auto</span> final_objective = env-&gt;GetObjectiveValue();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;Improvement %: &quot;</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            &lt;&lt; (init_objective - final_objective) / init_objective * 100</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>}</div>
 <div class="ttc" id="aclairvoyant__cvt_8h_html"><div class="ttname"><a href="clairvoyant__cvt_8h.html">clairvoyant_cvt.h</a></div><div class="ttdoc">Clairvoyant CVT algorithm.</div></div>
 <div class="ttc" id="aclassCoverageControl_1_1ClairvoyantCVT_html"><div class="ttname"><a href="classCoverageControl_1_1ClairvoyantCVT.html">CoverageControl::ClairvoyantCVT</a></div><div class="ttdef"><b>Definition</b> <a href="clairvoyant__cvt_8h_source.html#l00061">clairvoyant_cvt.h:61</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1CoverageSystem_html"><div class="ttname"><a href="classCoverageControl_1_1CoverageSystem.html">CoverageControl::CoverageSystem</a></div><div class="ttdoc">The CoverageSystem class is the main class for the coverage control library.</div><div class="ttdef"><b>Definition</b> <a href="coverage__system_8h_source.html#l00068">coverage_system.h:68</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html">CoverageControl::Parameters</a></div><div class="ttdoc">Class to store parameters.</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00050">parameters.h:50</a></div></div>
-<div class="ttc" id="aclassCoverageControl_1_1WorldIDF_html"><div class="ttname"><a href="classCoverageControl_1_1WorldIDF.html">CoverageControl::WorldIDF</a></div><div class="ttdoc">Class for Importance Density Function (IDF) for the world.</div><div class="ttdef"><b>Definition</b> <a href="world__idf_8h_source.html#l00065">world_idf.h:65</a></div></div>
+<div class="ttc" id="aclassCoverageControl_1_1WorldIDF_html"><div class="ttname"><a href="classCoverageControl_1_1WorldIDF.html">CoverageControl::WorldIDF</a></div><div class="ttdoc">Class for Importance Density Function (IDF) for the world.</div><div class="ttdef"><b>Definition</b> <a href="world__idf_8h_source.html#l00066">world_idf.h:66</a></div></div>
 <div class="ttc" id="acoverage__system_8h_html"><div class="ttname"><a href="coverage__system_8h.html">coverage_system.h</a></div><div class="ttdoc">The file contains the CoverageSystem class, which is the main class for the coverage control library.</div></div>
 <div class="ttc" id="agroup__cpp__api__typedefs_html_ga3eb2c9229531009f43635928ad308da6"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">CoverageControl::PointVector</a></div><div class="ttdeci">std::vector&lt; Point2 &gt; PointVector</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00050">typedefs.h:50</a></div></div>
 <div class="ttc" id="agroup__cpp__api__typedefs_html_ga3f07f168f209ff3416eae7485cf2b2ec"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">CoverageControl::Point2</a></div><div class="ttdeci">Eigen::Vector2d Point2</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00044">typedefs.h:44</a></div></div>

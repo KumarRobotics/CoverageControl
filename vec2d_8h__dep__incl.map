@@ -1,7 +1,0 @@
-<map id="vec2d.h" name="vec2d.h">
-<area shape="rect" id="Node000001" title="Contains Vec2d class for 2D vector." alt="" coords="34,5,100,30"/>
-<area shape="rect" id="Node000002" href="$core__binds_8h.html" title="Provides python bindings for the core CoverageControl library using pybind11." alt="" coords="19,78,115,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,46,70,78,64,78,64,46"/>
-<area shape="rect" id="Node000003" href="$python__binds_8cpp.html" title="Python bindings for the CoverageControl library using pybind11 (core_binds.h)" alt="" coords="5,151,129,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="70,118,70,150,64,150,64,118"/>
-</map>

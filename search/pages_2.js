@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['from_20source_0',['Installation From Source',['../installation-from-source.html',1,'installation']]]
+  ['installation_0',['Installation',['../installation.html',1,'']]]
 ];

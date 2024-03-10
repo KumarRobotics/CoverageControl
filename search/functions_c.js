@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['test_0',['Test',['../classCoverageControlTorch_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html#af15d102f8bd09872ec929e45c2dd0597',1,'CoverageControlTorch.trainers.multi_trainer.MultiTrainModel.Test()'],['../classCoverageControlTorch_1_1trainers_1_1trainer_1_1TrainModel.html#aec59b391d9adde693597f8424658ab95',1,'CoverageControlTorch.trainers.trainer.TrainModel.Test()']]],
-  ['train_1',['Train',['../classCoverageControlTorch_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html#a2a187f2def5dc81b0d7d3d80096d88ae',1,'CoverageControlTorch.trainers.multi_trainer.MultiTrainModel.Train()'],['../classCoverageControlTorch_1_1trainers_1_1trainer_1_1TrainModel.html#a2a187f2def5dc81b0d7d3d80096d88ae',1,'CoverageControlTorch.trainers.trainer.TrainModel.Train()']]],
-  ['trainepoch_2',['TrainEpoch',['../classCoverageControlTorch_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html#a743aae64924a9c6563ddef40b972c6ea',1,'CoverageControlTorch.trainers.multi_trainer.MultiTrainModel.TrainEpoch()'],['../classCoverageControlTorch_1_1trainers_1_1trainer_1_1TrainModel.html#a743aae64924a9c6563ddef40b972c6ea',1,'CoverageControlTorch.trainers.trainer.TrainModel.TrainEpoch()']]],
-  ['transformpoint_3',['TransformPoint',['../classCoverageControl_1_1BivariateNormalDistribution.html#ab0e0e825d36c28967e8c0449c2c2b913',1,'CoverageControl::BivariateNormalDistribution']]]
+  ['writemap_0',['WriteMap',['../namespaceCoverageControl_1_1MapUtils.html#a9a057a450c5f3e1afe85476cc63bbaa7',1,'CoverageControl::MapUtils']]],
+  ['writemapsparse_1',['WriteMapSparse',['../namespaceCoverageControl_1_1MapUtils.html#ad0610da0ae55a6b4c25b7751a5b23881',1,'CoverageControl::MapUtils']]],
+  ['writeworldmap_2',['WriteWorldMap',['../classCoverageControl_1_1WorldIDF.html#ad9d2b62c3f1125c5253bec8cc03092b5',1,'CoverageControl::WorldIDF']]]
 ];

@@ -53,19 +53,19 @@
 <area shape="poly" id="edge29_Node000024_Node000004" title=" " alt="" coords="2085,112,2041,162,2037,159,2081,108"/>
 <area shape="poly" id="edge32_Node000024_Node000020" title=" " alt="" coords="2094,111,2086,153,2070,204,2055,231,2038,255,2034,252,2051,228,2065,202,2081,151,2089,110"/>
 <area shape="poly" id="edge38_Node000024_Node000021" title=" " alt="" coords="2056,113,1870,169,1869,164,2054,108"/>
-<area shape="rect" id="Node000025" title=" " alt="" coords="2283,265,2340,290"/>
-<area shape="poly" id="edge28_Node000024_Node000025" title=" " alt="" coords="2147,108,2230,131,2267,146,2291,163,2304,183,2311,206,2316,250,2311,250,2306,207,2299,185,2287,167,2264,151,2229,136,2145,113"/>
+<area shape="rect" id="Node000025" title=" " alt="" coords="2286,265,2343,290"/>
+<area shape="poly" id="edge28_Node000024_Node000025" title=" " alt="" coords="2147,108,2230,132,2267,147,2291,163,2304,183,2312,206,2318,250,2312,250,2307,207,2299,185,2287,167,2264,151,2228,137,2145,113"/>
 <area shape="rect" id="Node000026" title=" " alt="" coords="2130,172,2200,196"/>
 <area shape="poly" id="edge30_Node000024_Node000026" title=" " alt="" coords="2105,108,2148,159,2144,162,2101,112"/>
 <area shape="rect" id="Node000027" title=" " alt="" coords="2224,172,2276,196"/>
 <area shape="poly" id="edge31_Node000024_Node000027" title=" " alt="" coords="2115,108,2217,162,2214,167,2113,112"/>
-<area shape="rect" id="Node000028" href="$constants_8h.html" title="Constants for the CoverageControl library." alt="" coords="2352,172,2543,196"/>
-<area shape="poly" id="edge33_Node000024_Node000028" title=" " alt="" coords="2142,108,2385,165,2383,170,2141,113"/>
-<area shape="poly" id="edge35_Node000028_Node000025" title=" " alt="" coords="2432,199,2343,259,2340,254,2429,195"/>
-<area shape="rect" id="Node000029" title=" " alt="" coords="2364,265,2531,290"/>
-<area shape="poly" id="edge34_Node000028_Node000029" title=" " alt="" coords="2450,197,2450,250,2445,250,2445,197"/>
-<area shape="rect" id="Node000030" title=" " alt="" coords="2555,265,2607,290"/>
-<area shape="poly" id="edge36_Node000028_Node000030" title=" " alt="" coords="2466,195,2553,254,2550,259,2463,199"/>
-<area shape="rect" id="Node000031" title=" " alt="" coords="2632,265,2685,290"/>
-<area shape="poly" id="edge37_Node000028_Node000031" title=" " alt="" coords="2485,194,2549,218,2621,249,2631,254,2628,259,2618,254,2547,223,2483,200"/>
+<area shape="rect" id="Node000028" href="$constants_8h.html" title="Constants for the CoverageControl library." alt="" coords="2351,172,2541,196"/>
+<area shape="poly" id="edge33_Node000024_Node000028" title=" " alt="" coords="2142,108,2383,165,2382,170,2141,113"/>
+<area shape="poly" id="edge34_Node000028_Node000025" title=" " alt="" coords="2431,199,2345,258,2342,254,2428,195"/>
+<area shape="rect" id="Node000029" title=" " alt="" coords="2367,265,2419,290"/>
+<area shape="poly" id="edge35_Node000028_Node000029" title=" " alt="" coords="2442,198,2409,254,2405,251,2437,196"/>
+<area shape="rect" id="Node000030" title=" " alt="" coords="2444,265,2497,290"/>
+<area shape="poly" id="edge36_Node000028_Node000030" title=" " alt="" coords="2452,196,2466,250,2461,251,2447,198"/>
+<area shape="rect" id="Node000031" title=" " alt="" coords="2521,265,2692,290"/>
+<area shape="poly" id="edge37_Node000028_Node000031" title=" " alt="" coords="2468,195,2574,255,2572,260,2465,199"/>
 </map>

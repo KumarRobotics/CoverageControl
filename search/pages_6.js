@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['problem_20statement_0',['Problem Statement',['../coverage-control-problem.html',1,'']]]
+  ['start_0',['Quick Start',['../quick_start.html',1,'']]],
+  ['statement_1',['Problem Statement',['../coverage-control-problem.html',1,'']]]
 ];

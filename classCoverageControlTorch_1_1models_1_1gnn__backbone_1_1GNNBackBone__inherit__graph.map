@@ -1,7 +1,0 @@
-<map id="GNNBackBone" name="GNNBackBone">
-<area shape="rect" id="Node000001" title=" " alt="" coords="41,78,153,103"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,69,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,40,89,76,85,79,55,44"/>
-<area shape="rect" id="Node000003" href="$classCoverageControlTorch_1_1models_1_1config__parser_1_1GNNConfigParser.html" title=" " alt="" coords="93,5,221,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,44,109,79,105,76,135,40"/>
-</map>

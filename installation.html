@@ -123,11 +123,180 @@ $(function(){initNavTree('installation.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Installation</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This section provides instructions for installing the Coverage Control library. The library can be installed using Docker, or from source. The Docker installation is the easiest way to get started, but the source installation provides more flexibility and control over the installation and usage of the library.</p>
-<ul>
-<li><a class="el" href="docker.html">Docker</a></li>
-<li><a class="el" href="installation-from-source.html">Installation From Source</a> </li>
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#autotoc_md7">Docker Installation</a><ul><li class="level2"><a href="#autotoc_md8">Prerequisites (Optional)</a></li>
+<li class="level2"><a href="#autotoc_md10">Docker Container</a></li>
+<li class="level2"><a href="#autotoc_md12">Building and Executing</a></li>
 </ul>
+</li>
+<li class="level1"><a href="#autotoc_md13">Installation from source</a><ul><li class="level2"><a href="#autotoc_md14">Prerequisites</a><ul><li class="level3"><a href="#autotoc_md15">CUDA Support</a></li>
+</ul>
+</li>
+<li class="level2"><a href="#autotoc_md17">Building the Core Library</a></li>
+<li class="level2"><a href="#autotoc_md19">Python Packages</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="textblock"><p>This page provides instructions for installing the Coverage Control library. The library can be installed using Docker or from source code. The Docker installation is the easiest way to get started, but the source installation provides more flexibility and control over the installation and usage of the library.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
+Docker Installation</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Prerequisites (Optional)</h2>
+<p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws). The workspace directory is mounted to the docker container.</p>
+<p>Add the following lines to your <code>~/.bashrc</code> file for convenience.  
+<div class="fragment">
+<div class="line"><span class="keyword">export</span> CoverageControl_ws=~/CoverageControl_ws <span class="comment"># Change to your workspace directory</span></div>
+</div>
+</p><dl class="section note"><dt>Note</dt><dd>Close and reopen the terminal for the changes to take effect.</dd></dl>
+<p>Clone the repository:  
+<div class="fragment">
+<div class="line"><span class="keyword">mkdir</span> -p ${CoverageControl_ws}/src</div>
+<div class="line"><span class="keyword">git</span> <span class="keywordtype">clone</span> <a href="https://github.com/KumarRobotics/CoverageControl.git">https://github.com/KumarRobotics/CoverageControl.git</a> \</div>
+<div class="line">          ${CoverageControl_ws}/src/CoverageControl</div>
+</div>
+ </p><hr  />
+<h2><a class="anchor" id="autotoc_md10"></a>
+Docker Container</h2>
+<p>Container can be created using the script in <code>setup_utils/create_container.sh</code>.  
+<div class="fragment">
+<div class="line"><span class="keyword">cd</span> ${CoverageControl_ws}/src/CoverageControl/setup_utils</div>
+<div class="line"><span class="keyword">bash</span> create_container.sh --with-cuda -d ${CoverageControl_ws} <span class="comment"># See flags below</span></div>
+</div>
+ This will land you in a shell inside the container in the directory <code>/workspace</code>. If the workspace directory was specified, it will be mounted to the container at the same location.</p>
+<p>One can exit the container by typing <code>exit</code> or pressing <code>Ctrl+D</code>.</p>
+<p>The container can be started again using the following command:  
+<div class="fragment">
+<div class="line"><span class="keyword">docker</span> <span class="keywordtype">start</span> -i coverage-control-$USER <span class="comment"># Replace with the name of the container</span></div>
+</div>
+</p>
+<p><b>Flags:</b></p><ul>
+<li><code>-d &lt;dir&gt;</code> : The workspace directory</li>
+<li><code>-n &lt;name&gt;</code>: Name of the container (default: <code>coverage-control-$USER</code>)</li>
+<li><code>--with-cuda</code> : With CUDA support</li>
+<li><code>--with-ros</code> : With ROS support</li>
+</ul>
+<p>The base image is <code>ghcr.io/kumarrobotics/coveragecontrol</code> with different tags for different versions and configurations.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Tags Suffix   </th><th class="markdownTableHeadNone">Flags    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>python2.2.1-cuda12.3.1-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros --with-cuda</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>python2.2.1-cuda12.3.1</code>   </td><td class="markdownTableBodyNone"><code>--with-cuda</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>python2.2.1-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>python2.2.1</code>   </td><td class="markdownTableBodyNone">None   </td></tr>
+</table>
+<hr  />
+<h2><a class="anchor" id="autotoc_md12"></a>
+Building and Executing</h2>
+<p>The library is already built and installed in the container. However, if you want to build it again, you can do so using the following commands.</p>
+<p>The primary setup script is <code>setup.sh</code> located in the root of the repository.  
+<div class="fragment">
+<div class="line"><span class="keyword">cd</span> ${CoverageControl_ws}/src/CoverageControl</div>
+<div class="line"><span class="keyword">bash</span> setup.sh -p --with-cuda -d ${CoverageControl_ws}</div>
+</div>
+ There are multiple options for building the library.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>-d [dir]</code>   </td><td class="markdownTableBodyNone">The workspace directory    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>-p</code>   </td><td class="markdownTableBodyNone">Build and install <code>python</code> bindings and <code>CoverageControlTorch</code> package    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>-g</code>   </td><td class="markdownTableBodyNone">Installs globally (builds inside the workspace directory if <code>-d</code> is specified)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>--with-cuda</code>   </td><td class="markdownTableBodyNone">Build with CUDA support    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>--with-deps</code>   </td><td class="markdownTableBodyNone">Install dependencies (Not required if using the docker image)   </td></tr>
+</table>
+<p><b>Testing:</b>  
+<div class="fragment">
+<div class="line"><span class="keyword">coverage_algorithm</span></div>
+</div>
+ </p>
+<h1><a class="anchor" id="autotoc_md13"></a>
+Installation from source</h1>
+<h2><a class="anchor" id="autotoc_md14"></a>
+Prerequisites</h2>
+<p>The following packages are required to build the library:  
+<div class="fragment">
+<div class="line"><span class="keywordflow">sudo</span> <span class="keyword">apt</span> <span class="keywordtype">install</span> libboost-all-dev libgmp-dev libmpfr-dev libeigen3-dev gnuplot-nox ffmpeg</div>
+</div>
+</p><dl class="section note"><dt>Note</dt><dd><code>gnuplot-nox</code> and <code>ffmpeg</code> are optional (but recommended) and only required for generating environment visualizations.</dd></dl>
+<p>Additional dependencies (generally already installed):  
+<div class="fragment">
+<div class="line"><span class="keywordflow">sudo</span> <span class="keyword">apt</span> <span class="keywordtype">install</span> build-essential cmake git wget python3 python3-pip python3-venv python3-dev</div>
+</div>
+ </p>
+<h3><a class="anchor" id="autotoc_md15"></a>
+CUDA Support</h3>
+<p>(Optional but recommended for GPU acceleration)</p>
+<p>The package also supports GPU acceleration using CUDA. To enable this feature, the following additional packages are required:</p><ul>
+<li><a href="https://cmake.org/download/"><code>cmake</code></a> (version 3.24 or higher)</li>
+<li><code>cuda</code> (version 11.8 or higher, 12.1 recommended)</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>On Ubuntu, latest <code>cmake</code> version can be installed from the official <a href="https://apt.kitware.com/">Kitware APT Repository</a>.</dd></dl>
+<hr  />
+<h2><a class="anchor" id="autotoc_md17"></a>
+Building the Core Library</h2>
+<p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws).</p>
+<p>Add the following lines to your <code>~/.bashrc</code> file.  
+<div class="fragment">
+<div class="line"><span class="keyword">export</span> CoverageControl_ws=~/CoverageControl_ws <span class="comment"># Change to your workspace directory</span></div>
+<div class="line"><span class="keyword">export</span> PATH=${CoverageControl_ws}/install/bin:$PATH</div>
+<div class="line"><span class="keyword">export</span> LD_LIBRARY_PATH=${CoverageControl_ws}/install/lib:$LD_LIBRARY_PATH</div>
+</div>
+ Clone the repository:  
+<div class="fragment">
+<div class="line"><span class="keyword">mkdir</span> -p ${CoverageControl_ws}/src</div>
+<div class="line"><span class="keyword">git</span> <span class="keywordtype">clone</span> <a href="https://github.com/KumarRobotics/CoverageControl.git">https://github.com/KumarRobotics/CoverageControl.git</a> \</div>
+<div class="line">          ${CoverageControl_ws}/src/CoverageControl</div>
+</div>
+ The primary setup script is <code>setup.sh</code> located in the root of the repository.  
+<div class="fragment">
+<div class="line"><span class="keyword">cd</span> ${CoverageControl_ws}/src/CoverageControl</div>
+<div class="line"><span class="keyword">bash</span> setup.sh --with-deps -d ${CoverageControl_ws}</div>
+</div>
+ There are multiple options for building the library.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>-d &lt;dir&gt;</code>   </td><td class="markdownTableBodyNone">The workspace directory    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>-p</code>   </td><td class="markdownTableBodyNone">Build and install <code>python</code> packages (See CoverageControlTorch Python Package)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>--with-cuda</code>   </td><td class="markdownTableBodyNone">Build with CUDA support    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>--with-deps</code>   </td><td class="markdownTableBodyNone">Install dependencies (CGAL 5.6)   </td></tr>
+</table>
+<dl class="section warning"><dt>Warning</dt><dd>Ubuntu 22.04 (Jammy) has CGAL 5.4 (libcgal-dev) in the official repositories, which has bugs and is not compatible with the library. The package requires <code>CGAL 5.6</code>, which is installed if <code>--with-deps</code> is used. The <code>--with-deps</code> option is only required for the first build as the downloaded files will persist in the workspace installation directory (<code>${CoverageControl_ws}/install</code>).</dd></dl>
+<hr  />
+<h2><a class="anchor" id="autotoc_md19"></a>
+Python Packages</h2>
+<p>The library provides two <code>python</code> packages:</p><ul>
+<li><code>CoverageControl</code> (bindings for the core library)</li>
+<li><code>CoverageControlTorch</code> (classes, utilities, and scripts for training and evaluating neural network policies)</li>
+</ul>
+<p>These can be installed by adding the <code>-p</code> option to the <code>setup.sh</code> script:  
+<div class="fragment">
+<div class="line"><span class="keyword">cd</span> ${CoverageControl_ws}/src/CoverageControl</div>
+<div class="line"><span class="keyword">bash</span> setup.sh -p -d ${CoverageControl_ws}</div>
+</div>
+</p><dl class="section note"><dt>Note</dt><dd>It is recommended that <code>python</code> bindings are built inside a virtual environment.</dd></dl>
+<p>Test the installation by running the following commands:  
+<div class="fragment">
+<div class="line"><span class="keyword">python</span> ${CoverageControl_ws}/src/CoverageControl/python/tests/coverage_algorithm.py</div>
+</div>
+ The <code>CoverageControlTorch</code> is built on top of <code>pytorch</code> and <code>pytorch-geometric</code>. Depending of whether you have <code>CUDA</code> installed, you can use either of the following files to install the package:</p><ul>
+<li><code>setup_utils/requirements.txt</code> (for GPU)</li>
+<li><code>setup_utils/requirements_cpu.txt</code> (for CPU)</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>Please change the <code>torch</code> and <code>torch-geometric</code> versions in the file to match your CUDA version. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

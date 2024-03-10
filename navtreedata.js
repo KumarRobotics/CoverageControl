@@ -26,8 +26,27 @@ var NAVTREE =
 [
   [ "Coverage Control Library", "index.html", [
     [ "Home", "index.html", "index" ],
-    [ "Installation", "installation.html", "installation" ],
-    [ "Quick Start", "quick_start.html", null ],
+    [ "Installation", "installation.html", [
+      [ "Docker Installation", "installation.html#autotoc_md7", [
+        [ "Prerequisites (Optional)", "installation.html#autotoc_md8", null ],
+        [ "Docker Container", "installation.html#autotoc_md10", null ],
+        [ "Building and Executing", "installation.html#autotoc_md12", null ]
+      ] ],
+      [ "Installation from source", "installation.html#autotoc_md13", [
+        [ "Prerequisites", "installation.html#autotoc_md14", [
+          [ "CUDA Support", "installation.html#autotoc_md15", null ]
+        ] ],
+        [ "Building the Core Library", "installation.html#autotoc_md17", null ],
+        [ "Python Packages", "installation.html#autotoc_md19", null ]
+      ] ]
+    ] ],
+    [ "Quick Start", "quick_start.html", [
+      [ "Parameters", "quick_start.html#autotoc_md20", null ],
+      [ "Python Interface", "quick_start.html#autotoc_md21", null ],
+      [ "C++ Interface", "quick_start.html#autotoc_md23", [
+        [ "Compile and Run", "quick_start.html#autotoc_md24", null ]
+      ] ]
+    ] ],
     [ "Problem Statement", "coverage-control-problem.html", null ],
     [ "LPAC Architecture", "lpac.html", null ],
     [ "Reference Manual", "topics.html", "topics" ],
@@ -37,7 +56,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"____init_____8py_source.html"
+"abstract__controller_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 2018;
+var viewWidth = 2023;
 var viewHeight = 232;
 var sectionId = 'dynsection-0';
 </script>
@@ -549,8 +549,8 @@ var sectionId = 'dynsection-0';
 <g id="Node000025" class="node">
 <title>Node25</title>
 <g id="a_Node000025"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="1751.12,-29 1708.12,-29 1708.12,-10.5 1751.12,-10.5 1751.12,-29"/>
-<text text-anchor="middle" x="1729.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">cmath</text>
+<polygon fill="#e0e0e0" stroke="#999999" points="1753.12,-29 1710.12,-29 1710.12,-10.5 1753.12,-10.5 1753.12,-29"/>
+<text text-anchor="middle" x="1731.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">cmath</text>
 </a>
 </g>
 </g>
@@ -558,8 +558,8 @@ var sectionId = 'dynsection-0';
 <g id="edge28_Node000024_Node000025" class="edge">
 <title>Node24&#45;&gt;Node25</title>
 <g id="a_edge28_Node000024_Node000025"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1605.4,-145.32C1643.84,-136.14 1698.28,-120.75 1712.62,-104.5 1728.1,-86.97 1730.96,-59.27 1730.88,-40.58"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1734.39,-40.69 1730.52,-30.82 1727.39,-40.94 1734.39,-40.69"/>
+<path fill="none" stroke="#63b8ff" d="M1605.33,-145.26C1643.7,-136.02 1698.1,-120.59 1712.62,-104.5 1728.38,-87.06 1731.93,-59.34 1732.34,-40.62"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1735.84,-40.81 1732.25,-30.84 1728.84,-40.88 1735.84,-40.81"/>
 </a>
 </g>
 </g>
@@ -603,8 +603,8 @@ var sectionId = 'dynsection-0';
 <g id="Node000028" class="node">
 <title>Node28</title>
 <g id="a_Node000028"><a xlink:href="constants_8h.html" target="_top" xlink:title="Constants for the CoverageControl library.">
-<polygon fill="white" stroke="#666666" points="1903,-99.25 1760.25,-99.25 1760.25,-80.75 1903,-80.75 1903,-99.25"/>
-<text text-anchor="middle" x="1831.62" y="-85.75" font-family="Helvetica,sans-Serif" font-size="10.00">CoverageControl/constants.h</text>
+<polygon fill="white" stroke="#666666" points="1902,-99.25 1759.25,-99.25 1759.25,-80.75 1902,-80.75 1902,-99.25"/>
+<text text-anchor="middle" x="1830.62" y="-85.75" font-family="Helvetica,sans-Serif" font-size="10.00">CoverageControl/constants.h</text>
 </a>
 </g>
 </g>
@@ -612,17 +612,17 @@ var sectionId = 'dynsection-0';
 <g id="edge33_Node000024_Node000028" class="edge">
 <title>Node24&#45;&gt;Node28</title>
 <g id="a_edge33_Node000024_Node000028"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1602.33,-145.31C1649.6,-134.11 1731.85,-114.63 1783.92,-102.3"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1784.47,-105.76 1793.4,-100.05 1782.86,-98.95 1784.47,-105.76"/>
+<path fill="none" stroke="#63b8ff" d="M1602.19,-145.31C1649.29,-134.11 1731.22,-114.63 1783.1,-102.3"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1783.61,-105.77 1792.53,-100.06 1782,-98.96 1783.61,-105.77"/>
 </a>
 </g>
 </g>
 <!-- Node28&#45;&gt;Node25 -->
-<g id="edge35_Node000028_Node000025" class="edge">
+<g id="edge34_Node000028_Node000025" class="edge">
 <title>Node28&#45;&gt;Node25</title>
-<g id="a_edge35_Node000028_Node000025"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1818.71,-80.36C1801.92,-69.13 1772.35,-49.34 1751.91,-35.66"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1753.95,-32.82 1743.7,-30.17 1750.06,-38.64 1753.95,-32.82"/>
+<g id="a_edge34_Node000028_Node000025"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1818.09,-80.36C1801.87,-69.18 1773.36,-49.52 1753.53,-35.85"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1755.53,-32.98 1745.31,-30.18 1751.55,-38.74 1755.53,-32.98"/>
 </a>
 </g>
 </g>
@@ -630,17 +630,17 @@ var sectionId = 'dynsection-0';
 <g id="Node000029" class="node">
 <title>Node29</title>
 <g id="a_Node000029"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="1894.38,-29 1768.88,-29 1768.88,-10.5 1894.38,-10.5 1894.38,-29"/>
-<text text-anchor="middle" x="1831.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">CoverageControlConfig.h</text>
+<polygon fill="#e0e0e0" stroke="#999999" points="1810.25,-29 1771,-29 1771,-10.5 1810.25,-10.5 1810.25,-29"/>
+<text text-anchor="middle" x="1790.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">limits</text>
 </a>
 </g>
 </g>
 <!-- Node28&#45;&gt;Node29 -->
-<g id="edge34_Node000028_Node000029" class="edge">
+<g id="edge35_Node000028_Node000029" class="edge">
 <title>Node28&#45;&gt;Node29</title>
-<g id="a_edge34_Node000028_Node000029"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1831.62,-80.36C1831.62,-70.35 1831.62,-53.56 1831.62,-40.35"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1835.13,-40.62 1831.63,-30.62 1828.13,-40.62 1835.13,-40.62"/>
+<g id="a_edge35_Node000028_Node000029"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1825.56,-80.36C1819.45,-69.94 1809.04,-52.17 1801.16,-38.73"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1804.37,-37.27 1796.29,-30.42 1798.33,-40.81 1804.37,-37.27"/>
 </a>
 </g>
 </g>
@@ -648,8 +648,8 @@ var sectionId = 'dynsection-0';
 <g id="Node000030" class="node">
 <title>Node30</title>
 <g id="a_Node000030"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="1951.25,-29 1912,-29 1912,-10.5 1951.25,-10.5 1951.25,-29"/>
-<text text-anchor="middle" x="1931.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">limits</text>
+<polygon fill="#e0e0e0" stroke="#999999" points="1868.62,-29 1828.62,-29 1828.62,-10.5 1868.62,-10.5 1868.62,-29"/>
+<text text-anchor="middle" x="1848.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">string</text>
 </a>
 </g>
 </g>
@@ -657,8 +657,8 @@ var sectionId = 'dynsection-0';
 <g id="edge36_Node000028_Node000030" class="edge">
 <title>Node28&#45;&gt;Node30</title>
 <g id="a_edge36_Node000028_Node000030"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1844.29,-80.36C1860.75,-69.13 1889.74,-49.34 1909.78,-35.66"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1911.53,-38.71 1917.81,-30.18 1907.58,-32.92 1911.53,-38.71"/>
+<path fill="none" stroke="#63b8ff" d="M1832.9,-80.36C1835.57,-70.25 1840.06,-53.22 1843.56,-39.94"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1846.87,-41.14 1846.03,-30.57 1840.1,-39.35 1846.87,-41.14"/>
 </a>
 </g>
 </g>
@@ -666,8 +666,8 @@ var sectionId = 'dynsection-0';
 <g id="Node000031" class="node">
 <title>Node31</title>
 <g id="a_Node000031"><a xlink:title=" ">
-<polygon fill="#e0e0e0" stroke="#999999" points="2009.62,-29 1969.62,-29 1969.62,-10.5 2009.62,-10.5 2009.62,-29"/>
-<text text-anchor="middle" x="1989.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">string</text>
+<polygon fill="#e0e0e0" stroke="#999999" points="2014.88,-29 1886.38,-29 1886.38,-10.5 2014.88,-10.5 2014.88,-29"/>
+<text text-anchor="middle" x="1950.62" y="-15.5" font-family="Helvetica,sans-Serif" font-size="10.00">CoverageControl/Config.h</text>
 </a>
 </g>
 </g>
@@ -675,8 +675,8 @@ var sectionId = 'dynsection-0';
 <g id="edge37_Node000028_Node000031" class="edge">
 <title>Node28&#45;&gt;Node31</title>
 <g id="a_edge37_Node000028_Node000031"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1859.26,-80.26C1885.88,-71.41 1926.94,-56.62 1960.62,-39.5 1963.06,-38.26 1965.55,-36.87 1967.99,-35.42"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1969.69,-38.49 1976.26,-30.17 1965.94,-32.57 1969.69,-38.49"/>
+<path fill="none" stroke="#63b8ff" d="M1845.82,-80.36C1865.93,-68.92 1901.63,-48.61 1925.71,-34.92"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1927.27,-38.06 1934.23,-30.07 1923.81,-31.97 1927.27,-38.06"/>
 </a>
 </g>
 </g>

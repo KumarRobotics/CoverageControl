@@ -123,13 +123,13 @@ $(function(){initNavTree('lpac.html',''); initResizable(); });
   <div class="headertitle"><div class="title">LPAC Architecture</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2><a class="anchor" id="autotoc_md28"></a>
+<div class="textblock"><h2><a class="anchor" id="autotoc_md31"></a>
 Navigation of Robot Swarms</h2>
 <p>Navigating a swarm of robots through an environment to achieve a common collaborative goal is a challenging problem, especially when the sensing and communication capabilities of the robots are limited. These problems require systems with high-fidelity algorithms comprising three key capabilities: perception, action, and communication, which are executed in a feedback loop, i.e., the Perception-Action-Communication (PAC) loop. To seamlessly scale the deployment of such systems across vast environments with large robot swarms, it is imperative to consider a decentralized system wherein each robot autonomously makes decisions, drawing upon its own observations and information received from neighboring robots.</p>
-<h2><a class="anchor" id="autotoc_md29"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 The Challenge</h2>
 <p>However, designing a navigation algorithm for a decentralized system is challenging. The robots perform perception and action independently, while the communication module is the only component that can facilitate robot collaboration. Under limited communication capabilities, the robots must decide <em>what</em> information to communicate to their neighbors and <em>how</em> to use the received information to take appropriate actions. The motivation of designing this library is to study the coverage control problem as a canonical problem for the decentralized navigation of robot swarms. We develop the learnable PAC (LPAC) architecture that can learn to process sensor observations, communicate relevant information, and take appropriate actions.</p>
-<h2><a class="anchor" id="autotoc_md30"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 LPAC Architecture</h2>
 <p>The learnable Perception-Action-Communication (LPAC) architecture is composed of three different types of neural networks, one for each module of the PAC system.</p><ol type="1">
 <li>In the perception module, a convolution neural network (CNN) processes localized IDF observations and generates an abstract representation.</li>

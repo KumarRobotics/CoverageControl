@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lpac_20architecture_0',['LPAC Architecture',['../lpac.html',1,'']]]
+  ['quick_20start_0',['Quick Start',['../quick_start.html',1,'']]]
 ];

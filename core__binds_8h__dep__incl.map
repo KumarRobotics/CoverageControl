@@ -1,5 +1,0 @@
-<map id="core_binds.h" name="core_binds.h">
-<area shape="rect" id="Node000001" title="Provides python bindings for the core CoverageControl library using pybind11." alt="" coords="19,5,115,30"/>
-<area shape="rect" id="Node000002" href="$python__binds_8cpp.html" title="Python bindings for the CoverageControl library using pybind11 (core_binds.h)" alt="" coords="5,78,129,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,46,70,78,64,78,64,46"/>
-</map>
