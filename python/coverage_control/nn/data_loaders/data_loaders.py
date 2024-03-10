@@ -6,6 +6,11 @@ import CoverageControlTorch.utils.coverage_system as coverage_system
 from torch_geometric.data import Dataset
 
 
+## \defgroup python_api_data_loaders Data Loaders
+#  \ingroup python_api
+## \brief Data loaders for training and testing
+
+## \ingroup python_api_data_loaders
 class LocalMapCNNDataset(Dataset):
     """
     Dataset for CNN training
@@ -41,6 +46,7 @@ class LocalMapCNNDataset(Dataset):
         self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{self.data_dir}/{self.stage}")
         self.targets = self.targets.view(-1, self.targets.shape[2])
 
+## \ingroup python_api_data_loaders
 class LocalMapGNNDataset(Dataset):
     """
     Dataset for hybrid CNN-GNN training
@@ -51,7 +57,7 @@ class LocalMapGNNDataset(Dataset):
         self.stage = stage
 
         # Coverage maps is of shape (num_samples, num_robots, 2, image_size, image_size)
-        self.coverage_maps = dl_utils.LoadTensor(f"{data_dir}/{stage}/coverage_maps.pt")
+        self.coverage_maps = dl_utils.load_tensor(f"{data_dir}/{stage}/coverage_maps.pt")
         self.num_robots = self.coverage_maps.shape[1]
         self.dataset_size = self.coverage_maps.shape[0]
         self.targets, self.targets_mean, self.targets_std = dl_utils.LoadActions(f"{data_dir}/{stage}")

@@ -1,16 +1,16 @@
 import sys
-import CoverageControl # Main library
+from coverage_control import _core as cc # Main library
 # Algorithms available:
 # ClairvoyantCVT
 # CentralizedCVT
 # DecentralizedCVT
 # NearOptimalCVT
-from CoverageControl import ClairvoyantCVT as CoverageAlgorithm
+from coverage_control._core import ClairvoyantCVT as CoverageAlgorithm
 
-params = CoverageControl.Parameters()
+params = cc.Parameters()
 
 # CoverageSystem handles the environment and robots
-env = CoverageControl.CoverageSystem(params)
+env = cc.CoverageSystem(params)
 
 init_cost = env.GetObjectiveValue()
 print("Initial Coverage cost: " + str('{:.2e}'.format(init_cost)))
