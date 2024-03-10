@@ -39,11 +39,11 @@
 #include <set>
 #include <vector>
 
+#include "CoverageControl/algorithms/abstract_controller.h"
 #include "CoverageControl/coverage_system.h"
 #include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
-#include "CoverageControl/algorithms/abstract_controller.h"
 
 namespace CoverageControl {
 
@@ -71,10 +71,10 @@ class ClairvoyantCVT : public AbstractController {
   bool is_converged_ = false;
 
  public:
-	ClairvoyantCVT(Parameters const &params, CoverageSystem &env)
-			: ClairvoyantCVT(params, params.pNumRobots, env) {}
+  ClairvoyantCVT(Parameters const &params, CoverageSystem &env)
+      : ClairvoyantCVT(params, params.pNumRobots, env) {}
   ClairvoyantCVT(Parameters const &params, size_t const &num_robots,
-                CoverageSystem &env)
+                 CoverageSystem &env)
       : params_{params}, num_robots_{num_robots}, env_{env} {
     robot_global_positions_ = env_.GetRobotPositions();
     actions_.resize(num_robots_);

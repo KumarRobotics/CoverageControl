@@ -30,6 +30,7 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_DECENTRALIZED_CVT_H_
 
 #include <omp.h>
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -70,8 +71,8 @@ class DecentralizedCVT : public AbstractController {
   bool is_converged_ = false;
 
  public:
-	DecentralizedCVT(Parameters const &params, CoverageSystem &env)
-			: DecentralizedCVT(params, params.pNumRobots, env) {}
+  DecentralizedCVT(Parameters const &params, CoverageSystem &env)
+      : DecentralizedCVT(params, params.pNumRobots, env) {}
   DecentralizedCVT(Parameters const &params, size_t const &num_robots,
                    CoverageSystem &env)
       : params_{params}, num_robots_{num_robots}, env_{env} {

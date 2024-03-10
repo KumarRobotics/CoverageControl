@@ -1,4 +1,4 @@
-/*! \addtogroup cpp_api Core API
+/*! \defgroup cpp_api Core API
 \brief Core C++ API with python bindings.
 */
 
@@ -17,3 +17,6 @@
 */
 
 
+/*! \defgroup python_api Python API
+\brief Python API for deep learning.
+*/

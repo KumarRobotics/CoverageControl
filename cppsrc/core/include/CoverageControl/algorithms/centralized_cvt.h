@@ -71,8 +71,8 @@ class CentralizedCVT : public AbstractController {
   bool is_converged_ = false;
 
  public:
-	CentralizedCVT(Parameters const &params, CoverageSystem &env)
-			: CentralizedCVT(params, params.pNumRobots, env) {}
+  CentralizedCVT(Parameters const &params, CoverageSystem &env)
+      : CentralizedCVT(params, params.pNumRobots, env) {}
   CentralizedCVT(Parameters const &params, size_t const &num_robots,
                  CoverageSystem &env)
       : params_{params}, num_robots_{num_robots}, env_{env} {
@@ -133,7 +133,6 @@ class CentralizedCVT : public AbstractController {
     }
     return true;
   }
-
 };
 
 } /* namespace CoverageControl */

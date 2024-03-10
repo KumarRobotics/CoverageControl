@@ -70,12 +70,12 @@ class WorldIDF {
   MapType world_map_;
   Parameters params_;
   double normalization_factor_ = 0;
-	bool is_cuda_available_ = false;
+  bool is_cuda_available_ = false;
 
   /*! Fills in values of the world_map_ with the total importance for each cell
    */
   void GenerateMapCPU() {
-		std::cout << "Generating map using CPU" << std::endl;
+    std::cout << "Generating map using CPU" << std::endl;
     float max_importance = 0;
     for (int i = 0; i < params_.pWorldMapSize; ++i) {  // Row (x index)
       float x1 = params_.pResolution * i;   // Left x-coordinate of pixel
@@ -111,7 +111,7 @@ class WorldIDF {
 
 #ifdef COVERAGECONTROL_WITH_CUDA
   void GenerateMapCuda() {
-		std::cout << "Generating map using CUDA" << std::endl;
+    std::cout << "Generating map using CUDA" << std::endl;
     GenerateMapCuda(static_cast<float>(params_.pResolution),
                     static_cast<float>(params_.pTruncationBND),
                     static_cast<int>(params_.pWorldMapSize));
@@ -179,22 +179,23 @@ class WorldIDF {
     /* GenerateMap(); */
   }
 #endif
+
  public:
-  explicit WorldIDF(size_t sz) { world_map_ = MapType(sz, sz);
-		if(CudaUtils::InitializeCUDA() == true) {
-			is_cuda_available_ = true;
-		} else {
-			is_cuda_available_ = false;
-		}
-	}
+  explicit WorldIDF(size_t sz) {
+    world_map_ = MapType(sz, sz);
+    if (CudaUtils::InitializeCUDA() == true) {
+      is_cuda_available_ = true;
+    } else {
+      is_cuda_available_ = false;
+    }
+  }
 
   explicit WorldIDF(Parameters const &params) : WorldIDF(params.pWorldMapSize) {
-		params_ = params;
-	}
+    params_ = params;
+  }
 
   WorldIDF(Parameters const &params, std::string const &file_name)
       : WorldIDF(params) {
-
     // Load Bivariate Normal Distribution from file
     std::ifstream file(file_name);
     if (!file.is_open()) {
@@ -289,11 +290,11 @@ class WorldIDF {
   void GenerateMap() {
 #ifdef COVERAGECONTROL_WITH_CUDA
     /* GenerateMapCuda(); */
-		if(is_cuda_available_) {
-			GenerateMapCuda();
-		} else {
-			GenerateMapCPU();
-		}
+    if (is_cuda_available_) {
+      GenerateMapCuda();
+    } else {
+      GenerateMapCPU();
+    }
 #else
     GenerateMapCPU();
 #endif
@@ -345,7 +346,6 @@ class WorldIDF {
   auto GetNumFeatures() const {
     return normal_distributions_.size() + polygon_features_.size();
   }
-
 };
 
 } /* namespace CoverageControl */

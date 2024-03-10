@@ -127,8 +127,8 @@ __device__ float ComputeImportancePoly(Polygons_Cuda const &device_polygons,
   auto &y = device_polygons.y;
   for (int i = 0; i < cu_num_polygons; ++i) {
     auto const &bounds = device_polygons.bounds[i];
-    if ((mid_pt_cell.x < bounds.xmin) or (mid_pt_cell.x > bounds.xmax) or
-        (mid_pt_cell.y < bounds.ymin) or (mid_pt_cell.y > bounds.ymax)) {
+    if ((mid_pt_cell.x < bounds.xmin) || (mid_pt_cell.x > bounds.xmax) ||
+        (mid_pt_cell.y < bounds.ymin) || (mid_pt_cell.y > bounds.ymax)) {
       start += device_polygons.sz[i];
       continue;
     }

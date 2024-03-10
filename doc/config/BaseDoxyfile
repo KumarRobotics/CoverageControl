@@ -352,7 +352,7 @@ OPTIMIZE_OUTPUT_SLICE  = NO
 # Note see also the list of default file extension mappings.
 
 ## Edit: Add .cu and .cuh for CUDA files
-EXTENSION_MAPPING      = cu=C++ cuh=C++
+EXTENSION_MAPPING      = cu=C++ cuh=C++ pyi=Python
 
 # If the MARKDOWN_SUPPORT tag is enabled then doxygen pre-processes all comments
 # according to the Markdown format, which allows for more readable
@@ -646,7 +646,7 @@ CASE_SENSE_NAMES       = SYSTEM
 # scope will be hidden.
 # The default value is: NO.
 
-HIDE_SCOPE_NAMES       = NO
+HIDE_SCOPE_NAMES       = YES
 
 # If the HIDE_COMPOUND_REFERENCE tag is set to NO (default) then doxygen will
 # append additional text to a page's title, such as Class Reference. If set to
@@ -801,7 +801,7 @@ SHOW_FILES             = YES
 # Folder Tree View (if specified).
 # The default value is: YES.
 
-SHOW_NAMESPACES        = NO
+SHOW_NAMESPACES        = YES
 
 # The FILE_VERSION_FILTER tag can be used to specify a program or script that
 # doxygen should invoke to get the current version for each file (typically from
@@ -1001,6 +1001,7 @@ FILE_PATTERNS          = *.cu \
                          *.h \
                          *.hpp \
                          *.py \
+                         *.pyi \
                          *.markdown \
                          *.md \
 												 *.txt \

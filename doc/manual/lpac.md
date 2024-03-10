@@ -1,4 +1,5 @@
 \page lpac LPAC Architecture
+\tableofcontents
 
 ## Navigation of Robot Swarms
 Navigating a swarm of robots through an environment to achieve a common collaborative goal is a challenging problem, especially when the sensing and communication capabilities of the robots are limited.
@@ -21,7 +22,9 @@ It generates a fixed-size message to communicate with the neighbors and aggregat
 
 \htmlonly
 <img class="center" style="width: 80%; margin-left: auto; margin-right: auto;" src="learnable_pac.png"/>
-<figcaption>A near-optimal solution, along with Voronoi partition, to an instance of the coverage control problem with 32 robots and 32 features in a 1024 x 1024 environment.</figcaption>
+<figcaption>Learnable Perception-Action-Communication (LPAC) architecture:
+The three modules are executed on each robot independently, with the GNN in the communication module facilitating collaboration between robots.
+</figcaption>
 \endhtmlonly
 
 > [LPAC: Learnable Perception-Action-Communication Loops with Applications to Coverage Control.](https://doi.org/10.48550/arXiv.2401.04855)  

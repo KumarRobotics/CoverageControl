@@ -403,7 +403,7 @@ class CoverageSystem {
     std::vector<int> robot_status(num_robots_, 0);
     PlotSystemMap(dir_name, step, robot_status);
   }
-	void PlotSystemMap(std::string const &) const;
+  void PlotSystemMap(std::string const &) const;
   void PlotSystemMap(std::string const &, int const &,
                      std::vector<int> const &) const;
   void PlotMapVoronoi(std::string const &, int const &);
@@ -412,8 +412,8 @@ class CoverageSystem {
   void PlotWorldMap(std::string const &, std::string const &) const;
   void PlotWorldMapRobots(std::string const &, std::string const &) const;
   void PlotInitMap(std::string const &filename) const {
-		PlotInitMap("./", filename);
-	}
+    PlotInitMap("./", filename);
+  }
   void PlotInitMap(std::string const &, std::string const &) const;
   void PlotRobotLocalMap(std::string const &, int const &, int const &);
   void PlotRobotSystemMap(std::string const &, int const &, int const &);
@@ -442,11 +442,11 @@ class CoverageSystem {
   //! \name Getters
   //
   //! @{
-  const auto& GetWorldIDFObject() const { return world_idf_; }
-  const MapType& GetWorldIDF() const { return world_idf_.GetWorldMap(); }
-  const MapType& GetSystemMap() const { return system_map_; }
-  const MapType& GetSystemExplorationMap() const { return exploration_map_; }
-  const MapType& GetSystemExploredIDFMap() const { return explored_idf_map_; }
+  const auto &GetWorldIDFObject() const { return world_idf_; }
+  const MapType &GetWorldIDF() const { return world_idf_.GetWorldMap(); }
+  const MapType &GetSystemMap() const { return system_map_; }
+  const MapType &GetSystemExplorationMap() const { return exploration_map_; }
+  const MapType &GetSystemExploredIDFMap() const { return explored_idf_map_; }
 
   inline auto GetNumRobots() const { return num_robots_; }
   inline auto GetNumFeatures() const { return num_robots_; }
@@ -498,31 +498,31 @@ class CoverageSystem {
     }
   }
 
-  const MapType& GetRobotLocalMap(size_t const id) {
+  const MapType &GetRobotLocalMap(size_t const id) {
     CheckRobotID(id);
     return robots_[id].GetRobotLocalMap();
   }
 
-  const MapType& GetRobotMap(size_t const id) const {
+  const MapType &GetRobotMap(size_t const id) const {
     CheckRobotID(id);
     return robots_[id].GetRobotMap();
   }
 
-  const MapType& GetRobotExplorationMap(size_t const id) {
+  const MapType &GetRobotExplorationMap(size_t const id) {
     CheckRobotID(id);
     return robots_[id].GetExplorationMap();
   }
 
-  const MapType& GetRobotSystemMap(size_t const id) {
+  const MapType &GetRobotSystemMap(size_t const id) {
     CheckRobotID(id);
     return robots_[id].GetRobotSystemMap();
   }
-  const MapType& GetRobotObstacleMap(size_t const id) {
+  const MapType &GetRobotObstacleMap(size_t const id) {
     CheckRobotID(id);
     return robots_[id].GetObstacleMap();
   }
 
-  const MapType& GetRobotSensorView(size_t const id) const {
+  const MapType &GetRobotSensorView(size_t const id) const {
     CheckRobotID(id);
     return robots_[id].GetSensorView();
   }
@@ -548,7 +548,7 @@ class CoverageSystem {
 
   std::pair<MapType, MapType> const &GetCommunicationMap(size_t const, size_t);
 
-  const auto& GetCommunicationMaps(size_t map_size) {
+  const auto &GetCommunicationMaps(size_t map_size) {
 #pragma omp parallel for num_threads(num_robots_)
     for (size_t i = 0; i < num_robots_; ++i) {
       GetCommunicationMap(i, map_size);
@@ -594,7 +594,7 @@ class CoverageSystem {
   }
 
   auto GetVoronoiCells() { return voronoi_cells_; }
-  auto& GetVoronoi() { return voronoi_; }
+  auto &GetVoronoi() { return voronoi_; }
 
   auto GetVoronoiCell(int const robot_id) { return voronoi_cells_[robot_id]; }
 

@@ -29,14 +29,14 @@
 
 namespace CoverageControl {
 
-	bool CudaUtils::is_cuda_initialized_ = false;
-	bool CudaUtils::is_cuda_available_ = false;
-	int CudaUtils::device_count_ = 0;
-	int CudaUtils::device_id_ = -1;
+bool CudaUtils::is_cuda_initialized_ = false;
+bool CudaUtils::is_cuda_available_ = false;
+int CudaUtils::device_count_ = 0;
+int CudaUtils::device_id_ = -1;
 #ifdef COVERAGECONTROL_WITH_CUDA
-	bool CudaUtils::use_cuda_ = true;
+bool CudaUtils::use_cuda_ = true;
 #else
-	bool CudaUtils::use_cuda_ = false;
+bool CudaUtils::use_cuda_ = false;
 #endif
 
-}
+}  // namespace CoverageControl

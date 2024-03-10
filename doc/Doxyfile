@@ -10,17 +10,16 @@ INPUT                  = doc/manual/README.md \
 												 doc/manual/quick_start.md \
 												 doc/manual/coverage-control.md \
 												 doc/manual/lpac.md \
-												 cppsrc/core python/src \
+												 cppsrc/core \
 												 params \
-												 python/tests/coverage_simple.py \
-												 python/tests/coverage_class.py \
-												 cppsrc/main/coverage_algorithm.cpp
+												 cppsrc/main/coverage_algorithm.cpp \
+                         python/coverage_control
 EXCLUDE                = doc/cppsrc/torch doc/cppsrc/main/torch
 OUTPUT_DIRECTORY       = doc/
 LAYOUT_FILE            = doc/config/DoxygenLayout.xml
 HIDE_SCOPE_NAMES       = YES
 IMAGE_PATH             = doc/graphics
 HTML_EXTRA_FILES			+= doc/graphics/LPAC.gif doc/graphics/coveragecontrol_global.png doc/graphics/learnable_pac.png
-FILTER_PATTERNS        = "*.md=python doc/bash-filter.py"
+FILTER_PATTERNS        = "*.md=python doc/bash-filter.py" *.py=doc/py-filter.sh
 ALIASES								+= repo_owner_lower="kumarrobotics"
 ALIASES								+= docker_cr="ghcr.io/kumarrobotics/testdoc"
