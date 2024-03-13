@@ -1,35 +1,47 @@
-DataDir =  "/root/CoverageControl_ws/data/pure_coverage/" # Absolute location
+DataDir =  "${CoverageControl_ws}/datasets/lpac/" # Absolute location
 
-GPUs =  [4, 5]
+GPUs =  [0, 1]
+NumWorkers = 4
+# Directory to save the model
+# If a model is already present, it will be loaded
+# Similarly, for the optimizer
+[LPACModel]
+Dir = "${CoverageControl_ws}/datasets/lpac/models/"
+Model = "model.pt"
+Optimizer = "optimizer.pt"
+
+[CNNModel]
+Dir = "${CoverageControl_ws}/datasets/lpac/models/" # Absolute location
+Model = "model.pt"
+Optimizer = "optimizer.pt"
 
 [ModelConfig]
-UseCommMaps = True
-
+UseCommMaps = true
 
 [GNNBackBone]
 InputDim = 7
 NumHops = 3
-NumLayers = 4
-LatentSize = 64
+NumLayers = 5
+LatentSize = 256
 OutputDim = 2
 
-[GNNTraining]
-LearningRate = 0.001
-WeightDecay = 0.0001
+[LPACTraining]
+LearningRate = 0.0001
+WeightDecay = 0.001
 BatchSize = 10
-NumEpochs = 50
+NumEpochs = 15
 
 [CNNBackBone]
 InputDim = 4
-OutputDim = 7
-NumLayers = 2
-LatentSize = 8
+NumLayers = 3
+LatentSize = 32
 KernelSize = 3
 ImageSize = 32
+OutputDim = 7
 
 [CNNTraining]
-LearningRate = 0.001
-WeightDecay = 0.0001
+LearningRate = 0.0001
+WeightDecay = 0.001
 BatchSize = 10
-NumEpochs = 50
-
+NumEpochs = 15
+Momentum = 0.1

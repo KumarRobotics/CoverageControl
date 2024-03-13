@@ -1,0 +1,31 @@
+EvalDir = "${CoverageControl_ws}/datasets/lpac/eval/" # Absolute location
+EnvironmentConfig = "${CoverageControl_ws}/datasets/lpac/coverage_control_params.toml" # Absolute location
+
+EnvironmentDataDir = "${CoverageControl_ws}/datasets/lpac/envs/" # Absolute location
+NumEnvironments = 2
+NumSteps = 600
+
+[[Controllers]]
+Name = "lpac"
+Type = "Learning"
+# ModelFile: "~/CoverageControl_ws/datsets/lpac/models/model_k3_1024.pt"
+ModelStateDict = "${CoverageControl_ws}/datasets/lpac/models/model_k3_1024_state_dict.pt"
+LearningParams = "${CoverageControl_ws}/datasets/lpac/models/learning_params.toml"
+UseCommMap = true
+UseCNN = true
+CNNMapSize = 32
+
+[[Controllers]]
+Name = "DecentralizedCVT" # Creates a subdirectory with this name
+Algorithm = "DecentralizedCVT"
+Type = "CVT"
+
+[[Controllers]]
+Name = "ClairvoyantCVT"
+Algorithm = "ClairvoyantCVT"
+Type = "CVT"
+
+[[Controllers]]
+Name = "CentralizedCVT"
+Algorithm = "CentralizedCVT"
+Type = "CVT"
