@@ -65,7 +65,7 @@ using CoverageControl::PointVector;
 using CoverageControl::WorldIDF;
 
 int main(int argc, char** argv) {
-	CoverageControl::CudaUtils::SetUseCuda(false);
+  CoverageControl::CudaUtils::SetUseCuda(false);
   Parameters params;
   /* params.pSensorSize = 16; */
   if (argc >= 2) {

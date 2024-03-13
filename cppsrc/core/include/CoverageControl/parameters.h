@@ -161,7 +161,7 @@ class Parameters {
   explicit Parameters(std::string const &config_file)
       : config_file_{config_file} {
     ParseParameters();
-    PrintParameters();
+    /* PrintParameters(); */
   }
 
   void SetConfig(std::string const &config_file) {

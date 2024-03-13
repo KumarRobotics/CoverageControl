@@ -75,7 +75,7 @@ class WorldIDF {
   /*! Fills in values of the world_map_ with the total importance for each cell
    */
   void GenerateMapCPU() {
-    std::cout << "Generating map using CPU" << std::endl;
+    /* std::cout << "Generating map using CPU" << std::endl; */
     float max_importance = 0;
     for (int i = 0; i < params_.pWorldMapSize; ++i) {  // Row (x index)
       float x1 = params_.pResolution * i;   // Left x-coordinate of pixel
@@ -84,7 +84,7 @@ class WorldIDF {
         float y1 = params_.pResolution * j;   // Lower y-coordinate of pixel
         float y2 = y1 + params_.pResolution;  // Upper y-coordinate of pixel
         float importance =
-            ComputeImportanceRectangle(Point2(x1, y1), Point2(x2, y2));
+            ComputeImportanceBND(Point2(x1, y1), Point2(x2, y2));
         if (std::abs(importance) < kEps) {
           importance = 0;
         }
@@ -109,9 +109,31 @@ class WorldIDF {
     }
   }
 
+  /*! Integrate each normal distribution over a rectangle (cell).
+   *  If the cell is far away, the importance is set to 0
+   */
+  float ComputeImportanceBND(Point2 const &bottom_left,
+                                   Point2 const &top_right) const {
+    Point2 bottom_right(top_right.x(), bottom_left.y());
+    Point2 top_left(Point2(bottom_left.x(), top_right.y()));
+    float importance = 0;
+    for (auto const &normal_distribution : normal_distributions_) {
+      Point2 mid_point = (bottom_left + top_right) / 2.;
+      if (normal_distribution.TransformPoint(mid_point).squaredNorm() >
+          params_.pTruncationBND * params_.pTruncationBND) {
+        continue;
+      }
+      importance += normal_distribution.IntegrateQuarterPlaneF(bottom_left);
+      importance -= normal_distribution.IntegrateQuarterPlaneF(bottom_right);
+      importance -= normal_distribution.IntegrateQuarterPlaneF(top_left);
+      importance += normal_distribution.IntegrateQuarterPlaneF(top_right);
+    }
+    return importance;
+  }
+
 #ifdef COVERAGECONTROL_WITH_CUDA
   void GenerateMapCuda() {
-    std::cout << "Generating map using CUDA" << std::endl;
+    /* std::cout << "Generating map using CUDA" << std::endl; */
     GenerateMapCuda(static_cast<float>(params_.pResolution),
                     static_cast<float>(params_.pTruncationBND),
                     static_cast<int>(params_.pWorldMapSize));
@@ -192,6 +214,7 @@ class WorldIDF {
 
   explicit WorldIDF(Parameters const &params) : WorldIDF(params.pWorldMapSize) {
     params_ = params;
+    GenerateMap();
   }
 
   WorldIDF(Parameters const &params, std::string const &file_name)
@@ -231,6 +254,29 @@ class WorldIDF {
         exit(1);
       }
     }
+    GenerateMap();
+  }
+
+  /*! Copy constructor to handle deep copy of the world map */
+  WorldIDF(WorldIDF const &other) {
+    world_map_ = other.world_map_;
+    params_ = other.params_;
+    normalization_factor_ = other.normalization_factor_;
+    is_cuda_available_ = other.is_cuda_available_;
+    normal_distributions_ = other.normal_distributions_;
+    polygon_features_ = other.polygon_features_;
+  }
+
+  WorldIDF &operator=(WorldIDF const &other) {
+    if (this != &other) {
+      world_map_ = other.world_map_;
+      params_ = other.params_;
+      normalization_factor_ = other.normalization_factor_;
+      is_cuda_available_ = other.is_cuda_available_;
+      normal_distributions_ = other.normal_distributions_;
+      polygon_features_ = other.polygon_features_;
+    }
+    return *this;
   }
 
   void LoadMap(std::string const &file_name) {
@@ -263,28 +309,6 @@ class WorldIDF {
     for (auto const &dist : dists) {
       normal_distributions_.push_back(dist);
     }
-  }
-
-  /*! Integrate each normal distribution over a rectangle (cell).
-   *  If the cell is far away, the importance is set to 0
-   */
-  float ComputeImportanceRectangle(Point2 const &bottom_left,
-                                   Point2 const &top_right) const {
-    Point2 bottom_right(top_right.x(), bottom_left.y());
-    Point2 top_left(Point2(bottom_left.x(), top_right.y()));
-    float importance = 0;
-    for (auto const &normal_distribution : normal_distributions_) {
-      Point2 mid_point = (bottom_left + top_right) / 2.;
-      if (normal_distribution.TransformPoint(mid_point).squaredNorm() >
-          params_.pTruncationBND * params_.pTruncationBND) {
-        continue;
-      }
-      importance += normal_distribution.IntegrateQuarterPlane(bottom_left);
-      importance -= normal_distribution.IntegrateQuarterPlane(bottom_right);
-      importance -= normal_distribution.IntegrateQuarterPlane(top_left);
-      importance += normal_distribution.IntegrateQuarterPlane(top_right);
-    }
-    return importance;
   }
 
   void GenerateMap() {

@@ -250,7 +250,6 @@ class CoverageSystem {
   //! Set the world IDF and recompute the world map
   void SetWorldIDF(WorldIDF const &world_idf) {
     world_idf_ = world_idf;
-    world_idf_.GenerateMap();
     normalization_factor_ = world_idf_.GetNormalizationFactor();
   }
   //! @}
@@ -359,7 +358,7 @@ class CoverageSystem {
 
   void ComputeVoronoiCells() {
     UpdateRobotPositions();
-    voronoi_ = Voronoi(robot_global_positions_, GetWorldIDF(),
+    voronoi_ = Voronoi(robot_global_positions_, GetWorldMap(),
                        Point2(params_.pWorldMapSize, params_.pWorldMapSize),
                        params_.pResolution);
     voronoi_cells_ = voronoi_.GetVoronoiCells();
@@ -443,7 +442,7 @@ class CoverageSystem {
   //
   //! @{
   const auto &GetWorldIDFObject() const { return world_idf_; }
-  const MapType &GetWorldIDF() const { return world_idf_.GetWorldMap(); }
+  const MapType &GetWorldMap() const { return world_idf_.GetWorldMap(); }
   const MapType &GetSystemMap() const { return system_map_; }
   const MapType &GetSystemExplorationMap() const { return exploration_map_; }
   const MapType &GetSystemExploredIDFMap() const { return explored_idf_map_; }
@@ -489,13 +488,15 @@ class CoverageSystem {
     return robot_global_positions_;
   }
 
-  Point2 GetRobotPosition(int const robot_id, bool force_no_noise = false) {
+  Point2 GetRobotPosition(int const robot_id,
+                          bool force_no_noise = false) const {
     Point2 robot_pos;
     robot_pos[0] = robots_[robot_id].GetGlobalCurrentPosition()[0];
     robot_pos[1] = robots_[robot_id].GetGlobalCurrentPosition()[1];
     if (params_.pAddNoisePositions and not force_no_noise) {
       return AddNoise(robot_pos);
     }
+    return robot_pos;
   }
 
   const MapType &GetRobotLocalMap(size_t const id) {

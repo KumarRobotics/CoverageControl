@@ -54,9 +54,9 @@ class AbstractController {
 
   /*!
    * Pure virtual function to compute the actions for the robots
-   * \return True if the actions are computed successfully, false otherwise
+   * \return 0 if the actions are computed successfully, 1 otherwise
    **/
-  virtual bool ComputeActions() = 0;
+  virtual int ComputeActions() = 0;
 };
 
 } /* namespace CoverageControl */

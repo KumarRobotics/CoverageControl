@@ -105,7 +105,7 @@ class CentralizedCVT : public AbstractController {
 
   bool IsConverged() const { return is_converged_; }
 
-  bool ComputeActions() {
+  int ComputeActions() {
     is_converged_ = true;
     robot_global_positions_ = env_.GetRobotPositions();
     ComputeGoals();
@@ -131,7 +131,7 @@ class CentralizedCVT : public AbstractController {
       actions_[iRobot] = speed * direction;
       is_converged_ = false;
     }
-    return true;
+    return 0;
   }
 };
 

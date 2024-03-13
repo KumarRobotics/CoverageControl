@@ -162,6 +162,15 @@ class BivariateNormalDistribution {
     return scale_ * std::erfc(transformed_point.x() * kOneBySqrt2) *
            std::erfc(transformed_point.y() * kOneBySqrt2) / 4.;
   }
+
+  float IntegrateQuarterPlaneF(Point2 const &point) const {
+    auto transformed_point = TransformPoint(point);
+    float x = static_cast<float>(transformed_point.x());
+    float y = static_cast<float>(transformed_point.y());
+    float scale = static_cast<float>(scale_);
+    return scale * std::erfc(x * kOneBySqrt2f) * std::erfc(y * kOneBySqrt2f) /
+           4.f;
+  }
 };
 
 } /* namespace CoverageControl */

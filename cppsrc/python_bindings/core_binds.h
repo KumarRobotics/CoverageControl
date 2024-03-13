@@ -27,10 +27,10 @@
  * pybind11
  */
 
-#ifndef CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
-#define CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
+#ifndef CPPSRC_PYTHON_BINDINGS_CORE_BINDS_H_
+#define CPPSRC_PYTHON_BINDINGS_CORE_BINDS_H_
 
-/* #include <CoverageControlConfig.h> */
+#include <CoverageControl/Config.h>
 #include <CoverageControl/bivariate_normal_distribution.h>
 #include <CoverageControl/coverage_system.h>
 #include <CoverageControl/parameters.h>
@@ -40,7 +40,6 @@
 #include <CoverageControl/voronoi.h>
 #include <CoverageControl/world_idf.h>
 
-#include <vector>
 /* #include <CoverageControl/geographiclib_wrapper.h> */
 #include <CoverageControl/algorithms/centralized_cvt.h>
 #include <CoverageControl/algorithms/clairvoyant_cvt.h>
@@ -50,6 +49,8 @@
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
 
+#include <vector>
+#include <string>
 #include <iostream>
 
 namespace py = pybind11;
@@ -241,11 +242,10 @@ void pyCoverageControl_core(py::module &m) {
       .def_readwrite("pNumFrontiers", &Parameters::pNumFrontiers);
 
   /* py::class_<GeoLocalTransform>(m, "GeoLocalTransform") */
-  /* 	.def(py::init<double, double, double>()) */
-  /* 	.def("Reset", &GeoLocalTransform::Reset) */
-  /* 	.def("Forward", &GeoLocalTransform::Forward) */
-  /* 	.def("Reverse", &GeoLocalTransform::Reverse) */
-  /* 	; */
+  /*     .def(py::init<double, double, double>()) */
+  /*     .def("Reset", &GeoLocalTransform::Reset) */
+  /*     .def("Forward", &GeoLocalTransform::Forward) */
+  /*     .def("Reverse", &GeoLocalTransform::Reverse); */
 }
 
 void pyCoverageControl_core_coverage_system(py::module &m) {
@@ -258,7 +258,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
           py::init<Parameters const &, WorldIDF const &, std::string const &>())
       .def(py::init<Parameters const &, BNDVector const &,
                     PointVector const &>())
-      .def("GetWorldIDF", &CoverageSystem::GetWorldIDF,
+      .def("GetWorldMap", &CoverageSystem::GetWorldMap,
            py::return_value_policy::reference_internal)
       .def("GetWorldIDFObject", &CoverageSystem::GetWorldIDFObject,
            py::return_value_policy::reference_internal)
@@ -351,4 +351,4 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
 
 }  // namespace CoverageControl
 
-#endif  // CPPSRC_CORE_PYTHON_BINDINGS_CORE_BINDS_H_
+#endif  // CPPSRC_PYTHON_BINDINGS_CORE_BINDS_H_

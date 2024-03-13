@@ -169,7 +169,7 @@ void CoverageSystem::InitSetup() {
       MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 1);
   explored_idf_map_ =
       MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
-  total_idf_weight_ = GetWorldIDF().sum();
+  total_idf_weight_ = GetWorldMap().sum();
   adjacency_matrix_.resize(num_robots_);
   relative_positions_neighbors_.resize(num_robots_);
   neighbor_ids_.resize(num_robots_);
@@ -417,7 +417,7 @@ void CoverageSystem::RenderRecordedMap(std::string const &dir_name,
                      params_.pCommunicationRange);
     auto iPlotterVoronoi = plotter_voronoi;
     iPlotterVoronoi.SetPlotName("voronoi_map", i);
-    iPlotterVoronoi.PlotMap(GetWorldIDF(), plotter_data_[i].positions,
+    iPlotterVoronoi.PlotMap(GetWorldMap(), plotter_data_[i].positions,
                             plotter_data_[i].voronoi,
                             plotter_data_[i].positions_history);
   }
@@ -444,7 +444,7 @@ void CoverageSystem::RecordPlotData(std::vector<int> const &robot_status,
                                     std::string const &map_name) {
   PlotterData data;
   if (map_name == "world") {
-    data.map = GetWorldIDF();
+    data.map = GetWorldMap();
   } else {
     data.map = system_map_;
   }
@@ -494,7 +494,7 @@ void CoverageSystem::PlotWorldMapRobots(std::string const &dir_name,
   plotter.SetScale(1);
   plotter.SetPlotName(map_name);
   std::vector<int> robot_status(num_robots_, 0);
-  plotter.PlotMap(GetWorldIDF(), robot_global_positions_,
+  plotter.PlotMap(GetWorldMap(), robot_global_positions_,
                   robot_positions_history_, robot_status);
 }
 
@@ -504,7 +504,7 @@ void CoverageSystem::PlotWorldMap(std::string const &dir_name,
                   params_.pResolution);
   plotter.SetScale(1);
   plotter.SetPlotName(map_name);
-  plotter.PlotMap(GetWorldIDF());
+  plotter.PlotMap(GetWorldMap());
 }
 
 void CoverageSystem::PlotInitMap(std::string const &dir_name,
@@ -513,7 +513,7 @@ void CoverageSystem::PlotInitMap(std::string const &dir_name,
                   params_.pResolution);
   plotter.SetScale(2);
   plotter.SetPlotName(map_name);
-  plotter.PlotMap(GetWorldIDF(), robot_global_positions_);
+  plotter.PlotMap(GetWorldMap(), robot_global_positions_);
 }
 
 void CoverageSystem::PlotMapVoronoi(std::string const &dir_name,
@@ -523,7 +523,7 @@ void CoverageSystem::PlotMapVoronoi(std::string const &dir_name,
                   params_.pResolution);
   plotter.SetScale(2);
   plotter.SetPlotName("voronoi_map", step);
-  plotter.PlotMap(GetWorldIDF(), robot_global_positions_, voronoi_,
+  plotter.PlotMap(GetWorldMap(), robot_global_positions_, voronoi_,
                   robot_positions_history_);
 }
 
@@ -534,7 +534,7 @@ void CoverageSystem::PlotMapVoronoi(std::string const &dir_name,
                   params_.pResolution);
   plotter.SetScale(2);
   plotter.SetPlotName("map", step);
-  plotter.PlotMap(GetWorldIDF(), robot_global_positions_, goals, voronoi);
+  plotter.PlotMap(GetWorldMap(), robot_global_positions_, goals, voronoi);
 }
 
 void CoverageSystem::PlotFrontiers(std::string const &dir_name, int const &step,

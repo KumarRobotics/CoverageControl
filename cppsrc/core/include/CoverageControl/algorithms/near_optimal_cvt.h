@@ -96,11 +96,11 @@ class NearOptimalCVT : public AbstractController {
   void ComputeGoals() {
     goals_ = NearOptimalCVTAlgorithm(
         params_.pLloydNumTries, params_.pLloydMaxIterations, num_robots_,
-        env_.GetWorldIDF(), params_.pWorldMapSize, params_.pResolution,
+        env_.GetWorldMap(), params_.pWorldMapSize, params_.pResolution,
         robot_global_positions_, voronoi_);
   }
 
-  bool ComputeActions() {
+  int ComputeActions() {
     is_converged_ = true;
     robot_global_positions_ = env_.GetRobotPositions();
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -117,7 +117,7 @@ class NearOptimalCVT : public AbstractController {
       actions_[iRobot] = speed * direction;
       is_converged_ = false;
     }
-    return true;
+    return 0;
   }
 
   bool IsConverged() { return is_converged_; }

@@ -30,13 +30,12 @@
 #include <pybind11/eigen.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl_bind.h>
+
 #include "core_binds.h"
 
-using namespace CoverageControl;
-
 PYBIND11_MODULE(_core, m) {
-  pyCoverageControl_core(m);
-  pyCoverageControl_core_coverage_system(m);
+  CoverageControl::pyCoverageControl_core(m);
+  CoverageControl::pyCoverageControl_core_coverage_system(m);
 
 #ifdef CoverageControl_VERSION
   m.attr("__version__") = CoverageControl_VERSION;

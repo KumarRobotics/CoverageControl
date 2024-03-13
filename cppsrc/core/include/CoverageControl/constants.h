@@ -50,6 +50,7 @@ double const kEps = 1e-10;          /*!< Epsilon for double comparison */
 double const kLargeEps = 1e-4;      /*!< Large epsilon for double comparison */
 double const kSqrt2 = std::sqrt(2); /*!< Square root of 2 */
 double const kOneBySqrt2 = 1. / std::sqrt(2); /*!< 1 by square root of 2 */
+float const kOneBySqrt2f = 1.f / std::sqrt(2.f); /*!< 1 by square root of 2 */
 double const kInfD =
     std::numeric_limits<double>::infinity(); /*!< Infinity for double */
 constexpr auto kMaxPrecision{std::numeric_limits<long double>::digits10 +

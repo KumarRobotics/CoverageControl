@@ -80,7 +80,7 @@ class ClairvoyantCVT : public AbstractController {
     actions_.resize(num_robots_);
     goals_ = robot_global_positions_;
     voronoi_mass_.resize(num_robots_, 0);
-    voronoi_ = Voronoi(robot_global_positions_, env_.GetWorldIDF(),
+    voronoi_ = Voronoi(robot_global_positions_, env_.GetWorldMap(),
                        Point2(params_.pWorldMapSize, params_.pWorldMapSize),
                        params_.pResolution);
     ComputeGoals();
@@ -101,7 +101,7 @@ class ClairvoyantCVT : public AbstractController {
     }
   }
 
-  bool ComputeActions() {
+  int ComputeActions() {
     is_converged_ = true;
     robot_global_positions_ = env_.GetRobotPositions();
     ComputeGoals();
@@ -127,7 +127,7 @@ class ClairvoyantCVT : public AbstractController {
       actions_[iRobot] = speed * direction;
       is_converged_ = false;
     }
-    return true;
+    return 0;
   }
 
   bool IsConverged() const { return is_converged_; }

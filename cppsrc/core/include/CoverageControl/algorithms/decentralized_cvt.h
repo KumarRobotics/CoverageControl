@@ -147,7 +147,7 @@ class DecentralizedCVT : public AbstractController {
     }
   }
 
-  bool ComputeActions() {
+  int ComputeActions() {
     is_converged_ = true;
     robot_global_positions_ = env_.GetRobotPositions();
     ComputeGoals();
@@ -173,8 +173,8 @@ class DecentralizedCVT : public AbstractController {
       direction.normalize();
       actions_[iRobot] = speed * direction;
       is_converged_ = false;
-      return true;
     }
+    return 0;
   }
 
   bool IsConverged() const { return is_converged_; }
