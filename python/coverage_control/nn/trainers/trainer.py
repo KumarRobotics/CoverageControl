@@ -1,21 +1,50 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
 import time
 import torch
-import matplotlib.pyplot as plt
+
+__all__ = ["TrainModel"]
 
 class TrainModel():
     """
     Train a model using pytorch
-    :param model: CNN model
-    :param train_loader: training data loader
-    :param optimizer: optimizer
-    :param criterion: loss function
-    :param epochs: number of epochs
-    :param device: device
-    :param model_file: model file
-    :return: None
+
     """
 
-    def __init__(self, model, train_loader, val_loader, optimizer, criterion, epochs, device, model_file, optimizer_file):
+    def __init__(self, model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, val_loader: torch.utils.data.DataLoader, optimizer: torch.optim.Optimizer, criterion: torch.nn.Module, epochs: int, device: torch.device, model_file: str, optimizer_file: str):
+        """
+        Initialize the model trainer
+
+        Args:
+            model: torch.nn.Module
+            train_loader: loader for the training data
+            val_loader: loader for the validation data
+            optimizer: optimizer for the model
+            criterion: loss function
+            epochs: number of epochs
+            device: device to train the model
+            model_file: file to save the model
+            optimizer_file: file to save the optimizer
+        """
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -26,35 +55,37 @@ class TrainModel():
         self.model_file = model_file
         self.optimizer_file = optimizer_file
 
-    def LoadSavedModelDict(self, model_path):
+    def load_saved_model_dict(self, model_path: str) -> None:
         """
         Load the saved model
-        :param model_path: model path
-        :return: None
+
+        Args:
+            model_path: model path
         """
         self.model.load_state_dict(torch.load(model_path))
 
-    def LoadSavedModel(self, model_path):
+    def load_saved_model(self, model_path: str) -> None:
         """
         Load the saved model
-        :param model_path: model path
-        :return: None
+            
+        Args:
+            model_path: model path
         """
         self.model = torch.load(model_path)
 
-    def LoadSavedOptimizer(self, optimizer_path):
+    def load_saved_optimizer(self, optimizer_path: str) -> None:
         """
         Load the saved optimizer
-        :param optimizer_path: optimizer path
-        :return: None
+
+        Args:
+            optimizer_path: optimizer path
         """
         self.optimizer = torch.load(optimizer_path)
 
     # Train in batches, save the best model using the validation set
-    def Train(self):
+    def train(self) -> None:
         """
         Train the model
-        :return: None
         """
         # Initialize the best validation loss
         best_val_loss = float("Inf")
@@ -79,7 +110,7 @@ class TrainModel():
 
             # Validation
             if self.val_loader is not None:
-                val_loss = self.ValidateEpoch(self.val_loader)
+                val_loss = self.validate_epoch(self.val_loader)
                 val_loss_history.append(val_loss)
                 torch.save(val_loss_history, model_path + '_val_loss.pt')
 
@@ -106,10 +137,12 @@ class TrainModel():
 
 
     # Train the model in batches
-    def TrainEpoch(self):
+    def TrainEpoch(self) -> float:
         """
         Train the model in batches
-        :return: training loss
+
+        Returns:
+            training loss
         """
         # Initialize the training loss
         train_loss = 0.0
@@ -146,17 +179,24 @@ class TrainModel():
             self.optimizer.step()
 
             # Update the training loss
-            train_loss += loss.item() * data.size(0)
-            num_dataset += data.size(0)
+            # train_loss += loss.item() * data.size(0)
+            # num_dataset += data.size(0)
+            train_loss += loss.item()
+            num_dataset += 1
 
         # Return the training loss
         return train_loss / num_dataset
 
     # Validate the model in batches
-    def ValidateEpoch(self, data_loader):
+    def validate_epoch(self, data_loader: torch.utils.data.DataLoader) -> float:
         """
         Validate the model in batches
-        :return: validation loss
+
+        Args:
+            data_loader: data loader for the validation data
+
+        Returns:
+            validation loss
         """
         # Initialize the validation loss
         val_loss = 0.0
@@ -181,17 +221,24 @@ class TrainModel():
                 loss = self.criterion(output, target)
 
                 # Update the validation loss
-                val_loss += loss.item() * data.size(0)
-                num_dataset += data.size(0)
+                # val_loss += loss.item() * data.size(0)
+                # num_dataset += data.size(0)
+                val_loss += loss.item()
+                num_dataset += 1
 
         # Return the validation loss
         return val_loss / num_dataset
 
     # Test the model in batches
-    def Test(self, test_loader):
+    def Test(self, test_loader: torch.utils.data.DataLoader) -> float:
         """
         Test the model in batches
-        :return: test loss
+
+        Args:
+            test_loader: data loader for the test data
+
+        Returns:
+            test loss
         """
 
-        return self.ValidateEpoch(test_loader)
+        return self.validate_epoch(test_loader)

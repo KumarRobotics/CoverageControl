@@ -1,6 +1,27 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
 import torch
 import math
-import tomllib
+
 from .config_parser import CNNConfigParser
 
 class CNNBackBone(torch.nn.Module, CNNConfigParser):
@@ -8,7 +29,7 @@ class CNNBackBone(torch.nn.Module, CNNConfigParser):
     Implements a multi-layer convolutional neural network, with ReLU non-linearities between layers,
     according to hyperparameters specified in the config
     """
-    def __init__(self, config):
+    def __init__(self, config: dict):
         super(CNNBackBone, self).__init__()
         self.Parse(config)
 
@@ -25,7 +46,7 @@ class CNNBackBone(torch.nn.Module, CNNConfigParser):
         # self.add_module("linear_3", torch.nn.Linear(2 * self.output_dim, self.output_dim))
 
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         for layer in range(self.num_layers):
             x = torch.nn.functional.leaky_relu(self._modules["batch_norm{}".format(layer)](self._modules["conv{}".format(layer)](x)))
             # x = self._modules["conv{}".format(layer)](x)

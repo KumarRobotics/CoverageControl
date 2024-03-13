@@ -20,83 +20,48 @@
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import sys
+if sys.version_info[1] < 11:
+    import tomli as tomllib
+else:
+    import tomllib
 import yaml
-import tomllib
 import torch
 import torch_geometric
+from coverage_control import IOUtils
+
+__all__ = ["DataLoaderUtils"]
 
 ## @ingroup python_api
 class DataLoaderUtils:
     """
     Class to provide utility functions to load tensors and configuration files
     """
-
-    def load_tensor(path):
+    @staticmethod
+    def load_maps(path: str, use_comm_map: bool = False) -> torch.tensor:
         """
-        Function to load a tensor from a file
-        Can load tensors from jit script format files
+        Function to load maps stored as tensors
+
+        The maps are stored as tensors in the following format:
+        - {path}/local_maps.pt: Local maps
+        - {path}/obstacle_maps.pt: Obstacle maps
+        - {path}/comm_maps.pt: Communication maps (if use_comm_map is True)
 
         Args:
-            path (str): Path to the file
+            path (str): Path to the directory containing the maps
+            use_comm_map (bool): Whether to load the communication map
 
         Returns:
-            tensor: The loaded tensor
-            None: If the file does not exist
+            maps: The loaded maps
 
-        Raises:
-            FileNotFoundError: If the file does not exist
         """
-        # Throw error if path does not exist
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"DataLoaderUtils::load_tensor: File not found: {path}")
-        # Load data
-        data = torch.load(path)
-        # Extract tensor if data is in jit script format
-        if isinstance(data, torch.jit.ScriptModule):
-            tensor = list(data.parameters())[0]
-        else:
-            tensor = data
-        return tensor
-
-    def load_yaml(path):
-        """
-        Function to load a yaml file
-
-        Args:
-            path (str): Path to the file
-
-        Returns:
-            data: The loaded data
-        Raises:
-            FileNotFoundError: If the file does not exist
-        """
-
-
-        # Throw error if path does not exist
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"DataLoaderUtils::load_yaml File not found: {path}")
-        # Load data
-        with open(path, "r") as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
-        return data
-
-    def LoadToml(path):
-        # Throw error if path does not exist
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"data_loader_utils::LoadToml: File not found: {path}")
-        # Load data
-        with open(path, "rb") as f:
-            data = tomllib.load(f)
-        return data
-
-    def LoadMaps(path, use_comm_map):
-        local_maps = load_tensor(f"{path}/local_maps.pt")
+        local_maps = IOUtils.load_tensor(f"{path}/local_maps.pt")
         local_maps = local_maps.to_dense().unsqueeze(2)
-        obstacle_maps = load_tensor(f"{path}/obstacle_maps.pt")
+        obstacle_maps = IOUtils.load_tensor(f"{path}/obstacle_maps.pt")
         obstacle_maps = obstacle_maps.to_dense().unsqueeze(2)
 
         if use_comm_map:
-            comm_maps = load_tensor(f"{path}/comm_maps.pt")
+            comm_maps = IOUtils.load_tensor(f"{path}/comm_maps.pt")
             comm_maps = comm_maps.to_dense()
             # comm_maps = (comm_maps * 256 + 256)/512
             maps = torch.cat([local_maps, comm_maps, obstacle_maps], 2)
@@ -104,30 +69,112 @@ class DataLoaderUtils:
             maps = torch.cat([local_maps, obstacle_maps], 2)
         return maps
 
-    def LoadFeatures(path, output_dim = None):
-        normalized_coverage_features = load_tensor(f"{path}/normalized_coverage_features.pt")
-        coverage_features_mean = load_tensor(f"{path}/../coverage_features_mean.pt")
-        coverage_features_std = load_tensor(f"{path}/../coverage_features_std.pt")
+    @staticmethod
+    def load_features(path: str, output_dim: int = None) -> tuple[torch.tensor, torch.tensor, torch.tensor]:
+        """
+        Function to load normalized features
+
+        The features are stored as tensors in the following format:
+        - {path}/normalized_coverage_features.pt: Normalized coverage features
+        - {path}/../coverage_features_mean.pt: Mean of the coverage features
+        - {path}/../coverage_features_std.pt: Standard deviation of the coverage features
+
+        Args:
+            path (str): Path to the directory containing the features
+            output_dim (int): Output dimension of the features
+
+        Returns:
+            features: The loaded features
+            features_mean: Mean of the features
+            features_std: Standard deviation of the features
+        """
+        normalized_coverage_features = IOUtils.load_tensor(f"{path}/normalized_coverage_features.pt")
+        coverage_features_mean = IOUtils.load_tensor(f"{path}/../coverage_features_mean.pt")
+        coverage_features_std = IOUtils.load_tensor(f"{path}/../coverage_features_std.pt")
         if output_dim is not None:
             normalized_coverage_features = normalized_coverage_features[:, :, :output_dim]
         return normalized_coverage_features, coverage_features_mean, coverage_features_std
 
-    def LoadActions(path):
-        actions = load_tensor(f"{path}/normalized_actions.pt")
-        actions_mean = load_tensor(f"{path}/../actions_mean.pt")
-        actions_std = load_tensor(f"{path}/../actions_std.pt")
+    @staticmethod
+    def load_actions(path: str) -> tuple[torch.tensor, torch.tensor, torch.tensor]:
+        """
+        Function to load normalized actions
+
+        The actions are stored as tensors in the following format:
+        - {path}/normalized_actions.pt: Normalized actions
+        - {path}/../actions_mean.pt: Mean of the actions
+        - {path}/../actions_std.pt: Standard deviation of the actions
+
+        Args:
+            path (str): Path to the directory containing the actions
+
+        Returns:
+            actions: The loaded actions
+            actions_mean: Mean of the actions
+            actions_std: Standard deviation of the actions
+
+        """
+        actions = IOUtils.load_tensor(f"{path}/normalized_actions.pt")
+        actions_mean = IOUtils.load_tensor(f"{path}/../actions_mean.pt")
+        actions_std = IOUtils.load_tensor(f"{path}/../actions_std.pt")
         return actions, actions_mean, actions_std
 
-    def LoadRobotPositions(path):
-        robot_positions = load_tensor(f"{path}/robot_positions.pt")
+    @staticmethod
+    def load_robot_positions(path: str) -> torch.tensor:
+        robot_positions = IOUtils.load_tensor(f"{path}/robot_positions.pt")
         return robot_positions
+        """
+        Function to load robot positions
 
-    def LoadEdgeWeights(path):
-        edge_weights = load_tensor(f"{path}/edge_weights.pt")
+        The robot positions are stored as tensors in the following format:
+        - {path}/robot_positions.pt: Robot positions
+
+        Args:
+            path (str): Path to the directory containing the robot positions
+
+        Returns:
+            robot_positions: The loaded robot positions
+
+        """
+
+    @staticmethod
+    def load_edge_weights(path: str) -> torch.tensor:
+        """
+        Function to load edge weights
+
+        The edge weights are stored as tensors in the following format:
+        - {path}/edge_weights.pt: Edge weights
+
+        Args:
+            path (str): Path to the directory containing the edge weights
+
+        Returns:
+            edge_weights: The loaded edge weights
+
+        """
+        edge_weights = IOUtils.load_tensor(f"{path}/edge_weights.pt")
         edge_weights.to_dense()
         return edge_weights
 
-    def ToTorchGeometricData(feature, edge_weights, pos = None):
+    @staticmethod
+    def to_torch_geometric_data(feature: torch.tensor, edge_weights: torch.tensor, pos: torch.tensor = None) -> torch_geometric.data.Data:
+        """
+        The function converts the feature, edge_weights and pos to a torch_geometric.data.Data object
+        This is essential for using the data with the PyTorch Geometric library
+
+        Args:
+            feature (torch.tensor): The feature tensor
+            edge_weights (torch.tensor): The edge weights tensor
+            pos (torch.tensor): The position tensor
+
+        Returns:
+            data: The torch_geometric.data.Data object
+            data.x: The feature tensor
+            data.edge_index: The edge index tensor
+            data.edge_weight: The edge weight tensor
+            data.pos: The position tensor (if pos is not None)
+
+        """
         # senders, receivers = numpy.nonzero(edge_weights)
         # weights = edge_weights[senders, receivers]
         # edge_index = numpy.stack([senders, receivers])

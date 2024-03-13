@@ -10,7 +10,9 @@ from __future__ import annotations
 
 from ._version import version as __version__
 from .core import *
+from .io_utils import IOUtils
+# from .nn import *
 
 __name__ = "coverage_control"
 
-__all__ = ["__version__", "core"]
+__all__ = ["__version__", "core", "nn", "IOUtils", "__name__"]

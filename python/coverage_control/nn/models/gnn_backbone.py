@@ -1,10 +1,30 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
 import os
 import sys
-import tomllib
 import torch
 import torch_geometric
-import CoverageControlTorch
-from CoverageControlTorch.models.config_parser import GNNConfigParser
+
+from .config_parser import GNNConfigParser
 
 class GNNBackBone(torch.nn.Module, GNNConfigParser):
     """
@@ -14,7 +34,7 @@ class GNNBackBone(torch.nn.Module, GNNConfigParser):
     def __init__(self, config, input_dim = None):
         super(GNNBackBone, self).__init__()
 
-        self.Parse(config)
+        self.parse(config)
         if input_dim is not None:
             self.input_dim = input_dim
 
@@ -23,7 +43,7 @@ class GNNBackBone(torch.nn.Module, GNNConfigParser):
             self.add_module("graph_conv_{}".format(i), torch_geometric.nn.TAGConv(in_channels = self.latent_size, out_channels = self.latent_size, K = self.num_hops))
 
 
-    def forward(self, x, edge_index, edge_weight = None):
+    def forward(self, x: torch.Tensor, edge_index: torch.Tensor, edge_weight = None) -> torch.Tensor:
         for i in range(self.num_layers):
             x = self._modules["graph_conv_{}".format(i)](x, edge_index, edge_weight)
             x = torch.relu(x)

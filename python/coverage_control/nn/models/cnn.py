@@ -1,31 +1,54 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
 import torch
-import CoverageControlTorch
-from CoverageControlTorch.models.cnn_backbone import CNNBackBone
-from CoverageControlTorch.models.config_parser import CNNConfigParser
 from torch_geometric.nn import MLP
+
+from .cnn_backbone import CNNBackBone
+from .config_parser import CNNConfigParser
+
+__all__ = ["CNN"]
 
 class CNN(torch.nn.Module, CNNConfigParser):
     """
     Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config
     This is the current architecture used in the hybrid CNN-GNN
     """
-    def __init__(self, config):
+    def __init__(self, config: dict):
         super(CNN, self).__init__()
         self.Parse(config)
 
         self.cnn_backbone = CNNBackBone(self.config)
         self.mlp = MLP([self.latent_size, 2 * self.latent_size, 2 * self.latent_size, self.latent_size])
         self.linear = torch.nn.Linear(self.latent_size, self.output_dim)
-    
-    def forward(self, x, return_embed=None):
+
+    def forward(self, x: torch.Tensor, return_embedding=False) -> torch.Tensor:
         x = self.cnn_backbone(x)
         x = self.mlp(x)
         x = self.linear(x)
         return x
 
-    def LoadModelCPP(self, model_path):
+    def load_cpp_model(self, model_path: str) -> None:
         jit_model = torch.jit.load(model_path)
         self.load_state_dict(jit_model.state_dict(), strict=False)
 
-    def LoadModel(self, model_path):
+    def load_model(self, model_path: str) -> None:
         self.load_state_dict(torch.load(model_path), strict=False)

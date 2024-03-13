@@ -1,21 +1,50 @@
-import torch
-import matplotlib.pyplot as plt
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+import torch
+
+__all__ = ["MultiTrainModel"]
 class MultiTrainModel():
     """
     Train a model using pytorch
-    :param model: CNN model
-    :param train_loader: training data loader
-    :param test_loader: testing data loader
-    :param optimizer: optimizer
-    :param criterion: loss function
-    :param epochs: number of epochs
-    :param device: device
-    :param model_file: model file
-    :return: None
+
+    Use the class TrainModel in trainer.py to train a single model
     """
 
-    def __init__(self, models, train_loader, val_loader, test_loader, optimizers, criterion, epochs, devices, model_files, optimizer_files):
+    def __init__(self, models: torch.nn.Module, train_loader: torch.utils.data.DataLoader, val_loader: torch.utils.data.DataLoader, test_loader: torch.utils.data.DataLoader, optimizers: torch.optim.Optimizer, criterion: torch.nn.Module, epochs: int, devices: list, model_files: list, optimizer_files: list):
+        """
+        Initialize the model trainer
+
+        Args:
+            models: list of torch.nn.Module
+            train_loader: loader for the training data
+            val_loader: loader for the validation data
+            test_loader: loader for the test data
+            optimizers: list of optimizers for the model
+            criterion: loss function
+            epochs: number of epochs
+            devices: list of devices to train the model
+            model_files: list of files to save the model
+            optimizer_files: list of files to save the optimizer
+        """
         self.models = models
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -30,35 +59,40 @@ class MultiTrainModel():
             device = torch.device('cuda', index = self.devices[i])
             self.models[i] = model.to(device)
 
-    def LoadSavedModelDict(self, model_path):
+    def load_saved_model_dict(self, model_path: str) -> None:
         """
         Load the saved model
-        :param model_path: model path
-        :return: None
+
+        Args:
+            model_path: model path
         """
         self.model.load_state_dict(torch.load(model_path))
 
-    def LoadSavedModel(self, model_path):
+    def load_saved_model(self, model_path: str) -> None:
         """
         Load the saved model
-        :param model_path: model path
-        :return: None
+
+        Args:
+            model_path: model path
         """
         self.model = torch.load(model_path)
 
-    def LoadSavedOptimizer(self, optimizer_path):
+    def load_saved_optimizer(self, optimizer_path: str) -> None:
         """
         Load the saved optimizer
-        :param optimizer_path: optimizer path
-        :return: None
+
+        Args:
+            optimizer_path: optimizer path
         """
         self.optimizer = torch.load(optimizer_path)
 
     # Train in batches, save the best model using the validation set
-    def Train(self):
+    def train(self) -> None:
         """
         Train the model
-        :return: None
+
+        Args:
+            None
         """
         # Initialize the best validation loss
         best_val_losses = [float('inf')] * len(self.models)
@@ -94,10 +128,9 @@ class MultiTrainModel():
                 torch.save(val_loss_history, model_path + '_val_loss.pt')
 
     # Train the model in batches
-    def TrainEpoch(self):
+    def train_epoch(self):
         """
         Train the model in batches
-        :return: training loss
         """
         # Initialize the training loss
         train_losses = [0.0] * len(self.models)
@@ -143,10 +176,9 @@ class MultiTrainModel():
         return train_losses/num_dataset
 
     # Validate the model in batches
-    def ValidateEpoch(self):
+    def validate_epoch(self):
         """
         Validate the model in batches
-        :return: validation loss
         """
         # Initialize the validation loss
         val_losses = [0.0] * len(self.models)
@@ -181,7 +213,7 @@ class MultiTrainModel():
         return val_losses/num_dataset
 
     # Test the model in batches
-    def Test(self):
+    def test(self):
         """
         Test the model in batches
         :return: test loss

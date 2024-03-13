@@ -24,7 +24,9 @@ classifiers = [
 	"Environment :: GPU :: NVIDIA CUDA",
 ]
 dynamic = ["version"]
-dependencies = ["numpy"]
+dependencies = ["numpy", "pyyaml",
+  'toml; python_version < "3.11"',
+]
 
 [project.optional-dependencies]
 nn = ["torch >=2.1", "torchvision >=2.1"]

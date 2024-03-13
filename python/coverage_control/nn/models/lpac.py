@@ -1,15 +1,39 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
 import torch
+import torch_geometric
 from torch_geometric.nn import MLP
 
-from CoverageControlTorch.models.config_parser import GNNConfigParser
-from CoverageControlTorch.models.gnn_backbone import GNNBackBone
-from CoverageControlTorch.models.cnn_backbone import CNNBackBone
+from .config_parser import GNNConfigParser
+from .cnn_backbone import CNNBackBone
+from .gnn_backbone import GNNBackBone
 
-class CNNGNN(torch.nn.Module, GNNConfigParser):
-    def __init__(self, config):
-        super(CNNGNN, self).__init__()
-        self.cnn_config = config['CNN']
-        self.Parse(config['GNN'])
+__all__ = ["LPAC"]
+
+class LPAC(torch.nn.Module, GNNConfigParser):
+    def __init__(self, in_config):
+        super(LPAC, self).__init__()
+        self.cnn_config = in_config["CNNBackBone"]
+        self.parse(in_config["GNNBackBone"])
         self.cnn_backbone = CNNBackBone(self.cnn_config)
         self.gnn_backbone = GNNBackBone(self.config, self.cnn_backbone.latent_size + 2)
         # --- no pos ---
@@ -21,7 +45,7 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         self.register_buffer("actions_mean", torch.zeros(self.output_dim))
         self.register_buffer("actions_std", torch.ones(self.output_dim))
 
-    def forward(self, data):
+    def forward(self, data: torch_geometric.data.Data) -> torch.Tensor:
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_weight
         pos = data.pos
         cnn_output = self.cnn_backbone(x.view(-1, x.shape[-3], x.shape[-2], x.shape[-1]))
@@ -45,11 +69,11 @@ class CNNGNN(torch.nn.Module, GNNConfigParser):
         x = self.output_linear(self.gnn_mlp(self.gnn_backbone(gnn_backbone_in, edge_index)))
         return x
 
-    def LoadModel(self, model_state_dict_path):
+    def load_model(self, model_state_dict_path: str) -> None:
         self.load_state_dict(torch.load(model_state_dict_path), strict=False)
 
-    def LoadCNNBackBone(self, model_path):
+    def load_cnn_backbone(self, model_path: str) -> None:
         self.load_state_dict(torch.load(model_path).state_dict(), strict=False)
 
-    def LoadGNNBackBone(self, model_path):
+    def load_gnn_backbone(self, model_path: str) -> None:
         self.load_state_dict(torch.load(model_path).state_dict(), strict=False)
