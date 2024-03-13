@@ -1,6 +1,7 @@
 import sys
 import torch
-import pyCoverageControlTorch as cct
+
+import coverage_control
 
 if __name__ == "__main__":
     # Get filename from argument

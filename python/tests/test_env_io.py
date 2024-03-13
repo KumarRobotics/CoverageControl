@@ -1,33 +1,39 @@
-import sys
-import os
-import math
-import time
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
+import tempfile
 import numpy as np
-import pyCoverageControl # Main library
-from pyCoverageControl import Point2 # for defining points
-from pyCoverageControl import PointVector # for defining list of points
-from pyCoverageControl import CoverageSystem
+import coverage_control as cc
 
-num_gaussians = 5
-num_robots = 15
+def test_env_io():
+    params = cc.Parameters()
+    env = cc.CoverageSystem(params)
+    world_map = env.GetWorldMap()
 
-params_filename = "params/parameters.yaml"
-dir = "./"
-
-params = pyCoverageControl.Parameters(params_filename)
-env = CoverageSystem(params, num_gaussians, num_robots)
-map = env.GetWorldIDF()
-env.WriteEnvironment(dir + "/env.pos", dir + "/env.idf")
-env.PlotWorldMap(dir, "env")
-
-world_idf = pyCoverageControl.WorldIDF(params, dir + "/env.idf")
-
-env2 = CoverageSystem(params, world_idf, dir + "/env.pos")
-env2.PlotWorldMap(dir, "env2")
-map2 = env2.GetWorldIDF()
-
-# Check if the two maps are the same
-# maps are numpy two dimensional arrays
-print("Maps are the same: ", np.array_equal(map, map2))
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        env.WriteEnvironment(tmp_dir + "/env.pos", tmp_dir + "/env.idf")
+        world_idf = cc.WorldIDF(params, tmp_dir + "/env.idf")
+        env2 = cc.CoverageSystem(params, world_idf, tmp_dir + "/env.pos")
+        map2 = env2.GetWorldMap()
+    is_equal = np.array_equal(world_map, map2)
+    assert is_equal
 
 

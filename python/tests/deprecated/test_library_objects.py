@@ -1,8 +1,8 @@
 import numpy as np
 import math
-import pyCoverageControl # Main library
-from pyCoverageControl import Point2 # for defining points
-from pyCoverageControl import PointVector # for defining list of points
+import coverage_control # Main library
+from coverage_control import Point2 # for defining points
+from coverage_control import PointVector # for defining list of points
 
 # We can visualize the map in python
 import matplotlib.pylab as plt
@@ -28,12 +28,12 @@ def plot_map(map):
 # The parameters are given in config/parameters.yaml
 # After changing the parameters, use the following function call to use the yaml file.
 # Make sure the path of the file is correct
-params_ = pyCoverageControl.Parameters()
+params_ = coverage_control.Parameters()
 
 ####################
 ## CoverageSystem ##
 ####################
-from pyCoverageControl import CoverageSystem
+from coverage_control import CoverageSystem
 # Create an environment with random distributions and robots at random start positions
 # See the parameter file for the range of random distributions
 num_gaussians = 100
@@ -47,7 +47,7 @@ plot_map(map)
 control_directions = PointVector()
 control_directions.append(np.array([math.sin(math.pi/4), math.cos(math.pi/4)]))
 control_directions.append(np.array([math.sin(math.pi/6), math.cos(math.pi/6)]))
-speeds = pyCoverageControl.DblVector()
+speeds = coverage_control.DblVector()
 speeds.append(1)
 speeds.append(1)
 env.StepControl(0, control_directions[0], speeds[0])
@@ -97,7 +97,7 @@ point_list.append(pt1)
 #################################
 ## BivariateNormalDistribution ##
 #################################
-from pyCoverageControl import BivariateNormalDistribution as BND # for defining bivariate normal distributions
+from coverage_control import BivariateNormalDistribution as BND # for defining bivariate normal distributions
 dist1 = BND() # zero-mean, sigma = 1, circular
 
 mean = Point2(100, 400)
@@ -113,7 +113,7 @@ dist3 = BND(mean3, sigma_skewed, rho, peak_val) # general BND
 ##############
 ## WorldIDF ##
 ##############
-from pyCoverageControl import WorldIDF # for defining world idf
+from coverage_control import WorldIDF # for defining world idf
 world_idf = WorldIDF(params_)
 world_idf.AddNormalDistribution(dist1); # Add a distribution to the idf
 world_idf.AddNormalDistribution(dist2); # Add a distribution to the idf
@@ -133,7 +133,7 @@ plot_map(map)
 ## RobotModel ##
 ################
 
-from pyCoverageControl import RobotModel
+from coverage_control import RobotModel
 # RobotModel requires an initial start position and a WorldIDF
 # It does not modify the WorldIDF but only queries it
 start_pos = Point2(0, 0)
@@ -172,7 +172,7 @@ robot_positions.append(Point2(150,150))
 env1 = CoverageSystem(params_, world_idf, robot_positions)
 
 # We can also specify distributions and robots
-bnd_list = pyCoverageControl.BNDVector()
+bnd_list = coverage_control.BNDVector()
 bnd_list.append(dist1)
 bnd_list.append(dist2)
 bnd_list.append(dist3)

@@ -4,13 +4,14 @@ import sys
 
 import torch
 
-from CoverageControlTorch.data_loaders import data_loader_utils as dl_utils
+import coverage_control as cc
+from coverage_control import IOUtils
 from eval import Evaluator
 
 if __name__ == "__main__":
 
     config_file = sys.argv[1]
-    config = dl_utils.LoadToml(config_file)
+    config = IOUtils.load_yaml(config_file)
     orig_name = config["Controllers"][0]["Name"]
     orig_dir = os.path.dirname(config["Controllers"][0]["ModelFile"])
 

@@ -1,43 +1,93 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
+# @file simple_data_generation.py
+# This file contains the code to generate a dataset for learning
+# 
+
+# Uses the following configuration given in a toml file:
+# DataDir = "~/CoverageControl_ws/src/CoverageControl/" # Absolute path to the root of the repository
+# EnvironmentConfig = "params/coverage_control_params.toml" # Relative to DataDir
+#
+# NumDataset = 1000
+#
+# # Number of steps to take before data is stores
+# # This helps in creating a more diverse dataset
+# EveryNumSteps = 5
+#
+# # The robots stop moving once the algorithm has converged
+# # Having some of these converged steps can help in stabilizing robot actions
+# ConvergedDataRatio = 0.25
+#
+# # Resizing of maps and Sparsification of tensors are triggered every TriggerPostProcessing dataset
+# # This should be set based on RAM resources available on the system
+# TriggerPostProcessing = 100
+#
+# CNNMapSize = 32
+
 import os
 import sys
 import torch
-import datetime
 import math
+import pathlib
 
-import pyCoverageControl as CoverageControl
-from pyCoverageControl import CoverageSystem
-from pyCoverageControl import LloydGlobalOnline as CoverageAlgorithm
-# from pyCoverageControl import OracleGlobalOffline as CoverageAlgorithm
-import CoverageControlTorch as cct
-import CoverageControlTorch.data_loaders.data_loader_utils as dl_utils
-from CoverageControlTorch.utils.coverage_system import ToTensor
-import CoverageControlTorch.utils.coverage_system as CoverageSystemUtils
-
+import coverage_control
+from coverage_control import IOUtils
+from coverage_control import CoverageSystem
+from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
+from coverage_control.nn import CoverageEnvUtils
 
 class DatasetGenerator():
-    def __init__(self, config_file, append_dir=None):
+    """
+    Class for generating dataset for learning
+    """
+    def __init__(self, config_file: str, append_dir: str = None):
+        """
+        Constructor for the class
 
-        # Load configs and create directories
-        self.config = dl_utils.LoadToml(config_file)
-        self.data_dir = self.config['DataDir']
-        self.data_folder = self.data_dir + '/data/'
+        Args:
+            config_file (str): Configuration file in toml format
+            append_dir (str): Name of the directory to append to the dataset directory
+        """
+
+        self.config = IOUtils.load_toml(config_file)
+        self.data_dir = IOUtils.sanitize_path(self.config['DataDir'])
+        self.dataset_dir = self.data_dir + '/data/'
         if append_dir is not None:
-            self.data_folder += append_dir + '/'
+            self.dataset_dir += append_dir
 
-        if not os.path.exists(self.data_dir):
-            print(self.data_dir)
-            print("Data directory does not exist")
+        if not pathlib.Path(self.data_dir).exists():
+            print(f'{self.data_dir} does not exist')
             exit()
 
-        if not os.path.exists(self.data_folder):
-            os.makedirs(self.data_folder)
+        if not pathlib.Path(self.dataset_dir).exists():
+            os.makedirs(self.dataset_dir)
 
-        env_config_file = self.data_dir + self.config["EnvironmentConfig"]
-        if not os.path.exists(env_config_file):
-            print("Environment config file does not exist")
+        env_config_file = IOUtils.sanitize_path(self.config["EnvironmentConfig"])
+        env_config_file = pathlib.Path(env_config_file)
+        if not env_config_file.exists():
+            print(f'{env_config_file} does not exist')
             exit()
 
-        self.env_params = CoverageControl.Parameters(env_config_file)
+        self.env_params = coverage_control.Parameters(env_config_file.as_posix())
 
         # Initialize variables
         self.dataset_count = 0
@@ -72,13 +122,13 @@ class DatasetGenerator():
         self.coverage_features = torch.zeros((self.num_dataset, self.num_robots, 7))
         self.edge_weights = torch.zeros((self.num_dataset, self.num_robots, self.num_robots))
 
-        self.RunDataGeneration()
-        self.TriggerPostProcessing()
+        self.run_data_generation()
+        self.trigger_post_processing()
         del self.raw_local_maps
         del self.raw_obstacle_maps
-        self.SaveDataset()
+        self.save_dataset()
 
-    def RunDataGeneration(self):
+    def run_data_generation(self):
         num_non_converged_env = 0
         while self.dataset_count < self.num_dataset:
             self.env = CoverageSystem(self.env_params, self.env_params.pNumFeatures, self.num_robots)
@@ -89,66 +139,70 @@ class DatasetGenerator():
             is_converged = False
             while num_steps < self.env_params.pEpisodeSteps and not is_converged and self.dataset_count < self.num_dataset:
                 if num_steps % self.every_num_step == 0:
-                    is_converged = self.StepWithSave()
+                    is_converged = self.step_with_save()
                 else:
-                    is_converged = self.StepWithoutSave()
+                    is_converged = self.step_without_save()
                 num_steps += 1
             if num_steps == self.env_params.pEpisodeSteps:
                 num_non_converged_env += 1
                 print('Non-converged environment: ' + str(num_non_converged_env))
 
+            print('Converged in ' + str(num_steps) + ' steps')
+
             num_converged_data = math.ceil(self.converged_data_ratio * num_steps / self.every_num_step)
             converged_data_count = 0
             while converged_data_count < num_converged_data and self.dataset_count < self.num_dataset:
-                self.StepWithSave()
+                self.step_with_save()
                 converged_data_count += 1
 
-    def StepWithSave(self):
-        converged = not self.alg.Step()
+    def step_with_save(self):
+        self.alg.ComputeActions()
+        converged = self.alg.IsConverged()
         actions = self.alg.GetActions()
         count = self.dataset_count
-        self.actions[count] = ToTensor(actions)
-        self.robot_positions[count] = CoverageSystemUtils.GetRobotPositions(self.env)
-        self.coverage_features[count] = CoverageSystemUtils.GetVoronoiFeatures(self.env)
-        self.raw_local_maps[self.trigger_count] = CoverageSystemUtils.GetRawLocalMaps(self.env, self.env_params)
-        self.raw_obstacle_maps[self.trigger_count] = CoverageSystemUtils.GetRawObstacleMaps(self.env, self.env_params)
-        self.comm_maps[count] = CoverageSystemUtils.GetCommunicationMaps(self.env, self.env_params, self.cnn_map_size)
-        self.edge_weights[count] = CoverageSystemUtils.GetWeights(self.env, self.env_params)
+        self.actions[count] = CoverageEnvUtils.to_tensor(actions)
+        self.robot_positions[count] = CoverageEnvUtils.get_robot_positions(self.env)
+        self.coverage_features[count] = CoverageEnvUtils.get_voronoi_features(self.env)
+        self.raw_local_maps[self.trigger_count] = CoverageEnvUtils.get_raw_local_maps(self.env, self.env_params)
+        self.raw_obstacle_maps[self.trigger_count] = CoverageEnvUtils.get_raw_obstacle_maps(self.env, self.env_params)
+        self.comm_maps[count] = CoverageEnvUtils.get_communication_maps(self.env, self.env_params, self.cnn_map_size)
+        self.edge_weights[count] = CoverageEnvUtils.get_weights(self.env, self.env_params)
         self.dataset_count += 1
         if self.dataset_count % 100 == 0:
             print(f'Dataset: {self.dataset_count}/{self.num_dataset}')
 
         self.trigger_count += 1
         if self.trigger_count == self.trigger_size:
-            self.TriggerPostProcessing()
+            self.trigger_post_processing()
             self.trigger_count = 0
 
-        error_flag = self.env.StepActions(actions)
-        return converged or error_flag
+        if(self.env.StepActions(actions)):
+            return True
+        return converged
 
-    def TriggerPostProcessing(self):
+    def trigger_post_processing(self):
         if self.trigger_start_idx > self.num_dataset -1:
             return
         trigger_end_idx = min(self.num_dataset, self.trigger_start_idx + self.trigger_size)
         raw_local_maps = self.raw_local_maps[0:trigger_end_idx - self.trigger_start_idx]
         raw_local_maps = raw_local_maps.to(self.device)
-        resized_local_maps = CoverageSystemUtils.ResizeMaps(raw_local_maps, self.cnn_map_size)
+        resized_local_maps = CoverageEnvUtils.resize_maps(raw_local_maps, self.cnn_map_size)
         self.local_maps[self.trigger_start_idx:trigger_end_idx] = resized_local_maps.view(-1, self.num_robots, self.cnn_map_size, self.cnn_map_size).cpu().clone()
 
         raw_obstacle_maps = self.raw_obstacle_maps[0:trigger_end_idx - self.trigger_start_idx]
         raw_obstacle_maps = raw_obstacle_maps.to(self.device)
-        resized_obstacle_maps = CoverageSystemUtils.ResizeMaps(raw_obstacle_maps, self.cnn_map_size)
+        resized_obstacle_maps = CoverageEnvUtils.resize_maps(raw_obstacle_maps, self.cnn_map_size)
         self.obstacle_maps[self.trigger_start_idx:trigger_end_idx] = resized_obstacle_maps.view(-1, self.num_robots, self.cnn_map_size, self.cnn_map_size).cpu().clone()
 
         self.trigger_start_idx = trigger_end_idx
 
-    def NormalizeTensor(self, tensor):
+    def normalize_tensor(self, tensor):
         tensor_mean = tensor.mean(dim=[0, 1])
         tensor_std = tensor.std(dim=[0, 1])
         tensor = (tensor - tensor_mean) / tensor_std
         return tensor, tensor_mean, tensor_std
 
-    def NormalizeCommunicationMaps(self):
+    def normalize_communication_maps(self):
         min_val = self.comm_maps.min()
         max_val = self.comm_maps.max()
         range_val = max_val - min_val
@@ -157,37 +211,40 @@ class DatasetGenerator():
         print('Communication map max: ' + str(max_val))
         return min_val, range_val
 
-    def SaveDataset(self):
-        torch.save(self.robot_positions, self.data_folder + '/robot_positions.pt')
-        torch.save(self.local_maps.to_sparse(), self.data_folder + '/local_maps.pt')
-        torch.save(self.obstacle_maps.to_sparse(), self.data_folder + '/obstacle_maps.pt')
-        torch.save(self.edge_weights.to_sparse(), self.data_folder + '/edge_weights.pt')
+    def save_dataset(self):
+        dataset_dir_path = pathlib.Path(self.dataset_dir)
+        torch.save(self.robot_positions, dataset_dir_path / 'robot_positions.pt')
+        torch.save(self.local_maps.to_sparse(), dataset_dir_path / 'local_maps.pt')
+        torch.save(self.obstacle_maps.to_sparse(), dataset_dir_path / 'obstacle_maps.pt')
+        torch.save(self.edge_weights.to_sparse(), dataset_dir_path / 'edge_weights.pt')
 
-        torch.save(self.comm_maps.to_sparse(), self.data_folder + '/comm_maps.pt')
+        torch.save(self.comm_maps.to_sparse(), dataset_dir_path / 'comm_maps.pt')
 
-        torch.save(self.actions, self.data_folder + '/actions.pt')
-        torch.save(self.coverage_features, self.data_folder + '/coverage_features.pt')
+        torch.save(self.actions, dataset_dir_path / 'actions.pt')
+        torch.save(self.coverage_features, dataset_dir_path / 'coverage_features.pt')
 
 
-    def StepWithoutSave(self):
-        converged = not self.alg.Step()
-        error_flag = self.env.StepActions(self.alg.GetActions())
-        return converged or error_flag
+    def step_without_save(self):
+        self.alg.ComputeActions()
+        converged = self.alg.IsConverged()
+        if (self.env.StepActions(self.alg.GetActions())):
+            return True
+        return converged
 
-    def GetTensorByteSizeMB(self, tensor):
+    def get_tensor_byte_size_MB(self, tensor):
         return (tensor.element_size() * tensor.nelement()) / (1024 * 1024)
 
-    def PrintTensorSizes(self, file=sys.stdout):
+    def print_tensor_sizes(self, file=sys.stdout):
         # Set to two decimal places
         print('Tensor sizes:', file=file)
-        print('Actions:', self.GetTensorByteSizeMB(self.actions), file=file)
-        print('Robot positions:', self.GetTensorByteSizeMB(self.robot_positions), file=file)
-        print('Raw local maps:', self.GetTensorByteSizeMB(self.raw_local_maps), file=file)
-        print('Raw obstacle maps:', self.GetTensorByteSizeMB(self.raw_obstacle_maps), file=file)
-        print('Local maps:', self.GetTensorByteSizeMB(self.local_maps), file=file)
-        print('Obstacle maps:', self.GetTensorByteSizeMB(self.obstacle_maps), file=file)
-        print('Comm maps:', self.GetTensorByteSizeMB(self.comm_maps), file=file)
-        print('Coverage features:', self.GetTensorByteSizeMB(self.coverage_features), file=file)
+        print('Actions:', self.get_tensor_byte_size_MB(self.actions), file=file)
+        print('Robot positions:', self.get_tensor_byte_size_MB(self.robot_positions), file=file)
+        print('Raw local maps:', self.get_tensor_byte_size_MB(self.raw_local_maps), file=file)
+        print('Raw obstacle maps:', self.get_tensor_byte_size_MB(self.raw_obstacle_maps), file=file)
+        print('Local maps:', self.get_tensor_byte_size_MB(self.local_maps), file=file)
+        print('Obstacle maps:', self.get_tensor_byte_size_MB(self.obstacle_maps), file=file)
+        print('Comm maps:', self.get_tensor_byte_size_MB(self.comm_maps), file=file)
+        print('Coverage features:', self.get_tensor_byte_size_MB(self.coverage_features), file=file)
 
 if __name__ == '__main__':
     config_file = sys.argv[1]

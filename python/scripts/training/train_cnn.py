@@ -1,23 +1,51 @@
+#  This file is part of the CoverageControl library
+#
+#  Author: Saurav Agarwal
+#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
+#  Repository: https://github.com/KumarRobotics/CoverageControl
+#
+#  Copyright (c) 2024, Saurav Agarwal
+#
+#  The CoverageControl library is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or (at your
+#  option) any later version.
+#
+#  The CoverageControl library is distributed in the hope that it will be
+#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+#  Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along with
+#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
+
 import os
 import sys
+import pathlib
 import torch
+import torch_geometric
 
-import CoverageControlTorch as cct
-import CoverageControlTorch.data_loaders.data_loader_utils as dl_utils
-from CoverageControlTorch.data_loaders.data_loaders import LocalMapCNNDataset
-from CoverageControlTorch.models.cnn import CNN
-from CoverageControlTorch.trainers.trainer import TrainModel
+import coverage_control as cc
+import coverage_control.nn as cc_nn
+from coverage_control import PointVector
+from coverage_control import IOUtils
+from coverage_control.nn import CoverageEnvUtils
+from coverage_control.nn import CNN
+from coverage_control.nn import LocalMapCNNDataset
+from coverage_control.nn import TrainModel
+
 
 # Set the device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 config_file = sys.argv[1]
-config = dl_utils.LoadToml(config_file)
-dataset_path = config["DataDir"]
-data_dir = dataset_path + "/data/"
+config = IOUtils.load_toml(config_file)
+num_workers = config["NumWorkers"]
+dataset_path = pathlib.Path(IOUtils.sanitize_path(config['DataDir']))
+data_dir = dataset_path / "data/"
 
 cnn_model = config["CNNModel"]
-model_dir = cnn_model["Dir"]
+model_dir = IOUtils.sanitize_path(cnn_model["Dir"]) + "/"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -30,10 +58,10 @@ num_epochs = training_config["NumEpochs"]
 learning_rate = training_config["LearningRate"]
 momentum = training_config["Momentum"]
 weight_decay = training_config["WeightDecay"]
+output_dim = config["CNNBackBone"]["OutputDim"]
 
-cnn_config = config["CNN"]
-use_comm_map = cnn_config["UseCommMap"]
-output_dim = cnn_config["OutputDim"]
+use_comm_map = config["ModelConfig"]["UseCommMaps"]
+cnn_config = config["CNNBackBone"]
 
 model = CNN(cnn_config).to(device)
 
@@ -47,9 +75,9 @@ model.register_buffer("target_Std", train_dataset.targets_std)
 print("Loaded datasets")
 print("Train dataset size: {}".format(len(train_dataset)))
 
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=48)
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=48)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=48)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
 
@@ -60,7 +88,7 @@ trainer = TrainModel(model, train_loader, val_loader, optimizer, criterion, num_
 # trainer.LoadSavedModel(model_file)
 # trainer.LoadSavedOptimizer(optimizer_file)
 
-trainer.Train()
+trainer.train()
 
 test_loss = trainer.Test()
 torch.save(test_loss, model_dir + "/test_loss.pt")

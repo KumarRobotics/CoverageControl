@@ -1,6 +1,9 @@
 import torch
 import torchvision
 
+"""
+This is just some helpful script for debugging the dataset generation
+"""
 T = torchvision.transforms.ConvertImageDtype(torch.uint8)
 
 # Load data from jit
