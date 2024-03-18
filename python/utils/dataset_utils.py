@@ -32,43 +32,10 @@ if sys.version_info[1] < 11:
 else:
     import tomllib
 
-def load_tensor(path):
-    """
-    Function to load a tensor from a file
-    Checks if the file exists, if not, returns None
-    Checks if the loaded data is a tensor or is in jit script format
-    """
-    # Throw error if path does not exist
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"data_loader_utils::load_tensor: File not found: {path}")
-    # Load data
-    data = torch.load(path)
-    # Extract tensor if data is in jit script format
-    if isinstance(data, torch.jit.ScriptModule):
-        tensor = list(data.parameters())[0]
-    else:
-        tensor = data
-    return tensor
-
-def load_toml(path): # Throw error if path does not exist
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"data_loader_utils::LoadToml: File not found: {path}")
-    # Load data
-    with open(path, "rb") as f:
-        data = tomllib.load(f)
-    return data
-
-def load_yaml(path):
-    # Throw error if path does not exist
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"data_loader_utils::load_yaml: File not found: {path}")
-    # Load data
-    with open(path, "r") as f:
-        data = yaml.load(f, Loader=yaml.FullLoader)
-    return data
+from coverage_control import IOUtils
 
 def split_save_data(path, data_name, num_train, num_val, num_test):
-    data = load_tensor(path + data_name + '.pt')
+    data = IOUtils.load_tensor(path + data_name + '.pt')
     # Check if tensor is sparse, if so, convert to dense
     is_sparse = False
     if data.is_sparse:
@@ -106,7 +73,7 @@ def split_dataset(config_path):
     Split dataset into training, validation, and test sets.
     The information is received via yaml config file.
     '''
-    config = load_toml(os.path.expanduser(config_path))
+    config = IOUtils.load_toml(os.path.expanduser(config_path))
     data_path = config['DataDir']
     data_path = os.path.expanduser(data_path)
     data_dir = data_path + '/data/'
@@ -141,7 +108,7 @@ def combine_dataset(config_path, subdir_list):
     The information is received via yaml config file.
     subdir_list is a list of subdirectories to combine, e.g. ['0', '1', '2']
     '''
-    config = load_toml(os.path.expanduser(config_path))
+    config = IOUtils.load_toml(os.path.expanduser(config_path))
     data_path = config['DataDir']
     data_path = os.path.expanduser(data_path)
     data_dir = data_path + '/data/'
@@ -152,7 +119,7 @@ def combine_dataset(config_path, subdir_list):
     for data_name in data_names:
         is_sparse = False
         for subdir in subdir_list:
-            data = load_tensor(data_dir + subdir + '/' + data_name + '.pt')
+            data = IOUtils.load_tensor(data_dir + subdir + '/' + data_name + '.pt')
             if subdir == subdir_list[0]:
                 is_sparse = data.is_sparse
                 if is_sparse:

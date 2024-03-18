@@ -32,8 +32,8 @@
 #include <iostream>
 #include <limits>
 #include <sstream>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "CoverageControl/Config.h"
 namespace CoverageControl {
@@ -56,11 +56,6 @@ class CudaUtils {
    * Constructor deleted as we don't want to create an instance of this class
    */
   CudaUtils() = delete;
-
-  /*!
-   * Destructor deleted as we don't want to create an instance of this class
-   */
-  ~CudaUtils() = delete;
 
   static bool UseCuda() { return use_cuda_; }
 

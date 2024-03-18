@@ -55,7 +55,6 @@ def test_clairvoyant_cvt():
             print("Error in step " + str(i))
             break
         if controller.IsConverged():
-            print("Converged in step " + str(i))
             break
         step_num = i
     current_cost = env.GetObjectiveValue()
@@ -75,7 +74,6 @@ def test_centralized_cvt():
             print("Error in step " + str(i))
             break
         if controller.IsConverged():
-            print("Converged in step " + str(i))
             break
         step_num = i
     current_cost = env.GetObjectiveValue()
@@ -95,7 +93,6 @@ def test_decentralized_cvt():
             print("Error in step " + str(i))
             break
         if controller.IsConverged():
-            print("Converged in step " + str(i))
             break
         step_num = i
     current_cost = env.GetObjectiveValue()

@@ -38,7 +38,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
-/* #include <mutex> */
+#include <mutex>
 #include <random>
 #include <string>
 #include <utility>
@@ -78,7 +78,7 @@ class CoverageSystem {
   mutable std::random_device
       rd_;                    //!< Random device for random number generation
   mutable std::mt19937 gen_;  //!< Mersenne Twister random number generator
-  /* mutable std::mutex mutex_; */
+  mutable std::mutex mutex_;
   std::uniform_real_distribution<>
       distrib_pts_;  //!< Uniform distribution for generating random points
   PointVector robot_global_positions_;  //!< Global positions of the robots
@@ -95,8 +95,6 @@ class CoverageSystem {
       0;                         //!< Weighted ratio of explored locations
   double total_idf_weight_ = 0;  //!< Total weight of the world IDF
   std::vector<PlotterData> plotter_data_;  //!< Stores data for plotting
-  std::vector<std::vector<int>>
-      adjacency_matrix_;  //!< Adjacency matrix for communication
   std::vector<std::vector<Point2>>
       relative_positions_neighbors_;  //!< Relative positions of neighboring
                                       //!< robots for each robot
@@ -108,6 +106,7 @@ class CoverageSystem {
 
   //! Update the exploration map, explored IDF map, and system map
   void UpdateSystemMap() {
+    // This is not necessarily thread safe. Do NOT parallelize this for loop
     for (size_t i = 0; i < num_robots_; ++i) {
       MapUtils::MapBounds index, offset;
       MapUtils::ComputeOffsets(params_.pResolution, robot_global_positions_[i],

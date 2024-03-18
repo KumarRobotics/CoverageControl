@@ -59,10 +59,10 @@ namespace CoverageControl {
  * \class NearOptimalCVT
  * @}
  * The algorithm has knowledge of the entire map in a centralized manner.
- * It runs several trials; for each trial, it generates random initial positions for the sites.
- * Then uses the CVT to compute optimal centroids.
- * It performs the Hungarian algorithm to assign robots to the centroids.
- * Finally, the trial with the minimum cost is selected.
+ * It runs several trials; for each trial, it generates random initial positions
+ *for the sites. Then uses the CVT to compute optimal centroids. It performs the
+ *Hungarian algorithm to assign robots to the centroids. Finally, the trial with
+ *the minimum cost is selected.
  **/
 class NearOptimalCVT : public AbstractController {
  private:

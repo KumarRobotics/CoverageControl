@@ -69,76 +69,37 @@ class WorldIDF {
   std::vector<PolygonFeature> polygon_features_;
   MapType world_map_;
   Parameters params_;
-  double normalization_factor_ = 0;
+  float normalization_factor_ = 0;
   bool is_cuda_available_ = false;
-
-  /*! Fills in values of the world_map_ with the total importance for each cell
-   */
-  void GenerateMapCPU() {
-    /* std::cout << "Generating map using CPU" << std::endl; */
-    float max_importance = 0;
-    for (int i = 0; i < params_.pWorldMapSize; ++i) {  // Row (x index)
-      float x1 = params_.pResolution * i;   // Left x-coordinate of pixel
-      float x2 = x1 + params_.pResolution;  // Right x-coordinate of pixel
-      for (int j = 0; j < params_.pWorldMapSize; ++j) {  // Column (y index)
-        float y1 = params_.pResolution * j;   // Lower y-coordinate of pixel
-        float y2 = y1 + params_.pResolution;  // Upper y-coordinate of pixel
-        float importance =
-            ComputeImportanceBND(Point2(x1, y1), Point2(x2, y2));
-        if (std::abs(importance) < kEps) {
-          importance = 0;
-        }
-        world_map_(i, j) = importance;
-        if (importance > max_importance) {
-          max_importance = importance;
-        }
-      }
-    }
-
-    if (max_importance < kEps) {
-      normalization_factor_ = params_.pNorm;
-    } else {
-      normalization_factor_ = params_.pNorm / max_importance;
-    }
-
-    // Normalize the world map
-    for (int i = 0; i < params_.pWorldMapSize; ++i) {
-      for (int j = 0; j < params_.pWorldMapSize; ++j) {
-        world_map_(i, j) *= normalization_factor_;
-      }
-    }
-  }
 
   /*! Integrate each normal distribution over a rectangle (cell).
    *  If the cell is far away, the importance is set to 0
    */
-  float ComputeImportanceBND(Point2 const &bottom_left,
-                                   Point2 const &top_right) const {
-    Point2 bottom_right(top_right.x(), bottom_left.y());
-    Point2 top_left(Point2(bottom_left.x(), top_right.y()));
-    float importance = 0;
+  template <class PointType = Point2, typename NumType = double>
+  NumType ComputeImportanceBND(PointType const &bottom_left,
+                               PointType const &top_right) const {
+    PointType bottom_right(top_right.x(), bottom_left.y());
+    PointType top_left(bottom_left.x(), top_right.y());
+    NumType importance = 0;
+    PointType mid_point = (bottom_left + top_right) / 2.f;
+    float trun_f = static_cast<float>(params_.pTruncationBND);
+    NumType trun_sqr = trun_f * trun_f;
     for (auto const &normal_distribution : normal_distributions_) {
-      Point2 mid_point = (bottom_left + top_right) / 2.;
-      if (normal_distribution.TransformPoint(mid_point).squaredNorm() >
-          params_.pTruncationBND * params_.pTruncationBND) {
+      PointType mid_transformed = normal_distribution.TransformPoint(mid_point);
+      if (mid_transformed[0] * mid_transformed[0] +
+              mid_transformed[1] * mid_transformed[1] >
+          trun_sqr) {
         continue;
       }
-      importance += normal_distribution.IntegrateQuarterPlaneF(bottom_left);
-      importance -= normal_distribution.IntegrateQuarterPlaneF(bottom_right);
-      importance -= normal_distribution.IntegrateQuarterPlaneF(top_left);
-      importance += normal_distribution.IntegrateQuarterPlaneF(top_right);
+      importance += normal_distribution.IntegrateQuarterPlane(bottom_left);
+      importance -= normal_distribution.IntegrateQuarterPlane(bottom_right);
+      importance -= normal_distribution.IntegrateQuarterPlane(top_left);
+      importance += normal_distribution.IntegrateQuarterPlane(top_right);
     }
     return importance;
   }
 
 #ifdef COVERAGECONTROL_WITH_CUDA
-  void GenerateMapCuda() {
-    /* std::cout << "Generating map using CUDA" << std::endl; */
-    GenerateMapCuda(static_cast<float>(params_.pResolution),
-                    static_cast<float>(params_.pTruncationBND),
-                    static_cast<int>(params_.pWorldMapSize));
-  }
-
   void GenerateMapCuda(float const resolution, float const truncation,
                        int const map_size) {
     int num_dists = normal_distributions_.size();
@@ -149,10 +110,10 @@ class WorldIDF {
     BND_Cuda *host_dists = new BND_Cuda[num_dists];
 
     for (int i = 0; i < num_dists; ++i) {
-      auto mean = normal_distributions_[i].GetMean();
+      Point2 mean = normal_distributions_[i].GetMean();
       host_dists[i].mean_x = static_cast<float>(mean.x());
       host_dists[i].mean_y = static_cast<float>(mean.y());
-      auto sigma = normal_distributions_[i].GetSigma();
+      Point2 sigma = normal_distributions_[i].GetSigma();
       host_dists[i].sigma_x = static_cast<float>(sigma.x());
       host_dists[i].sigma_y = static_cast<float>(sigma.y());
       host_dists[i].rho = static_cast<float>(normal_distributions_[i].GetRho());
@@ -166,7 +127,7 @@ class WorldIDF {
       PolygonYMonotonePartition(poly_feature.poly, partition_polys);
       for (auto const &poly : partition_polys) {
         Bounds bounds;
-        for (auto const &pt : poly) {
+        for (Point2 const &pt : poly) {
           float x = static_cast<float>(pt.x());
           float y = static_cast<float>(pt.y());
           host_polygons.x.push_back(x);
@@ -198,7 +159,6 @@ class WorldIDF {
                             resolution, truncation, params_.pNorm,
                             world_map_.data(), f_norm);
     normalization_factor_ = static_cast<double>(f_norm);
-    /* GenerateMap(); */
   }
 #endif
 
@@ -214,12 +174,13 @@ class WorldIDF {
 
   explicit WorldIDF(Parameters const &params) : WorldIDF(params.pWorldMapSize) {
     params_ = params;
-    GenerateMap();
   }
 
   WorldIDF(Parameters const &params, std::string const &file_name)
-      : WorldIDF(params) {
+      : WorldIDF(params.pWorldMapSize) {
+    params_ = params;
     // Load Bivariate Normal Distribution from file
+    params_ = params;
     std::ifstream file(file_name);
     if (!file.is_open()) {
       std::cout << "Error: Could not open file " << file_name << std::endl;
@@ -312,6 +273,7 @@ class WorldIDF {
   }
 
   void GenerateMap() {
+    /* std::cout << "Generating map" << std::endl; */
 #ifdef COVERAGECONTROL_WITH_CUDA
     /* GenerateMapCuda(); */
     if (is_cuda_available_) {
@@ -351,7 +313,7 @@ class WorldIDF {
     }
     file << std::setprecision(kMaxPrecision);
     for (auto const &dist : normal_distributions_) {
-      auto sigma = dist.GetSigma();
+      Point2 sigma = dist.GetSigma();
       if (sigma.x() == sigma.y()) {
         file << "CircularBND" << std::endl;
         file << dist.GetMean().x() << " " << dist.GetMean().y() << " "
@@ -370,6 +332,56 @@ class WorldIDF {
   auto GetNumFeatures() const {
     return normal_distributions_.size() + polygon_features_.size();
   }
+
+  /*! Fills in values of the world_map_ with the total importance for each cell
+   */
+  void GenerateMapCPU() {
+    /* std::cout << "Generating map using CPU" << std::endl; */
+    float max_importance = 0;
+    float res = static_cast<float>(params_.pResolution);
+    for (int i = 0; i < params_.pWorldMapSize; ++i) {  // Row (x index)
+      float x1 = res * i;   // Left x-coordinate of pixel
+      float x2 = x1 + res;  // Right x-coordinate of pixel
+      for (int j = 0; j < params_.pWorldMapSize; ++j) {  // Column (y index)
+        float y1 = res * j;   // Lower y-coordinate of pixel
+        float y2 = y1 + res;  // Upper y-coordinate of pixel
+        float importance = ComputeImportanceBND<Point2f, float>(
+            Point2f(x1, y1), Point2f(x2, y2));
+        /* auto importance = ComputeImportanceBND(pt1, pt2); */
+        /* if (std::abs(importance) < kEps) { */
+        /*   importance = 0; */
+        /* } */
+        world_map_(i, j) = importance;
+        if (importance > max_importance) {
+          max_importance = importance;
+        }
+      }
+    }
+
+    if (max_importance < kEps) {
+      normalization_factor_ = static_cast<float>(params_.pNorm);
+    } else {
+      normalization_factor_ =
+          static_cast<float>(params_.pNorm) / max_importance;
+    }
+
+    // Normalize the world map
+#pragma omp parallel for
+    for (int i = 0; i < params_.pWorldMapSize; ++i) {
+      for (int j = 0; j < params_.pWorldMapSize; ++j) {
+        world_map_(i, j) *= normalization_factor_;
+      }
+    }
+  }
+
+#ifdef COVERAGECONTROL_WITH_CUDA
+  void GenerateMapCuda() {
+    /* std::cout << "Generating map using CUDA" << std::endl; */
+    GenerateMapCuda(static_cast<float>(params_.pResolution),
+                    static_cast<float>(params_.pTruncationBND),
+                    static_cast<int>(params_.pWorldMapSize));
+  }
+#endif
 };
 
 } /* namespace CoverageControl */

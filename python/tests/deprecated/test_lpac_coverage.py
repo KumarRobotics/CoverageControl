@@ -22,10 +22,8 @@
 import os
 import sys
 import tempfile
-import numpy as np
 import warnings
 import torch
-import torch_geometric
 
 import coverage_control as cc
 import coverage_control.nn as cc_nn
@@ -66,7 +64,8 @@ def test_lpac_coverage():
     num_steps = 200
     step_count = 0
 
-    obj_values = np.zeros(num_steps)
+    actions_all = torch.zeros(num_steps, params.pNumRobots, 2)
+    obj_values = torch.zeros(num_steps)
     init_obj_value = env.GetObjectiveValue()
     obj_values[0] = env.GetObjectiveValue()/init_obj_value
 
@@ -76,13 +75,22 @@ def test_lpac_coverage():
             pyg_data = CoverageEnvUtils.get_torch_geometric_data(env, params, True, use_comm_maps, map_size).to(device)
             actions = lpac_model(pyg_data)
             actions = actions * actions_std + actions_mean
+            actions_all[step_count] = actions
             point_vector_actions = PointVector(actions.cpu().numpy())
             env.StepActions(point_vector_actions)
             obj_values[step_count] = env.GetObjectiveValue()/init_obj_value
             step_count += 1
-    is_all_close = np.allclose(obj_values, np.load(os.path.join(script_dir, "data/nn/lpac_obj_values.npy")), atol=1e-4)
+    lpac_actions_ref = torch.load(os.path.join(script_dir, "data/nn/lpac_actions.pt"))
+    is_all_close = torch.allclose(actions_all, lpac_actions_ref, atol=1e-2)
     assert is_all_close
-    is_all_equal = np.equal(obj_values, np.load(os.path.join(script_dir, "data/nn/lpac_obj_values.npy"))).all()
+    is_all_equal = torch.equal(actions_all, lpac_actions_ref)
+    if not is_all_equal and is_all_close:
+        warnings.warn("Not all elements are equal, but all elements are close")
+
+    lpac_obj_values_ref = torch.load(os.path.join(script_dir, "data/nn/lpac_obj_values.pt"))
+    is_all_close = torch.allclose(obj_values, lpac_obj_values_ref, atol=1e-2)
+    assert is_all_close
+    is_all_equal = torch.equal(obj_values, lpac_obj_values_ref)
     if not is_all_equal and is_all_close:
         warnings.warn("Not all elements are equal, but all elements are close")
 

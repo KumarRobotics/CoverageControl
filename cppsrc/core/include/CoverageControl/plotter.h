@@ -33,8 +33,8 @@
 #include <filesystem>
 #include <iostream>
 #include <list>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "CoverageControl/typedefs.h"
 #include "CoverageControl/voronoi.h"

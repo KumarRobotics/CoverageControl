@@ -41,6 +41,7 @@
 
 #include <cmath>
 
+#include "CoverageControl/constants.h"
 #include "CoverageControl/extern/cuda_helpers/helper_cuda.h"
 #include "CoverageControl/generate_world_map.h"
 #include "CoverageControl/cuda/geometry_utils.cuh"
@@ -50,6 +51,7 @@ __device__ __constant__ int cu_num_dists;
 __device__ __constant__ int cu_map_size;
 __device__ __constant__ float cu_resolution;
 __device__ __constant__ float cu_truncation;
+__device__ __constant__ float cu_trun_sq;
 __device__ __constant__ float cu_OneBySqrt2;
 __device__ __constant__ float cu_normalization_factor;
 __device__ __constant__ int cu_polygons_num_pts;
@@ -84,7 +86,7 @@ __device__ float IntegrateQuarterPlane(BND_Cuda const &bnd,
   /* auto transformed_point = TransformPoint(i, in_point); */
   float sc = bnd.scale;
   /* return sc; */
-  return sc * erfc(pt.x / sqrt(2.)) * erfc(pt.y / sqrt(2.)) / 4.;
+  return sc * erfc(pt.x * cu_OneBySqrt2) * erfc(pt.y * cu_OneBySqrt2) / 4.f;
 }
 
 __device__ float ComputeImportanceBND(BND_Cuda const *device_dists,
@@ -107,8 +109,7 @@ __device__ float ComputeImportanceBND(BND_Cuda const *device_dists,
       mid_pt.x =
           (mid_pt.x - bnd.rho * mid_pt.y) / (sqrt(1 - bnd.rho * bnd.rho));
     }
-    if (mid_pt.x * mid_pt.x + mid_pt.y * mid_pt.y >
-        cu_truncation * cu_truncation) {
+    if (mid_pt.x * mid_pt.x + mid_pt.y * mid_pt.y > cu_trun_sq) {
       continue;
     }
     total_importance += IntegrateQuarterPlane(bnd, bottom_left);
@@ -184,6 +185,8 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
       cudaMemcpyToSymbol(cu_resolution, &resolution, sizeof(float)));
   checkCudaErrors(
       cudaMemcpyToSymbol(cu_truncation, &truncation, sizeof(float)));
+  float trun_sq = truncation * truncation;
+  checkCudaErrors(cudaMemcpyToSymbol(cu_trun_sq, &trun_sq, sizeof(float)));
   float f_OneBySqrt2 = static_cast<float>(1. / std::sqrt(2.));
   checkCudaErrors(
       cudaMemcpyToSymbol(cu_OneBySqrt2, &f_OneBySqrt2, sizeof(float)));
@@ -233,7 +236,7 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   /* dim3 dimBlock(1, 1, 1); */
   /* dim3 dimGrid(1,1,1); */
 
-  dim3 dimBlock(16, 16, 1);
+  dim3 dimBlock(32, 32, 1);
   dim3 dimGrid(map_size / dimBlock.x, map_size / dimBlock.x, 1);
 
   kernel<<<dimGrid, dimBlock>>>(device_dists, device_polygons,
@@ -245,8 +248,9 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
       thrust::device_pointer_cast(device_importance_vec);
   float max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
 
-  normalization_factor = pNorm;
-  if (max > 1e-8) {
+  if (max < kEps) {
+    normalization_factor = pNorm;
+  } else {
     normalization_factor = pNorm / max;
   }
   if (normalization_factor > 1e-5) {

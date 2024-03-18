@@ -49,9 +49,9 @@
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
 
-#include <vector>
-#include <string>
 #include <iostream>
+#include <string>
+#include <vector>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -68,6 +68,13 @@ void pyCoverageControl_core(py::module &m) {
   m.def(
       "Point2", [](double const &a, double const &b) { return Point2(a, b); },
       "Create a Point2 object with values a and b");
+
+  m.def(
+      "Point2f", []() { return Point2f(0, 0); },
+      "Create a Point2f object with both values 0");
+  m.def(
+      "Point2f", [](float const &a, float const &b) { return Point2f(a, b); },
+      "Create a Point2f object with values a and b");
 
   py::bind_vector<std::vector<double>>(m, "DblVector");
   py::bind_vector<std::vector<std::vector<double>>>(m, "DblVectorVector");
@@ -98,10 +105,7 @@ void pyCoverageControl_core(py::module &m) {
       .def("GetMean", &BivariateNormalDistribution::GetMean)
       .def("GetSigma", &BivariateNormalDistribution::GetSigma)
       .def("GetRho", &BivariateNormalDistribution::GetRho)
-      .def("GetScale", &BivariateNormalDistribution::GetScale)
-      .def("TransformPoint", &BivariateNormalDistribution::TransformPoint)
-      .def("IntegrateQuarterPlane",
-           &BivariateNormalDistribution::IntegrateQuarterPlane);
+      .def("GetScale", &BivariateNormalDistribution::GetScale);
 
   py::bind_vector<BNDVector>(m, "BNDVector");
 
@@ -116,6 +120,10 @@ void pyCoverageControl_core(py::module &m) {
       .def("AddNormalDistribution", py::overload_cast<BNDVector const &>(
                                         &WorldIDF::AddNormalDistribution))
       .def("GenerateMap", &WorldIDF::GenerateMap)
+      .def("GenerateMapCPU", &WorldIDF::GenerateMapCPU)
+#ifdef COVERAGECONTROL_WITH_CUDA
+      .def("GenerateMapCuda", py::overload_cast<>(&WorldIDF::GenerateMapCuda))
+#endif
       .def("GetWorldMap", &WorldIDF::GetWorldMap,
            py::return_value_policy::reference_internal)
       .def("WriteWorldMap", &WorldIDF::WriteWorldMap)
@@ -347,6 +355,14 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
       .def("WriteEnvironment", &CoverageSystem::WriteEnvironment)
       .def("GetNumRobots", &CoverageSystem::GetNumRobots);
+}
+
+// CudaUtils
+void pyCoverageControl_core_cuda_utils(py::module &m) {
+  py::class_<CudaUtils>(m, "CudaUtils")
+      .def_static("UseCuda", &CudaUtils::UseCuda)
+      .def_static("SetUseCuda", &CudaUtils::SetUseCuda)
+      .def_static("IsCudaAvailable", &CudaUtils::IsCudaAvailable);
 }
 
 }  // namespace CoverageControl

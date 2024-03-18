@@ -32,7 +32,17 @@ import coverage_control.nn as cc_nn
 from coverage_control.nn import CoverageEnvUtils
 
 class ControllerCVT:
+    """
+    Controller class for CVT based controllers
+    """
     def __init__(self, config: dict, params: Parameters, env: CoverageSystem):
+        """
+        Constructor for the CVT controller
+        Args:
+            config: Configuration dictionary
+            params: Parameters object
+            env: CoverageSystem object
+        """
         self.name = config["Name"]
         self.params = params
         match config["Algorithm"]:
@@ -48,6 +58,18 @@ class ControllerCVT:
                 raise ValueError(f"Unknown controller type: {controller_type}")
 
     def Step(self, env: CoverageSystem) -> (float, bool):
+        """
+        Step function for the CVT controller
+
+        Performs three steps:
+        1. Compute actions using the CVT algorithm
+        2. Get the actions from the algorithm
+        3. Step the environment using the actions
+        Args:
+            env: CoverageSystem object
+        Returns:
+            Objective value and convergence flag
+        """
         self.alg.ComputeActions()
         actions = self.alg.GetActions()
         converged = self.alg.IsConverged()
@@ -57,7 +79,17 @@ class ControllerCVT:
         return env.GetObjectiveValue(), converged
 
 class ControllerNN:
+    """
+    Controller class for neural network based controllers
+    """
     def __init__(self, config: dict, params: Parameters, env: CoverageSystem):
+        """
+        Constructor for the neural network controller
+        Args:
+            config: Configuration dictionary
+            params: Parameters object
+            env: CoverageSystem object
+        """
         self.config = config
         self.params = params
         self.name = self.config["Name"]
@@ -83,6 +115,18 @@ class ControllerNN:
         self.model.eval()
 
     def Step(self, env):
+        """
+        Step function for the neural network controller
+
+        Performs three steps:
+        1. Get the data from the environment
+        2. Get the actions from the model
+        3. Step the environment using the actions
+        Args:
+            env: CoverageSystem object
+        Returns:
+            Objective value and convergence flag
+        """
         pyg_data = CoverageEnvUtils.get_torch_geometric_data(env, self.params, True, self.use_comm_map, self.cnn_map_size).to(self.device)
         with torch.no_grad():
             actions = self.model(pyg_data)

@@ -41,8 +41,9 @@ namespace CoverageControl {
  * @{
  */
 
-typedef Eigen::Vector2d Point2; /*!< Point2 is a 2D vector of doubles */
-typedef Eigen::Vector3d Point3; /*!< Point3 is a 3D vector of doubles */
+typedef Eigen::Vector2d Point2;  /*!< Point2 is a 2D vector of doubles */
+typedef Eigen::Vector2f Point2f; /*!< Point2 is a 2D vector of doubles */
+typedef Eigen::Vector3d Point3;  /*!< Point3 is a 3D vector of doubles */
 typedef Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     MapType; /*!< MapType is a 2D matrix of floats. Note: It is RowMajor */
 

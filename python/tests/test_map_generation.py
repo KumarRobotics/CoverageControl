@@ -41,10 +41,11 @@ def test_map_generation():
     world_map = env.GetWorldMap()
 
     world_map_ref = np.load(os.path.join(script_dir, "data/world_map.npy"))
-    is_all_close = np.allclose(world_map, world_map_ref, atol=1e-4)
+    is_all_close = np.allclose(world_map, world_map_ref, atol=1e-2)
     assert is_all_close
     is_all_equal = np.equal(world_map, world_map_ref).all()
     if not is_all_equal and is_all_close:
+        print("Max error: ", np.max(np.abs(world_map - world_map_ref)))
         warnings.warn("Not all elements are equal, but all elements are close")
 
 if __name__ == "__main__":

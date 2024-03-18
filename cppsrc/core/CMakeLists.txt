@@ -7,7 +7,8 @@ FetchContent_Declare(CMakeExtraUtils
 FetchContent_MakeAvailable(CMakeExtraUtils)
 
 include(DynamicVersion)
-dynamic_version(PROJECT_PREFIX "CoverageControl_" GIT_ARCHIVAL_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../../.git_archival.txt")
+dynamic_version(PROJECT_PREFIX "CoverageControl_" GIT_ARCHIVAL_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../../.git_archival.txt"
+  FALLBACK_VERSION 0.0.1)
 
 project(CoverageControl VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 

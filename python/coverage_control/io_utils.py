@@ -59,7 +59,7 @@ class IOUtils:
         # Throw error if path does not exist
         path = IOUtils.sanitize_path(path)
         if not os.path.exists(path):
-            raise FileNotFoundError(f"DataLoaderUtils::load_tensor: File not found: {path}")
+            raise FileNotFoundError(f"IOUtils::load_tensor: File not found: {path}")
         # Load data
         data = torch.load(path)
         # Extract tensor if data is in jit script format
@@ -87,7 +87,7 @@ class IOUtils:
         path = IOUtils.sanitize_path(path)
         # Throw error if path does not exist
         if not os.path.exists(path):
-            raise FileNotFoundError(f"DataLoaderUtils::load_yaml File not found: {path}")
+            raise FileNotFoundError(f"IOUtils::load_yaml File not found: {path}")
         # Load data
         with open(path, "r") as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
@@ -97,7 +97,7 @@ class IOUtils:
     def load_toml(path: str) -> dict: # Throw error if path does not exist
         path = IOUtils.sanitize_path(path)
         if not os.path.exists(path):
-            raise FileNotFoundError(f"data_loader_utils::LoadToml: File not found: {path}")
+            raise FileNotFoundError(f"IOUtils::load_toml: File not found: {path}")
         # Load data
         with open(path, "rb") as f:
             data = tomllib.load(f)

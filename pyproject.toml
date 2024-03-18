@@ -70,8 +70,10 @@ build-verbosity = 1
 
 repair-wheel-command = ""
 
-test-command = ""
-before-test = ""
+test-command=""
+before-test=""
+# test-command = "pytest -ra --showlocals --ignore={project}/python/tests/deprecated {project}/python/tests"
+# before-test = "pip install pytest torch torchvision torch_geometric"
 test-requires = []
 test-extras = []
 
@@ -89,3 +91,7 @@ repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
 repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"
 
 [tool.cibuildwheel.windows]
+
+[tool.pytest.ini_options]
+addopts = ["--ignore=python/tests/deprecated", "-ra", "--showlocals"]
+testpaths = ["python/tests"]

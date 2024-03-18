@@ -79,7 +79,6 @@ def test_to_tensor_device():
 
 def test_get_raw_local_maps():
     local_maps = CoverageEnvUtils.get_raw_local_maps(env, params)
-    torch.save(local_maps, os.path.join(script_dir, "data/coverage_env_utils/local_maps.pt"))
 
     assert isinstance(local_maps, torch.Tensor)
     assert local_maps.shape == (params.pNumRobots, params.pLocalMapSize, params.pLocalMapSize)
@@ -93,7 +92,6 @@ def test_get_raw_local_maps():
 
 def test_get_raw_obstacle_maps():
     obstacle_maps = CoverageEnvUtils.get_raw_obstacle_maps(env, params)
-    torch.save(obstacle_maps, os.path.join(script_dir, "data/coverage_env_utils/obstacle_maps.pt"))
     assert isinstance(obstacle_maps, torch.Tensor)
     assert obstacle_maps.shape == (params.pNumRobots, params.pLocalMapSize, params.pLocalMapSize)
     assert obstacle_maps.dtype == torch.float32
@@ -106,7 +104,6 @@ def test_get_raw_obstacle_maps():
 
 def test_get_communication_maps():
     comm_maps = CoverageEnvUtils.get_communication_maps(env, params, 32)
-    torch.save(comm_maps, os.path.join(script_dir, "data/coverage_env_utils/comm_maps.pt"))
     assert isinstance(comm_maps, torch.Tensor)
     assert comm_maps.shape == (params.pNumRobots, 2, 32, 32)
     assert comm_maps.dtype == torch.float32
@@ -120,7 +117,6 @@ def test_get_communication_maps():
 def test_resize_maps():
     local_maps = CoverageEnvUtils.get_raw_local_maps(env, params)
     resized_local_maps = CoverageEnvUtils.resize_maps(local_maps, 32)
-    torch.save(resized_local_maps, os.path.join(script_dir, "data/coverage_env_utils/resized_local_maps.pt"))
     assert isinstance(resized_local_maps, torch.Tensor)
     assert resized_local_maps.shape == (params.pNumRobots, 32, 32)
     assert resized_local_maps.dtype == torch.float32
@@ -133,7 +129,6 @@ def test_resize_maps():
 
 def test_get_maps():
     maps = CoverageEnvUtils.get_maps(env, params, 32, use_comm_map = True)
-    torch.save(maps, os.path.join(script_dir, "data/coverage_env_utils/maps.pt"))
     assert isinstance(maps, torch.Tensor)
     assert maps.shape == (params.pNumRobots, 4, 32, 32)
     assert maps.dtype == torch.float32
@@ -146,7 +141,6 @@ def test_get_maps():
 
 def test_get_voronoi_features():
     voronoi_features = CoverageEnvUtils.get_voronoi_features(env)
-    torch.save(voronoi_features, os.path.join(script_dir, "data/coverage_env_utils/voronoi_features.pt"))
     assert isinstance(voronoi_features, torch.Tensor)
     feature_len = len(env.GetRobotVoronoiFeatures()[0])
     assert voronoi_features.shape == (params.pNumRobots, feature_len)
@@ -184,7 +178,6 @@ def test_get_weights():
 
 def test_get_torch_geometric_data():
     data = CoverageEnvUtils.get_torch_geometric_data(env, params, use_cnn = True, use_comm_map = True, map_size = 32)
-    torch.save(data, os.path.join(script_dir, "data/coverage_env_utils/torch_geometric_data.pt"))
     assert isinstance(data, torch_geometric.data.Data)
     assert data.x.shape == (params.pNumRobots, 4, 32, 32)
     assert data.x.dtype == torch.float32

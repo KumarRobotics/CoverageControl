@@ -36,6 +36,7 @@
 PYBIND11_MODULE(_core, m) {
   CoverageControl::pyCoverageControl_core(m);
   CoverageControl::pyCoverageControl_core_coverage_system(m);
+  CoverageControl::pyCoverageControl_core_cuda_utils(m);
 
 #ifdef CoverageControl_VERSION
   m.attr("__version__") = CoverageControl_VERSION;

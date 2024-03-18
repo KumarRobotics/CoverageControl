@@ -139,14 +139,27 @@ class BivariateNormalDistribution {
   Point2 TransformPoint(Point2 const &in_point) const {
     if (is_circular_) {
       return Point2((in_point - mean_) / sigma_.x());
-    } else {
-      Point2 translated = in_point - mean_;
-      Point2 normalized(translated.x() / sigma_.x(),
-                        translated.y() / sigma_.y());
-      return Point2((normalized.x() - rho_ * normalized.y()) /
-                        (std::sqrt(1 - rho_ * rho_)),
-                    normalized.y());
     }
+    Point2 translated = in_point - mean_;
+    Point2 normalized(translated.x() / sigma_.x(), translated.y() / sigma_.y());
+    return Point2(
+        (normalized.x() - rho_ * normalized.y()) / (std::sqrt(1 - rho_ * rho_)),
+        normalized.y());
+  }
+
+  Point2f TransformPoint(Point2f const &in_point_f) const {
+    Point2f mean_f = mean_.cast<float>();
+    Point2f sigma_f = sigma_.cast<float>();
+    float rho_f = static_cast<float>(rho_);
+    if (is_circular_ or std::abs(rho_f) < kEpsf) {
+      return Point2f((in_point_f - mean_f) / sigma_f.x());
+    }
+    Point2f translated = in_point_f - mean_f;
+    Point2f normalized(translated.x() / sigma_f.x(),
+                       translated.y() / sigma_f.y());
+    return Point2f(
+        (normalized.x() - rho_f * normalized.y()) / (sqrt(1 - rho_f * rho_f)),
+        normalized.y());
   }
 
   /*!
@@ -158,18 +171,16 @@ class BivariateNormalDistribution {
    * @return Value of the integral
    */
   double IntegrateQuarterPlane(Point2 const &point) const {
-    auto transformed_point = TransformPoint(point);
+    Point2 transformed_point = TransformPoint(point);
     return scale_ * std::erfc(transformed_point.x() * kOneBySqrt2) *
            std::erfc(transformed_point.y() * kOneBySqrt2) / 4.;
   }
 
-  float IntegrateQuarterPlaneF(Point2 const &point) const {
-    auto transformed_point = TransformPoint(point);
-    float x = static_cast<float>(transformed_point.x());
-    float y = static_cast<float>(transformed_point.y());
-    float scale = static_cast<float>(scale_);
-    return scale * std::erfc(x * kOneBySqrt2f) * std::erfc(y * kOneBySqrt2f) /
-           4.f;
+  float IntegrateQuarterPlane(Point2f const &point) const {
+    float scale_f = static_cast<float>(scale_);
+    Point2f transformed_point = TransformPoint(point);
+    return scale_f * std::erfc(transformed_point.x() * kOneBySqrt2f) *
+           std::erfc(transformed_point.y() * kOneBySqrt2f) / 4.f;
   }
 };
 

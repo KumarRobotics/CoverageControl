@@ -170,11 +170,9 @@ void CoverageSystem::InitSetup() {
   explored_idf_map_ =
       MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
   total_idf_weight_ = GetWorldMap().sum();
-  adjacency_matrix_.resize(num_robots_);
   relative_positions_neighbors_.resize(num_robots_);
   neighbor_ids_.resize(num_robots_);
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-    adjacency_matrix_[iRobot].resize(num_robots_, 0);
     relative_positions_neighbors_[iRobot].reserve(num_robots_);
     neighbor_ids_[iRobot].reserve(num_robots_);
   }
@@ -184,21 +182,6 @@ void CoverageSystem::InitSetup() {
 void CoverageSystem::PostStepCommands(size_t robot_id) {
   robot_global_positions_[robot_id] =
       robots_[robot_id].GetGlobalCurrentPosition();
-  for (size_t jRobot = 0; jRobot < robot_id; ++jRobot) {
-    if (robot_id == jRobot) {
-      adjacency_matrix_[robot_id][jRobot] = 0;
-      continue;
-    }
-    Point2 relative_pos =
-        robot_global_positions_[jRobot] - robot_global_positions_[robot_id];
-    if (relative_pos.norm() < params_.pCommunicationRange) {
-      adjacency_matrix_[robot_id][jRobot] = 1;
-      adjacency_matrix_[jRobot][robot_id] = 1;
-    } else {
-      adjacency_matrix_[robot_id][jRobot] = 0;
-      adjacency_matrix_[jRobot][robot_id] = 0;
-    }
-  }
   UpdateNeighbors();
 
   if (params_.pUpdateSystemMap) {
@@ -227,11 +210,10 @@ void CoverageSystem::PostStepCommands(size_t robot_id) {
 
 void CoverageSystem::PostStepCommands() {
   UpdateRobotPositions();
-  ComputeAdjacencyMatrix();
+  UpdateNeighbors();
   if (params_.pUpdateSystemMap) {
     UpdateSystemMap();
   }
-  UpdateNeighbors();
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
     auto &history = robot_positions_history_[iRobot];
     if (history.size() > 0 and
@@ -243,42 +225,21 @@ void CoverageSystem::PostStepCommands() {
   }
 }
 
-void CoverageSystem::ComputeAdjacencyMatrix() {
-  /* #pragma omp parallel for num_threads(num_robots_) */
-  for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-    for (size_t jRobot = 0; jRobot < iRobot; ++jRobot) {
-      if (iRobot == jRobot) {
-        adjacency_matrix_[iRobot][jRobot] = 0;
-        continue;
-      }
-      Point2 relative_pos =
-          robot_global_positions_[jRobot] - robot_global_positions_[iRobot];
-      if (relative_pos.norm() < params_.pCommunicationRange) {
-        adjacency_matrix_[iRobot][jRobot] = 1;
-        adjacency_matrix_[jRobot][iRobot] = 1;
-      } else {
-        adjacency_matrix_[iRobot][jRobot] = 0;
-        adjacency_matrix_[jRobot][iRobot] = 0;
-      }
-    }
-  }
-}
-
 void CoverageSystem::UpdateNeighbors() {
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
     relative_positions_neighbors_[iRobot].clear();
     neighbor_ids_[iRobot].clear();
-    for (size_t jRobot = 0; jRobot < num_robots_; ++jRobot) {
-      if (iRobot == jRobot) {
-        continue;
-      }
-      if (adjacency_matrix_[iRobot][jRobot] == 0) {
-        continue;
-      }
+  }
+  for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+    for (size_t jRobot = iRobot + 1; jRobot < num_robots_; ++jRobot) {
       Point2 relative_pos =
           robot_global_positions_[jRobot] - robot_global_positions_[iRobot];
-      relative_positions_neighbors_[iRobot].push_back(relative_pos);
-      neighbor_ids_[iRobot].push_back(jRobot);
+      if (relative_pos.norm() < params_.pCommunicationRange) {
+        relative_positions_neighbors_[iRobot].push_back(relative_pos);
+        neighbor_ids_[iRobot].push_back(jRobot);
+        relative_positions_neighbors_[jRobot].push_back(-relative_pos);
+        neighbor_ids_[jRobot].push_back(iRobot);
+      }
     }
   }
 }
@@ -336,7 +297,8 @@ Point2 CoverageSystem::AddNoise(Point2 const pt) const {
   auto noise_sigma = params_.pPositionsNoiseSigma;
   {  // Wrap noise generation in a mutex to avoid issues with random number
      // generation
-    /* std::lock_guard<std::mutex> lock(mutex_); */
+     // Random number generation is not thread safe
+    std::lock_guard<std::mutex> lock(mutex_);
     std::normal_distribution pos_noise{0.0, noise_sigma};
     noisy_pt += Point2(pos_noise(gen_), pos_noise(gen_));
   }

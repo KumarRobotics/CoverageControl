@@ -47,10 +47,11 @@ namespace CoverageControl {
  */
 
 double const kEps = 1e-10;          /*!< Epsilon for double comparison */
+float const kEpsf = 1e-6f;          /*!< Epsilon for float comparison */
 double const kLargeEps = 1e-4;      /*!< Large epsilon for double comparison */
 double const kSqrt2 = std::sqrt(2); /*!< Square root of 2 */
 double const kOneBySqrt2 = 1. / std::sqrt(2); /*!< 1 by square root of 2 */
-float const kOneBySqrt2f = 1.f / std::sqrt(2.f); /*!< 1 by square root of 2 */
+float const kOneBySqrt2f = 1.f / sqrtf(2.f);  /*!< 1 by square root of 2 */
 double const kInfD =
     std::numeric_limits<double>::infinity(); /*!< Infinity for double */
 constexpr auto kMaxPrecision{std::numeric_limits<long double>::digits10 +

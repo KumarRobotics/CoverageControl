@@ -2,7 +2,7 @@
 @INCLUDE = doc/config/BaseDoxyfile
 
 PROJECT_NAME           = "Coverage Control Library"
-PROJECT_NUMBER         = 1.0.0
+PROJECT_NUMBER         = $(GIT_TAG)
 USE_MDFILE_AS_MAINPAGE = doc/manual/README.md
 INPUT                  = doc/manual/README.md \
 												 doc/manual/ref_manual.txt \

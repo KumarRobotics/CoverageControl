@@ -33,10 +33,10 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ROBOT_MODEL_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ROBOT_MODEL_H_
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <memory>
-#include <algorithm>
 #include <vector>
 
 #include "CoverageControl/constants.h"
