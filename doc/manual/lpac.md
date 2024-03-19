@@ -1,7 +1,7 @@
 \page lpac LPAC Neural Network
 \tableofcontents
 
-## Prelminaries
+# Prelminaries
 We will organize files in a **workspace** directory: `${CoverageControl_ws}` (e.g., ~/CoverageControl\_ws).
 
 Download and extract the file `lpac_CoverageControl.tar.gz` to the workspace directory.
@@ -23,7 +23,7 @@ ${CoverageControl_ws}/
 
 The models folder already contains a trained LPAC model for a 1024x1024 environment with 32 robots, 32 features, and 128 communication radius.
 
-## Dataset Generation
+# Dataset Generation
 
 There are two ways to classes for dataset generation located in `python/scripts/data_generation/`
 1. `simple_data_generation.py`
@@ -44,7 +44,7 @@ The class will use a `coverage_control_params.toml` configuration file to genera
 The `simple_data_generation.py` is useful for generating a large dataset in parts and then combining them into a single dataset.
 See `python/utils/process_data.sh` and `python/utils/dataset_utils.py` for tools to process and combine datasets.
 
-## Training
+# Training
 
 To train the LPAC model, run the following command:
 ```bash
@@ -55,7 +55,7 @@ python python/scripts/training/train_lpac.py \
 The second argument is the environment size, used to normalize the input features.
 A sample `learning_params.toml` file is also provided in the `params` directory of the repository. See the file for details on the parameters.
 
-## Evaluation
+# Evaluation
 There are two scripts for evaluation located in `python/scripts/evaluators/`
 1. [eval_single_env.py](python/scripts/evaluators/eval_single_env.py)
 2. [eval.py](python/scripts/evaluators/eval.py)
