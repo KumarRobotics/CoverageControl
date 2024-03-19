@@ -4,6 +4,6 @@ var searchData=
   ['from_20source_1',['Installation From Source',['../installation.html#installation-from-source',1,'']]],
   ['frontier_2',['Frontier',['../structCoverageControl_1_1Frontier.html',1,'CoverageControl']]],
   ['frontiercompare_3',['FrontierCompare',['../structCoverageControl_1_1FrontierCompare.html',1,'CoverageControl']]],
-  ['function_4',['Cost Function',['../coverage-control-problem.html#autotoc_md31',1,'']]],
-  ['funding_5',['Support and Funding',['../index.html#autotoc_md4',1,'']]]
+  ['function_4',['Cost Function',['../coverage-control-problem.html#autotoc_md33',1,'']]],
+  ['funding_5',['Support and Funding',['../index.html#autotoc_md6',1,'']]]
 ];

@@ -27,43 +27,43 @@ var NAVTREE =
   [ "Coverage Control Library", "index.html", [
     [ "Home", "index.html", "index" ],
     [ "Installation", "installation.html", [
-      [ "PyPI Installation", "installation.html#autotoc_md7", null ],
-      [ "Docker Installation", "installation.html#autotoc_md9", [
-        [ "Prerequisites (Optional)", "installation.html#autotoc_md10", null ],
-        [ "Docker Container", "installation.html#autotoc_md12", null ]
+      [ "PyPI Installation", "installation.html#autotoc_md9", null ],
+      [ "Docker Installation", "installation.html#autotoc_md11", [
+        [ "Prerequisites (Optional)", "installation.html#autotoc_md12", null ],
+        [ "Docker Container", "installation.html#autotoc_md14", null ]
       ] ],
       [ "Installation From Source", "installation.html#installation-from-source", [
-        [ "Prerequisites", "installation.html#autotoc_md14", [
-          [ "CUDA Support", "installation.html#autotoc_md15", null ]
+        [ "Prerequisites", "installation.html#autotoc_md16", [
+          [ "CUDA Support", "installation.html#autotoc_md17", null ]
         ] ],
-        [ "Automated Installation", "installation.html#autotoc_md17", null ],
-        [ "Building the Core C++ Library", "installation.html#autotoc_md18", null ]
+        [ "Automated Installation", "installation.html#autotoc_md19", null ],
+        [ "Building the Core C++ Library", "installation.html#autotoc_md20", null ]
       ] ]
     ] ],
     [ "Quick Start", "quick_start.html", [
-      [ "Parameters", "quick_start.html#autotoc_md20", null ],
-      [ "Python Interface", "quick_start.html#autotoc_md21", null ],
-      [ "C++ Interface", "quick_start.html#autotoc_md23", [
-        [ "Compile and Run", "quick_start.html#autotoc_md24", null ]
+      [ "Parameters", "quick_start.html#autotoc_md22", null ],
+      [ "Python Interface", "quick_start.html#autotoc_md23", null ],
+      [ "C++ Interface", "quick_start.html#autotoc_md25", [
+        [ "Compile and Run", "quick_start.html#autotoc_md26", null ]
       ] ]
     ] ],
     [ "LPAC Neural Network", "lpac.html", [
-      [ "Prelminaries", "lpac.html#autotoc_md25", null ],
-      [ "Dataset Generation", "lpac.html#autotoc_md26", null ],
-      [ "Training", "lpac.html#autotoc_md27", null ],
-      [ "Evaluation", "lpac.html#autotoc_md28", null ]
+      [ "Preliminaries", "lpac.html#autotoc_md27", null ],
+      [ "Dataset Generation", "lpac.html#autotoc_md28", null ],
+      [ "Training", "lpac.html#autotoc_md29", null ],
+      [ "Evaluation", "lpac.html#autotoc_md30", null ]
     ] ],
     [ "Theoretical Background", "coverage-control-problem.html", [
-      [ "Coverage Control Problem", "coverage-control-problem.html#autotoc_md29", [
-        [ "Introduction", "coverage-control-problem.html#autotoc_md30", null ],
-        [ "Cost Function", "coverage-control-problem.html#autotoc_md31", null ],
-        [ "The Problem", "coverage-control-problem.html#autotoc_md33", null ],
-        [ "Decentralized Coverage Control", "coverage-control-problem.html#autotoc_md35", null ]
+      [ "Coverage Control Problem", "coverage-control-problem.html#autotoc_md31", [
+        [ "Introduction", "coverage-control-problem.html#autotoc_md32", null ],
+        [ "Cost Function", "coverage-control-problem.html#autotoc_md33", null ],
+        [ "The Problem", "coverage-control-problem.html#autotoc_md35", null ],
+        [ "Decentralized Coverage Control", "coverage-control-problem.html#autotoc_md37", null ]
       ] ],
-      [ "LPAC Architecture", "coverage-control-problem.html#autotoc_md37", [
-        [ "Navigation of Robot Swarms", "coverage-control-problem.html#autotoc_md38", null ],
-        [ "The Challenge", "coverage-control-problem.html#autotoc_md39", null ],
-        [ "Architecture", "coverage-control-problem.html#autotoc_md40", null ]
+      [ "LPAC Architecture", "coverage-control-problem.html#autotoc_md39", [
+        [ "Navigation of Robot Swarms", "coverage-control-problem.html#autotoc_md40", null ],
+        [ "The Challenge", "coverage-control-problem.html#autotoc_md41", null ],
+        [ "Architecture", "coverage-control-problem.html#autotoc_md42", null ]
       ] ]
     ] ],
     [ "Reference Manual", "topics.html", "topics" ],

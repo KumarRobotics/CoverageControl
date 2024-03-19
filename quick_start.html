@@ -124,21 +124,21 @@ $(function(){initNavTree('quick_start.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md20">Parameters</a></li>
-<li class="level1"><a href="#autotoc_md21">Python Interface</a></li>
-<li class="level1"><a href="#autotoc_md23">C++ Interface</a><ul><li class="level2"><a href="#autotoc_md24">Compile and Run</a></li>
+<ul><li class="level1"><a href="#autotoc_md22">Parameters</a></li>
+<li class="level1"><a href="#autotoc_md23">Python Interface</a></li>
+<li class="level1"><a href="#autotoc_md25">C++ Interface</a><ul><li class="level2"><a href="#autotoc_md26">Compile and Run</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md20"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md22"></a>
 Parameters</h1>
 <p>The library uses <code>toml</code> files to specify the configuration parameters for the environment and the robot models. <br  />
  The class <code><a class="el" href="classCoverageControl_1_1Parameters.html" title="Class to store parameters.">CoverageControl::Parameters</a></code> is used to load the configuration file and access the parameters.</p>
 <div class="fragment"><div class="line">params = <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">CoverageControl.Parameters</a>(<span class="stringliteral">&quot;params/coverage_control_params.toml&quot;</span>)</div>
 <div class="ttc" id="aclassCoverageControl_1_1Parameters_html"><div class="ttname"><a href="classCoverageControl_1_1Parameters.html">CoverageControl::Parameters</a></div><div class="ttdoc">Class to store parameters.</div><div class="ttdef"><b>Definition</b> <a href="parameters_8h_source.html#l00050">parameters.h:50</a></div></div>
 </div><!-- fragment --><p> See <a class="el" href="coverage__control__params_8toml_source.html">params/coverage_control_params.toml</a> for an example configuration file.</p>
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md23"></a>
 Python Interface</h1>
 <p>Import the <code>coverage_control</code> library and the <code>ClairvoyantCVT</code> algorithm. </p><div class="fragment"><div class="line"><span class="keyword">import</span> coverage_control <span class="keyword">as</span> cc</div>
 <div class="line"><span class="keyword">from</span> coverage_control <span class="keyword">import</span> ClairvoyantCVT <span class="keyword">as</span> CoverageAlgorithm</div>
@@ -174,7 +174,7 @@ Python Interface</h1>
 </div><!-- fragment --><p>Plot the final state of the environment: </p><div class="fragment"><div class="line">env.PlotSystemMap(<span class="stringliteral">&quot;final_map&quot;</span>);</div>
 </div><!-- fragment --><p>See <a class="el" href="coverage__simple_8py_source.html">python/scripts/coverage_env/coverage_simple.py</a> and <a class="el" href="coverage__class_8py_source.html">python/scripts/coverage_env/coverage_class.py</a> for complete examples.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md23"></a>
+<h1><a class="anchor" id="autotoc_md25"></a>
 C++ Interface</h1>
 <p>Include the <code><a class="el" href="namespaceCoverageControl.html" title="Namespace for the CoverageControl library.">CoverageControl</a></code> library, algorithms, and other necessary headers: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="parameters_8h.html">CoverageControl/parameters.h</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="typedefs_8h.html">CoverageControl/typedefs.h</a>&gt;</span></div>
@@ -225,7 +225,7 @@ C++ Interface</h1>
 <div class="line">          &lt;&lt; std::endl;</div>
 </div><!-- fragment --><p>Plot the final state of the environment: </p><div class="fragment"><div class="line">env.PlotSystemMap(<span class="stringliteral">&quot;final_map&quot;</span>); <span class="comment">// Creates &quot;final_map.png&quot;</span></div>
 </div><!-- fragment --><p>See <a class="el" href="coverage__algorithm_8cpp.html">cppsrc/main/coverage_algorithm.cpp</a> for a complete example.</p>
-<h2><a class="anchor" id="autotoc_md24"></a>
+<h2><a class="anchor" id="autotoc_md26"></a>
 Compile and Run</h2>
 <p>Create a <code>CMakeLists.txt</code> file with the following content: </p><div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.16)</div>
 <div class="line">project(coveragecontrol)</div>

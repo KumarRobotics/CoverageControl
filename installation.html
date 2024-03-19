@@ -124,21 +124,21 @@ $(function(){initNavTree('installation.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md7">PyPI Installation</a></li>
-<li class="level1"><a href="#autotoc_md9">Docker Installation</a><ul><li class="level2"><a href="#autotoc_md10">Prerequisites (Optional)</a></li>
-<li class="level2"><a href="#autotoc_md12">Docker Container</a></li>
+<ul><li class="level1"><a href="#autotoc_md9">PyPI Installation</a></li>
+<li class="level1"><a href="#autotoc_md11">Docker Installation</a><ul><li class="level2"><a href="#autotoc_md12">Prerequisites (Optional)</a></li>
+<li class="level2"><a href="#autotoc_md14">Docker Container</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#installation-from-source">Installation From Source</a><ul><li class="level2"><a href="#autotoc_md14">Prerequisites</a><ul><li class="level3"><a href="#autotoc_md15">CUDA Support</a></li>
+<li class="level1"><a href="#installation-from-source">Installation From Source</a><ul><li class="level2"><a href="#autotoc_md16">Prerequisites</a><ul><li class="level3"><a href="#autotoc_md17">CUDA Support</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#autotoc_md17">Automated Installation</a></li>
-<li class="level2"><a href="#autotoc_md18">Building the Core C++ Library</a></li>
+<li class="level2"><a href="#autotoc_md19">Automated Installation</a></li>
+<li class="level2"><a href="#autotoc_md20">Building the Core C++ Library</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md7"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md9"></a>
 PyPI Installation</h1>
 <p>The library is available on PyPI and can be installed using <code>pip</code>. It is recommended to install the library inside a virtual environment.  
 <div class="fragment">
@@ -158,10 +158,10 @@ PyPI Installation</h1>
 <div class="line"><span class="keywordflow">sudo</span> <span class="keyword">apt</span> <span class="keywordtype">install</span> gnuplot-nox ffmpeg</div>
 </div>
  </p><hr  />
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 Docker Installation</h1>
 <p>Docker images are available for the library with different configurations and versions.</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Prerequisites (Optional)</h2>
 <p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws). The workspace directory is mounted to the docker container.</p>
 <p>Add the following lines to your <code>${HOME}/.bashrc</code> file for convenience.  
@@ -176,7 +176,7 @@ Prerequisites (Optional)</h2>
 <div class="line">          ${CoverageControl_ws}/src/CoverageControl</div>
 </div>
  </p><hr  />
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Docker Container</h2>
 <p>Container can be created using the script in <code>setup_utils/create_container.sh</code>.  
 <div class="fragment">
@@ -213,7 +213,7 @@ Docker Container</h2>
 <hr  />
 <h1><a class="anchor" id="installation-from-source"></a>
 Installation From Source</h1>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Prerequisites</h2>
 <p>The following packages are required to build the library:  
 <div class="fragment">
@@ -225,7 +225,7 @@ Prerequisites</h2>
 <div class="line"><span class="keywordflow">sudo</span> <span class="keyword">apt</span> <span class="keywordtype">install</span> build-essential cmake git wget python3 python3-pip python3-venv python3-dev</div>
 </div>
  </p>
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md17"></a>
 CUDA Support</h3>
 <p>(Optional but recommended for GPU acceleration)</p>
 <p>The package also supports GPU acceleration using CUDA. To enable this feature, the following additional packages are required:</p><ul>
@@ -234,7 +234,7 @@ CUDA Support</h3>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>On Ubuntu, latest <code>cmake</code> version can be installed from the official <a href="https://apt.kitware.com/">Kitware APT Repository</a>.</dd></dl>
 <hr  />
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md19"></a>
 Automated Installation</h2>
 <p> 
 <div class="fragment">
@@ -248,7 +248,7 @@ Automated Installation</h2>
 <div class="line"><span class="keyword">pytest</span></div>
 </div>
 </p>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 Building the Core C++ Library</h2>
 <p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws).</p>
 <p>Add the following lines to your <code>~/.bashrc</code> file.  

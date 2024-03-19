@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['library_0',['Building the Core C++ Library',['../installation.html#autotoc_md18',1,'']]],
-  ['license_1',['License',['../index.html#autotoc_md6',1,'']]],
+  ['library_0',['Building the Core C++ Library',['../installation.html#autotoc_md20',1,'']]],
+  ['license_1',['License',['../index.html#autotoc_md8',1,'']]],
   ['load_5factions_2',['load_actions',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a47c7da780acfed1ff91d4b96757a12f1',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
   ['load_5fcnn_5fbackbone_3',['load_cnn_backbone',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a9661a554ec690fc47132cd5b0e768d80',1,'coverage_control::nn::models::lpac::LPAC']]],
   ['load_5fcpp_5fmodel_4',['load_cpp_model',['../classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae393be8e7e39c9dd81580792227e249f',1,'coverage_control::nn::models::cnn::CNN']]],
@@ -21,6 +21,6 @@ var searchData=
   ['localmapcnndataset_18',['LocalMapCNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html',1,'coverage_control::nn::data_loaders::loaders']]],
   ['localmapgnndataset_19',['LocalMapGNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapGNNDataset.html',1,'coverage_control::nn::data_loaders::loaders']]],
   ['lpac_20',['LPAC',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html',1,'coverage_control::nn::models::lpac']]],
-  ['lpac_20architecture_21',['LPAC Architecture',['../coverage-control-problem.html#autotoc_md37',1,'']]],
+  ['lpac_20architecture_21',['LPAC Architecture',['../coverage-control-problem.html#autotoc_md39',1,'']]],
   ['lpac_20neural_20network_22',['LPAC Neural Network',['../lpac.html',1,'']]]
 ];

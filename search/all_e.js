@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['of_20robot_20swarms_0',['Navigation of Robot Swarms',['../coverage-control-problem.html#autotoc_md38',1,'']]],
-  ['optional_1',['Prerequisites (Optional)',['../installation.html#autotoc_md10',1,'']]],
+  ['of_20robot_20swarms_0',['Navigation of Robot Swarms',['../coverage-control-problem.html#autotoc_md40',1,'']]],
+  ['optional_1',['Prerequisites (Optional)',['../installation.html#autotoc_md12',1,'']]],
   ['oracle_5fbang_5fexplore_5fexploit_2eh_2',['oracle_bang_explore_exploit.h',['../oracle__bang__explore__exploit_8h.html',1,'']]],
   ['oracle_5fexplore_5fexploit_2eh_3',['oracle_explore_exploit.h',['../oracle__explore__exploit_8h.html',1,'']]],
   ['oraclebangexploreexploit_4',['OracleBangExploreExploit',['../classCoverageControl_1_1OracleBangExploreExploit.html',1,'CoverageControl']]],

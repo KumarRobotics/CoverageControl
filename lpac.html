@@ -124,14 +124,14 @@ $(function(){initNavTree('lpac.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md25">Prelminaries</a></li>
-<li class="level1"><a href="#autotoc_md26">Dataset Generation</a></li>
-<li class="level1"><a href="#autotoc_md27">Training</a></li>
-<li class="level1"><a href="#autotoc_md28">Evaluation</a></li>
+<ul><li class="level1"><a href="#autotoc_md27">Preliminaries</a></li>
+<li class="level1"><a href="#autotoc_md28">Dataset Generation</a></li>
+<li class="level1"><a href="#autotoc_md29">Training</a></li>
+<li class="level1"><a href="#autotoc_md30">Evaluation</a></li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md25"></a>
-Prelminaries</h1>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md27"></a>
+Preliminaries</h1>
 <p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws).</p>
 <p>Download and extract the file <code>lpac_CoverageControl.tar.gz</code> to the workspace directory. The file can be downloaded from the repository's release page.  
 <div class="fragment">
@@ -148,7 +148,7 @@ This will create a directory <code>lpac</code> in the workspace directory. The d
 <div class="line">    <span class="keyword">└──</span> params/ <span class="comment"># Parameters for training and evaluation</span></div>
 </div>
  The models folder already contains a trained LPAC model for a 1024x1024 environment with 32 robots, 32 features, and 128 communication radius.</p>
-<h1><a class="anchor" id="autotoc_md26"></a>
+<h1><a class="anchor" id="autotoc_md28"></a>
 Dataset Generation</h1>
 <p>There are two ways to classes for dataset generation located in <code>python/scripts/data_generation/</code></p><ol type="1">
 <li><code><a class="el" href="simple__data__generation_8py.html" title="Generates a dataset for coverage control learning.">simple_data_generation.py</a></code></li>
@@ -162,7 +162,7 @@ Dataset Generation</h1>
 </div>
  A sample <code><a class="el" href="data__params_8toml_source.html">data_params.toml</a></code> file is also provided in the <code>params</code> directory of the repository. See the file for details on the parameters. The class will use a <code><a class="el" href="coverage__control__params_8toml_source.html">coverage_control_params.toml</a></code> configuration file to generate environments and then use the <code>ClairvoyantCVT</code> algorithm to generate the dataset.</p>
 <p>The <code><a class="el" href="simple__data__generation_8py.html" title="Generates a dataset for coverage control learning.">simple_data_generation.py</a></code> is useful for generating a large dataset in parts and then combining them into a single dataset. See <code>python/utils/process_data.sh</code> and <code><a class="el" href="dataset__utils_8py_source.html">python/utils/dataset_utils.py</a></code> for tools to process and combine datasets.</p>
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md29"></a>
 Training</h1>
 <p>To train the LPAC model, run the following command:  
 <div class="fragment">
@@ -170,7 +170,7 @@ Training</h1>
 <div class="line">       ${CoverageControl_ws}/lpac/params/learning_params.toml 1024</div>
 </div>
  The second argument is the environment size, used to normalize the input features. A sample <code><a class="el" href="learning__params_8toml_source.html">learning_params.toml</a></code> file is also provided in the <code>params</code> directory of the repository. See the file for details on the parameters.</p>
-<h1><a class="anchor" id="autotoc_md28"></a>
+<h1><a class="anchor" id="autotoc_md30"></a>
 Evaluation</h1>
 <p>There are two scripts for evaluation located in <code>python/scripts/evaluators/</code></p><ol type="1">
 <li><a href="python/scripts/evaluators/eval_single_env.py">eval_single_env.py</a></li>

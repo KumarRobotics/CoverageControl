@@ -124,29 +124,29 @@ $(function(){initNavTree('coverage-control-problem.html',''); initResizable(); }
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md29">Coverage Control Problem</a><ul><li class="level2"><a href="#autotoc_md30">Introduction</a></li>
-<li class="level2"><a href="#autotoc_md31">Cost Function</a></li>
-<li class="level2"><a href="#autotoc_md33">The Problem</a></li>
-<li class="level2"><a href="#autotoc_md35">Decentralized Coverage Control</a></li>
+<ul><li class="level1"><a href="#autotoc_md31">Coverage Control Problem</a><ul><li class="level2"><a href="#autotoc_md32">Introduction</a></li>
+<li class="level2"><a href="#autotoc_md33">Cost Function</a></li>
+<li class="level2"><a href="#autotoc_md35">The Problem</a></li>
+<li class="level2"><a href="#autotoc_md37">Decentralized Coverage Control</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md37">LPAC Architecture</a><ul><li class="level2"><a href="#autotoc_md38">Navigation of Robot Swarms</a></li>
-<li class="level2"><a href="#autotoc_md39">The Challenge</a></li>
-<li class="level2"><a href="#autotoc_md40">Architecture</a></li>
+<li class="level1"><a href="#autotoc_md39">LPAC Architecture</a><ul><li class="level2"><a href="#autotoc_md40">Navigation of Robot Swarms</a></li>
+<li class="level2"><a href="#autotoc_md41">The Challenge</a></li>
+<li class="level2"><a href="#autotoc_md42">Architecture</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md29"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md31"></a>
 Coverage Control Problem</h1>
-<h2><a class="anchor" id="autotoc_md30"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 Introduction</h2>
 <p>Coverage control is the problem of navigating a robot swarm to collaboratively monitor features or a phenomenon of interest not known <em>a priori</em>. The goal is to provide sensor coverage based on the importance of information at each point in the environment. An importance density field (IDF) \(\Phi:\mathcal{W} \mapsto {R}_{\geq 0}\) is defined over a 2-D environment \(\mathcal W\subset  R^2\). The IDF represents a non-negative measure of importance at each point in the environment. With the state of a robot \(i\) given by its position \(\mathbf p_i\in \mathcal W\) in the environment, the control actions given by the velocity \(\dot{\mathbf p}_i(t)\), and \(\Delta t\) as the time step, we use the following model for the state evolution:  </p><p class="formulaDsp">
 \begin{equation}
 \mathbf p_i(t+\Delta t) = \mathbf p_i(t) + \dot{\mathbf p}_i(t) \Delta t.
 \end{equation}
 </p>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 Cost Function</h2>
 <p>The cost function for the coverage control problem is defined as:  </p><p class="formulaDsp">
 \begin{equation}
@@ -170,7 +170,7 @@ Cost Function</h2>
 </p>
 <p> This new cost function is a sum of integrals over disjoint regions and is much easier to compute and optimize than the original function. Furthermore, if the Voronoi partition is known, the cost function can be computed in a decentralized manner, as each robot only needs to compute the integral over its own region \(P_i\).</p>
 <hr  />
- <h2><a class="anchor" id="autotoc_md33"></a>
+ <h2><a class="anchor" id="autotoc_md35"></a>
 The Problem</h2>
 <p>We can now define the coverage control problem in the context of the navigation control problem: Find a decentralized control policy \(\Pi\) that minimizes the expected cost \(\mathcal J(\mathbf X)\). The policy \(\Pi\) is defined over a space of all possible velocities, and each robot independently executes the same policy.</p>
 <p> 
@@ -178,7 +178,7 @@ The Problem</h2>
 <figcaption>A near-optimal solution, along with Voronoi partition, to an instance of the coverage control problem with 32 robots and 32 features in a 1024 x 1024 environment.</figcaption>
 </p>
 <hr  />
-<h2><a class="anchor" id="autotoc_md35"></a>
+<h2><a class="anchor" id="autotoc_md37"></a>
 Decentralized Coverage Control</h2>
 <p>The library aims at providing simulations and algorithms for the decentralized coverage control problem with the following restrictions:</p><ol type="1">
 <li>The IDF \(\Phi\) is static and is not known <em>a priori</em>.</li>
@@ -192,15 +192,15 @@ Decentralized Coverage Control</h2>
 </ol>
 <p>Designing such decentralized algorithms is challenging and can be intractable for complex systems. This motivates us to use a learning-based approach to design a decentralized coverage control algorithm. The <a class="el" href="lpac.html">LPAC Neural Network</a> with GNN addresses the above challenges and provides a scalable and robust solution to the problem.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md37"></a>
+<h1><a class="anchor" id="autotoc_md39"></a>
 LPAC Architecture</h1>
-<h2><a class="anchor" id="autotoc_md38"></a>
+<h2><a class="anchor" id="autotoc_md40"></a>
 Navigation of Robot Swarms</h2>
 <p>Navigating a swarm of robots through an environment to achieve a common collaborative goal is a challenging problem, especially when the sensing and communication capabilities of the robots are limited. These problems require systems with high-fidelity algorithms comprising three key capabilities: perception, action, and communication, which are executed in a feedback loop, i.e., the Perception-Action-Communication (PAC) loop. To seamlessly scale the deployment of such systems across vast environments with large robot swarms, it is imperative to consider a decentralized system wherein each robot autonomously makes decisions, drawing upon its own observations and information received from neighboring robots.</p>
-<h2><a class="anchor" id="autotoc_md39"></a>
+<h2><a class="anchor" id="autotoc_md41"></a>
 The Challenge</h2>
 <p>Designing a navigation algorithm for a decentralized system is challenging. The robots perform perception and action independently, while the communication module is the only component that can facilitate robot collaboration. Under limited communication capabilities, the robots must decide <em>what</em> information to communicate to their neighbors and <em>how</em> to use the received information to take appropriate actions. The motivation of designing this library is to study the coverage control problem as a canonical problem for the decentralized navigation of robot swarms. We develop the learnable PAC (LPAC) architecture that can learn to process sensor observations, communicate relevant information, and take appropriate actions.</p>
-<h2><a class="anchor" id="autotoc_md40"></a>
+<h2><a class="anchor" id="autotoc_md42"></a>
 Architecture</h2>
 <p>The learnable Perception-Action-Communication (LPAC) architecture is composed of three different types of neural networks, one for each module of the PAC system.</p><ol type="1">
 <li>In the perception module, a convolution neural network (CNN) processes localized IDF observations and generates an abstract representation.</li>

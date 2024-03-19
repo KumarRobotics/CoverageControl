@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['parameters_0',['Parameters',['../classCoverageControl_1_1Parameters.html',1,'Parameters'],['../quick_start.html#autotoc_md20',1,'Parameters']]],
+  ['parameters_0',['Parameters',['../classCoverageControl_1_1Parameters.html',1,'Parameters'],['../quick_start.html#autotoc_md22',1,'Parameters']]],
   ['parameters_2ecpp_1',['parameters.cpp',['../parameters_8cpp.html',1,'']]],
   ['parameters_2eh_2',['parameters.h',['../parameters_8h.html',1,'']]],
   ['parse_3',['parse',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f',1,'coverage_control.nn.models.config_parser.CNNConfigParser.parse()'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f',1,'coverage_control.nn.models.config_parser.GNNConfigParser.parse()']]],
@@ -23,18 +23,18 @@ var searchData=
   ['polygons_5fcuda_20',['Polygons_Cuda',['../structCoverageControl_1_1Polygons__Cuda.html',1,'CoverageControl']]],
   ['polygons_5fcuda_5fhost_21',['Polygons_Cuda_Host',['../structCoverageControl_1_1Polygons__Cuda__Host.html',1,'CoverageControl']]],
   ['polygonymonotonepartition_22',['PolygonYMonotonePartition',['../namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042',1,'CoverageControl']]],
-  ['prelminaries_23',['Prelminaries',['../lpac.html#autotoc_md25',1,'']]],
-  ['prerequisites_24',['Prerequisites',['../installation.html#autotoc_md14',1,'']]],
-  ['prerequisites_20optional_25',['Prerequisites (Optional)',['../installation.html#autotoc_md10',1,'']]],
+  ['preliminaries_23',['Preliminaries',['../lpac.html#autotoc_md27',1,'']]],
+  ['prerequisites_24',['Prerequisites',['../installation.html#autotoc_md16',1,'']]],
+  ['prerequisites_20optional_25',['Prerequisites (Optional)',['../installation.html#autotoc_md12',1,'']]],
   ['presolution_26',['pResolution',['../classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1',1,'CoverageControl::Parameters']]],
-  ['problem_27',['Problem',['../coverage-control-problem.html#autotoc_md29',1,'Coverage Control Problem'],['../coverage-control-problem.html#autotoc_md33',1,'The Problem']]],
+  ['problem_27',['Problem',['../coverage-control-problem.html#autotoc_md31',1,'Coverage Control Problem'],['../coverage-control-problem.html#autotoc_md35',1,'The Problem']]],
   ['probotinitdist_28',['pRobotInitDist',['../classCoverageControl_1_1Parameters.html#a2ffd24f087343f91e5e8f76bf82ca119',1,'CoverageControl::Parameters']]],
   ['probotmapsize_29',['pRobotMapSize',['../classCoverageControl_1_1Parameters.html#a16c11f0867b9d184ae9efe007b3c0dde',1,'CoverageControl::Parameters']]],
   ['probotposhistorysize_30',['pRobotPosHistorySize',['../classCoverageControl_1_1Parameters.html#a88ac5b20000243e0bbf0382aec8ed7be',1,'CoverageControl::Parameters']]],
   ['ptimestep_31',['pTimeStep',['../classCoverageControl_1_1Parameters.html#a1b37a3efdab146959388923831565c12',1,'CoverageControl::Parameters']]],
   ['ptruncationbnd_32',['pTruncationBND',['../classCoverageControl_1_1Parameters.html#ae226328e36dc112d58034b53fedbbe1a',1,'CoverageControl::Parameters']]],
   ['pworldmapsize_33',['pWorldMapSize',['../classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe',1,'CoverageControl::Parameters']]],
-  ['pypi_20installation_34',['PyPI Installation',['../installation.html#autotoc_md7',1,'']]],
+  ['pypi_20installation_34',['PyPI Installation',['../installation.html#autotoc_md9',1,'']]],
   ['python_20api_35',['Python API',['../group__python__api.html',1,'']]],
-  ['python_20interface_36',['Python Interface',['../quick_start.html#autotoc_md21',1,'']]]
+  ['python_20interface_36',['Python Interface',['../quick_start.html#autotoc_md23',1,'']]]
 ];
