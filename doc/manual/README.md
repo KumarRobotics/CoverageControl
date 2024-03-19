@@ -19,6 +19,16 @@ The library provides a simulation environment, algorithms, and GNN-based archite
 
 ---
 
+## Quick Start
+The library is available as a `pip` package. To install the package, run the following command:
+```bash
+pip install coverage_control
+```
+
+See the [Quick Start](quick_start.md) guide for a quick introduction to the library.
+
+---
+
 ## Citation
 ```
 @article{agarwal2024lpac,

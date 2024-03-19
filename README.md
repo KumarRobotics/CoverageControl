@@ -4,7 +4,7 @@ See full documentation at [https://KumarRobotics.github.io/CoverageControl/](htt
 
 Coverage control is the problem of navigating a robot swarm to collaboratively monitor features or a phenomenon of interest not known _a priori_.
 The library provides a simulation environment, algorithms, and GNN-based architectures for the coverage control problem.  
-<img align="right" width="300" src="https://github.com/KumarRobotics/CoverageControl/blob/main/doc/graphics/LPAC.gif">
+<img align="right" width="300" src="https://kumarrobotics.github.io/CoverageControl/LPAC.gif">
 
 **Key features:**  
 - The core library `CoverageControlCore` is written in `C++` and `CUDA` to handle large-scale simulations
@@ -12,6 +12,15 @@ The library provides a simulation environment, algorithms, and GNN-based archite
 - Several Centroidal Voronoi Tessellation (CVT)-based algorithms (aka Lloyd's algorithms)
 - Learnable Perception-Action-Communication (LPAC) architecture for the coverage control problem is implemented in `PyTorch` and `PyTorch Geometric`
 - GPU and CPU parallelization using `CUDA` and `OpenMP`
+
+---
+## Quick Start
+The library is available as a `pip` package. To install the package, run the following command:
+```bash
+pip install coverage_control
+```
+
+See the [Quick Start](https://kumarrobotics.github.io/CoverageControl/quick_start.html) guide for a quick introduction to the library.
 
 ---
 

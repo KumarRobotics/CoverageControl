@@ -1,7 +1,7 @@
 \page lpac LPAC Neural Network
 \tableofcontents
 
-# Prelminaries
+# Preliminaries
 We will organize files in a **workspace** directory: `${CoverageControl_ws}` (e.g., ~/CoverageControl\_ws).
 
 Download and extract the file `lpac_CoverageControl.tar.gz` to the workspace directory.
