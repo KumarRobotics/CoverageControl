@@ -20,6 +20,7 @@
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
 import importlib.metadata
+
 import coverage_control as m
 
 

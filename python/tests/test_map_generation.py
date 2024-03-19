@@ -20,23 +20,24 @@
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import sys
-import tempfile
 import warnings
-import numpy as np
 
 import coverage_control
+import numpy as np
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
-params_file = os.path.join(script_dir, "data/coverage_control_params.toml")
+params_file = os.path.join(script_dir, "data/params/coverage_control_params.toml")
 params = coverage_control.Parameters(params_file)
 
 features_file = os.path.join(script_dir, "data/features")
 robot_pos_file = os.path.join(script_dir, "data/robots_positions")
 
+
 def test_map_generation():
-    world_idf = coverage_control.WorldIDF(params, os.path.join(script_dir, features_file))
+    world_idf = coverage_control.WorldIDF(
+        params, os.path.join(script_dir, features_file)
+    )
     env = coverage_control.CoverageSystem(params, world_idf, robot_pos_file)
     world_map = env.GetWorldMap()
 
@@ -44,9 +45,11 @@ def test_map_generation():
     is_all_close = np.allclose(world_map, world_map_ref, atol=1e-2)
     assert is_all_close
     is_all_equal = np.equal(world_map, world_map_ref).all()
+
     if not is_all_equal and is_all_close:
         print("Max error: ", np.max(np.abs(world_map - world_map_ref)))
         warnings.warn("Not all elements are equal, but all elements are close")
+
 
 if __name__ == "__main__":
     test_map_generation()

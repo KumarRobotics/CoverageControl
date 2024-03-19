@@ -19,6 +19,9 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+"""
+An example class to use the CoverageControl library to run a coverage algorithm
+"""
 import sys
 import coverage_control as cc # Main library
 from coverage_control import CoverageSystem
@@ -31,6 +34,9 @@ from coverage_control import CoverageSystem
 from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
 
 class RunCoverageAlgorithm:
+    """
+    A class to run the coverage algorithm
+    """
 
     def __init__(self, params_filename=None):
         if params_filename is not None:
@@ -42,30 +48,36 @@ class RunCoverageAlgorithm:
         self.controller = CoverageAlgorithm(self.params_, self.params_.pNumRobots, self.env)
 
     def step(self):
+        """
+        Run one step of the coverage algorithm
+        """
         self.controller.ComputeActions();
         actions = self.controller.GetActions()
         error_flag = self.env.StepActions(actions)
         return error_flag
 
     def execute(self):
+        """
+        Run the coverage algorithm
+        """
         num_steps = 1
 
         init_cost = self.env.GetObjectiveValue()
-        print("Initial Coverage cost: " + str('{:.2e}'.format(init_cost)))
+        print(f"Initial Coverage cost: {init_cost:.2e}")
 
         while num_steps <= self.params_.pEpisodeSteps:
             if self.step():
-                print("Error in step " + str(num_steps))
+                print(f"Error in step {num_steps}")
                 break
 
             if self.controller.IsConverged():
-                print("Converged in step " + str(num_steps))
+                print(f"Converged in step {num_steps}")
                 break
 
             num_steps = num_steps + 1
 
         final_cost = self.env.GetObjectiveValue()
-        print("Improvement %: " + str('{:.2f}'.format(100 * (init_cost - final_cost)/init_cost)))
+        print(f"Improvement %: {100 * (init_cost - final_cost)/init_cost:.2f}")
 
 if __name__ == '__main__':
 

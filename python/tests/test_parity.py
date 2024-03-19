@@ -19,19 +19,18 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
-import os
-import sys
-import tempfile
 import warnings
-import numpy as np
 
 import coverage_control
+import numpy as np
 
 params = coverage_control.Parameters()
-    
+
+
 def test_parity():
     if not coverage_control.CudaUtils.IsCudaAvailable():
         warnings.warn("CUDA not available, skipping test")
+
         return
     env_cuda = coverage_control.CoverageSystem(params)
     world_idf_obj_cuda = env_cuda.GetWorldIDFObject()
@@ -45,15 +44,18 @@ def test_parity():
     world_map_cpu = world_idf_obj_cpu.GetWorldMap()
 
     is_close = np.allclose(world_map_cuda, world_map_cpu, atol=1e-2)
+
     if not is_close:
         diff = np.abs(world_map_cuda - world_map_cpu).max()
         print("Max difference: ", diff)
     assert is_close
     is_equal = np.array_equal(world_map_cuda, world_map_cpu)
+
     if not is_equal and is_close:
         diff = np.abs(world_map_cuda - world_map_cpu).max()
         print("Max difference: ", diff)
         warnings.warn("Not all elements are equal, but all elements are close")
+
 
 if __name__ == "__main__":
     test_parity()

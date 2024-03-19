@@ -1,19 +1,41 @@
 \page installation Installation
 \tableofcontents
 
-This page provides instructions for installing the Coverage Control library.
-The library can be installed using Docker or from source code.
-The Docker installation is the easiest way to get started, but the source installation provides more flexibility and control over the installation and usage of the library.
+# PyPI Installation
+The library is available on PyPI and can be installed using `pip`.
+It is recommended to install the library inside a virtual environment.
+```bash
+pip install coverage_control
+```
+
+The package depends on the following packages, which are installed as dependencies:
+- [PyTorch](https://pytorch.org/)
+- [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/)
+
+\note PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The package installs the default version (latest CUDA).
+
+We need the following optional packages for visualization and video generation:
+- `gnuplot` or `gnuplot-nox` (for visualizing environment)
+- `ffmpeg` (for generating videos)
+
+On Ubuntu, these can be installed using the following command:
+```bash
+sudo apt install gnuplot-nox ffmpeg
+```
+
+--------
 
 # Docker Installation
+
+Docker images are available for the library with different configurations and versions.
 
 ## Prerequisites (Optional)
 We will organize files in a **workspace** directory: `${CoverageControl_ws}` (e.g., ~/CoverageControl\_ws).
 The workspace directory is mounted to the docker container.
 
-Add the following lines to your `~/.bashrc` file for convenience.
+Add the following lines to your `${HOME}/.bashrc` file for convenience.
 ```bash
-export CoverageControl_ws=~/CoverageControl_ws # Change to your workspace directory
+export CoverageControl_ws=${HOME}/CoverageControl_ws # Change to your workspace directory
 ```
 \note Close and reopen the terminal for the changes to take effect.
 
@@ -59,35 +81,12 @@ The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tag
 |`python2.2.1-ros2humble` | `--with-ros`|
 |`python2.2.1` | None|
 
+The library is already built and installed in the container.
+However, if you want to build it again, you can do so following the [Installation from Source](#installation-from-source) instructions (except for the prerequisites).
+
 --------
 
-## Building and Executing
-
-The library is already built and installed in the container.
-However, if you want to build it again, you can do so using the following commands.
-
-The primary setup script is `setup.sh` located in the root of the repository.
-```bash
-cd ${CoverageControl_ws}/src/CoverageControl
-bash setup.sh -p --with-cuda -d ${CoverageControl_ws}
-```
-
-There are multiple options for building the library.
-
-Option | Description
---- | ---
-`-d [dir]` | The workspace directory
-`-p` | Build and install `python` bindings and `CoverageControlTorch` package
-`-g` | Installs globally (builds inside the workspace directory if `-d` is specified)
-`--with-cuda` | Build with CUDA support
-`--with-deps` | Install dependencies (Not required if using the docker image)
-
-**Testing:**
-```bash
-coverage_algorithm
-```
-
-# Installation from source
+# Installation From Source {#installation-from-source}
 ## Prerequisites
 
 The following packages are required to build the library:
@@ -112,7 +111,25 @@ The package also supports GPU acceleration using CUDA. To enable this feature, t
 
 --------
 
-## Building the Core Library
+## Automated Installation
+
+```bash
+pip install .
+```
+
+Testing the installation (from the root of the repository):
+
+Download the file `pytest_data.tar.gz` from the repository's release page and extract it to `python/tests/`.
+This will create a directory `python/tests/data`.
+
+Then run the following commands:
+```bash
+pip install pytest
+pytest
+```
+
+
+## Building the Core C++ Library
 
 We will organize files in a **workspace** directory: `${CoverageControl_ws}` (e.g., ~/CoverageControl\_ws).
 
@@ -136,40 +153,19 @@ cd ${CoverageControl_ws}/src/CoverageControl
 bash setup.sh --with-deps -d ${CoverageControl_ws}
 ```
 
+Testing the installation:
+```bash
+coverage_algorithm
+```
+
 There are multiple options for building the library.
 
 Option | Description
 --- | ---
 `-d <dir>` | The workspace directory
-`-p` | Build and install `python` packages (See [CoverageControlTorch Python Package](#coveragecontroltorch-python-package))
 `--with-cuda` | Build with CUDA support
-`--with-deps` | Install dependencies (CGAL 5.6)
 
 
-\warning Ubuntu 22.04 (Jammy) has CGAL 5.4 (libcgal-dev) in the official repositories, which has bugs and is not compatible with the library. The package requires `CGAL 5.6`, which is installed if `--with-deps` is used. The `--with-deps` option is only required for the first build as the downloaded files will persist in the workspace installation directory (`${CoverageControl_ws}/install`).
+\warning Ubuntu 22.04 (Jammy) has CGAL 5.4 (libcgal-dev) in the official repositories, which has bugs and is not compatible with the library. The package requires `CGAL 5.6`, which is automatically installed from the official CGAL repository through `CMake`.
 
 --------
-
-## Python Packages
-
-The library provides two `python` packages:
-- `%CoverageControl` (bindings for the core library)
-- `%CoverageControlTorch` (classes, utilities, and scripts for training and evaluating neural network policies)
-
-These can be installed by adding the `-p` option to the `setup.sh` script:
-```bash
-cd ${CoverageControl_ws}/src/CoverageControl
-bash setup.sh -p -d ${CoverageControl_ws}
-```
-\note It is recommended that `python` bindings are built inside a virtual environment.
-
-Test the installation by running the following commands:
-```bash
-python ${CoverageControl_ws}/src/CoverageControl/python/tests/coverage_algorithm.py
-```
-
-The `CoverageControlTorch` is built on top of `pytorch` and `pytorch-geometric`. Depending of whether you have `CUDA` installed, you can use either of the following files to install the package:
-- `setup_utils/requirements.txt` (for GPU)
-- `setup_utils/requirements_cpu.txt` (for CPU)
-
-\note Please change the `torch` and `torch-geometric` versions in the file to match your CUDA version.

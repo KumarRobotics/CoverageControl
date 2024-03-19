@@ -19,8 +19,12 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
-import sys
+"""
+A simple example of using the CoverageControl library
+"""
+
 import coverage_control as cc
+
 # Algorithms available:
 # ClairvoyantCVT
 # CentralizedCVT
@@ -34,25 +38,27 @@ params = cc.Parameters()
 env = cc.CoverageSystem(params)
 
 init_cost = env.GetObjectiveValue()
-print("Initial Coverage cost: " + str('{:.2e}'.format(init_cost)))
+print(f"Initial Coverage cost: {init_cost:.2e}")
 
 # Runs the coverage control algorithm
 controller = CoverageAlgorithm(params, env)
 
 for i in range(0, params.pEpisodeSteps):
     # Compute actions to be taken by the robots
-    controller.ComputeActions();
+    controller.ComputeActions()
     # Get actions from the controller
     actions = controller.GetActions()
+
     # Send actions to the environment
+
     if env.StepActions(actions):
-        print("Error in step " + str(i))
+        print(f"Error in step {i}")
         break
 
     if controller.IsConverged():
-        print("Converged in step " + str(i))
+        print(f"Converged in step {i}")
         break
 
 # print some metrics
 current_cost = env.GetObjectiveValue()
-print("Improvement %: " + str('{:.2f}'.format(100 * (init_cost - current_cost)/init_cost)))
+print(f"Improvement %: {100 * (init_cost - current_cost)/init_cost:.2f}")

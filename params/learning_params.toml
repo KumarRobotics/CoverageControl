@@ -1,4 +1,4 @@
-DataDir =  "${CoverageControl_ws}/datasets/lpac/" # Absolute location
+DataDir =  "${CoverageControl_ws}/lpac/" # Absolute location
 
 GPUs =  [0, 1]
 NumWorkers = 4
@@ -6,12 +6,12 @@ NumWorkers = 4
 # If a model is already present, it will be loaded
 # Similarly, for the optimizer
 [LPACModel]
-Dir = "${CoverageControl_ws}/datasets/lpac/models/"
+Dir = "${CoverageControl_ws}/lpac/models/"
 Model = "model.pt"
 Optimizer = "optimizer.pt"
 
 [CNNModel]
-Dir = "${CoverageControl_ws}/datasets/lpac/models/" # Absolute location
+Dir = "${CoverageControl_ws}/lpac/models/" # Absolute location
 Model = "model.pt"
 Optimizer = "optimizer.pt"
 

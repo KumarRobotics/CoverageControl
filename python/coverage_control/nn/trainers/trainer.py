@@ -19,18 +19,36 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Train a model using pytorch
+"""
+
 import time
+
 import torch
 
 __all__ = ["TrainModel"]
 
-class TrainModel():
+
+## @ingroup python_api
+class TrainModel:
     """
     Train a model using pytorch
 
     """
 
-    def __init__(self, model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, val_loader: torch.utils.data.DataLoader, optimizer: torch.optim.Optimizer, criterion: torch.nn.Module, epochs: int, device: torch.device, model_file: str, optimizer_file: str):
+    def __init__(
+        self,
+        model: torch.nn.Module,
+        train_loader: torch.utils.data.DataLoader,
+        val_loader: torch.utils.data.DataLoader,
+        optimizer: torch.optim.Optimizer,
+        criterion: torch.nn.Module,
+        epochs: int,
+        device: torch.device,
+        model_file: str,
+        optimizer_file: str,
+    ):
         """
         Initialize the model trainer
 
@@ -67,7 +85,7 @@ class TrainModel():
     def load_saved_model(self, model_path: str) -> None:
         """
         Load the saved model
-            
+
         Args:
             model_path: model path
         """
@@ -96,32 +114,38 @@ class TrainModel():
         val_loss_history = []
         start_time = time.time()
 
-        model_path = self.model_file.split('.')[0]
+        model_path = self.model_file.split(".")[0]
         # Train the model
+
         for epoch in range(self.epochs):
             # Training
             train_loss = self.TrainEpoch()
             train_loss_history.append(train_loss)
-            torch.save(train_loss_history, model_path + '_train_loss.pt')
+            torch.save(train_loss_history, model_path + "_train_loss.pt")
             # Print the loss
-            print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
-                  "Training Loss: {:.5f}.. ".format(train_loss))
-
+            print(
+                "Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
+                "Training Loss: {:.5f}.. ".format(train_loss),
+            )
 
             # Validation
+
             if self.val_loader is not None:
                 val_loss = self.validate_epoch(self.val_loader)
                 val_loss_history.append(val_loss)
-                torch.save(val_loss_history, model_path + '_val_loss.pt')
+                torch.save(val_loss_history, model_path + "_val_loss.pt")
 
                 # Save the best model
+
                 if val_loss < best_val_loss:
                     best_val_loss = val_loss
                     torch.save(self.model, self.model_file)
                     torch.save(self.optimizer, self.optimizer_file)
-                print("Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
-                      "Validation Loss: {:.5f}.. ".format(val_loss),
-                      "Best Validation Loss: {:.5f}.. ".format(best_val_loss))
+                print(
+                    "Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
+                    "Validation Loss: {:.5f}.. ".format(val_loss),
+                    "Best Validation Loss: {:.5f}.. ".format(best_val_loss),
+                )
 
             if train_loss < best_train_loss:
                 best_train_loss = train_loss
@@ -134,7 +158,6 @@ class TrainModel():
             elapsed_time = time.time() - start_time
             # Print elapsed time in minutes
             print("Elapsed time: {:.2f} minutes".format(elapsed_time / 60))
-
 
     # Train the model in batches
     def TrainEpoch(self) -> float:
@@ -152,6 +175,7 @@ class TrainModel():
 
         num_dataset = 0
         # Train the model in batches
+
         for batch_idx, (data, target) in enumerate(self.train_loader):
             # Move the data to the device
             data, target = data.to(self.device), target.to(self.device)
@@ -169,6 +193,7 @@ class TrainModel():
             loss = self.criterion(output, target)
 
             # Print batch number and loss
+
             if batch_idx % 10 == 0:
                 print("Batch: {}, Loss: {}".format(batch_idx, loss))
 
@@ -185,6 +210,7 @@ class TrainModel():
             num_dataset += 1
 
         # Return the training loss
+
         return train_loss / num_dataset
 
     # Validate the model in batches
@@ -227,6 +253,7 @@ class TrainModel():
                 num_dataset += 1
 
         # Return the validation loss
+
         return val_loss / num_dataset
 
     # Test the model in batches

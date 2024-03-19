@@ -29,9 +29,17 @@ from .gnn_backbone import GNNBackBone
 
 __all__ = ["LPAC"]
 
+"""
+Module for LPAC model
+"""
+
+## @ingroup python_api
 class LPAC(torch.nn.Module, GNNConfigParser):
+    """
+    LPAC neural network architecture
+    """
     def __init__(self, in_config):
-        super(LPAC, self).__init__()
+        super().__init__()
         self.cnn_config = in_config["CNNBackBone"]
         self.parse(in_config["GNNBackBone"])
         self.cnn_backbone = CNNBackBone(self.cnn_config)
@@ -46,6 +54,9 @@ class LPAC(torch.nn.Module, GNNConfigParser):
         self.register_buffer("actions_std", torch.ones(self.output_dim))
 
     def forward(self, data: torch_geometric.data.Data) -> torch.Tensor:
+        """
+        Forward pass of the LPAC model
+        """
         x, edge_index, edge_weight = data.x, data.edge_index, data.edge_weight
         pos = data.pos
         cnn_output = self.cnn_backbone(x.view(-1, x.shape[-3], x.shape[-2], x.shape[-1]))
@@ -70,10 +81,19 @@ class LPAC(torch.nn.Module, GNNConfigParser):
         return x
 
     def load_model(self, model_state_dict_path: str) -> None:
+        """
+        Load the model from the state dict
+        """
         self.load_state_dict(torch.load(model_state_dict_path), strict=False)
 
     def load_cnn_backbone(self, model_path: str) -> None:
+        """
+        Load the CNN backbone from the model path
+        """
         self.load_state_dict(torch.load(model_path).state_dict(), strict=False)
 
     def load_gnn_backbone(self, model_path: str) -> None:
+        """
+        Load the GNN backbone from the model path
+        """
         self.load_state_dict(torch.load(model_path).state_dict(), strict=False)

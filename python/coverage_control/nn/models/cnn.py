@@ -19,6 +19,9 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config
+"""
 import torch
 from torch_geometric.nn import MLP
 
@@ -27,28 +30,53 @@ from .config_parser import CNNConfigParser
 
 __all__ = ["CNN"]
 
+
+## @ingroup python_api
 class CNN(torch.nn.Module, CNNConfigParser):
     """
-    Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config
-    This is the current architecture used in the hybrid CNN-GNN
+    Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config.
     """
+
     def __init__(self, config: dict):
-        super(CNN, self).__init__()
-        self.Parse(config)
+        super().__init__()
+        self.parse(config)
 
         self.cnn_backbone = CNNBackBone(self.config)
-        self.mlp = MLP([self.latent_size, 2 * self.latent_size, 2 * self.latent_size, self.latent_size])
+        self.mlp = MLP(
+            [
+                self.latent_size,
+                2 * self.latent_size,
+                2 * self.latent_size,
+                self.latent_size,
+            ]
+        )
         self.linear = torch.nn.Linear(self.latent_size, self.output_dim)
 
-    def forward(self, x: torch.Tensor, return_embedding=False) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Forward pass through the network
+
+        Args:
+            x: Input tensor
+
+        Returns:
+            Output tensor
+        """
         x = self.cnn_backbone(x)
         x = self.mlp(x)
         x = self.linear(x)
+
         return x
 
     def load_cpp_model(self, model_path: str) -> None:
+        """
+        Loads a model saved in cpp jit format
+        """
         jit_model = torch.jit.load(model_path)
         self.load_state_dict(jit_model.state_dict(), strict=False)
 
     def load_model(self, model_path: str) -> None:
+        """
+        Loads a model saved in pytorch format
+        """
         self.load_state_dict(torch.load(model_path), strict=False)

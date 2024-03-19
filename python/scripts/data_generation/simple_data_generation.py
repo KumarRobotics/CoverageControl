@@ -21,11 +21,11 @@
 
 # @file simple_data_generation.py
 # This file contains the code to generate a dataset for learning
-# 
+#
 
 # Uses the following configuration given in a toml file:
-# DataDir = "~/CoverageControl_ws/src/CoverageControl/" # Absolute path to the root of the repository
-# EnvironmentConfig = "params/coverage_control_params.toml" # Relative to DataDir
+# DataDir =  "${CoverageControl_ws}/datasets/lpac" # Absolute location
+# EnvironmentConfig = "${CoverageControl_ws}/datasets/lpac/coverage_control_params.toml" # Absolute location
 #
 # NumDataset = 1000
 #
@@ -35,13 +35,16 @@
 #
 # # The robots stop moving once the algorithm has converged
 # # Having some of these converged steps can help in stabilizing robot actions
-# ConvergedDataRatio = 0.25
+# ConvergedDataRatio = 0.02
 #
 # # Resizing of maps and Sparsification of tensors are triggered every TriggerPostProcessing dataset
 # # This should be set based on RAM resources available on the system
 # TriggerPostProcessing = 100
 #
 # CNNMapSize = 32
+
+## @file simple_data_generation.py
+#  @brief Generates a dataset for coverage control learning
 
 import os
 import sys
@@ -55,7 +58,8 @@ from coverage_control import CoverageSystem
 from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
 from coverage_control.nn import CoverageEnvUtils
 
-class DatasetGenerator():
+## @ingroup python_api
+class SimpleDatasetGenerator():
     """
     Class for generating dataset for learning
     """
@@ -252,4 +256,4 @@ if __name__ == '__main__':
         append_folder = sys.argv[2]
     else:
         append_folder = None
-    DatasetGenerator(config_file, append_folder)
+    SimpleDatasetGenerator(config_file, append_folder)

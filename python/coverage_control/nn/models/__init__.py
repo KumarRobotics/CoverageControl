@@ -1,8 +1,10 @@
-from __future__ import annotations
+"""
+This module contains the implementation of the LPAC architecture.
+"""
 
-__name__ = "models"
+from __future__ import annotations
 
 from .cnn import CNN
 from .lpac import LPAC
 
-__all__ = ["__name__", "CNN", "LPAC"]
+__all__ = ["CNN", "LPAC"]

@@ -19,30 +19,38 @@
 # You should have received a copy of the GNU General Public License along with
 # CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+## @file eval_single_env.py
+#  @brief Evaluate a single dataset with multiple controllers
+
 import os
 import sys
-import numpy as np
-
-import torch
 
 import coverage_control as cc
-from coverage_control import IOUtils
-from coverage_control import CoverageSystem
-from coverage_control import Parameters, WorldIDF
+import numpy as np
+from coverage_control import CoverageSystem, IOUtils, WorldIDF
+
 from controller import ControllerCVT, ControllerNN
 
+
+## @ingroup python_api
 class EvaluatorSingle:
-    def __init__(self, config):
-        self.config = config
+    """
+    Class to evaluate a single environment with multiple controllers
+    """
+
+    def __init__(self, in_config):
+        self.config = in_config
         self.eval_dir = IOUtils.sanitize_path(self.config["EvalDir"]) + "/"
         self.env_dir = IOUtils.sanitize_path(self.config["EnvironmentDataDir"]) + "/"
         self.feature_file = self.env_dir + self.config["FeatureFile"]
         self.pos_file = self.env_dir + self.config["RobotPosFile"]
+
         if not os.path.exists(self.env_dir):
             os.makedirs(self.env_dir)
 
         if not os.path.exists(self.feature_file):
             raise ValueError(f"Feature file {self.feature_file} does not exist")
+
         if not os.path.exists(self.pos_file):
             raise ValueError(f"Robot position file {self.pos_file} does not exist")
 
@@ -60,15 +68,15 @@ class EvaluatorSingle:
         self.plot_map = self.config["PlotMap"]
         self.generate_video = self.config["GenerateVideo"]
 
-    def Evaluate(self, save = True):
+    def evaluate(self, save=True):
         cost_data = np.zeros((self.num_controllers, self.num_steps))
         world_idf = WorldIDF(self.cc_params, self.feature_file)
         env_main = CoverageSystem(self.cc_params, world_idf, self.pos_file)
-        robot_init_pos = env_main.GetRobotPositions(force_no_noise = True)
+        robot_init_pos = env_main.GetRobotPositions(force_no_noise=True)
 
         if self.plot_map:
             map_dir = self.eval_dir + "/plots/"
-            os.makedirs(map_dir, exist_ok = True)
+            os.makedirs(map_dir, exist_ok=True)
             env_main.PlotInitMap(map_dir, "InitMap")
 
         for controller_id in range(self.num_controllers):
@@ -83,36 +91,57 @@ class EvaluatorSingle:
                 Controller = ControllerNN
             else:
                 Controller = ControllerCVT
-            controller = Controller(self.controllers_configs[controller_id], self.cc_params, env)
-            cost_data[controller_id, step_count] = env.GetObjectiveValue()
+            controller = Controller(
+                self.controllers_configs[controller_id], self.cc_params, env
+            )
+            initial_objective_value = env.GetObjectiveValue()
+            cost_data[controller_id, step_count] = (
+                env.GetObjectiveValue() / initial_objective_value
+            )
             step_count = step_count + 1
+
             while step_count < self.num_steps:
-                objective_value, converged = controller.Step(env)
-                cost_data[controller_id, step_count] = objective_value
+                objective_value, converged = controller.step(env)
+                cost_data[controller_id, step_count] = (
+                    objective_value / initial_objective_value
+                )
+
                 if converged and not self.generate_video:
-                    cost_data[controller_id, step_count:] = objective_value
+                    cost_data[controller_id, step_count:] = (
+                        objective_value / initial_objective_value
+                    )
+
                     break
+
                 if self.generate_video:
                     env.RecordPlotData()
 
                 step_count = step_count + 1
+
                 if step_count % 100 == 0:
-                    print(f"Step {step_count}, Objective Value {objective_value}")
+                    print(
+                        f"Step {step_count}, Objective Value {cost_data[controller_id, step_count - 1]}"
+                    )
                     print(f"{controller.name}, Step {step_count}")
 
-            if save == True:
+            if save is True:
                 controller_dir = self.eval_dir + "/" + controller_name
+
                 if not os.path.exists(controller_dir):
                     os.makedirs(controller_dir)
 
                 controller_data_file = controller_dir + "/" + "eval.csv"
-                np.savetxt(controller_data_file, cost_data[controller_id, :], delimiter=",")
+                np.savetxt(
+                    controller_data_file, cost_data[controller_id, :], delimiter=","
+                )
+
             if self.generate_video:
                 controller_dir = self.eval_dir + "/" + controller_name
                 env.RenderRecordedMap(controller_dir, "video.mp4")
 
             del controller
             del env
+
         return cost_data
 
 
@@ -122,4 +151,4 @@ if __name__ == "__main__":
     config = IOUtils.load_toml(config_file)
 
     evaluator = EvaluatorSingle(config)
-    evaluator.Evaluate()
+    evaluator.evaluate()

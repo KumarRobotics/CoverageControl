@@ -12,11 +12,10 @@ See \ref params/coverage_control_params.toml for an example configuration file.
 
 # Python Interface
 
-Import the `CoverageControl` library and the `ClairvoyantCVT` algorithm.
+Import the `coverage_control` library and the `ClairvoyantCVT` algorithm.
 ```python
-import sys
-import CoverageControl # Main library
-from CoverageControl import ClairvoyantCVT as CoverageAlgorithm
+import coverage_control as cc
+from coverage_control import ClairvoyantCVT as CoverageAlgorithm
 ```
 
 You can choose one of the following algorithms instead of `ClairvoyantCVT`:
@@ -27,15 +26,15 @@ You can choose one of the following algorithms instead of `ClairvoyantCVT`:
 
 Create a `CoverageControl::Parameters` object and load the configuration file:
 ```python
-params = CoverageControl.Parameters() # for default parameters
+params = cc.Parameters() # for default parameters
 ```
 
 Create a simulation environment:
 ```python
-env = CoverageControl.CoverageSystem(params)
+env = cc.CoverageSystem(params)
 ```
 
-Plot the initial environment:
+Plot the initial environment (needs `gnuplot` installed):
 ```python
 env.PlotInitMap("init_map");
 ```
@@ -43,7 +42,7 @@ env.PlotInitMap("init_map");
 Print the initial coverage cost:
 ```python
 init_cost = env.GetObjectiveValue()
-print("Initial Coverage cost: " + str('{:.2e}'.format(init_cost)))
+print(f"Initial Coverage cost: {init_cost:.2e}")
 ```
 
 Create a controller using the `CoverageAlgorithm` and the environment:
@@ -58,20 +57,22 @@ for i in range(0, params.pEpisodeSteps):
     controller.ComputeActions();
     # Get actions from the controller
     actions = controller.GetActions()
+
     # Send actions to the environment
     if env.StepActions(actions):
-        print("Error in step " + str(i))
+        print(f"Error in step {i}")
         break
 
     if controller.IsConverged():
-        print("Converged in step " + str(i))
+        print(f"Converged in step {i}")
         break
+
 ```
 
 Print improvement in cost:
 ```python
 current_cost = env.GetObjectiveValue()
-print("Improvement %: " + str('{:.2f}'.format(100 * (init_cost - current_cost)/init_cost)))
+print(f"Improvement %: {100 * (init_cost - current_cost)/init_cost:.2f}")
 ```
 
 Plot the final state of the environment:
@@ -80,7 +81,7 @@ env.PlotSystemMap("final_map");
 ```
 
 
-See \ref python/tests/coverage_simple.py and \ref python/tests/coverage_class.py for complete examples.
+See \ref python/scripts/coverage_env/coverage_simple.py and \ref python/scripts/coverage_env/coverage_class.py for complete examples.
 
 ---
 

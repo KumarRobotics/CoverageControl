@@ -19,29 +19,32 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Utility functions for coverage environment
+"""
+
 ## @file coverage_env_utils.py
 #  @brief Utility functions for coverage environment
 
 import math
+
 import numpy
-import copy
+
 # import cv2
 import torch
-import torchvision
 import torch_geometric
-from torch_geometric.data import Dataset
-from scipy.ndimage import gaussian_filter
+import torchvision
 from scipy.spatial import distance_matrix
 
-from ...core import PointVector, DblVector, DblVectorVector
-from ...core import Parameters
-from ...core import CoverageSystem
+from ...core import CoverageSystem, DblVector, DblVectorVector, Parameters, PointVector
+
 
 ## @ingroup python_api
 class CoverageEnvUtils:
     """
     Class for utility functions for coverage environment
     """
+
     @staticmethod
     def to_tensor(data: object) -> torch.Tensor:
         """
@@ -63,25 +66,34 @@ class CoverageEnvUtils:
             ValueError: if data type is not supported
 
         """
+
         if isinstance(data, numpy.ndarray):
             return torch.from_numpy(numpy.copy(data.astype(numpy.float32)))
-        elif isinstance(data, PointVector):
+
+        if isinstance(data, PointVector):
             data_tensor = torch.Tensor(len(data), 2)
-            for i in range(len(data)):
+
+            for i, _ in enumerate(data):
                 data_tensor[i] = CoverageEnvUtils.to_tensor(data[i])
+
             return data_tensor
-        elif isinstance(data, DblVectorVector):
+
+        if isinstance(data, DblVectorVector):
             data_tensor = torch.Tensor(len(data))
-            for i in range(len(data)):
+
+            for i, _ in enumerate(data):
                 data_tensor[i] = CoverageEnvUtils.to_tensor(data[i])
+
             return data_tensor
-        elif isinstance(data, DblVector):
+
+        if isinstance(data, DblVector):
             data_tensor = torch.Tensor(len(data))
-            for i in range(len(data)):
+
+            for i, _ in enumerate(data):
                 data_tensor[i] = float(data[i])
+
             return data_tensor
-        else:
-            raise ValueError('Unknown data type: {}'.format(type(data)))
+        raise ValueError(f"Unknown data type: {type(data)}")
 
     @staticmethod
     def get_raw_local_maps(env: CoverageSystem, params: Parameters) -> torch.Tensor:
@@ -96,9 +108,13 @@ class CoverageEnvUtils:
             torch.Tensor: raw local maps
 
         """
-        local_maps = torch.zeros((env.GetNumRobots(), params.pLocalMapSize, params.pLocalMapSize))
+        local_maps = torch.zeros(
+            (env.GetNumRobots(), params.pLocalMapSize, params.pLocalMapSize)
+        )
+
         for r_idx in range(env.GetNumRobots()):
             local_maps[r_idx] = CoverageEnvUtils.to_tensor(env.GetRobotLocalMap(r_idx))
+
         return local_maps
 
     @staticmethod
@@ -114,13 +130,21 @@ class CoverageEnvUtils:
             torch.Tensor: raw obstacle maps
 
         """
-        obstacle_maps = torch.zeros((env.GetNumRobots(), params.pLocalMapSize, params.pLocalMapSize))
+        obstacle_maps = torch.zeros(
+            (env.GetNumRobots(), params.pLocalMapSize, params.pLocalMapSize)
+        )
+
         for r_idx in range(env.GetNumRobots()):
-            obstacle_maps[r_idx] = CoverageEnvUtils.to_tensor(env.GetRobotObstacleMap(r_idx))
+            obstacle_maps[r_idx] = CoverageEnvUtils.to_tensor(
+                env.GetRobotObstacleMap(r_idx)
+            )
+
         return obstacle_maps
 
     @staticmethod
-    def get_communication_maps(env: CoverageSystem, params: Parameters, map_size: int) -> torch.Tensor:
+    def get_communication_maps(
+        env: CoverageSystem, params: Parameters, map_size: int
+    ) -> torch.Tensor:
         """
         Generate communication maps from positions
 
@@ -140,9 +164,17 @@ class CoverageEnvUtils:
         num_robots = env.GetNumRobots()
 
         comm_maps = torch.zeros((num_robots, 2, map_size, map_size))
+
         for r_idx in range(num_robots):
-            neighbors_pos = CoverageEnvUtils.to_tensor(env.GetRelativePositonsNeighbors(r_idx))
-            scaled_indices = torch.round(neighbors_pos * map_size / (params.pCommunicationRange * params.pResolution * 2.) + (map_size / 2. - params.pResolution / 2.))
+            neighbors_pos = CoverageEnvUtils.to_tensor(
+                env.GetRelativePositonsNeighbors(r_idx)
+            )
+            scaled_indices = torch.round(
+                neighbors_pos
+                * map_size
+                / (params.pCommunicationRange * params.pResolution * 2.0)
+                + (map_size / 2.0 - params.pResolution / 2.0)
+            )
             # comm_range_mask = relative_dist[r_idx] < params.pCommunicationRange
             # scaled_indices = scaled_relative_pos[r_idx][comm_range_mask]
             indices = torch.transpose(scaled_indices, 1, 0)
@@ -150,8 +182,13 @@ class CoverageEnvUtils:
             values = neighbors_pos / params.pCommunicationRange
             # values = values / params.pCommunicationRange
             # values = (values + params.pCommunicationRange) / (2. * params.pCommunicationRange)
-            comm_maps[r_idx][0] = torch.sparse_coo_tensor(indices, values[:, 0], torch.Size([map_size, map_size])).to_dense()
-            comm_maps[r_idx][1] = torch.sparse_coo_tensor(indices, values[:, 1], torch.Size([map_size, map_size])).to_dense()
+            comm_maps[r_idx][0] = torch.sparse_coo_tensor(
+                indices, values[:, 0], torch.Size([map_size, map_size])
+            ).to_dense()
+            comm_maps[r_idx][1] = torch.sparse_coo_tensor(
+                indices, values[:, 1], torch.Size([map_size, map_size])
+            ).to_dense()
+
         return comm_maps
         # positions = env.GetRobotPositions()
         # robot_positions = CoverageEnvUtils.to_tensor(env.GetRobotPositions())
@@ -178,12 +215,23 @@ class CoverageEnvUtils:
         """
         shape = maps.shape
         maps = maps.view(-1, maps.shape[-2], maps.shape[-1])
-        maps = torchvision.transforms.functional.resize(maps, (resized_map_size, resized_map_size), interpolation=torchvision.transforms.InterpolationMode.BILINEAR, antialias=True)
+        maps = torchvision.transforms.functional.resize(
+            maps,
+            (resized_map_size, resized_map_size),
+            interpolation=torchvision.transforms.InterpolationMode.BILINEAR,
+            antialias=True,
+        )
         maps = maps.view(shape[:-2] + maps.shape[-2:])
+
         return maps
 
     @staticmethod
-    def get_maps(env: CoverageSystem, params: Parameters, resized_map_size: int, use_comm_map: bool) -> torch.Tensor:
+    def get_maps(
+        env: CoverageSystem,
+        params: Parameters,
+        resized_map_size: int,
+        use_comm_map: bool,
+    ) -> torch.Tensor:
         """
         Get maps for the coverage environment
 
@@ -200,14 +248,31 @@ class CoverageEnvUtils:
 
         num_robots = env.GetNumRobots()
         raw_local_maps = CoverageEnvUtils.get_raw_local_maps(env, params)
-        resized_local_maps = CoverageEnvUtils.resize_maps(raw_local_maps, resized_map_size)
+        resized_local_maps = CoverageEnvUtils.resize_maps(
+            raw_local_maps, resized_map_size
+        )
         raw_obstacle_maps = CoverageEnvUtils.get_raw_obstacle_maps(env, params)
-        resized_obstacle_maps = CoverageEnvUtils.resize_maps(raw_obstacle_maps, resized_map_size)
+        resized_obstacle_maps = CoverageEnvUtils.resize_maps(
+            raw_obstacle_maps, resized_map_size
+        )
+
         if use_comm_map:
-            comm_maps = CoverageEnvUtils.get_communication_maps(env, params, resized_map_size)
-            maps = torch.cat([resized_local_maps.unsqueeze(1), comm_maps, resized_obstacle_maps.unsqueeze(1)], 1)
+            comm_maps = CoverageEnvUtils.get_communication_maps(
+                env, params, resized_map_size
+            )
+            maps = torch.cat(
+                [
+                    resized_local_maps.unsqueeze(1),
+                    comm_maps,
+                    resized_obstacle_maps.unsqueeze(1),
+                ],
+                1,
+            )
         else:
-            maps = torch.cat([resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1)
+            maps = torch.cat(
+                [resized_local_maps.unsqueeze(1), resized_obstacle_maps.unsqueeze(1)], 1
+            )
+
         return maps
 
     @staticmethod
@@ -223,8 +288,10 @@ class CoverageEnvUtils:
         """
         features = env.GetRobotVoronoiFeatures()
         tensor_features = torch.zeros((len(features), len(features[0])))
-        for r_idx in range(len(features)):
+
+        for r_idx, _ in enumerate(features):
             tensor_features[r_idx] = CoverageEnvUtils.to_tensor(features[r_idx])
+
         return tensor_features
 
     @staticmethod
@@ -234,38 +301,73 @@ class CoverageEnvUtils:
 
         Args:
             env: coverage environment
-        
+
         Returns:
             torch.Tensor: robot positions
         """
         robot_positions = CoverageEnvUtils.to_tensor(env.GetRobotPositions())
+
         return robot_positions
 
     @staticmethod
     def get_weights(env: CoverageSystem, params: Parameters) -> torch.Tensor:
-        onebyexp = 1. / math.exp(1.)
+        """
+        Get edge weights for the communication graph
+
+        Args:
+            env: coverage environment
+            params: parameters
+
+        Returns:
+            torch.Tensor: edge weights
+        """
+        onebyexp = 1.0 / math.exp(1.0)
         robot_positions = CoverageEnvUtils.to_tensor(env.GetRobotPositions())
         pairwise_distances = torch.cdist(robot_positions, robot_positions, 2)
-        edge_weights = torch.exp(-(pairwise_distances.square())/(params.pCommunicationRange * params.pCommunicationRange))
+        edge_weights = torch.exp(
+            -(pairwise_distances.square())
+            / (params.pCommunicationRange * params.pCommunicationRange)
+        )
         edge_weights.masked_fill_(edge_weights < onebyexp, 0)
         edge_weights.fill_diagonal_(0)
+
         return edge_weights
 
     # Legacy edge weights used in previous research
     # The weights are proportional to the distance
     # Trying to move away from this
     @staticmethod
-    def robot_positions_to_edge_weights(robot_positions: PointVector, world_map_size: int, comm_range: float) -> torch.Tensor:
+    def robot_positions_to_edge_weights(
+        robot_positions: PointVector, world_map_size: int, comm_range: float
+    ) -> torch.Tensor:
+        """
+        Convert robot positions to edge weights
+
+        Args:
+            robot_positions: robot positions
+            world_map_size: size of the world map
+            comm_range: communication range
+
+        Returns:
+            torch.Tensor: edge weights
+        """
         x = numpy.array(robot_positions)
-        S = distance_matrix(x, x)
-        S[S > comm_range] = 0
-        C = (world_map_size**2) / (S.shape[0]**2)
-        C = 3 / C
-        graph_obs = C * S
+        s_mat = distance_matrix(x, x)
+        s_mat[s_mat > comm_range] = 0
+        c_mat = (world_map_size**2) / (s_mat.shape[0] ** 2)
+        c_mat = 3 / c_mat
+        graph_obs = c_mat * s_mat
+
         return graph_obs
 
     @staticmethod
-    def get_torch_geometric_data(env: CoverageSystem, params: Parameters, use_cnn: bool, use_comm_map: bool, map_size: int) -> torch_geometric.data.Data:
+    def get_torch_geometric_data(
+        env: CoverageSystem,
+        params: Parameters,
+        use_cnn: bool,
+        use_comm_map: bool,
+        map_size: int,
+    ) -> torch_geometric.data.Data:
         """
         Get torch geometric data
         In this function, the edge weights are binary
@@ -281,6 +383,7 @@ class CoverageEnvUtils:
             torch_geometric.data.Data: torch geometric data
 
         """
+
         if use_cnn:
             features = CoverageEnvUtils.get_maps(env, params, map_size, use_comm_map)
         else:
@@ -289,13 +392,13 @@ class CoverageEnvUtils:
         edge_index = edge_weights.indices().long()
         weights = edge_weights.values().float()
         pos = CoverageEnvUtils.get_robot_positions(env)
-        pos = (pos + params.pWorldMapSize/2.0)/params.pWorldMapSize
+        pos = (pos + params.pWorldMapSize / 2.0) / params.pWorldMapSize
         data = torch_geometric.data.Data(
-                x=features,
-                edge_index=edge_index.clone().detach(),
-                edge_weight=weights.clone().detach(),
-                pos=pos.clone().detach()
-                )
+            x=features,
+            edge_index=edge_index.clone().detach(),
+            edge_weight=weights.clone().detach(),
+            pos=pos.clone().detach(),
+        )
 
         return data
 

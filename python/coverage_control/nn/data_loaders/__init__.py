@@ -1,9 +1,23 @@
+"""
+This module contains the data loader utilities for the coverage environment.
+"""
+
 from __future__ import annotations
 
-__name__ = "data_loaders"
-
-from .data_loader_utils import DataLoaderUtils
-from .loaders import LocalMapCNNDataset, LocalMapGNNDataset, CNNGNNDataset, VoronoiGNNDataset
 from .coverage_env_utils import CoverageEnvUtils
+from .data_loader_utils import DataLoaderUtils
+from .loaders import (
+    CNNGNNDataset,
+    LocalMapCNNDataset,
+    LocalMapGNNDataset,
+    VoronoiGNNDataset,
+)
 
-__all__ = ["__name__", "DataLoaderUtils", "CoverageEnvUtils", "LocalMapCNNDataset", "LocalMapGNNDataset", "CNNGNNDataset", "VoronoiGNNDataset"]
+__all__ = [
+    "DataLoaderUtils",
+    "CoverageEnvUtils",
+    "LocalMapCNNDataset",
+    "LocalMapGNNDataset",
+    "CNNGNNDataset",
+    "VoronoiGNNDataset",
+]

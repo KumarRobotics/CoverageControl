@@ -1,8 +1,9 @@
+"""
+Provides CVT-based algorithms for coverage control.
+"""
 
 from __future__ import annotations
 
-__name__ = "algorithms"
-
-from .._core import NearOptimalCVT, ClairvoyantCVT, CentralizedCVT, DecentralizedCVT
+from .._core import CentralizedCVT, ClairvoyantCVT, DecentralizedCVT, NearOptimalCVT
 
 __all__ = ["NearOptimalCVT", "ClairvoyantCVT", "CentralizedCVT", "DecentralizedCVT"]

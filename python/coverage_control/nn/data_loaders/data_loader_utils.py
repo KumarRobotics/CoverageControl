@@ -19,24 +19,19 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
-import os
-import sys
-if sys.version_info[1] < 11:
-    import tomli as tomllib
-else:
-    import tomllib
-import yaml
 import torch
 import torch_geometric
 from coverage_control import IOUtils
 
 __all__ = ["DataLoaderUtils"]
 
+
 ## @ingroup python_api
 class DataLoaderUtils:
     """
     Class to provide utility functions to load tensors and configuration files
     """
+
     @staticmethod
     def load_maps(path: str, use_comm_map: bool = False) -> torch.tensor:
         """
@@ -67,10 +62,13 @@ class DataLoaderUtils:
             maps = torch.cat([local_maps, comm_maps, obstacle_maps], 2)
         else:
             maps = torch.cat([local_maps, obstacle_maps], 2)
+
         return maps
 
     @staticmethod
-    def load_features(path: str, output_dim: int = None) -> tuple[torch.tensor, torch.tensor, torch.tensor]:
+    def load_features(
+        path: str, output_dim: int = None
+    ) -> tuple[torch.tensor, torch.tensor, torch.tensor]:
         """
         Function to load normalized features
 
@@ -88,12 +86,26 @@ class DataLoaderUtils:
             features_mean: Mean of the features
             features_std: Standard deviation of the features
         """
-        normalized_coverage_features = IOUtils.load_tensor(f"{path}/normalized_coverage_features.pt")
-        coverage_features_mean = IOUtils.load_tensor(f"{path}/../coverage_features_mean.pt")
-        coverage_features_std = IOUtils.load_tensor(f"{path}/../coverage_features_std.pt")
+        normalized_coverage_features = IOUtils.load_tensor(
+            f"{path}/normalized_coverage_features.pt"
+        )
+        coverage_features_mean = IOUtils.load_tensor(
+            f"{path}/../coverage_features_mean.pt"
+        )
+        coverage_features_std = IOUtils.load_tensor(
+            f"{path}/../coverage_features_std.pt"
+        )
+
         if output_dim is not None:
-            normalized_coverage_features = normalized_coverage_features[:, :, :output_dim]
-        return normalized_coverage_features, coverage_features_mean, coverage_features_std
+            normalized_coverage_features = normalized_coverage_features[
+                :, :, :output_dim
+            ]
+
+        return (
+            normalized_coverage_features,
+            coverage_features_mean,
+            coverage_features_std,
+        )
 
     @staticmethod
     def load_actions(path: str) -> tuple[torch.tensor, torch.tensor, torch.tensor]:
@@ -117,12 +129,11 @@ class DataLoaderUtils:
         actions = IOUtils.load_tensor(f"{path}/normalized_actions.pt")
         actions_mean = IOUtils.load_tensor(f"{path}/../actions_mean.pt")
         actions_std = IOUtils.load_tensor(f"{path}/../actions_std.pt")
+
         return actions, actions_mean, actions_std
 
     @staticmethod
     def load_robot_positions(path: str) -> torch.tensor:
-        robot_positions = IOUtils.load_tensor(f"{path}/robot_positions.pt")
-        return robot_positions
         """
         Function to load robot positions
 
@@ -136,6 +147,9 @@ class DataLoaderUtils:
             robot_positions: The loaded robot positions
 
         """
+        robot_positions = IOUtils.load_tensor(f"{path}/robot_positions.pt")
+
+        return robot_positions
 
     @staticmethod
     def load_edge_weights(path: str) -> torch.tensor:
@@ -154,10 +168,13 @@ class DataLoaderUtils:
         """
         edge_weights = IOUtils.load_tensor(f"{path}/edge_weights.pt")
         edge_weights.to_dense()
+
         return edge_weights
 
     @staticmethod
-    def to_torch_geometric_data(feature: torch.tensor, edge_weights: torch.tensor, pos: torch.tensor = None) -> torch_geometric.data.Data:
+    def to_torch_geometric_data(
+        feature: torch.tensor, edge_weights: torch.tensor, pos: torch.tensor = None
+    ) -> torch_geometric.data.Data:
         """
         The function converts the feature, edge_weights and pos to a torch_geometric.data.Data object
         This is essential for using the data with the PyTorch Geometric library
@@ -183,17 +200,19 @@ class DataLoaderUtils:
         edge_index = edge_weights.indices().long()
         weights = edge_weights.values().float()
         # weights = torch.reciprocal(edge_weights.values().float())
-        if pos == None:
+
+        if pos is None:
             data = torch_geometric.data.Data(
-                    x=feature,
-                    edge_index=edge_index.clone().detach(),
-                    edge_weight=weights.clone().detach()
-                    )
+                x=feature,
+                edge_index=edge_index.clone().detach(),
+                edge_weight=weights.clone().detach(),
+            )
         else:
             data = torch_geometric.data.Data(
-                    x=feature,
-                    edge_index=edge_index.clone().detach(),
-                    edge_weight=weights.clone().detach(),
-                    pos=pos.clone().detach()
-                    )
+                x=feature,
+                edge_index=edge_index.clone().detach(),
+                edge_weight=weights.clone().detach(),
+                pos=pos.clone().detach(),
+            )
+
         return data

@@ -19,16 +19,21 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import sys
+
 if sys.version_info[1] < 11:
     import tomli as tomllib
 else:
     import tomllib
+
 import coverage_control as cc
+
 
 def test_parameters():
     # Test the parameters
-    params_file = "params/coverage_control_params.toml"
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    params_file = os.path.join(script_dir, "data/params/coverage_control_params.toml")
     params = cc.Parameters(params_file)
 
     with open(params_file, "rb") as f:
@@ -45,11 +50,13 @@ def test_parameters():
     # Extract all the leaf nodes from the toml file
     def extract_leaf_nodes(params_toml):
         leaf_nodes = []
+
         for key in params_toml:
             if isinstance(params_toml[key], dict):
                 leaf_nodes.extend(extract_leaf_nodes(params_toml[key]))
             else:
                 leaf_nodes.append(key)
+
         return leaf_nodes
 
     params_toml = extract_leaf_nodes(params_toml)
@@ -60,6 +67,7 @@ def test_parameters():
 
     for key in dir_params:
         assert key in params_toml
+
 
 if __name__ == "__main__":
     test_parameters()

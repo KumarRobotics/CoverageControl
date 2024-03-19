@@ -19,15 +19,25 @@
 # You should have received a copy of the GNU General Public License along with
 # CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+## @file io_utils.py
+#  @brief The module provides utility functions for loading data from files
+
+"""
+The module provides utility functions for loading data from files
+"""
+
 import os
 import sys
+
+import torch
+import yaml
+
 if sys.version_info[1] < 11:
     import tomli as tomllib
 else:
     import tomllib
-import yaml
-import torch
 
+## @ingroup python_api
 class IOUtils:
     """
     Class provides the following utility functions:
@@ -38,6 +48,10 @@ class IOUtils:
 
     @staticmethod
     def sanitize_path(path_str: str) -> str:
+        """
+        Function to sanitize a path string
+        """
+
         return os.path.normpath(os.path.expanduser(os.path.expandvars(path_str)))
 
     @staticmethod
@@ -58,15 +72,18 @@ class IOUtils:
         """
         # Throw error if path does not exist
         path = IOUtils.sanitize_path(path)
+
         if not os.path.exists(path):
             raise FileNotFoundError(f"IOUtils::load_tensor: File not found: {path}")
         # Load data
         data = torch.load(path)
         # Extract tensor if data is in jit script format
+
         if isinstance(data, torch.jit.ScriptModule):
             tensor = list(data.parameters())[0]
         else:
             tensor = data
+
         return tensor
 
     @staticmethod
@@ -86,19 +103,26 @@ class IOUtils:
 
         path = IOUtils.sanitize_path(path)
         # Throw error if path does not exist
+
         if not os.path.exists(path):
             raise FileNotFoundError(f"IOUtils::load_yaml File not found: {path}")
         # Load data
-        with open(path, "r") as f:
+        with open(path, "rb") as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
+
         return data
 
     @staticmethod
-    def load_toml(path: str) -> dict: # Throw error if path does not exist
+    def load_toml(path: str) -> dict:  # Throw error if path does not exist
+        """
+        Function to load a toml file
+        """
         path = IOUtils.sanitize_path(path)
+
         if not os.path.exists(path):
             raise FileNotFoundError(f"IOUtils::load_toml: File not found: {path}")
         # Load data
         with open(path, "rb") as f:
             data = tomllib.load(f)
+
         return data

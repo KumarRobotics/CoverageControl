@@ -19,27 +19,61 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
-class CNNConfigParser():
+"""
+This file contains the configuration parser for the models
+"""
+
+
+class CNNConfigParser:
+    """
+    Class to parse the configuration for the CNN model
+    """
+
     def __init__(self):
-        pass
-
-    def Parse(self, config: dict) -> None:
-        self.config = config
-        self.input_dim = self.config['InputDim']
-        self.output_dim = self.config['OutputDim']
-        self.num_layers = self.config['NumLayers']
-        self.latent_size = self.config['LatentSize']
-        self.kernel_size = self.config['KernelSize']
-        self.image_size = self.config['ImageSize']
-
-class GNNConfigParser():
-    def __init__(self, config):
-        pass
+        self.config = None
+        self.input_dim = None
+        self.output_dim = None
+        self.num_layers = None
+        self.latent_size = None
+        self.kernel_size = None
+        self.image_size = None
 
     def parse(self, config: dict) -> None:
+        """
+        Parse the configuration for the CNN model
+
+        Args:
+            config (dict): Configuration for the CNN model
+        """
         self.config = config
-        self.input_dim = self.config['InputDim']
-        self.output_dim = self.config['OutputDim']
-        self.num_hops = self.config['NumHops']
-        self.num_layers = self.config['NumLayers']
-        self.latent_size = self.config['LatentSize']
+        self.input_dim = self.config["InputDim"]
+        self.output_dim = self.config["OutputDim"]
+        self.num_layers = self.config["NumLayers"]
+        self.latent_size = self.config["LatentSize"]
+        self.kernel_size = self.config["KernelSize"]
+        self.image_size = self.config["ImageSize"]
+
+
+class GNNConfigParser:
+    """
+    Class to parse the configuration for the GNN model
+    """
+
+    def __init__(self):
+        self.config = None
+        self.input_dim = None
+        self.output_dim = None
+        self.num_hops = None
+        self.num_layers = None
+        self.latent_size = None
+
+    def parse(self, config: dict) -> None:
+        """
+        Parse the configuration for the GNN model
+        """
+        self.config = config
+        self.input_dim = self.config["InputDim"]
+        self.output_dim = self.config["OutputDim"]
+        self.num_hops = self.config["NumHops"]
+        self.num_layers = self.config["NumLayers"]
+        self.latent_size = self.config["LatentSize"]

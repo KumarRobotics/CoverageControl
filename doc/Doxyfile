@@ -3,17 +3,20 @@
 
 PROJECT_NAME           = "Coverage Control Library"
 PROJECT_NUMBER         = $(GIT_TAG)
+EXTRACT_STATIC         = YES
 USE_MDFILE_AS_MAINPAGE = doc/manual/README.md
 INPUT                  = doc/manual/README.md \
 												 doc/manual/ref_manual.txt \
 												 doc/manual/installation.md \
 												 doc/manual/quick_start.md \
-												 doc/manual/coverage-control.md \
 												 doc/manual/lpac.md \
+												 doc/manual/coverage-control.md \
 												 cppsrc/core \
 												 params \
 												 cppsrc/main/coverage_algorithm.cpp \
-                         python/coverage_control
+                         python/coverage_control \
+                         python/scripts \
+                         python/utils
 EXCLUDE                = doc/cppsrc/torch doc/cppsrc/main/torch
 OUTPUT_DIRECTORY       = doc/
 LAYOUT_FILE            = doc/config/DoxygenLayout.xml
@@ -22,4 +25,4 @@ IMAGE_PATH             = doc/graphics
 HTML_EXTRA_FILES			+= doc/graphics/LPAC.gif doc/graphics/coveragecontrol_global.png doc/graphics/learnable_pac.png
 FILTER_PATTERNS        = "*.md=python doc/bash-filter.py" *.py=doc/py-filter.sh
 ALIASES								+= repo_owner_lower="kumarrobotics"
-ALIASES								+= docker_cr="ghcr.io/kumarrobotics/testdoc"
+ALIASES								+= docker_cr="ghcr.io/kumarrobotics/coveragecontrol"
