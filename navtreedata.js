@@ -47,7 +47,12 @@ var NAVTREE =
         [ "Compile and Run", "quick_start.html#autotoc_md24", null ]
       ] ]
     ] ],
-    [ "LPAC Neural Network", "lpac.html", null ],
+    [ "LPAC Neural Network", "lpac.html", [
+      [ "Prelminaries", "lpac.html#autotoc_md25", null ],
+      [ "Dataset Generation", "lpac.html#autotoc_md26", null ],
+      [ "Training", "lpac.html#autotoc_md27", null ],
+      [ "Evaluation", "lpac.html#autotoc_md28", null ]
+    ] ],
     [ "Theoretical Background", "coverage-control-problem.html", [
       [ "Coverage Control Problem", "coverage-control-problem.html#autotoc_md29", [
         [ "Introduction", "coverage-control-problem.html#autotoc_md30", null ],
