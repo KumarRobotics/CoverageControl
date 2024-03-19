@@ -56,7 +56,7 @@ window.MathJax = {
 						<tbody>
 							<tr id="projectrow">
 								<td id="projectalign">
-									<div id="projectname">Coverage Control Library<span id="projectnumber">&#160;1.0.0</span>
+									<div id="projectname">Coverage Control Library
 									</div>
 								</td>
 							</tr>
@@ -140,16 +140,16 @@ $(function(){initNavTree('classCoverageControl_1_1AbstractController.html',''); 
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a00378c7c98b321ae77f000ab481a2005" id="r_a00378c7c98b321ae77f000ab481a2005"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00378c7c98b321ae77f000ab481a2005">GetActions</a> ()=0</td></tr>
 <tr class="separator:a00378c7c98b321ae77f000ab481a2005"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5bf5df992a8147d832f170e26a93e20" id="r_af5bf5df992a8147d832f170e26a93e20"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5bf5df992a8147d832f170e26a93e20">ComputeActions</a> ()=0</td></tr>
-<tr class="separator:af5bf5df992a8147d832f170e26a93e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d5f88b1a902651a68857c8eeb8b31b7" id="r_a4d5f88b1a902651a68857c8eeb8b31b7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d5f88b1a902651a68857c8eeb8b31b7">ComputeActions</a> ()=0</td></tr>
+<tr class="separator:a4d5f88b1a902651a68857c8eeb8b31b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The class <a class="el" href="classCoverageControl_1_1AbstractController.html">AbstractController</a> is an abstract class for coverage control algorithms. It provides a common interface for all coverage control algorithms. Pure virtual functions: GetActions and ComputeActions </p>
 
 <p class="definition">Definition at line <a class="el" href="abstract__controller_8h_source.html#l00047">47</a> of file <a class="el" href="abstract__controller_8h_source.html">abstract_controller.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af5bf5df992a8147d832f170e26a93e20" name="af5bf5df992a8147d832f170e26a93e20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5bf5df992a8147d832f170e26a93e20">&#9670;&#160;</a></span>ComputeActions()</h2>
+<a id="a4d5f88b1a902651a68857c8eeb8b31b7" name="a4d5f88b1a902651a68857c8eeb8b31b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d5f88b1a902651a68857c8eeb8b31b7">&#9670;&#160;</a></span>ComputeActions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,7 +158,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool ComputeActions </td>
+          <td class="memname">virtual int ComputeActions </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"></span></td><td>)</td>
           <td></td>
@@ -170,9 +170,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Pure virtual function to compute the actions for the robots </p><dl class="section return"><dt>Returns</dt><dd>True if the actions are computed successfully, false otherwise </dd></dl>
+<p>Pure virtual function to compute the actions for the robots </p><dl class="section return"><dt>Returns</dt><dd>0 if the actions are computed successfully, 1 otherwise </dd></dl>
 
-<p>Implemented in <a class="el" href="classCoverageControl_1_1CentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">CentralizedCVT</a>, <a class="el" href="classCoverageControl_1_1ClairvoyantCVT.html#a93324c1cb821ae58acecca65beda970f">ClairvoyantCVT</a>, <a class="el" href="classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f">DecentralizedCVT</a>, <a class="el" href="classCoverageControl_1_1NearOptimalCVT.html#a93324c1cb821ae58acecca65beda970f">NearOptimalCVT</a>, <a class="el" href="classCoverageControl_1_1OracleBangExploreExploit.html#a93324c1cb821ae58acecca65beda970f">OracleBangExploreExploit</a>, and <a class="el" href="classCoverageControl_1_1OracleExploreExploit.html#a93324c1cb821ae58acecca65beda970f">OracleExploreExploit</a>.</p>
+<p>Implemented in <a class="el" href="classCoverageControl_1_1CentralizedCVT.html#a1a841cad0973710964ae0bd8cf57cef7">CentralizedCVT</a>, <a class="el" href="classCoverageControl_1_1ClairvoyantCVT.html#a1a841cad0973710964ae0bd8cf57cef7">ClairvoyantCVT</a>, <a class="el" href="classCoverageControl_1_1DecentralizedCVT.html#a1a841cad0973710964ae0bd8cf57cef7">DecentralizedCVT</a>, <a class="el" href="classCoverageControl_1_1NearOptimalCVT.html#a1a841cad0973710964ae0bd8cf57cef7">NearOptimalCVT</a>, <a class="el" href="classCoverageControl_1_1OracleBangExploreExploit.html#a1a841cad0973710964ae0bd8cf57cef7">OracleBangExploreExploit</a>, and <a class="el" href="classCoverageControl_1_1OracleExploreExploit.html#a1a841cad0973710964ae0bd8cf57cef7">OracleExploreExploit</a>.</p>
 
 </div>
 </div>

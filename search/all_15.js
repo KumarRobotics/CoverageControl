@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['world_5fidf_2eh_0',['world_idf.h',['../world__idf_8h.html',1,'']]],
-  ['worldidf_1',['WorldIDF',['../classCoverageControl_1_1WorldIDF.html',1,'CoverageControl']]],
-  ['writemap_2',['WriteMap',['../namespaceCoverageControl_1_1MapUtils.html#a9a057a450c5f3e1afe85476cc63bbaa7',1,'CoverageControl::MapUtils']]],
-  ['writemapsparse_3',['WriteMapSparse',['../namespaceCoverageControl_1_1MapUtils.html#ad0610da0ae55a6b4c25b7751a5b23881',1,'CoverageControl::MapUtils']]],
-  ['writeworldmap_4',['WriteWorldMap',['../classCoverageControl_1_1WorldIDF.html#ad9d2b62c3f1125c5253bec8cc03092b5',1,'CoverageControl::WorldIDF']]]
+  ['validate_5fepoch_0',['validate_epoch',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a0df5c3f3313c8840f9a5002f5181db8d',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['vec2d_1',['Vec2d',['../classCoverageControl_1_1Vec2d.html',1,'CoverageControl']]],
+  ['vec2d_2eh_2',['vec2d.h',['../vec2d_8h.html',1,'']]],
+  ['voronoi_3',['Voronoi',['../classCoverageControl_1_1Voronoi.html',1,'CoverageControl']]],
+  ['voronoi_2ecpp_4',['voronoi.cpp',['../voronoi_8cpp.html',1,'']]],
+  ['voronoi_2eh_5',['voronoi.h',['../voronoi_8h.html',1,'']]],
+  ['voronoicell_6',['VoronoiCell',['../structCoverageControl_1_1VoronoiCell.html',1,'CoverageControl']]],
+  ['voronoignndataset_7',['VoronoiGNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1VoronoiGNNDataset.html',1,'coverage_control::nn::data_loaders::loaders']]]
 ];

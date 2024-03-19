@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['add_0',['Add',['../classCoverageControl_1_1Vec2d.html#a0d647f21d601578ff6bac6ebdf465725',1,'CoverageControl::Vec2d']]],
-  ['addnoise_1',['AddNoise',['../classCoverageControl_1_1CoverageSystem.html#af4bd7744548e3a7e691efdc39e37d674',1,'CoverageControl::CoverageSystem']]],
-  ['addnormaldistribution_2',['AddNormalDistribution',['../classCoverageControl_1_1WorldIDF.html#ab9add37d675c45464964b993295c4c78',1,'CoverageControl::WorldIDF::AddNormalDistribution(BivariateNormalDistribution const &amp;distribution)'],['../classCoverageControl_1_1WorldIDF.html#a58957784a130400a247328824951577d',1,'CoverageControl::WorldIDF::AddNormalDistribution(std::vector&lt; BivariateNormalDistribution &gt; const &amp;dists)']]],
-  ['adduniformdistributionpolygon_3',['AddUniformDistributionPolygon',['../classCoverageControl_1_1WorldIDF.html#ade6915e56b624b23dffc85f25c0f11c1',1,'CoverageControl::WorldIDF']]]
+  ['_5f_5finit_5f_5f_0',['__init__',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#ac6daf0c1d66e796e28b65df17bef112f',1,'coverage_control.nn.trainers.trainer.TrainModel.__init__()'],['../classsimple__data__generation_1_1SimpleDatasetGenerator.html#a7d8a01c6e0b4e47d5d43c3d3015ded8c',1,'simple_data_generation.SimpleDatasetGenerator.__init__()'],['../classcontroller_1_1ControllerCVT.html#a2de9a8d0f6e6097e016fb2365267a1ef',1,'controller.ControllerCVT.__init__()'],['../classcontroller_1_1ControllerNN.html#a2de9a8d0f6e6097e016fb2365267a1ef',1,'controller.ControllerNN.__init__()']]]
 ];

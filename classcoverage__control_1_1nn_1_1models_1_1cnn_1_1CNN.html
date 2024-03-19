@@ -56,7 +56,7 @@ window.MathJax = {
 						<tbody>
 							<tr id="projectrow">
 								<td id="projectalign">
-									<div id="projectname">Coverage Control Library<span id="projectnumber">&#160;1.0.0</span>
+									<div id="projectname">Coverage Control Library
 									</div>
 								</td>
 							</tr>
@@ -124,11 +124,11 @@ $(function(){initNavTree('classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.h
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">CNN Class Reference</div></div>
+  <div class="headertitle"><div class="title">CNN Class Reference<div class="ingroups"><a class="el" href="group__python__api.html">Python API</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config This is the current architecture used in the hybrid CNN-GNN.  
+<p>Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config.  
  <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for CNN:</div>
@@ -140,14 +140,21 @@ $(function(){initNavTree('classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.h
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a80bb869f93be4825cb2c21c78ab94436" id="r_a80bb869f93be4825cb2c21c78ab94436"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80bb869f93be4825cb2c21c78ab94436">__init__</a> (self, config)</td></tr>
-<tr class="separator:a80bb869f93be4825cb2c21c78ab94436"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8304ae9497ad8d8f9e54407926814432" id="r_a8304ae9497ad8d8f9e54407926814432"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8304ae9497ad8d8f9e54407926814432">forward</a> (self, x, return_embed=None)</td></tr>
-<tr class="separator:a8304ae9497ad8d8f9e54407926814432"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac69d063a48f626a2d3613964f3ef5626" id="r_ac69d063a48f626a2d3613964f3ef5626"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac69d063a48f626a2d3613964f3ef5626">LoadModelCPP</a> (self, model_path)</td></tr>
-<tr class="separator:ac69d063a48f626a2d3613964f3ef5626"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fe1cb17711c7b032759e7c28188b03e" id="r_a0fe1cb17711c7b032759e7c28188b03e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fe1cb17711c7b032759e7c28188b03e">LoadModel</a> (self, model_path)</td></tr>
-<tr class="separator:a0fe1cb17711c7b032759e7c28188b03e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96082cb1a1ea8859d892693ef875f410" id="r_a96082cb1a1ea8859d892693ef875f410"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96082cb1a1ea8859d892693ef875f410">__init__</a> (self, dict config)</td></tr>
+<tr class="separator:a96082cb1a1ea8859d892693ef875f410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad595a6de19393dc9cfd62926cbd870d" id="r_aad595a6de19393dc9cfd62926cbd870d"><td class="memItemLeft" align="right" valign="top">torch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad595a6de19393dc9cfd62926cbd870d">forward</a> (self, torch.Tensor x)</td></tr>
+<tr class="memdesc:aad595a6de19393dc9cfd62926cbd870d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward pass through the network.  <br /></td></tr>
+<tr class="separator:aad595a6de19393dc9cfd62926cbd870d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae393be8e7e39c9dd81580792227e249f" id="r_ae393be8e7e39c9dd81580792227e249f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae393be8e7e39c9dd81580792227e249f">load_cpp_model</a> (self, str model_path)</td></tr>
+<tr class="memdesc:ae393be8e7e39c9dd81580792227e249f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a model saved in cpp jit format.  <br /></td></tr>
+<tr class="separator:ae393be8e7e39c9dd81580792227e249f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7614fb6536cebe2da23e32078abcb92" id="r_ae7614fb6536cebe2da23e32078abcb92"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7614fb6536cebe2da23e32078abcb92">load_model</a> (self, str model_path)</td></tr>
+<tr class="memdesc:ae7614fb6536cebe2da23e32078abcb92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a model saved in pytorch format.  <br /></td></tr>
+<tr class="separator:ae7614fb6536cebe2da23e32078abcb92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html">CNNConfigParser</a></td></tr>
+<tr class="memitem:a48ef7fbb9e48517deaeb161805f3c77f inherit pub_methods_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_a48ef7fbb9e48517deaeb161805f3c77f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f">parse</a> (self, dict config)</td></tr>
+<tr class="memdesc:a48ef7fbb9e48517deaeb161805f3c77f inherit pub_methods_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the configuration for the CNN model.  <br /></td></tr>
+<tr class="separator:a48ef7fbb9e48517deaeb161805f3c77f inherit pub_methods_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -155,16 +162,33 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ae4bb20419d685a1a3e50193133756ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0de7ff39e186c08a0edd764ef7614581" id="r_a0de7ff39e186c08a0edd764ef7614581"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0de7ff39e186c08a0edd764ef7614581">mlp</a></td></tr>
 <tr class="separator:a0de7ff39e186c08a0edd764ef7614581"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad233f1cd9be3d3eee13aa3891ce03484" id="r_ad233f1cd9be3d3eee13aa3891ce03484"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad233f1cd9be3d3eee13aa3891ce03484">latent_size</a></td></tr>
+<tr class="separator:ad233f1cd9be3d3eee13aa3891ce03484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54d6246f3d7a6b1836d79d9294ab5c2c" id="r_a54d6246f3d7a6b1836d79d9294ab5c2c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54d6246f3d7a6b1836d79d9294ab5c2c">linear</a></td></tr>
 <tr class="separator:a54d6246f3d7a6b1836d79d9294ab5c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html">CNNConfigParser</a></td></tr>
+<tr class="memitem:ad2256458892609d0533df5d72a7257ad inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_ad2256458892609d0533df5d72a7257ad"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#ad2256458892609d0533df5d72a7257ad">config</a></td></tr>
+<tr class="separator:ad2256458892609d0533df5d72a7257ad inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a678f7fbb928babf1af66288a698c62c7 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_a678f7fbb928babf1af66288a698c62c7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a></td></tr>
+<tr class="separator:a678f7fbb928babf1af66288a698c62c7 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac02d798a7d5b86155b5f39511946bd36 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_ac02d798a7d5b86155b5f39511946bd36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#ac02d798a7d5b86155b5f39511946bd36">output_dim</a></td></tr>
+<tr class="separator:ac02d798a7d5b86155b5f39511946bd36 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedf8516949b5868a670a467b12362706 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_aedf8516949b5868a670a467b12362706"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#aedf8516949b5868a670a467b12362706">num_layers</a></td></tr>
+<tr class="separator:aedf8516949b5868a670a467b12362706 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad233f1cd9be3d3eee13aa3891ce03484 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_ad233f1cd9be3d3eee13aa3891ce03484"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#ad233f1cd9be3d3eee13aa3891ce03484">latent_size</a></td></tr>
+<tr class="separator:ad233f1cd9be3d3eee13aa3891ce03484 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3538c94f8bccfb35742b32fd1642d7c4 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_a3538c94f8bccfb35742b32fd1642d7c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#a3538c94f8bccfb35742b32fd1642d7c4">kernel_size</a></td></tr>
+<tr class="separator:a3538c94f8bccfb35742b32fd1642d7c4 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d1dfe388c77a43db67816da60481ae4 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser" id="r_a0d1dfe388c77a43db67816da60481ae4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#a0d1dfe388c77a43db67816da60481ae4">image_size</a></td></tr>
+<tr class="separator:a0d1dfe388c77a43db67816da60481ae4 inherit pub_attribs_classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config This is the current architecture used in the hybrid CNN-GNN. </p>
+<div class="textblock"><p>Implements an architecture consisting of a multi-layer CNN followed by an MLP, according to parameters specified in the input config. </p>
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00011">11</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00038">38</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a80bb869f93be4825cb2c21c78ab94436" name="a80bb869f93be4825cb2c21c78ab94436"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80bb869f93be4825cb2c21c78ab94436">&#9670;&#160;</a></span>__init__()</h2>
+<a id="a96082cb1a1ea8859d892693ef875f410" name="a96082cb1a1ea8859d892693ef875f410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96082cb1a1ea8859d892693ef875f410">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -177,87 +201,97 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>config</em></span>&#160;)</td>
+          <td class="paramtype">dict</td>          <td class="paramname"><span class="paramname"><em>config</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00012">12</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p>Reimplemented from <a class="el" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html">CNNConfigParser</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00040">40</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8304ae9497ad8d8f9e54407926814432" name="a8304ae9497ad8d8f9e54407926814432"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8304ae9497ad8d8f9e54407926814432">&#9670;&#160;</a></span>forward()</h2>
+<a id="aad595a6de19393dc9cfd62926cbd870d" name="aad595a6de19393dc9cfd62926cbd870d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad595a6de19393dc9cfd62926cbd870d">&#9670;&#160;</a></span>forward()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">forward </td>
+          <td class="memname"> torch.Tensor forward </td>
           <td>(</td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>self</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>x</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>return_embed</em><span class="paramdefsep"> = </span><span class="paramdefval">None</span></span>&#160;)</td>
+          <td class="paramtype">torch.Tensor</td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00020">20</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p>Forward pass through the network. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Input tensor</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Output tensor </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00064">64</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>
-<a id="a0fe1cb17711c7b032759e7c28188b03e" name="a0fe1cb17711c7b032759e7c28188b03e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fe1cb17711c7b032759e7c28188b03e">&#9670;&#160;</a></span>LoadModel()</h2>
+<a id="ae393be8e7e39c9dd81580792227e249f" name="ae393be8e7e39c9dd81580792227e249f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae393be8e7e39c9dd81580792227e249f">&#9670;&#160;</a></span>load_cpp_model()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">LoadModel </td>
+          <td class="memname"> None load_cpp_model </td>
           <td>(</td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>self</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>model_path</em></span>&#160;)</td>
+          <td class="paramtype">str</td>          <td class="paramname"><span class="paramname"><em>model_path</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00030">30</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p>Loads a model saved in cpp jit format. </p>
+
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00074">74</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>
-<a id="ac69d063a48f626a2d3613964f3ef5626" name="ac69d063a48f626a2d3613964f3ef5626"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac69d063a48f626a2d3613964f3ef5626">&#9670;&#160;</a></span>LoadModelCPP()</h2>
+<a id="ae7614fb6536cebe2da23e32078abcb92" name="ae7614fb6536cebe2da23e32078abcb92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7614fb6536cebe2da23e32078abcb92">&#9670;&#160;</a></span>load_model()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">LoadModelCPP </td>
+          <td class="memname"> None load_model </td>
           <td>(</td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>self</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>model_path</em></span>&#160;)</td>
+          <td class="paramtype">str</td>          <td class="paramname"><span class="paramname"><em>model_path</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00026">26</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p>Loads a model saved in pytorch format. </p>
+
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00081">81</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>
@@ -274,7 +308,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00016">16</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00044">44</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+
+</div>
+</div>
+<a id="ad233f1cd9be3d3eee13aa3891ce03484" name="ad233f1cd9be3d3eee13aa3891ce03484"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad233f1cd9be3d3eee13aa3891ce03484">&#9670;&#160;</a></span>latent_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">latent_size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00047">47</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>
@@ -290,7 +340,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00018">18</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00053">53</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>
@@ -306,7 +356,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00017">17</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cnn_8py_source.html#l00045">45</a> of file <a class="el" href="cnn_8py_source.html">cnn.py</a>.</p>
 
 </div>
 </div>

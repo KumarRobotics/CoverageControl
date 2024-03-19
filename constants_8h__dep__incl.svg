@@ -58,8 +58,8 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Constants for the CoverageControl library.">
-<polygon fill="#999999" stroke="#666666" points="574,-410.5 507,-410.5 507,-392 574,-392 574,-410.5"/>
-<text text-anchor="middle" x="540.5" y="-397" font-family="Helvetica,sans-Serif" font-size="10.00">constants.h</text>
+<polygon fill="#999999" stroke="#666666" points="593,-410.5 526,-410.5 526,-392 593,-392 593,-410.5"/>
+<text text-anchor="middle" x="559.5" y="-397" font-family="Helvetica,sans-Serif" font-size="10.00">constants.h</text>
 </a>
 </g>
 </g>
@@ -76,8 +76,8 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M510.02,-387.03C487.94,-377.44 458.7,-364.76 439.51,-356.43"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="508.56,-390.21 519.13,-390.98 511.35,-383.79 508.56,-390.21"/>
+<path fill="none" stroke="#63b8ff" d="M525.63,-387.55C499.92,-377.91 465.26,-364.91 442.65,-356.43"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="524.37,-390.82 534.97,-391.05 526.83,-384.26 524.37,-390.82"/>
 </a>
 </g>
 </g>
@@ -94,8 +94,8 @@ var sectionId = 'dynsection-1';
 <g id="edge26_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge26_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M542.46,-380.3C545.19,-348.13 548.9,-282.89 540.5,-228.5 538.53,-215.76 533.56,-201.66 530.1,-192.88"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="538.99,-379.82 541.56,-390.09 545.96,-380.46 538.99,-379.82"/>
+<path fill="none" stroke="#63b8ff" d="M558.56,-380.25C556.77,-348.01 551.95,-282.67 540.5,-228.5 537.83,-215.89 533.03,-201.75 529.81,-192.93"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="555.06,-380.26 559.07,-390.07 562.05,-379.9 555.06,-380.26"/>
 </a>
 </g>
 </g>
@@ -109,11 +109,11 @@ var sectionId = 'dynsection-1';
 </g>
 </g>
 <!-- Node1&#45;&gt;Node14 -->
-<g id="edge37_Node000001_Node000014" class="edge">
+<g id="edge38_Node000001_Node000014" class="edge">
 <title>Node1&#45;&gt;Node14</title>
-<g id="a_edge37_Node000001_Node000014"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M495.24,-396.91C441.32,-391.88 356.05,-380.25 336.5,-356 322.71,-338.89 343.69,-314.39 356.97,-301.66"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="494.78,-400.38 505.05,-397.78 495.4,-393.41 494.78,-400.38"/>
+<g id="a_edge38_Node000001_Node000014"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M514.49,-397.87C455.95,-393.72 358.57,-382.88 336.5,-356 322.55,-339.02 343.6,-314.46 356.93,-301.69"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="513.92,-401.34 524.13,-398.51 514.38,-394.35 513.92,-401.34"/>
 </a>
 </g>
 </g>
@@ -127,38 +127,38 @@ var sectionId = 'dynsection-1';
 </g>
 </g>
 <!-- Node1&#45;&gt;Node15 -->
-<g id="edge27_Node000001_Node000015" class="edge">
+<g id="edge28_Node000001_Node000015" class="edge">
 <title>Node1&#45;&gt;Node15</title>
-<g id="a_edge27_Node000001_Node000015"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M534.73,-380.84C524.27,-345.64 502.57,-272.61 495.09,-247.48"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="531.28,-381.53 537.49,-390.12 537.99,-379.53 531.28,-381.53"/>
+<g id="a_edge28_Node000001_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M551.64,-381.29C537.11,-346.28 506.6,-272.72 496.12,-247.48"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="548.25,-382.27 555.32,-390.17 554.72,-379.59 548.25,-382.27"/>
 </a>
 </g>
 </g>
 <!-- Node16 -->
 <g id="Node000016" class="node">
 <title>Node16</title>
-<g id="a_Node000016"><a xlink:href="vec2d_8h.html" target="_top" xlink:title="Contains Vec2d class for 2D vector.">
-<polygon fill="white" stroke="#666666" points="637.38,-356 587.63,-356 587.63,-337.5 637.38,-337.5 637.38,-356"/>
-<text text-anchor="middle" x="612.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">vec2d.h</text>
+<g id="a_Node000016"><a xlink:href="generate__world__map_8cu.html" target="_top" xlink:title="File for generating the world map IDF using CUDA.">
+<polygon fill="white" stroke="#666666" points="705.88,-356 587.13,-356 587.13,-337.5 705.88,-337.5 705.88,-356"/>
+<text text-anchor="middle" x="646.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">generate_world_map.cu</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node16 -->
-<g id="edge28_Node000001_Node000016" class="edge">
+<g id="edge27_Node000001_Node000016" class="edge">
 <title>Node1&#45;&gt;Node16</title>
-<g id="a_edge28_Node000001_Node000016"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M561.45,-384.97C574.28,-375.62 590.21,-364 600.83,-356.26"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="559.63,-381.97 553.61,-390.69 563.75,-387.63 559.63,-381.97"/>
+<g id="a_edge27_Node000001_Node000016"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M583.4,-385.83C599.01,-376.41 618.88,-364.42 632.11,-356.43"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="581.92,-382.64 575.16,-390.8 585.53,-388.63 581.92,-382.64"/>
 </a>
 </g>
 </g>
 <!-- Node17 -->
 <g id="Node000017" class="node">
 <title>Node17</title>
-<g id="a_Node000017"><a xlink:href="voronoi_8h.html" target="_top" xlink:title="Class for computing Voronoi cells.">
-<polygon fill="white" stroke="#666666" points="686,-301.5 631,-301.5 631,-283 686,-283 686,-301.5"/>
-<text text-anchor="middle" x="658.5" y="-288" font-family="Helvetica,sans-Serif" font-size="10.00">voronoi.h</text>
+<g id="a_Node000017"><a xlink:href="vec2d_8h.html" target="_top" xlink:title="Contains Vec2d class for 2D vector.">
+<polygon fill="white" stroke="#666666" points="773.38,-356 723.63,-356 723.63,-337.5 773.38,-337.5 773.38,-356"/>
+<text text-anchor="middle" x="748.5" y="-342.5" font-family="Helvetica,sans-Serif" font-size="10.00">vec2d.h</text>
 </a>
 </g>
 </g>
@@ -166,8 +166,26 @@ var sectionId = 'dynsection-1';
 <g id="edge29_Node000001_Node000017" class="edge">
 <title>Node1&#45;&gt;Node17</title>
 <g id="a_edge29_Node000001_Node000017"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M585.42,-391.86C606.98,-385.55 631.35,-374.65 646.5,-356 659.37,-340.16 659.94,-314.67 659.24,-301.59"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="584.71,-388.43 575.93,-394.37 586.5,-395.2 584.71,-388.43"/>
+<path fill="none" stroke="#63b8ff" d="M601.74,-388.52C639.07,-378.15 692.26,-363.37 723.3,-354.75"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="600.87,-385.13 592.17,-391.18 602.74,-391.87 600.87,-385.13"/>
+</a>
+</g>
+</g>
+<!-- Node18 -->
+<g id="Node000018" class="node">
+<title>Node18</title>
+<g id="a_Node000018"><a xlink:href="voronoi_8h.html" target="_top" xlink:title="Class for computing Voronoi cells.">
+<polygon fill="white" stroke="#666666" points="686,-301.5 631,-301.5 631,-283 686,-283 686,-301.5"/>
+<text text-anchor="middle" x="658.5" y="-288" font-family="Helvetica,sans-Serif" font-size="10.00">voronoi.h</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node18 -->
+<g id="edge30_Node000001_Node000018" class="edge">
+<title>Node1&#45;&gt;Node18</title>
+<g id="a_edge30_Node000001_Node000018"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M604.51,-397.87C663.05,-393.72 760.43,-382.88 782.5,-356 811.28,-320.94 730.92,-303.53 686.19,-296.76"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="604.62,-394.35 594.87,-398.51 605.08,-401.34 604.62,-394.35"/>
 </a>
 </g>
 </g>
@@ -478,91 +496,91 @@ var sectionId = 'dynsection-1';
 </a>
 </g>
 </g>
-<!-- Node17&#45;&gt;Node3 -->
-<g id="edge30_Node000017_Node000003" class="edge">
-<title>Node17&#45;&gt;Node3</title>
-<g id="a_edge30_Node000017_Node000003"><a xlink:title=" ">
+<!-- Node18&#45;&gt;Node3 -->
+<g id="edge31_Node000018_Node000003" class="edge">
+<title>Node18&#45;&gt;Node3</title>
+<g id="a_edge31_Node000018_Node000003"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M639.23,-275.63C611.02,-252.76 559.42,-210.94 537.18,-192.9"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="636.99,-278.32 646.97,-281.9 641.4,-272.88 636.99,-278.32"/>
 </a>
 </g>
 </g>
-<!-- Node17&#45;&gt;Node15 -->
-<g id="edge35_Node000017_Node000015" class="edge">
-<title>Node17&#45;&gt;Node15</title>
-<g id="a_edge35_Node000017_Node000015"><a xlink:title=" ">
+<!-- Node18&#45;&gt;Node15 -->
+<g id="edge36_Node000018_Node000015" class="edge">
+<title>Node18&#45;&gt;Node15</title>
+<g id="a_edge36_Node000018_Node000015"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M620.37,-279.19C589.71,-269.49 547.36,-256.1 519.95,-247.43"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="619.06,-282.45 629.65,-282.12 621.17,-275.77 619.06,-282.45"/>
-</a>
-</g>
-</g>
-<!-- Node18 -->
-<g id="Node000018" class="node">
-<title>Node18</title>
-<g id="a_Node000018"><a xlink:href="plotter_8h.html" target="_top" xlink:title="Class to plot the map.">
-<polygon fill="white" stroke="#666666" points="760.13,-247 708.88,-247 708.88,-228.5 760.13,-228.5 760.13,-247"/>
-<text text-anchor="middle" x="734.5" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">plotter.h</text>
-</a>
-</g>
-</g>
-<!-- Node17&#45;&gt;Node18 -->
-<g id="edge31_Node000017_Node000018" class="edge">
-<title>Node17&#45;&gt;Node18</title>
-<g id="a_edge31_Node000017_Node000018"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M680.16,-276.29C693.67,-266.95 710.59,-255.26 721.93,-247.43"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="678.53,-273.16 672.3,-281.72 682.51,-278.92 678.53,-273.16"/>
-</a>
-</g>
-</g>
-<!-- Node20 -->
-<g id="Node000020" class="node">
-<title>Node20</title>
-<g id="a_Node000020"><a xlink:href="voronoi_8cpp.html" target="_top" xlink:title="Functions to compute Centroidal Voronoi Tessellation.">
-<polygon fill="white" stroke="#666666" points="691.25,-247 625.75,-247 625.75,-228.5 691.25,-228.5 691.25,-247"/>
-<text text-anchor="middle" x="658.5" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">voronoi.cpp</text>
-</a>
-</g>
-</g>
-<!-- Node17&#45;&gt;Node20 -->
-<g id="edge36_Node000017_Node000020" class="edge">
-<title>Node17&#45;&gt;Node20</title>
-<g id="a_edge36_Node000017_Node000020"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M658.5,-271.14C658.5,-262.86 658.5,-253.71 658.5,-247.26"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="655,-271.07 658.5,-281.07 662,-271.07 655,-271.07"/>
-</a>
-</g>
-</g>
-<!-- Node18&#45;&gt;Node3 -->
-<g id="edge33_Node000018_Node000003" class="edge">
-<title>Node18&#45;&gt;Node3</title>
-<g id="a_edge33_Node000018_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M697.82,-227.49C659.2,-217.74 598.87,-202.52 561.07,-192.98"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="696.56,-230.78 707.11,-229.84 698.27,-224 696.56,-230.78"/>
-</a>
-</g>
-</g>
-<!-- Node18&#45;&gt;Node13 -->
-<g id="edge32_Node000018_Node000013" class="edge">
-<title>Node18&#45;&gt;Node13</title>
-<g id="a_edge32_Node000018_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M735.39,-216.66C737.1,-202.73 741.66,-184.82 753.5,-174 765.19,-163.32 852.7,-147.74 912.13,-138.2"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="731.91,-216.25 734.61,-226.49 738.89,-216.8 731.91,-216.25"/>
 </a>
 </g>
 </g>
 <!-- Node19 -->
 <g id="Node000019" class="node">
 <title>Node19</title>
-<g id="a_Node000019"><a xlink:href="plotter_8cpp.html" target="_top" xlink:title="Helper function to plot maps.">
+<g id="a_Node000019"><a xlink:href="plotter_8h.html" target="_top" xlink:title="Class to plot the map.">
+<polygon fill="white" stroke="#666666" points="760.13,-247 708.88,-247 708.88,-228.5 760.13,-228.5 760.13,-247"/>
+<text text-anchor="middle" x="734.5" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">plotter.h</text>
+</a>
+</g>
+</g>
+<!-- Node18&#45;&gt;Node19 -->
+<g id="edge32_Node000018_Node000019" class="edge">
+<title>Node18&#45;&gt;Node19</title>
+<g id="a_edge32_Node000018_Node000019"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M680.16,-276.29C693.67,-266.95 710.59,-255.26 721.93,-247.43"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="678.53,-273.16 672.3,-281.72 682.51,-278.92 678.53,-273.16"/>
+</a>
+</g>
+</g>
+<!-- Node21 -->
+<g id="Node000021" class="node">
+<title>Node21</title>
+<g id="a_Node000021"><a xlink:href="voronoi_8cpp.html" target="_top" xlink:title="Functions to compute Centroidal Voronoi Tessellation.">
+<polygon fill="white" stroke="#666666" points="691.25,-247 625.75,-247 625.75,-228.5 691.25,-228.5 691.25,-247"/>
+<text text-anchor="middle" x="658.5" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">voronoi.cpp</text>
+</a>
+</g>
+</g>
+<!-- Node18&#45;&gt;Node21 -->
+<g id="edge37_Node000018_Node000021" class="edge">
+<title>Node18&#45;&gt;Node21</title>
+<g id="a_edge37_Node000018_Node000021"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M658.5,-271.14C658.5,-262.86 658.5,-253.71 658.5,-247.26"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="655,-271.07 658.5,-281.07 662,-271.07 655,-271.07"/>
+</a>
+</g>
+</g>
+<!-- Node19&#45;&gt;Node3 -->
+<g id="edge34_Node000019_Node000003" class="edge">
+<title>Node19&#45;&gt;Node3</title>
+<g id="a_edge34_Node000019_Node000003"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M697.82,-227.49C659.2,-217.74 598.87,-202.52 561.07,-192.98"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="696.56,-230.78 707.11,-229.84 698.27,-224 696.56,-230.78"/>
+</a>
+</g>
+</g>
+<!-- Node19&#45;&gt;Node13 -->
+<g id="edge33_Node000019_Node000013" class="edge">
+<title>Node19&#45;&gt;Node13</title>
+<g id="a_edge33_Node000019_Node000013"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M735.39,-216.66C737.1,-202.73 741.66,-184.82 753.5,-174 765.19,-163.32 852.7,-147.74 912.13,-138.2"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="731.91,-216.25 734.61,-226.49 738.89,-216.8 731.91,-216.25"/>
+</a>
+</g>
+</g>
+<!-- Node20 -->
+<g id="Node000020" class="node">
+<title>Node20</title>
+<g id="a_Node000020"><a xlink:href="plotter_8cpp.html" target="_top" xlink:title="Helper function to plot maps.">
 <polygon fill="white" stroke="#666666" points="824.38,-192.5 762.63,-192.5 762.63,-174 824.38,-174 824.38,-192.5"/>
 <text text-anchor="middle" x="793.5" y="-179" font-family="Helvetica,sans-Serif" font-size="10.00">plotter.cpp</text>
 </a>
 </g>
 </g>
-<!-- Node18&#45;&gt;Node19 -->
-<g id="edge34_Node000018_Node000019" class="edge">
-<title>Node18&#45;&gt;Node19</title>
-<g id="a_edge34_Node000018_Node000019"><a xlink:title=" ">
+<!-- Node19&#45;&gt;Node20 -->
+<g id="edge35_Node000019_Node000020" class="edge">
+<title>Node19&#45;&gt;Node20</title>
+<g id="a_edge35_Node000019_Node000020"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M752.6,-220.64C762.94,-211.44 775.49,-200.27 783.94,-192.76"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="750.52,-217.81 745.37,-227.07 755.17,-223.04 750.52,-217.81"/>
 </a>

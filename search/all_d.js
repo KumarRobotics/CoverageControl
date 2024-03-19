@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['of_20robot_20swarms_0',['Navigation of Robot Swarms',['../lpac.html#autotoc_md31',1,'']]],
-  ['optional_1',['Prerequisites (Optional)',['../installation.html#autotoc_md8',1,'']]],
-  ['oracle_5fbang_5fexplore_5fexploit_2eh_2',['oracle_bang_explore_exploit.h',['../oracle__bang__explore__exploit_8h.html',1,'']]],
-  ['oracle_5fexplore_5fexploit_2eh_3',['oracle_explore_exploit.h',['../oracle__explore__exploit_8h.html',1,'']]],
-  ['oraclebangexploreexploit_4',['OracleBangExploreExploit',['../classCoverageControl_1_1OracleBangExploreExploit.html',1,'CoverageControl']]],
-  ['oracleexploreexploit_5',['OracleExploreExploit',['../classCoverageControl_1_1OracleExploreExploit.html',1,'CoverageControl']]],
-  ['oraclesimulexploreexploit_6',['OracleSimulExploreExploit',['../classCoverageControl_1_1OracleSimulExploreExploit.html',1,'CoverageControl']]],
-  ['orientation_7',['Orientation',['../namespaceCoverageControl.html#a63b1cbdc231f239e5124684a556f92eb',1,'CoverageControl']]]
+  ['navigation_20of_20robot_20swarms_0',['Navigation of Robot Swarms',['../coverage-control-problem.html#autotoc_md38',1,'']]],
+  ['near_5foptimal_5fcvt_2eh_1',['near_optimal_cvt.h',['../near__optimal__cvt_8h.html',1,'']]],
+  ['near_5foptimal_5fcvt_5falgorithm_2eh_2',['near_optimal_cvt_algorithm.h',['../near__optimal__cvt__algorithm_8h.html',1,'']]],
+  ['nearoptimalcvt_3',['NearOptimalCVT',['../classCoverageControl_1_1NearOptimalCVT.html',1,'CoverageControl']]],
+  ['network_4',['LPAC Neural Network',['../lpac.html',1,'']]],
+  ['neural_20network_5',['LPAC Neural Network',['../lpac.html',1,'']]],
+  ['norm_6',['Norm',['../classCoverageControl_1_1Vec2d.html#aa7aa5b0e9c11b93537a0bd8e1f23c85c',1,'CoverageControl::Vec2d']]],
+  ['normsqr_7',['NormSqr',['../classCoverageControl_1_1Vec2d.html#a29d21f2eab134db6eef4417568af02cd',1,'CoverageControl::Vec2d']]]
 ];

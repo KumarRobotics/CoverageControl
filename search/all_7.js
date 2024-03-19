@@ -1,4 +1,30 @@
 var searchData=
 [
-  ['home_0',['Home',['../index.html',1,'']]]
+  ['generate_5fworld_5fmap_2ecu_0',['generate_world_map.cu',['../generate__world__map_8cu.html',1,'']]],
+  ['generate_5fworld_5fmap_2eh_1',['generate_world_map.h',['../generate__world__map_8h.html',1,'']]],
+  ['generate_5fworld_5fmap_5fcuda_2',['generate_world_map_cuda',['../namespaceCoverageControl.html#af8efa372a0ff2cc930d9071434e40bea',1,'CoverageControl']]],
+  ['generatemapcpu_3',['GenerateMapCPU',['../classCoverageControl_1_1WorldIDF.html#a249129a9267eee0084fd46e18b8a0f70',1,'CoverageControl::WorldIDF']]],
+  ['generation_4',['Dataset Generation',['../lpac.html#autotoc_md26',1,'']]],
+  ['geographiclib_5fwrapper_2eh_5',['geographiclib_wrapper.h',['../geographiclib__wrapper_8h.html',1,'']]],
+  ['geolocaltransform_6',['GeoLocalTransform',['../classCoverageControl_1_1GeoLocalTransform.html',1,'CoverageControl']]],
+  ['geometry_5futils_2ecuh_7',['geometry_utils.cuh',['../geometry__utils_8cuh.html',1,'']]],
+  ['get_5fcommunication_5fmaps_8',['get_communication_maps',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#a7e423aa14abaac41f7d3fe44b4818f3d',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5fmaps_9',['get_maps',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#acfadc255a84704237a7803a6a512c347',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5fraw_5flocal_5fmaps_10',['get_raw_local_maps',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#aabb58b810e723b0fc5b8c267b046395e',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5fraw_5fobstacle_5fmaps_11',['get_raw_obstacle_maps',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#ac750600753876dc9ba94ef95e4d27634',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5frobot_5fpositions_12',['get_robot_positions',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#ab4582f3a484c201985b54981afb230f6',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5ftorch_5fgeometric_5fdata_13',['get_torch_geometric_data',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#a951147b558268648ccd2e10ebd0f4c40',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5fvoronoi_5ffeatures_14',['get_voronoi_features',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#a6cc87e0af057f2550ee91411ad5f7f25',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['get_5fweights_15',['get_weights',['../classcoverage__control_1_1nn_1_1data__loaders_1_1coverage__env__utils_1_1CoverageEnvUtils.html#a12fcf93bdc2c68412a3d6dc78bf07de1',1,'coverage_control::nn::data_loaders::coverage_env_utils::CoverageEnvUtils']]],
+  ['getactions_16',['GetActions',['../classCoverageControl_1_1AbstractController.html#a00378c7c98b321ae77f000ab481a2005',1,'CoverageControl::AbstractController::GetActions()'],['../classCoverageControl_1_1CentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0',1,'CoverageControl::CentralizedCVT::GetActions()'],['../classCoverageControl_1_1ClairvoyantCVT.html#a834d2cd09c9c88c91e727039f2cfcac0',1,'CoverageControl::ClairvoyantCVT::GetActions()'],['../classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0',1,'CoverageControl::DecentralizedCVT::GetActions()'],['../classCoverageControl_1_1NearOptimalCVT.html#a834d2cd09c9c88c91e727039f2cfcac0',1,'CoverageControl::NearOptimalCVT::GetActions()'],['../classCoverageControl_1_1OracleBangExploreExploit.html#a834d2cd09c9c88c91e727039f2cfcac0',1,'CoverageControl::OracleBangExploreExploit::GetActions()'],['../classCoverageControl_1_1OracleExploreExploit.html#a834d2cd09c9c88c91e727039f2cfcac0',1,'CoverageControl::OracleExploreExploit::GetActions()']]],
+  ['getclosestgridcoordinate_17',['GetClosestGridCoordinate',['../namespaceCoverageControl_1_1MapUtils.html#aa9620847b455131ea6f423cded67bfb4',1,'CoverageControl::MapUtils']]],
+  ['getlocalvoronoifeatures_18',['GetLocalVoronoiFeatures',['../classCoverageControl_1_1CoverageSystem.html#a0e007880c6752418c727f2fd24b4f641',1,'CoverageControl::CoverageSystem']]],
+  ['getmean_19',['GetMean',['../classCoverageControl_1_1BivariateNormalDistribution.html#a0ffcc2a69feb24768403ae651bfebeac',1,'CoverageControl::BivariateNormalDistribution']]],
+  ['getrho_20',['GetRho',['../classCoverageControl_1_1BivariateNormalDistribution.html#a0f861ab5cd0b243fc8bbe2fbdc3e8b47',1,'CoverageControl::BivariateNormalDistribution']]],
+  ['getrobotpositions_21',['GetRobotPositions',['../classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3',1,'CoverageControl::CoverageSystem']]],
+  ['getscale_22',['GetScale',['../classCoverageControl_1_1BivariateNormalDistribution.html#a073500c7bf85d4fed293f6e787a47c74',1,'CoverageControl::BivariateNormalDistribution']]],
+  ['getsigma_23',['GetSigma',['../classCoverageControl_1_1BivariateNormalDistribution.html#a7b9d61f59fdc264a7fc9a114ad53a351',1,'CoverageControl::BivariateNormalDistribution']]],
+  ['getweightedexplorationratio_24',['GetWeightedExplorationRatio',['../classCoverageControl_1_1CoverageSystem.html#a17ef19df7a66f32777c5c871387401a4',1,'CoverageControl::CoverageSystem']]],
+  ['gnnbackbone_25',['GNNBackBone',['../classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html',1,'coverage_control::nn::models::gnn_backbone']]],
+  ['gnnconfigparser_26',['GNNConfigParser',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html',1,'coverage_control::nn::models::config_parser']]]
 ];

@@ -1,5 +1,4 @@
 <map id="core" name="core">
-<area shape="rect" id="node2" href="dir_014c7091652660d97909e2bfbc2e1196.html" title="algorithms" alt="" coords="107,62,189,87"/>
-<area shape="rect" id="clust2" href="dir_3a0deea937e98eff28e03c381f362ef6.html" alt="" coords="27,51,200,97"/>
-<area shape="rect" id="clust1" href="dir_acc2690b8931d4a3a5ea03803c5e99fa.html" title="coverage_control" alt="" coords="16,16,211,108"/>
+<area shape="rect" id="node1" href="dir_3a0deea937e98eff28e03c381f362ef6.html" title="core" alt="" coords="52,51,98,76"/>
+<area shape="rect" id="clust1" href="dir_acc2690b8931d4a3a5ea03803c5e99fa.html" title="coverage_control" alt="" coords="16,16,135,87"/>
 </map>

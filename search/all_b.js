@@ -1,7 +1,26 @@
 var searchData=
 [
-  ['map_5futils_2eh_0',['map_utils.h',['../map__utils_8h.html',1,'']]],
-  ['mapbounds_1',['MapBounds',['../structCoverageControl_1_1MapUtils_1_1MapBounds.html',1,'CoverageControl::MapUtils']]],
-  ['maptype_2',['MapType',['../group__cpp__api__typedefs.html#ga1e7223b1ff04a86829e728711282b957',1,'CoverageControl']]],
-  ['multitrainmodel_3',['MultiTrainModel',['../classcoverage__control_1_1nn_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html',1,'coverage_control::nn::trainers::multi_trainer']]]
+  ['library_0',['Building the Core C++ Library',['../installation.html#autotoc_md18',1,'']]],
+  ['license_1',['License',['../index.html#autotoc_md6',1,'']]],
+  ['load_5factions_2',['load_actions',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a47c7da780acfed1ff91d4b96757a12f1',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fcnn_5fbackbone_3',['load_cnn_backbone',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a9661a554ec690fc47132cd5b0e768d80',1,'coverage_control::nn::models::lpac::LPAC']]],
+  ['load_5fcpp_5fmodel_4',['load_cpp_model',['../classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae393be8e7e39c9dd81580792227e249f',1,'coverage_control::nn::models::cnn::CNN']]],
+  ['load_5fdata_5',['load_data',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html#a91cd5af280083e6a16e5c777a9d67e54',1,'coverage_control::nn::data_loaders::loaders::LocalMapCNNDataset']]],
+  ['load_5fedge_5fweights_6',['load_edge_weights',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a234e23ee92054b3cc15a2128f4e11da5',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5ffeatures_7',['load_features',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aeb266157d21c29876214e13d3ba3e034',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fgnn_5fbackbone_8',['load_gnn_backbone',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a98e9b7d395e6d0e750b77dfda7c2d7a7',1,'coverage_control::nn::models::lpac::LPAC']]],
+  ['load_5fmaps_9',['load_maps',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#ab8514b5120bf91f7d54ea1024b91507d',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fmodel_10',['load_model',['../classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae7614fb6536cebe2da23e32078abcb92',1,'coverage_control.nn.models.cnn.CNN.load_model()'],['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#ae42fc570d70b4e91bde6d869aab8d9d1',1,'coverage_control.nn.models.lpac.LPAC.load_model()']]],
+  ['load_5frobot_5fpositions_11',['load_robot_positions',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a2a494013b6d4e0e0a8cbea1fb0dcde69',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fsaved_5fmodel_12',['load_saved_model',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a72bd567575b885f0d8591f20d75d8941',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['load_5fsaved_5fmodel_5fdict_13',['load_saved_model_dict',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a6bc7e7426158ac0d877db986d417899a',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['load_5fsaved_5foptimizer_14',['load_saved_optimizer',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#abdf5fd130331afa21b31632b44c22e26',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['load_5ftensor_15',['load_tensor',['../classcoverage__control_1_1io__utils_1_1IOUtils.html#a23fc5dff2cfdedf61f46ebdc250cd718',1,'coverage_control::io_utils::IOUtils']]],
+  ['load_5ftoml_16',['load_toml',['../classcoverage__control_1_1io__utils_1_1IOUtils.html#a7eebe56821ae4cd3c500c6d170a2ace5',1,'coverage_control::io_utils::IOUtils']]],
+  ['load_5fyaml_17',['load_yaml',['../classcoverage__control_1_1io__utils_1_1IOUtils.html#aa1dae1644955aba741a1ceb070000ca4',1,'coverage_control::io_utils::IOUtils']]],
+  ['localmapcnndataset_18',['LocalMapCNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html',1,'coverage_control::nn::data_loaders::loaders']]],
+  ['localmapgnndataset_19',['LocalMapGNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapGNNDataset.html',1,'coverage_control::nn::data_loaders::loaders']]],
+  ['lpac_20',['LPAC',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html',1,'coverage_control::nn::models::lpac']]],
+  ['lpac_20architecture_21',['LPAC Architecture',['../coverage-control-problem.html#autotoc_md37',1,'']]],
+  ['lpac_20neural_20network_22',['LPAC Neural Network',['../lpac.html',1,'']]]
 ];

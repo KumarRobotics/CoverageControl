@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['test_0',['Test',['../classcoverage__control_1_1nn_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html#af15d102f8bd09872ec929e45c2dd0597',1,'coverage_control.nn.trainers.multi_trainer.MultiTrainModel.Test()'],['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#aec59b391d9adde693597f8424658ab95',1,'coverage_control.nn.trainers.trainer.TrainModel.Test()']]],
-  ['train_1',['Train',['../classcoverage__control_1_1nn_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html#a2a187f2def5dc81b0d7d3d80096d88ae',1,'coverage_control.nn.trainers.multi_trainer.MultiTrainModel.Train()'],['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a2a187f2def5dc81b0d7d3d80096d88ae',1,'coverage_control.nn.trainers.trainer.TrainModel.Train()']]],
-  ['trainepoch_2',['TrainEpoch',['../classcoverage__control_1_1nn_1_1trainers_1_1multi__trainer_1_1MultiTrainModel.html#a743aae64924a9c6563ddef40b972c6ea',1,'coverage_control.nn.trainers.multi_trainer.MultiTrainModel.TrainEpoch()'],['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a743aae64924a9c6563ddef40b972c6ea',1,'coverage_control.nn.trainers.trainer.TrainModel.TrainEpoch()']]],
-  ['transformpoint_3',['TransformPoint',['../classCoverageControl_1_1BivariateNormalDistribution.html#ab0e0e825d36c28967e8c0449c2c2b913',1,'CoverageControl::BivariateNormalDistribution']]]
+  ['parse_0',['parse',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f',1,'coverage_control.nn.models.config_parser.CNNConfigParser.parse()'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f',1,'coverage_control.nn.models.config_parser.GNNConfigParser.parse()']]],
+  ['perpendicular_1',['Perpendicular',['../classCoverageControl_1_1Vec2d.html#a069a23a0567e0253778cafc6efafeff7',1,'CoverageControl::Vec2d']]],
+  ['polygonymonotonepartition_2',['PolygonYMonotonePartition',['../namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042',1,'CoverageControl']]]
 ];

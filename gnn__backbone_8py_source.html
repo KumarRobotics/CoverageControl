@@ -56,7 +56,7 @@ window.MathJax = {
 						<tbody>
 							<tr id="projectrow">
 								<td id="projectalign">
-									<div id="projectname">Coverage Control Library<span id="projectnumber">&#160;1.0.0</span>
+									<div id="projectname">Coverage Control Library
 									</div>
 								</td>
 							</tr>
@@ -128,42 +128,86 @@ $(function(){initNavTree('gnn__backbone_8py_source.html',''); initResizable(); }
   <div class="headertitle"><div class="title">gnn_backbone.py</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="keyword">import</span> os</div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">import</span> sys</div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">import</span> tomllib</div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">import</span> torch</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">import</span> torch_geometric</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">import</span> CoverageControlTorch</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">from</span> CoverageControlTorch.models.config_parser <span class="keyword">import</span> GNNConfigParser</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">class </span>GNNBackBone(torch.nn.Module, GNNConfigParser):</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="stringliteral">    Implements a multi-layer graph convolutional neural network, with ReLU non-linearities between layers,</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="stringliteral">    according to hyperparameters specified in the input config</span></div>
-<div class="foldopen" id="foldopen00013" data-start="" data-end="">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html">   13</a></span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">def </span>__init__(self, config, input_dim = None):</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        super(GNNBackBone, self).__init__()</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        self.Parse(config)</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keywordflow">if</span> input_dim <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a> = input_dim</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        self.add_module(<span class="stringliteral">&quot;graph_conv_0&quot;</span>, torch_geometric.nn.TAGConv(in_channels = self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a>, out_channels = self.latent_size, K = self.num_hops))</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(1, self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706">num_layers</a>):</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            self.add_module(<span class="stringliteral">&quot;graph_conv_{}&quot;</span>.format(i), torch_geometric.nn.TAGConv(in_channels = self.latent_size, out_channels = self.latent_size, K = self.num_hops))</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">def </span>forward(self, x, edge_index, edge_weight = None):</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706">num_layers</a>):</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            x = self._modules[<span class="stringliteral">&quot;graph_conv_{}&quot;</span>.format(i)](x, edge_index, edge_weight)</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            x = torch.relu(x)</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">return</span> x</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">#  This file is part of the CoverageControl library</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">#</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">#  Author: Saurav Agarwal</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">#  Repository: https://github.com/KumarRobotics/CoverageControl</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">#</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">#  Copyright (c) 2024, Saurav Agarwal</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">#</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">#  The CoverageControl library is free software: you can redistribute it and/or</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">#  modify it under the terms of the GNU General Public License as published by</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">#  the Free Software Foundation, either version 3 of the License, or (at your</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">#  option) any later version.</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">#</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">#  The CoverageControl library is distributed in the hope that it will be</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">#  Public License for more details.</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">#</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">#  You should have received a copy of the GNU General Public License along with</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">#  CoverageControl library. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="stringliteral">Implements a GNN architecture.</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">import</span> torch_geometric</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">from</span> .config_parser <span class="keyword">import</span> GNNConfigParser</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">class </span>GNNBackBone(torch.nn.Module, GNNConfigParser):</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="stringliteral">    Implements a GNN architecture,</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="stringliteral">    according to hyperparameters specified in the input config</span></div>
+<div class="foldopen" id="foldopen00035" data-start="" data-end="">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html">   35</a></span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">def </span>__init__(self, config, input_dim=None):</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        super().__init__()</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        self.<a class="code hl_function" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f">parse</a>(config)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordflow">if</span> input_dim <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a><a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a> = input_dim</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        self.add_module(</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="stringliteral">&quot;graph_conv_0&quot;</span>,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            torch_geometric.nn.TAGConv(</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                in_channels=self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a><a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#a678f7fbb928babf1af66288a698c62c7">input_dim</a>,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                out_channels=self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#ad233f1cd9be3d3eee13aa3891ce03484">latent_size</a>,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                K=self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#abbdd66ebd718046403685519e9a2e8b0">num_hops</a>,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            ),</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        )</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(1, self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#aedf8516949b5868a670a467b12362706">num_layers</a><a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706">num_layers</a>):</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            self.add_module(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                <span class="stringliteral">&quot;graph_conv_{}&quot;</span>.format(i),</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                torch_geometric.nn.TAGConv(</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                    in_channels=self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#ad233f1cd9be3d3eee13aa3891ce03484">latent_size</a>,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                    out_channels=self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#ad233f1cd9be3d3eee13aa3891ce03484">latent_size</a>,</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                    K=self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#abbdd66ebd718046403685519e9a2e8b0">num_hops</a>,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                ),</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            )</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">def </span>forward(</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        self, x: torch.Tensor, edge_index: torch.Tensor, edge_weight=<span class="keywordtype">None</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    ) -&gt; torch.Tensor:</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(self.<a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#aedf8516949b5868a670a467b12362706">num_layers</a><a class="code hl_variable" href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706">num_layers</a>):</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            x = self._modules[<span class="stringliteral">&quot;graph_conv_{}&quot;</span>.format(i)](x, edge_index, edge_weight)</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            x = torch.relu(x)</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">return</span> x</div>
 </div>
-<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone_html_a678f7fbb928babf1af66288a698c62c7"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#a678f7fbb928babf1af66288a698c62c7">coverage_control.nn.models.gnn_backbone.GNNBackBone.input_dim</a></div><div class="ttdeci">input_dim</div><div class="ttdef"><b>Definition</b> <a href="#l00019">gnn_backbone.py:19</a></div></div>
-<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone_html_aedf8516949b5868a670a467b12362706"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706">coverage_control.nn.models.gnn_backbone.GNNBackBone.num_layers</a></div><div class="ttdeci">num_layers</div><div class="ttdef"><b>Definition</b> <a href="#l00022">gnn_backbone.py:22</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser_html_a48ef7fbb9e48517deaeb161805f3c77f"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a48ef7fbb9e48517deaeb161805f3c77f">coverage_control.nn.models.config_parser.GNNConfigParser.parse</a></div><div class="ttdeci">None parse(self, dict config)</div><div class="ttdoc">Parse the configuration for the GNN model.</div><div class="ttdef"><b>Definition</b> <a href="config__parser_8py_source.html#l00073">config_parser.py:73</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser_html_a678f7fbb928babf1af66288a698c62c7"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#a678f7fbb928babf1af66288a698c62c7">coverage_control.nn.models.config_parser.GNNConfigParser.input_dim</a></div><div class="ttdeci">input_dim</div><div class="ttdef"><b>Definition</b> <a href="config__parser_8py_source.html#l00064">config_parser.py:64</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser_html_abbdd66ebd718046403685519e9a2e8b0"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#abbdd66ebd718046403685519e9a2e8b0">coverage_control.nn.models.config_parser.GNNConfigParser.num_hops</a></div><div class="ttdeci">num_hops</div><div class="ttdef"><b>Definition</b> <a href="config__parser_8py_source.html#l00066">config_parser.py:66</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser_html_ad233f1cd9be3d3eee13aa3891ce03484"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#ad233f1cd9be3d3eee13aa3891ce03484">coverage_control.nn.models.config_parser.GNNConfigParser.latent_size</a></div><div class="ttdeci">latent_size</div><div class="ttdef"><b>Definition</b> <a href="config__parser_8py_source.html#l00068">config_parser.py:68</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser_html_aedf8516949b5868a670a467b12362706"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#aedf8516949b5868a670a467b12362706">coverage_control.nn.models.config_parser.GNNConfigParser.num_layers</a></div><div class="ttdeci">num_layers</div><div class="ttdef"><b>Definition</b> <a href="config__parser_8py_source.html#l00067">config_parser.py:67</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone_html_a678f7fbb928babf1af66288a698c62c7"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#a678f7fbb928babf1af66288a698c62c7">coverage_control.nn.models.gnn_backbone.GNNBackBone.input_dim</a></div><div class="ttdeci">input_dim</div><div class="ttdef"><b>Definition</b> <a href="#l00043">gnn_backbone.py:43</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone_html_aedf8516949b5868a670a467b12362706"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706">coverage_control.nn.models.gnn_backbone.GNNBackBone.num_layers</a></div><div class="ttdeci">num_layers</div><div class="ttdef"><b>Definition</b> <a href="#l00054">gnn_backbone.py:54</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

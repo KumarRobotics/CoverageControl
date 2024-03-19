@@ -56,7 +56,7 @@ window.MathJax = {
 						<tbody>
 							<tr id="projectrow">
 								<td id="projectalign">
-									<div id="projectname">Coverage Control Library<span id="projectnumber">&#160;1.0.0</span>
+									<div id="projectname">Coverage Control Library
 									</div>
 								</td>
 							</tr>
@@ -149,145 +149,223 @@ $(function(){initNavTree('data__loader__utils_8py_source.html',''); initResizabl
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">#  You should have received a copy of the GNU General Public License along with</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">#  CoverageControl library. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">import</span> os</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">import</span> yaml</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">import</span> tomllib</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">import</span> torch</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">import</span> torch_geometric</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">import</span> torch_geometric</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">from</span> coverage_control <span class="keyword">import</span> IOUtils</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>__all__ = [<span class="stringliteral">&quot;DataLoaderUtils&quot;</span>]</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">class </span>DataLoaderUtils:</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="stringliteral">    Class to provide utility functions to load tensors and configuration files</span></div>
-<div class="foldopen" id="foldopen00032" data-start="" data-end="">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html">   32</a></span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(path):</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="stringliteral">        Function to load a tensor from a file</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="stringliteral">        Can load tensors from jit script format files</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="stringliteral">        Args:</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="stringliteral">            path (str): Path to the file</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="stringliteral">        Returns:</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="stringliteral">            tensor: The loaded tensor</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="stringliteral">            None: If the file does not exist</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="stringliteral">        Raises:</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="stringliteral">            FileNotFoundError: If the file does not exist</span></div>
-<div class="foldopen" id="foldopen00048" data-start="" data-end="">
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">   48</a></span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="comment"># Throw error if path does not exist</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(path):</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">raise</span> FileNotFoundError(f<span class="stringliteral">&quot;DataLoaderUtils::load_tensor: File not found: {path}&quot;</span>)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="comment"># Load data</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        data = torch.load(path)</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="comment"># Extract tensor if data is in jit script format</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">if</span> isinstance(data, torch.jit.ScriptModule):</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            tensor = list(data.parameters())[0]</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">else</span>:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            tensor = data</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">return</span> tensor</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">class </span>DataLoaderUtils:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="stringliteral">    Class to provide utility functions to load tensors and configuration files</span></div>
+<div class="foldopen" id="foldopen00033" data-start="" data-end="">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html">   33</a></span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="preprocessor">@staticmethod</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#ab8514b5120bf91f7d54ea1024b91507d">load_maps</a>(path: str, use_comm_map: bool = <span class="keyword">False</span>) -&gt; torch.tensor:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="stringliteral">        Function to load maps stored as tensors</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="stringliteral">        The maps are stored as tensors in the following format:</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="stringliteral">        - {path}/local_maps.pt: Local maps</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="stringliteral">        - {path}/obstacle_maps.pt: Obstacle maps</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="stringliteral">        - {path}/comm_maps.pt: Communication maps (if use_comm_map is True)</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="stringliteral">            path (str): Path to the directory containing the maps</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="stringliteral">            use_comm_map (bool): Whether to load the communication map</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="stringliteral">            maps: The loaded maps</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="stringliteral"></span> </div>
+<div class="foldopen" id="foldopen00052" data-start="" data-end="">
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#ab8514b5120bf91f7d54ea1024b91507d">   52</a></span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        local_maps = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/local_maps.pt&quot;</span>)</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        local_maps = local_maps.to_dense().unsqueeze(2)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        obstacle_maps = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/obstacle_maps.pt&quot;</span>)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        obstacle_maps = obstacle_maps.to_dense().unsqueeze(2)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">if</span> use_comm_map:</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            comm_maps = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/comm_maps.pt&quot;</span>)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            comm_maps = comm_maps.to_dense()</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="comment"># comm_maps = (comm_maps * 256 + 256)/512</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            maps = torch.cat([local_maps, comm_maps, obstacle_maps], 2)</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            maps = torch.cat([local_maps, obstacle_maps], 2)</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordflow">return</span> maps</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aaddbcd576820f208f49cb9c064785aaf">load_yaml</a>(path):</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="stringliteral">        Function to load a yaml file</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="stringliteral">        Args:</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="stringliteral">            path (str): Path to the file</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="stringliteral">        Returns:</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="stringliteral">            data: The loaded data</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="stringliteral">        Raises:</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="stringliteral">            FileNotFoundError: If the file does not exist</span></div>
-<div class="foldopen" id="foldopen00072" data-start="" data-end="">
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aaddbcd576820f208f49cb9c064785aaf">   72</a></span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="comment"># Throw error if path does not exist</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(path):</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="keywordflow">raise</span> FileNotFoundError(f<span class="stringliteral">&quot;DataLoaderUtils::load_yaml File not found: {path}&quot;</span>)</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="comment"># Load data</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">with</span> open(path, <span class="stringliteral">&quot;r&quot;</span>) <span class="keyword">as</span> f:</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            data = yaml.load(f, Loader=yaml.FullLoader)</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">return</span> data</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="preprocessor">@staticmethod</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aeb266157d21c29876214e13d3ba3e034">load_features</a>(</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        path: str, output_dim: int = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    ) -&gt; tuple[torch.tensor, torch.tensor, torch.tensor]:</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="stringliteral">        Function to load normalized features</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="stringliteral">        The features are stored as tensors in the following format:</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="stringliteral">        - {path}/normalized_coverage_features.pt: Normalized coverage features</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="stringliteral">        - {path}/../coverage_features_mean.pt: Mean of the coverage features</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="stringliteral">        - {path}/../coverage_features_std.pt: Standard deviation of the coverage features</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="stringliteral">            path (str): Path to the directory containing the features</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="stringliteral">            output_dim (int): Output dimension of the features</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="stringliteral">            features: The loaded features</span></div>
+<div class="foldopen" id="foldopen00086" data-start="" data-end="">
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aeb266157d21c29876214e13d3ba3e034">   86</a></span><span class="stringliteral">            features_mean: Mean of the features</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="stringliteral">            features_std: Standard deviation of the features</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        normalized_coverage_features = IOUtils.load_tensor(</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            f<span class="stringliteral">&quot;{path}/normalized_coverage_features.pt&quot;</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        )</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        coverage_features_mean = IOUtils.load_tensor(</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            f<span class="stringliteral">&quot;{path}/../coverage_features_mean.pt&quot;</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        )</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        coverage_features_std = IOUtils.load_tensor(</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            f<span class="stringliteral">&quot;{path}/../coverage_features_std.pt&quot;</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        )</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keywordflow">if</span> output_dim <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            normalized_coverage_features = normalized_coverage_features[</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                :, :, :output_dim</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            ]</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">return</span> (</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            normalized_coverage_features,</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            coverage_features_mean,</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            coverage_features_std,</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        )</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">def </span>LoadToml(path):</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="comment"># Throw error if path does not exist</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(path):</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="keywordflow">raise</span> FileNotFoundError(f<span class="stringliteral">&quot;data_loader_utils::LoadToml: File not found: {path}&quot;</span>)</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="comment"># Load data</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keyword">with</span> open(path, <span class="stringliteral">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            data = tomllib.load(f)</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">return</span> data</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">def </span>LoadMaps(path, use_comm_map):</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        local_maps = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/local_maps.pt&quot;</span>)</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        local_maps = local_maps.to_dense().unsqueeze(2)</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        obstacle_maps = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/obstacle_maps.pt&quot;</span>)</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        obstacle_maps = obstacle_maps.to_dense().unsqueeze(2)</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">if</span> use_comm_map:</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            comm_maps = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/comm_maps.pt&quot;</span>)</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            comm_maps = comm_maps.to_dense()</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="comment"># comm_maps = (comm_maps * 256 + 256)/512</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            maps = torch.cat([local_maps, comm_maps, obstacle_maps], 2)</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keywordflow">else</span>:</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            maps = torch.cat([local_maps, obstacle_maps], 2)</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">return</span> maps</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">def </span>LoadFeatures(path, output_dim = None):</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        normalized_coverage_features = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/normalized_coverage_features.pt&quot;</span>)</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        coverage_features_mean = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/../coverage_features_mean.pt&quot;</span>)</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        coverage_features_std = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/../coverage_features_std.pt&quot;</span>)</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span> output_dim <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            normalized_coverage_features = normalized_coverage_features[:, :, :output_dim]</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> normalized_coverage_features, coverage_features_mean, coverage_features_std</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">def </span>LoadActions(path):</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        actions = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/normalized_actions.pt&quot;</span>)</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        actions_mean = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/../actions_mean.pt&quot;</span>)</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        actions_std = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/../actions_std.pt&quot;</span>)</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keywordflow">return</span> actions, actions_mean, actions_std</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">def </span>LoadRobotPositions(path):</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        robot_positions = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/robot_positions.pt&quot;</span>)</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keywordflow">return</span> robot_positions</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keyword">def </span>LoadEdgeWeights(path):</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        edge_weights = <a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">load_tensor</a>(f<span class="stringliteral">&quot;{path}/edge_weights.pt&quot;</span>)</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        edge_weights.to_dense()</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">return</span> edge_weights</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">def </span>ToTorchGeometricData(feature, edge_weights, pos = None):</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="comment"># senders, receivers = numpy.nonzero(edge_weights)</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="comment"># weights = edge_weights[senders, receivers]</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="comment"># edge_index = numpy.stack([senders, receivers])</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        edge_weights = edge_weights.to_sparse()</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        edge_weights = edge_weights.coalesce()</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        edge_index = edge_weights.indices().long()</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        weights = edge_weights.values().float()</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="comment"># weights = torch.reciprocal(edge_weights.values().float())</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        <span class="keywordflow">if</span> pos == <span class="keywordtype">None</span>:</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            data = torch_geometric.data.Data(</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                    x=feature,</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                    edge_index=edge_index.clone().detach(),</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                    edge_weight=weights.clone().detach()</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                    )</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <span class="keywordflow">else</span>:</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            data = torch_geometric.data.Data(</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                    x=feature,</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                    edge_index=edge_index.clone().detach(),</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                    edge_weight=weights.clone().detach(),</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                    pos=pos.clone().detach()</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                    )</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keywordflow">return</span> data</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="preprocessor">@staticmethod</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a47c7da780acfed1ff91d4b96757a12f1">load_actions</a>(path: str) -&gt; tuple[torch.tensor, torch.tensor, torch.tensor]:</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="stringliteral">        Function to load normalized actions</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="stringliteral">        The actions are stored as tensors in the following format:</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="stringliteral">        - {path}/normalized_actions.pt: Normalized actions</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="stringliteral">        - {path}/../actions_mean.pt: Mean of the actions</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="stringliteral">        - {path}/../actions_std.pt: Standard deviation of the actions</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="stringliteral">            path (str): Path to the directory containing the actions</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="stringliteral">            actions: The loaded actions</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="stringliteral">            actions_mean: Mean of the actions</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="stringliteral">            actions_std: Standard deviation of the actions</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="stringliteral"></span> </div>
+<div class="foldopen" id="foldopen00128" data-start="" data-end="">
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a47c7da780acfed1ff91d4b96757a12f1">  128</a></span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        actions = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/normalized_actions.pt&quot;</span>)</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        actions_mean = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/../actions_mean.pt&quot;</span>)</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        actions_std = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/../actions_std.pt&quot;</span>)</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="keywordflow">return</span> actions, actions_mean, actions_std</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
 </div>
-<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_a90769a46e0774c6544e5e88a2d37dcda"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a90769a46e0774c6544e5e88a2d37dcda">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_tensor</a></div><div class="ttdeci">load_tensor(path)</div><div class="ttdoc">Function to load a tensor from a file Can load tensors from jit script format files.</div><div class="ttdef"><b>Definition</b> <a href="#l00048">data_loader_utils.py:48</a></div></div>
-<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_aaddbcd576820f208f49cb9c064785aaf"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aaddbcd576820f208f49cb9c064785aaf">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_yaml</a></div><div class="ttdeci">load_yaml(path)</div><div class="ttdoc">Function to load a yaml file.</div><div class="ttdef"><b>Definition</b> <a href="#l00072">data_loader_utils.py:72</a></div></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="preprocessor">@staticmethod</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a2a494013b6d4e0e0a8cbea1fb0dcde69">load_robot_positions</a>(path: str) -&gt; torch.tensor:</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="stringliteral">        Function to load robot positions</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="stringliteral">        The robot positions are stored as tensors in the following format:</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="stringliteral">        - {path}/robot_positions.pt: Robot positions</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="stringliteral">            path (str): Path to the directory containing the robot positions</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="stringliteral">            robot_positions: The loaded robot positions</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="stringliteral"></span> </div>
+<div class="foldopen" id="foldopen00149" data-start="" data-end="">
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a2a494013b6d4e0e0a8cbea1fb0dcde69">  149</a></span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        robot_positions = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/robot_positions.pt&quot;</span>)</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keywordflow">return</span> robot_positions</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="preprocessor">@staticmethod</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a234e23ee92054b3cc15a2128f4e11da5">load_edge_weights</a>(path: str) -&gt; torch.tensor:</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="stringliteral">        Function to load edge weights</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="stringliteral">        The edge weights are stored as tensors in the following format:</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="stringliteral">        - {path}/edge_weights.pt: Edge weights</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="stringliteral">            path (str): Path to the directory containing the edge weights</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="stringliteral">            edge_weights: The loaded edge weights</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="stringliteral"></span> </div>
+<div class="foldopen" id="foldopen00168" data-start="" data-end="">
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a234e23ee92054b3cc15a2128f4e11da5">  168</a></span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        edge_weights = IOUtils.load_tensor(f<span class="stringliteral">&quot;{path}/edge_weights.pt&quot;</span>)</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        edge_weights.to_dense()</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordflow">return</span> edge_weights</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="preprocessor">@staticmethod</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">def </span><a class="code hl_function" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a6d7457446efed626665b39e3c99c54e5">to_torch_geometric_data</a>(</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        feature: torch.tensor, edge_weights: torch.tensor, pos: torch.tensor = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    ) -&gt; torch_geometric.data.Data:</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="stringliteral">        The function converts the feature, edge_weights and pos to a torch_geometric.data.Data object</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="stringliteral">        This is essential for using the data with the PyTorch Geometric library</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="stringliteral">            feature (torch.tensor): The feature tensor</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="stringliteral">            edge_weights (torch.tensor): The edge weights tensor</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="stringliteral">            pos (torch.tensor): The position tensor</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="stringliteral">            data: The torch_geometric.data.Data object</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="stringliteral">            data.x: The feature tensor</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="stringliteral">            data.edge_index: The edge index tensor</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="stringliteral">            data.edge_weight: The edge weight tensor</span></div>
+<div class="foldopen" id="foldopen00192" data-start="" data-end="">
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a6d7457446efed626665b39e3c99c54e5">  192</a></span><span class="stringliteral">            data.pos: The position tensor (if pos is not None)</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="comment"># senders, receivers = numpy.nonzero(edge_weights)</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="comment"># weights = edge_weights[senders, receivers]</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="comment"># edge_index = numpy.stack([senders, receivers])</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        edge_weights = edge_weights.to_sparse()</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        edge_weights = edge_weights.coalesce()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        edge_index = edge_weights.indices().long()</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        weights = edge_weights.values().float()</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="comment"># weights = torch.reciprocal(edge_weights.values().float())</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">if</span> pos <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            data = torch_geometric.data.Data(</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                x=feature,</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                edge_index=edge_index.clone().detach(),</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                edge_weight=weights.clone().detach(),</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            )</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            data = torch_geometric.data.Data(</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                x=feature,</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                edge_index=edge_index.clone().detach(),</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                edge_weight=weights.clone().detach(),</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                pos=pos.clone().detach(),</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            )</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <span class="keywordflow">return</span> data</div>
+</div>
+</div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_a234e23ee92054b3cc15a2128f4e11da5"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a234e23ee92054b3cc15a2128f4e11da5">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_edge_weights</a></div><div class="ttdeci">torch.tensor load_edge_weights(str path)</div><div class="ttdoc">Function to load edge weights.</div><div class="ttdef"><b>Definition</b> <a href="#l00168">data_loader_utils.py:168</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_a2a494013b6d4e0e0a8cbea1fb0dcde69"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a2a494013b6d4e0e0a8cbea1fb0dcde69">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_robot_positions</a></div><div class="ttdeci">torch.tensor load_robot_positions(str path)</div><div class="ttdoc">Function to load robot positions.</div><div class="ttdef"><b>Definition</b> <a href="#l00149">data_loader_utils.py:149</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_a47c7da780acfed1ff91d4b96757a12f1"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a47c7da780acfed1ff91d4b96757a12f1">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_actions</a></div><div class="ttdeci">tuple[torch.tensor, torch.tensor, torch.tensor] load_actions(str path)</div><div class="ttdoc">Function to load normalized actions.</div><div class="ttdef"><b>Definition</b> <a href="#l00128">data_loader_utils.py:128</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_a6d7457446efed626665b39e3c99c54e5"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a6d7457446efed626665b39e3c99c54e5">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.to_torch_geometric_data</a></div><div class="ttdeci">torch_geometric.data.Data to_torch_geometric_data(torch.tensor feature, torch.tensor edge_weights, torch.tensor pos=None)</div><div class="ttdoc">The function converts the feature, edge_weights and pos to a torch_geometric.data....</div><div class="ttdef"><b>Definition</b> <a href="#l00192">data_loader_utils.py:194</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_ab8514b5120bf91f7d54ea1024b91507d"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#ab8514b5120bf91f7d54ea1024b91507d">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_maps</a></div><div class="ttdeci">torch.tensor load_maps(str path, bool use_comm_map=False)</div><div class="ttdoc">Function to load maps stored as tensors.</div><div class="ttdef"><b>Definition</b> <a href="#l00052">data_loader_utils.py:52</a></div></div>
+<div class="ttc" id="aclasscoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils_html_aeb266157d21c29876214e13d3ba3e034"><div class="ttname"><a href="classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aeb266157d21c29876214e13d3ba3e034">coverage_control.nn.data_loaders.data_loader_utils.DataLoaderUtils.load_features</a></div><div class="ttdeci">tuple[torch.tensor, torch.tensor, torch.tensor] load_features(str path, int output_dim=None)</div><div class="ttdoc">Function to load normalized features.</div><div class="ttdef"><b>Definition</b> <a href="#l00086">data_loader_utils.py:88</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

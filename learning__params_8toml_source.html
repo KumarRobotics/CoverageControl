@@ -56,7 +56,7 @@ window.MathJax = {
 						<tbody>
 							<tr id="projectrow">
 								<td id="projectalign">
-									<div id="projectname">Coverage Control Library<span id="projectnumber">&#160;1.0.0</span>
+									<div id="projectname">Coverage Control Library
 									</div>
 								</td>
 							</tr>
@@ -128,41 +128,53 @@ $(function(){initNavTree('learning__params_8toml_source.html',''); initResizable
   <div class="headertitle"><div class="title">learning_params.toml</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span>DataDir =  &quot;/root/CoverageControl_ws/data/pure_coverage/&quot; # Absolute location</div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span>DataDir =  &quot;${CoverageControl_ws}/lpac/&quot; # Absolute location</div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span>GPUs =  [4, 5]</div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>[ModelConfig]</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>UseCommMaps = True</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>[GNNBackBone]</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>InputDim = 7</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>NumHops = 3</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>NumLayers = 4</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>LatentSize = 64</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>OutputDim = 2</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>[GNNTraining]</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>LearningRate = 0.001</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>WeightDecay = 0.0001</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>BatchSize = 10</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>NumEpochs = 50</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>[CNNBackBone]</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>InputDim = 4</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>OutputDim = 7</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>NumLayers = 2</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>LatentSize = 8</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>KernelSize = 3</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>ImageSize = 32</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>[CNNTraining]</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>LearningRate = 0.001</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>WeightDecay = 0.0001</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>BatchSize = 10</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>NumEpochs = 50</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span>GPUs =  [0, 1]</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span>NumWorkers = 4</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span># Directory to save the model</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span># If a model is already present, it will be loaded</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span># Similarly, for the optimizer</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>[LPACModel]</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>Dir = &quot;${CoverageControl_ws}/lpac/models/&quot;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>Model = &quot;model.pt&quot;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>Optimizer = &quot;optimizer.pt&quot;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>[CNNModel]</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>Dir = &quot;${CoverageControl_ws}/lpac/models/&quot; # Absolute location</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>Model = &quot;model.pt&quot;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>Optimizer = &quot;optimizer.pt&quot;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>[ModelConfig]</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>UseCommMaps = true</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>[GNNBackBone]</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>InputDim = 7</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>NumHops = 3</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>NumLayers = 5</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>LatentSize = 256</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>OutputDim = 2</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>[LPACTraining]</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>LearningRate = 0.0001</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>WeightDecay = 0.001</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>BatchSize = 10</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>NumEpochs = 15</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>[CNNBackBone]</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>InputDim = 4</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>NumLayers = 3</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>LatentSize = 32</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>KernelSize = 3</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>ImageSize = 32</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>OutputDim = 7</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>[CNNTraining]</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>LearningRate = 0.0001</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>WeightDecay = 0.001</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>BatchSize = 10</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>NumEpochs = 15</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>Momentum = 0.1</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

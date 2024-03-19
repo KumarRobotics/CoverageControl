@@ -27,17 +27,17 @@ var NAVTREE =
   [ "Coverage Control Library", "index.html", [
     [ "Home", "index.html", "index" ],
     [ "Installation", "installation.html", [
-      [ "Docker Installation", "installation.html#autotoc_md7", [
-        [ "Prerequisites (Optional)", "installation.html#autotoc_md8", null ],
-        [ "Docker Container", "installation.html#autotoc_md10", null ],
-        [ "Building and Executing", "installation.html#autotoc_md12", null ]
+      [ "PyPI Installation", "installation.html#autotoc_md7", null ],
+      [ "Docker Installation", "installation.html#autotoc_md9", [
+        [ "Prerequisites (Optional)", "installation.html#autotoc_md10", null ],
+        [ "Docker Container", "installation.html#autotoc_md12", null ]
       ] ],
-      [ "Installation from source", "installation.html#autotoc_md13", [
+      [ "Installation From Source", "installation.html#installation-from-source", [
         [ "Prerequisites", "installation.html#autotoc_md14", [
           [ "CUDA Support", "installation.html#autotoc_md15", null ]
         ] ],
-        [ "Building the Core Library", "installation.html#autotoc_md17", null ],
-        [ "Python Packages", "installation.html#autotoc_md19", null ]
+        [ "Automated Installation", "installation.html#autotoc_md17", null ],
+        [ "Building the Core C++ Library", "installation.html#autotoc_md18", null ]
       ] ]
     ] ],
     [ "Quick Start", "quick_start.html", [
@@ -47,8 +47,20 @@ var NAVTREE =
         [ "Compile and Run", "quick_start.html#autotoc_md24", null ]
       ] ]
     ] ],
-    [ "Problem Statement", "coverage-control-problem.html", null ],
-    [ "LPAC Architecture", "lpac.html", null ],
+    [ "LPAC Neural Network", "lpac.html", null ],
+    [ "Theoretical Background", "coverage-control-problem.html", [
+      [ "Coverage Control Problem", "coverage-control-problem.html#autotoc_md29", [
+        [ "Introduction", "coverage-control-problem.html#autotoc_md30", null ],
+        [ "Cost Function", "coverage-control-problem.html#autotoc_md31", null ],
+        [ "The Problem", "coverage-control-problem.html#autotoc_md33", null ],
+        [ "Decentralized Coverage Control", "coverage-control-problem.html#autotoc_md35", null ]
+      ] ],
+      [ "LPAC Architecture", "coverage-control-problem.html#autotoc_md37", [
+        [ "Navigation of Robot Swarms", "coverage-control-problem.html#autotoc_md38", null ],
+        [ "The Challenge", "coverage-control-problem.html#autotoc_md39", null ],
+        [ "Architecture", "coverage-control-problem.html#autotoc_md40", null ]
+      ] ]
+    ] ],
     [ "Reference Manual", "topics.html", "topics" ],
     [ "File List", "files.html", "files" ]
   ] ]
@@ -57,7 +69,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "____init_____8py_source.html",
-"typedefs_8h_source.html"
+"group__cpp__api__constants.html#gad08691d2b43666bbc3f8411c3fd3ea7e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['localmapcnndataset_0',['LocalMapCNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loaders_1_1LocalMapCNNDataset.html',1,'coverage_control::nn::data_loaders::data_loaders']]],
-  ['localmapgnndataset_1',['LocalMapGNNDataset',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loaders_1_1LocalMapGNNDataset.html',1,'coverage_control::nn::data_loaders::data_loaders']]]
+  ['geolocaltransform_0',['GeoLocalTransform',['../classCoverageControl_1_1GeoLocalTransform.html',1,'CoverageControl']]],
+  ['gnnbackbone_1',['GNNBackBone',['../classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html',1,'coverage_control::nn::models::gnn_backbone']]],
+  ['gnnconfigparser_2',['GNNConfigParser',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html',1,'coverage_control::nn::models::config_parser']]]
 ];

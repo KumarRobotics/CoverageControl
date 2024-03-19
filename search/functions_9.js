@@ -1,5 +1,19 @@
 var searchData=
 [
-  ['perpendicular_0',['Perpendicular',['../classCoverageControl_1_1Vec2d.html#a069a23a0567e0253778cafc6efafeff7',1,'CoverageControl::Vec2d']]],
-  ['polygonymonotonepartition_1',['PolygonYMonotonePartition',['../namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042',1,'CoverageControl']]]
+  ['load_5factions_0',['load_actions',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a47c7da780acfed1ff91d4b96757a12f1',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fcnn_5fbackbone_1',['load_cnn_backbone',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a9661a554ec690fc47132cd5b0e768d80',1,'coverage_control::nn::models::lpac::LPAC']]],
+  ['load_5fcpp_5fmodel_2',['load_cpp_model',['../classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae393be8e7e39c9dd81580792227e249f',1,'coverage_control::nn::models::cnn::CNN']]],
+  ['load_5fdata_3',['load_data',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html#a91cd5af280083e6a16e5c777a9d67e54',1,'coverage_control::nn::data_loaders::loaders::LocalMapCNNDataset']]],
+  ['load_5fedge_5fweights_4',['load_edge_weights',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a234e23ee92054b3cc15a2128f4e11da5',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5ffeatures_5',['load_features',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#aeb266157d21c29876214e13d3ba3e034',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fgnn_5fbackbone_6',['load_gnn_backbone',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a98e9b7d395e6d0e750b77dfda7c2d7a7',1,'coverage_control::nn::models::lpac::LPAC']]],
+  ['load_5fmaps_7',['load_maps',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#ab8514b5120bf91f7d54ea1024b91507d',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fmodel_8',['load_model',['../classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html#ae7614fb6536cebe2da23e32078abcb92',1,'coverage_control.nn.models.cnn.CNN.load_model()'],['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#ae42fc570d70b4e91bde6d869aab8d9d1',1,'coverage_control.nn.models.lpac.LPAC.load_model()']]],
+  ['load_5frobot_5fpositions_9',['load_robot_positions',['../classcoverage__control_1_1nn_1_1data__loaders_1_1data__loader__utils_1_1DataLoaderUtils.html#a2a494013b6d4e0e0a8cbea1fb0dcde69',1,'coverage_control::nn::data_loaders::data_loader_utils::DataLoaderUtils']]],
+  ['load_5fsaved_5fmodel_10',['load_saved_model',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a72bd567575b885f0d8591f20d75d8941',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['load_5fsaved_5fmodel_5fdict_11',['load_saved_model_dict',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a6bc7e7426158ac0d877db986d417899a',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['load_5fsaved_5foptimizer_12',['load_saved_optimizer',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#abdf5fd130331afa21b31632b44c22e26',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['load_5ftensor_13',['load_tensor',['../classcoverage__control_1_1io__utils_1_1IOUtils.html#a23fc5dff2cfdedf61f46ebdc250cd718',1,'coverage_control::io_utils::IOUtils']]],
+  ['load_5ftoml_14',['load_toml',['../classcoverage__control_1_1io__utils_1_1IOUtils.html#a7eebe56821ae4cd3c500c6d170a2ace5',1,'coverage_control::io_utils::IOUtils']]],
+  ['load_5fyaml_15',['load_yaml',['../classcoverage__control_1_1io__utils_1_1IOUtils.html#aa1dae1644955aba741a1ceb070000ca4',1,'coverage_control::io_utils::IOUtils']]]
 ];

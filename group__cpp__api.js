@@ -16,23 +16,23 @@ var group__cpp__api =
       [ "pWorldMapSize", "classCoverageControl_1_1Parameters.html#a012d80426433506f0393a2d1ced26bfe", null ]
     ] ],
     [ "AbstractController", "classCoverageControl_1_1AbstractController.html", [
-      [ "ComputeActions", "classCoverageControl_1_1AbstractController.html#af5bf5df992a8147d832f170e26a93e20", null ],
+      [ "ComputeActions", "classCoverageControl_1_1AbstractController.html#a4d5f88b1a902651a68857c8eeb8b31b7", null ],
       [ "GetActions", "classCoverageControl_1_1AbstractController.html#a00378c7c98b321ae77f000ab481a2005", null ]
     ] ],
     [ "CentralizedCVT", "classCoverageControl_1_1CentralizedCVT.html", [
-      [ "ComputeActions", "classCoverageControl_1_1CentralizedCVT.html#a93324c1cb821ae58acecca65beda970f", null ],
+      [ "ComputeActions", "classCoverageControl_1_1CentralizedCVT.html#a1a841cad0973710964ae0bd8cf57cef7", null ],
       [ "GetActions", "classCoverageControl_1_1CentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0", null ]
     ] ],
     [ "ClairvoyantCVT", "classCoverageControl_1_1ClairvoyantCVT.html", [
-      [ "ComputeActions", "classCoverageControl_1_1ClairvoyantCVT.html#a93324c1cb821ae58acecca65beda970f", null ],
+      [ "ComputeActions", "classCoverageControl_1_1ClairvoyantCVT.html#a1a841cad0973710964ae0bd8cf57cef7", null ],
       [ "GetActions", "classCoverageControl_1_1ClairvoyantCVT.html#a834d2cd09c9c88c91e727039f2cfcac0", null ]
     ] ],
     [ "DecentralizedCVT", "classCoverageControl_1_1DecentralizedCVT.html", [
-      [ "ComputeActions", "classCoverageControl_1_1DecentralizedCVT.html#a93324c1cb821ae58acecca65beda970f", null ],
+      [ "ComputeActions", "classCoverageControl_1_1DecentralizedCVT.html#a1a841cad0973710964ae0bd8cf57cef7", null ],
       [ "GetActions", "classCoverageControl_1_1DecentralizedCVT.html#a834d2cd09c9c88c91e727039f2cfcac0", null ]
     ] ],
     [ "NearOptimalCVT", "classCoverageControl_1_1NearOptimalCVT.html", [
-      [ "ComputeActions", "classCoverageControl_1_1NearOptimalCVT.html#a93324c1cb821ae58acecca65beda970f", null ],
+      [ "ComputeActions", "classCoverageControl_1_1NearOptimalCVT.html#a1a841cad0973710964ae0bd8cf57cef7", null ],
       [ "GetActions", "classCoverageControl_1_1NearOptimalCVT.html#a834d2cd09c9c88c91e727039f2cfcac0", null ]
     ] ],
     [ "BivariateNormalDistribution", "classCoverageControl_1_1BivariateNormalDistribution.html", [
@@ -88,10 +88,11 @@ var group__cpp__api =
     [ "VoronoiCell", "structCoverageControl_1_1VoronoiCell.html", null ],
     [ "Voronoi", "classCoverageControl_1_1Voronoi.html", null ],
     [ "WorldIDF", "classCoverageControl_1_1WorldIDF.html", [
+      [ "WorldIDF", "classCoverageControl_1_1WorldIDF.html#ae4f6c1b9c2a714d3ba51eb1922c5542a", null ],
       [ "AddNormalDistribution", "classCoverageControl_1_1WorldIDF.html#ab9add37d675c45464964b993295c4c78", null ],
       [ "AddNormalDistribution", "classCoverageControl_1_1WorldIDF.html#a58957784a130400a247328824951577d", null ],
       [ "AddUniformDistributionPolygon", "classCoverageControl_1_1WorldIDF.html#ade6915e56b624b23dffc85f25c0f11c1", null ],
-      [ "ComputeImportanceRectangle", "classCoverageControl_1_1WorldIDF.html#af913a85adce2dc93045e8754c13d8ba0", null ],
+      [ "GenerateMapCPU", "classCoverageControl_1_1WorldIDF.html#a249129a9267eee0084fd46e18b8a0f70", null ],
       [ "WriteWorldMap", "classCoverageControl_1_1WorldIDF.html#ad9d2b62c3f1125c5253bec8cc03092b5", null ]
     ] ]
 ];

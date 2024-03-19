@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['problem_20statement_0',['Problem Statement',['../coverage-control-problem.html',1,'']]]
+  ['network_0',['LPAC Neural Network',['../lpac.html',1,'']]],
+  ['neural_20network_1',['LPAC Neural Network',['../lpac.html',1,'']]]
 ];

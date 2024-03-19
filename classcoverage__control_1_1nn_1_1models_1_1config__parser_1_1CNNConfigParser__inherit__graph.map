@@ -1,5 +1,7 @@
 <map id="CNNConfigParser" name="CNNConfigParser">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,134,30"/>
-<area shape="rect" id="Node000002" href="$classcoverage__control_1_1nn_1_1models_1_1cnn__backbone_1_1CNNBackBone.html" title="Implements a multi&#45;layer convolutional neural network, with ReLU non&#45;linearities between layers,..." alt="" coords="14,78,125,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,46,72,78,67,78,67,46"/>
+<area shape="rect" id="Node000001" title="This file contains the configuration parser for the models." alt="" coords="19,5,147,30"/>
+<area shape="rect" id="Node000002" href="$classcoverage__control_1_1nn_1_1models_1_1cnn_1_1CNN.html" title="Implements an architecture consisting of a multi&#45;layer CNN followed by an MLP, according to parameter..." alt="" coords="5,78,57,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,44,42,79,37,76,63,41"/>
+<area shape="rect" id="Node000003" href="$classcoverage__control_1_1nn_1_1models_1_1cnn__backbone_1_1CNNBackBone.html" title="Implements a multi&#45;layer convolutional neural network, with leaky&#45;ReLU non&#45;linearities between layers..." alt="" coords="81,78,192,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,41,130,76,126,79,99,44"/>
 </map>

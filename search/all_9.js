@@ -1,11 +1,15 @@
 var searchData=
 [
-  ['keps_0',['kEps',['../group__cpp__api__constants.html#ga5deba897e5581fb736ceb59c2a6feb5a',1,'CoverageControl']]],
-  ['kfloatmax_1',['kFloatMax',['../namespaceCoverageControl.html#a6a0b6d725318748eaa58165861adb78f',1,'CoverageControl']]],
-  ['kfloatmin_2',['kFloatMin',['../namespaceCoverageControl.html#a442da004e1f4be1a1125f6272a6c99bf',1,'CoverageControl']]],
-  ['kinfd_3',['kInfD',['../group__cpp__api__constants.html#ga5e878bac48ebe71bc1593bb64d33a3b7',1,'CoverageControl']]],
-  ['klargeeps_4',['kLargeEps',['../group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05',1,'CoverageControl']]],
-  ['kmaxprecision_5',['kMaxPrecision',['../group__cpp__api__constants.html#gad08691d2b43666bbc3f8411c3fd3ea7e',1,'CoverageControl']]],
-  ['konebysqrt2_6',['kOneBySqrt2',['../group__cpp__api__constants.html#ga845278ec96128e76681e0e8e6368ccad',1,'CoverageControl']]],
-  ['ksqrt2_7',['kSqrt2',['../group__cpp__api__constants.html#ga68173a231b63d8188abeb9a5f0f2b579',1,'CoverageControl']]]
+  ['imp_0',['imp',['../structCoverageControl_1_1PolygonFeature.html#a81bda3e8f02a5ed6ee510e972e4adcd1',1,'CoverageControl::PolygonFeature']]],
+  ['initializecuda_1',['InitializeCUDA',['../classCoverageControl_1_1CudaUtils.html#ab4dadd4ca5b34fc6ed93444d18643274',1,'CoverageControl::CudaUtils']]],
+  ['installation_2',['Installation',['../installation.html#autotoc_md17',1,'Automated Installation'],['../installation.html#autotoc_md9',1,'Docker Installation'],['../installation.html',1,'Installation'],['../installation.html#autotoc_md7',1,'PyPI Installation']]],
+  ['installation_20from_20source_3',['Installation From Source',['../installation.html#installation-from-source',1,'']]],
+  ['integratequarterplane_4',['IntegrateQuarterPlane',['../classCoverageControl_1_1BivariateNormalDistribution.html#af43dc0f1e143bce867ecb33d8c67ad19',1,'CoverageControl::BivariateNormalDistribution']]],
+  ['interface_5',['Interface',['../quick_start.html#autotoc_md23',1,'C++ Interface'],['../quick_start.html#autotoc_md21',1,'Python Interface']]],
+  ['introduction_6',['Introduction',['../coverage-control-problem.html#autotoc_md30',1,'']]],
+  ['io_5futils_2epy_7',['io_utils.py',['../io__utils_8py.html',1,'']]],
+  ['ioutils_8',['IOUtils',['../classcoverage__control_1_1io__utils_1_1IOUtils.html',1,'coverage_control::io_utils']]],
+  ['iscudaavailable_9',['IsCudaAvailable',['../classCoverageControl_1_1CudaUtils.html#a16bca99c34b8ab840563850064079b22',1,'CoverageControl::CudaUtils']]],
+  ['iscudainitialized_10',['IsCudaInitialized',['../classCoverageControl_1_1CudaUtils.html#a485d8843e8b96f69a627f49243e9b449',1,'CoverageControl::CudaUtils']]],
+  ['ispointinmonotonepolygon_11',['IsPointInMonotonePolygon',['../namespaceCoverageControl.html#aebbc68be9e0fa66d1e34be175c8ecd18',1,'CoverageControl']]]
 ];

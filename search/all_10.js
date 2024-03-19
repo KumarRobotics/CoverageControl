@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['robot_20swarms_0',['Navigation of Robot Swarms',['../lpac.html#autotoc_md31',1,'']]],
-  ['robot_5fmodel_2eh_1',['robot_model.h',['../robot__model_8h.html',1,'']]],
-  ['robotmodel_2',['RobotModel',['../classCoverageControl_1_1RobotModel.html',1,'RobotModel'],['../classCoverageControl_1_1RobotModel.html#afa6b3d4664d2ae39efa3a145c915dcf1',1,'CoverageControl::RobotModel::RobotModel()']]],
-  ['run_3',['Compile and Run',['../quick_start.html#autotoc_md24',1,'']]]
+  ['queue_5ft_0',['queue_t',['../group__cpp__api__typedefs.html#gafb74cd37ffcdf39e89e52b7d18243822',1,'CoverageControl']]],
+  ['quick_20start_1',['Quick Start',['../quick_start.html',1,'']]]
 ];

@@ -56,7 +56,7 @@ window.MathJax = {
 						<tbody>
 							<tr id="projectrow">
 								<td id="projectalign">
-									<div id="projectname">Coverage Control Library<span id="projectnumber">&#160;1.0.0</span>
+									<div id="projectname">Coverage Control Library
 									</div>
 								</td>
 							</tr>
@@ -140,21 +140,19 @@ Parameters</h1>
 </div><!-- fragment --><p> See <a class="el" href="coverage__control__params_8toml_source.html">params/coverage_control_params.toml</a> for an example configuration file.</p>
 <h1><a class="anchor" id="autotoc_md21"></a>
 Python Interface</h1>
-<p>Import the <code><a class="el" href="namespaceCoverageControl.html" title="Namespace for the CoverageControl library.">CoverageControl</a></code> library and the <code>ClairvoyantCVT</code> algorithm. </p><div class="fragment"><div class="line"><span class="keyword">import</span> sys</div>
-<div class="line"><span class="keyword">import</span> CoverageControl <span class="comment"># Main library</span></div>
-<div class="line"><span class="keyword">from</span> CoverageControl <span class="keyword">import</span> ClairvoyantCVT <span class="keyword">as</span> CoverageAlgorithm</div>
+<p>Import the <code>coverage_control</code> library and the <code>ClairvoyantCVT</code> algorithm. </p><div class="fragment"><div class="line"><span class="keyword">import</span> coverage_control <span class="keyword">as</span> cc</div>
+<div class="line"><span class="keyword">from</span> coverage_control <span class="keyword">import</span> ClairvoyantCVT <span class="keyword">as</span> CoverageAlgorithm</div>
 </div><!-- fragment --><p>You can choose one of the following algorithms instead of <code>ClairvoyantCVT</code>:</p><ul>
 <li><code>ClairvoyantCVT</code></li>
 <li><code>CentralizedCVT</code></li>
 <li><code>DecentralizedCVT</code></li>
 <li><code>NearOptimalCVT</code></li>
 </ul>
-<p>Create a <code><a class="el" href="classCoverageControl_1_1Parameters.html" title="Class to store parameters.">CoverageControl::Parameters</a></code> object and load the configuration file: </p><div class="fragment"><div class="line">params = <a class="code hl_class" href="classCoverageControl_1_1Parameters.html">CoverageControl.Parameters</a>() <span class="comment"># for default parameters</span></div>
-</div><!-- fragment --><p>Create a simulation environment: </p><div class="fragment"><div class="line">env = <a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageControl.CoverageSystem</a>(params)</div>
-<div class="ttc" id="aclassCoverageControl_1_1CoverageSystem_html"><div class="ttname"><a href="classCoverageControl_1_1CoverageSystem.html">CoverageControl::CoverageSystem</a></div><div class="ttdoc">The CoverageSystem class is the main class for the coverage control library.</div><div class="ttdef"><b>Definition</b> <a href="coverage__system_8h_source.html#l00068">coverage_system.h:68</a></div></div>
-</div><!-- fragment --><p>Plot the initial environment: </p><div class="fragment"><div class="line">env.PlotInitMap(<span class="stringliteral">&quot;init_map&quot;</span>);</div>
+<p>Create a <code><a class="el" href="classCoverageControl_1_1Parameters.html" title="Class to store parameters.">CoverageControl::Parameters</a></code> object and load the configuration file: </p><div class="fragment"><div class="line">params = cc.Parameters() <span class="comment"># for default parameters</span></div>
+</div><!-- fragment --><p>Create a simulation environment: </p><div class="fragment"><div class="line">env = cc.CoverageSystem(params)</div>
+</div><!-- fragment --><p>Plot the initial environment (needs <code>gnuplot</code> installed): </p><div class="fragment"><div class="line">env.PlotInitMap(<span class="stringliteral">&quot;init_map&quot;</span>);</div>
 </div><!-- fragment --><p>Print the initial coverage cost: </p><div class="fragment"><div class="line">init_cost = env.GetObjectiveValue()</div>
-<div class="line">print(<span class="stringliteral">&quot;Initial Coverage cost: &quot;</span> + str(<span class="stringliteral">&#39;{:.2e}&#39;</span>.format(init_cost)))</div>
+<div class="line">print(f<span class="stringliteral">&quot;Initial Coverage cost: {init_cost:.2e}&quot;</span>)</div>
 </div><!-- fragment --><p>Create a controller using the <code>CoverageAlgorithm</code> and the environment: </p><div class="fragment"><div class="line">controller = <a class="code hl_class" href="classCoverageControl_1_1ClairvoyantCVT.html">CoverageAlgorithm</a>(params, env)</div>
 <div class="ttc" id="aclassCoverageControl_1_1ClairvoyantCVT_html"><div class="ttname"><a href="classCoverageControl_1_1ClairvoyantCVT.html">CoverageControl::ClairvoyantCVT</a></div><div class="ttdef"><b>Definition</b> <a href="clairvoyant__cvt_8h_source.html#l00061">clairvoyant_cvt.h:61</a></div></div>
 </div><!-- fragment --><p>Execute the algorithm: </p><div class="fragment"><div class="line"><span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(0, params.pEpisodeSteps):</div>
@@ -162,18 +160,19 @@ Python Interface</h1>
 <div class="line">    controller.ComputeActions();</div>
 <div class="line">    <span class="comment"># Get actions from the controller</span></div>
 <div class="line">    actions = controller.GetActions()</div>
+<div class="line"> </div>
 <div class="line">    <span class="comment"># Send actions to the environment</span></div>
 <div class="line">    <span class="keywordflow">if</span> env.StepActions(actions):</div>
-<div class="line">        print(<span class="stringliteral">&quot;Error in step &quot;</span> + str(i))</div>
+<div class="line">        print(f<span class="stringliteral">&quot;Error in step {i}&quot;</span>)</div>
 <div class="line">        <span class="keywordflow">break</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">if</span> controller.IsConverged():</div>
-<div class="line">        print(<span class="stringliteral">&quot;Converged in step &quot;</span> + str(i))</div>
+<div class="line">        print(f<span class="stringliteral">&quot;Converged in step {i}&quot;</span>)</div>
 <div class="line">        <span class="keywordflow">break</span></div>
 </div><!-- fragment --><p>Print improvement in cost: </p><div class="fragment"><div class="line">current_cost = env.GetObjectiveValue()</div>
-<div class="line">print(<span class="stringliteral">&quot;Improvement %: &quot;</span> + str(<span class="stringliteral">&#39;{:.2f}&#39;</span>.format(100 * (init_cost - current_cost)/init_cost)))</div>
+<div class="line">print(f<span class="stringliteral">&quot;Improvement %: {100 * (init_cost - current_cost)/init_cost:.2f}&quot;</span>)</div>
 </div><!-- fragment --><p>Plot the final state of the environment: </p><div class="fragment"><div class="line">env.PlotSystemMap(<span class="stringliteral">&quot;final_map&quot;</span>);</div>
-</div><!-- fragment --><p>See python/tests/coverage_simple.py and python/tests/coverage_class.py for complete examples.</p>
+</div><!-- fragment --><p>See <a class="el" href="coverage__simple_8py_source.html">python/scripts/coverage_env/coverage_simple.py</a> and <a class="el" href="coverage__class_8py_source.html">python/scripts/coverage_env/coverage_class.py</a> for complete examples.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md23"></a>
 C++ Interface</h1>
@@ -199,8 +198,9 @@ C++ Interface</h1>
 <div class="line"><span class="keyword">using </span><a class="code hl_class" href="classCoverageControl_1_1Parameters.html">CoverageControl::Parameters</a>;</div>
 <div class="line"><span class="keyword">using </span><a class="code hl_class" href="classCoverageControl_1_1WorldIDF.html">CoverageControl::WorldIDF</a>;</div>
 <div class="line"><span class="keyword">using </span><a class="code hl_class" href="classCoverageControl_1_1CoverageSystem.html">CoverageControl::CoverageSystem</a>;</div>
+<div class="ttc" id="aclassCoverageControl_1_1CoverageSystem_html"><div class="ttname"><a href="classCoverageControl_1_1CoverageSystem.html">CoverageControl::CoverageSystem</a></div><div class="ttdoc">The CoverageSystem class is the main class for the coverage control library.</div><div class="ttdef"><b>Definition</b> <a href="coverage__system_8h_source.html#l00068">coverage_system.h:68</a></div></div>
 <div class="ttc" id="aclassCoverageControl_1_1WorldIDF_html"><div class="ttname"><a href="classCoverageControl_1_1WorldIDF.html">CoverageControl::WorldIDF</a></div><div class="ttdoc">Class for Importance Density Function (IDF) for the world.</div><div class="ttdef"><b>Definition</b> <a href="world__idf_8h_source.html#l00066">world_idf.h:66</a></div></div>
-<div class="ttc" id="agroup__cpp__api__typedefs_html_ga3eb2c9229531009f43635928ad308da6"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">CoverageControl::PointVector</a></div><div class="ttdeci">std::vector&lt; Point2 &gt; PointVector</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00050">typedefs.h:50</a></div></div>
+<div class="ttc" id="agroup__cpp__api__typedefs_html_ga3eb2c9229531009f43635928ad308da6"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">CoverageControl::PointVector</a></div><div class="ttdeci">std::vector&lt; Point2 &gt; PointVector</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00051">typedefs.h:51</a></div></div>
 <div class="ttc" id="agroup__cpp__api__typedefs_html_ga3f07f168f209ff3416eae7485cf2b2ec"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">CoverageControl::Point2</a></div><div class="ttdeci">Eigen::Vector2d Point2</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00044">typedefs.h:44</a></div></div>
 </div><!-- fragment --><p>Inside the <code>main</code> function, create a <code>Parameters</code> object: </p><div class="fragment"><div class="line">Parameters params;</div>
 </div><!-- fragment --><p>Create coverage system environment: </p><div class="fragment"><div class="line">CoverageSystem env(params);</div>

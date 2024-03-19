@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['architecture_0',['LPAC Architecture',['../lpac.html',1,'']]]
+  ['background_0',['Theoretical Background',['../coverage-control-problem.html',1,'']]]
 ];
