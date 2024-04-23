@@ -43,6 +43,20 @@ namespace CoverageControl {
 void PolygonYMonotonePartition(PointVector const &polygon,
                                std::vector<PointVector> &y_monotone_polygons);
 
+/*! \brief Generate random polygons
+ *
+ * @param[in] num_polygons The number of polygons to generate
+ * @param[in] max_vertices The maximum number of vertices in each polygon
+ * @param[bounding_box_lower] The lower left corner of the bounding box
+ * @param[bounding_box_upper] The upper right corner of the bounding box
+ * @param[radius] The radius of the circle in which the polygons are generated
+ * @param[out] polygons The output polygons
+ */
+
+void GenerateRandomPolygons(int const num_polygons, int const max_vertices,
+                            double const half_width, double const world_size,
+                            std::vector<PointVector> &polygons);
+
 } /* namespace CoverageControl */
 
 #endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_POLYGON_UTILS_H_

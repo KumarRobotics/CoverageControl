@@ -68,6 +68,9 @@ void pyCoverageControl_core(py::module &m) {
   m.def(
       "Point2", [](double const &a, double const &b) { return Point2(a, b); },
       "Create a Point2 object with values a and b");
+  m.def(
+      "Point2", [](Point2 const &p) { return Point2(p); },
+      "Create a Point2 object with values from another Point2 object");
 
   m.def(
       "Point2f", []() { return Point2f(0, 0); },
@@ -112,6 +115,7 @@ void pyCoverageControl_core(py::module &m) {
   py::class_<WorldIDF>(m, "WorldIDF")
       .def(py::init<Parameters const &>())
       .def(py::init<Parameters const &, std::string const &>())
+      .def(py::init<Parameters const &, MapType const &>())
       .def("AddUniformDistributionPolygon",
            &WorldIDF::AddUniformDistributionPolygon)
       .def("AddNormalDistribution",
@@ -125,6 +129,8 @@ void pyCoverageControl_core(py::module &m) {
       .def("GenerateMapCuda", py::overload_cast<>(&WorldIDF::GenerateMapCuda))
 #endif
       .def("GetWorldMap", &WorldIDF::GetWorldMap,
+           py::return_value_policy::reference_internal)
+      .def("GetWorldMapMutable", &WorldIDF::GetWorldMapMutable,
            py::return_value_policy::reference_internal)
       .def("WriteWorldMap", &WorldIDF::WriteWorldMap)
       .def("GetNormalizationFactor", &WorldIDF::GetNormalizationFactor)
@@ -226,6 +232,9 @@ void pyCoverageControl_core(py::module &m) {
       .def("SetConfig", &Parameters::SetConfig)
       .def_readwrite("pNumRobots", &Parameters::pNumRobots)
       .def_readwrite("pNumFeatures", &Parameters::pNumFeatures)
+      .def_readwrite("pNumPolygons", &Parameters::pNumPolygons)
+      .def_readwrite("pMaxVertices", &Parameters::pMaxVertices)
+      .def_readwrite("pPolygonRadius", &Parameters::pPolygonRadius)
       .def_readwrite("pResolution", &Parameters::pResolution)
       .def_readwrite("pWorldMapSize", &Parameters::pWorldMapSize)
       .def_readwrite("pRobotMapSize", &Parameters::pRobotMapSize)
@@ -260,6 +269,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
   py::class_<CoverageSystem>(m, "CoverageSystem")
       .def(py::init<Parameters const &>())
       .def(py::init<Parameters const &, int const, int const>())
+      .def(py::init<Parameters const &, int const, int const, int const>())
       .def(
           py::init<Parameters const &, WorldIDF const &, PointVector const &>())
       .def(
@@ -267,6 +277,8 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def(py::init<Parameters const &, BNDVector const &,
                     PointVector const &>())
       .def("GetWorldMap", &CoverageSystem::GetWorldMap,
+           py::return_value_policy::reference_internal)
+      .def("GetWorldMapMutable", &CoverageSystem::GetWorldMapMutable,
            py::return_value_policy::reference_internal)
       .def("GetWorldIDFObject", &CoverageSystem::GetWorldIDFObject,
            py::return_value_policy::reference_internal)
@@ -315,6 +327,8 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
            py::overload_cast<>(&CoverageSystem::GetRobotExplorationFeatures),
            py::return_value_policy::copy)
       .def("GetRobotExplorationMap", &CoverageSystem::GetRobotExplorationMap,
+           py::return_value_policy::reference_internal)
+      .def("GetSystemExplorationMap", &CoverageSystem::GetSystemExplorationMap,
            py::return_value_policy::reference_internal)
       .def("GetSystemMap", &CoverageSystem::GetSystemMap,
            py::return_value_policy::reference_internal)

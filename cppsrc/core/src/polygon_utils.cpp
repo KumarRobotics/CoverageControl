@@ -32,6 +32,7 @@
 #include "CoverageControl/cgal/config.h"
 #include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/cgal/utilities.h"
+#include "CoverageControl/constants.h"
 
 namespace CoverageControl {
 void PolygonYMonotonePartition(PointVector const &poly,
@@ -64,4 +65,40 @@ void PolygonYMonotonePartition(PointVector const &poly,
     new_polys.push_back(new_p);
   }
 }
+
+void GenerateRandomPolygons(int const num_polygons, int const max_vertices,
+                            double const half_width, double const world_size,
+                            std::vector<PointVector> &polygons) {
+  polygons.clear();
+  polygons.reserve(num_polygons);
+  CGAL::Random rand;
+  for (int i = 0; i < num_polygons; ++i) {
+    int num_vertices = rand.get_int(4, max_vertices);
+    PointVector poly;
+    poly.reserve(num_vertices);
+    std::list<CGAL_Point2> points;
+    CGAL::copy_n_unique(Point_generator(half_width), num_vertices,
+                        std::back_inserter(points));
+    Polygon_2 poly_cgal;
+    CGAL::random_polygon_2(num_vertices, std::back_inserter(poly_cgal),
+                           points.begin());
+    auto bbox = poly_cgal.bbox();
+    CGAL_Point2 lower_left(bbox.xmin(), bbox.ymin());
+    CGAL_Point2 upper_right(bbox.xmax() - bbox.xmin(),
+                            bbox.ymax() - bbox.ymin());
+    CGAL_Point2 polygon_base = CGAL_Point2(
+        rand.get_double(kLargeEps, world_size - kLargeEps -
+                                       CGAL::to_double(upper_right.x())),
+        rand.get_double(kLargeEps, world_size - kLargeEps -
+                                       CGAL::to_double(upper_right.y())));
+    for (auto const &pt : poly_cgal) {
+      Point2 new_pt = CGALtoCC(pt);
+      new_pt += CGALtoCC(polygon_base);
+      new_pt -= CGALtoCC(lower_left);
+      poly.push_back(new_pt);
+    }
+    polygons.push_back(poly);
+  }
+}
+
 } /* namespace CoverageControl */

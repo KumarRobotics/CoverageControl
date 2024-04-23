@@ -118,6 +118,7 @@ set(sources_list
 	polygon_utils.cpp
 	parameters.cpp
 	voronoi.cpp
+  world_idf.cpp
 	coverage_system.cpp
 	plotter.cpp
 	cuda_utils.cpp

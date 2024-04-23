@@ -46,6 +46,10 @@ add_executable(coverage_algorithm coverage_algorithm.cpp)
 target_link_libraries(coverage_algorithm PRIVATE CoverageControl::CoverageControl)
 install(TARGETS coverage_algorithm DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+add_executable(world_idf world_idf.cpp)
+target_link_libraries(world_idf PRIVATE CoverageControl::CoverageControl)
+install(TARGETS world_idf DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 # if(WITH_TORCH)
 # 	add_executable(eval_dist_gnn torch/eval_dist_gnn.cpp)
 # 	target_link_libraries(eval_dist_gnn PRIVATE compiler_flags CoverageControl CoverageControlTorch ${CUDA_cusparse_LIBRARY})

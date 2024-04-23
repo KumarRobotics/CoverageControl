@@ -57,6 +57,9 @@ class Parameters {
    */
   int pNumRobots = 32;    //!< Number of robots
   int pNumFeatures = 32;  //!< Number of features
+  int pNumPolygons = 0;   //!< Number of polygonal features
+  int pMaxVertices = 10;  //!< Maximum number of vertices in a polygon
+  double pPolygonRadius = 64;
 
   /*! \name Map Parameters
    * @{

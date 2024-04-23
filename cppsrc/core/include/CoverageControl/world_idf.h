@@ -176,6 +176,20 @@ class WorldIDF {
     params_ = params;
   }
 
+  WorldIDF(Parameters const &params, MapType const &world_map)
+      : WorldIDF(params.pWorldMapSize) {
+    params_ = params;
+    if (world_map.rows() != params.pWorldMapSize ||
+        world_map.cols() != params.pWorldMapSize) {
+      std::cout << "Error: World map size does not match the specified size"
+                << std::endl;
+      throw std::invalid_argument(
+          "World map size does not match the specified size");
+      exit(1);
+    }
+    world_map_ = world_map;
+  }
+
   WorldIDF(Parameters const &params, std::string const &file_name)
       : WorldIDF(params.pWorldMapSize) {
     params_ = params;
@@ -201,14 +215,15 @@ class WorldIDF {
       } else if (type == "Uniform") {
         int num_vertices;
         file >> num_vertices;
+        double importance;
+        file >>
+            importance;  // importance moved here. Be careful with semantic file
         std::vector<Point2> vertices;
         for (int i = 0; i < num_vertices; ++i) {
           double x, y;
           file >> x >> y;
           vertices.push_back(Point2(x, y));
         }
-        double importance;
-        file >> importance;
         AddUniformDistributionPolygon(PolygonFeature(vertices, importance));
       } else {
         std::cout << "Error: Unknown feature type " << type << std::endl;
@@ -305,74 +320,15 @@ class WorldIDF {
 
   const MapType &GetWorldMap() const { return world_map_; }
 
-  inline int WriteDistributions(std::string const &file_name) const {
-    std::ofstream file(file_name);
-    if (!file.is_open()) {
-      std::cerr << "Could not open file: " << file_name << std::endl;
-      return -1;
-    }
-    file << std::setprecision(kMaxPrecision);
-    for (auto const &dist : normal_distributions_) {
-      Point2 sigma = dist.GetSigma();
-      if (sigma.x() == sigma.y()) {
-        file << "CircularBND" << std::endl;
-        file << dist.GetMean().x() << " " << dist.GetMean().y() << " "
-             << sigma.x() << " " << dist.GetScale() << std::endl;
-      } else {
-        file << "BND" << std::endl;
-        file << dist.GetMean().x() << " " << dist.GetMean().y() << " "
-             << dist.GetSigma().x() << " " << dist.GetSigma().y() << " "
-             << dist.GetRho() << " " << dist.GetScale() << std::endl;
-      }
-    }
-    file.close();
-    return 0;
-  }
+  MapType &GetWorldMapMutable() { return world_map_; }
+
+  int WriteDistributions(std::string const &file_name) const;
 
   auto GetNumFeatures() const {
     return normal_distributions_.size() + polygon_features_.size();
   }
 
-  /*! Fills in values of the world_map_ with the total importance for each cell
-   */
-  void GenerateMapCPU() {
-    /* std::cout << "Generating map using CPU" << std::endl; */
-    float max_importance = 0;
-    float res = static_cast<float>(params_.pResolution);
-    for (int i = 0; i < params_.pWorldMapSize; ++i) {  // Row (x index)
-      float x1 = res * i;   // Left x-coordinate of pixel
-      float x2 = x1 + res;  // Right x-coordinate of pixel
-      for (int j = 0; j < params_.pWorldMapSize; ++j) {  // Column (y index)
-        float y1 = res * j;   // Lower y-coordinate of pixel
-        float y2 = y1 + res;  // Upper y-coordinate of pixel
-        float importance = ComputeImportanceBND<Point2f, float>(
-            Point2f(x1, y1), Point2f(x2, y2));
-        /* auto importance = ComputeImportanceBND(pt1, pt2); */
-        /* if (std::abs(importance) < kEps) { */
-        /*   importance = 0; */
-        /* } */
-        world_map_(i, j) = importance;
-        if (importance > max_importance) {
-          max_importance = importance;
-        }
-      }
-    }
-
-    if (max_importance < kEps) {
-      normalization_factor_ = static_cast<float>(params_.pNorm);
-    } else {
-      normalization_factor_ =
-          static_cast<float>(params_.pNorm) / max_importance;
-    }
-
-    // Normalize the world map
-#pragma omp parallel for
-    for (int i = 0; i < params_.pWorldMapSize; ++i) {
-      for (int j = 0; j < params_.pWorldMapSize; ++j) {
-        world_map_(i, j) *= normalization_factor_;
-      }
-    }
-  }
+  void GenerateMapCPU();
 
 #ifdef COVERAGECONTROL_WITH_CUDA
   void GenerateMapCuda() {

@@ -32,9 +32,15 @@
 namespace CoverageControl {
 
 CoverageSystem::CoverageSystem(Parameters const &params)
-    : CoverageSystem(params, params.pNumFeatures, params.pNumRobots) {}
+    : CoverageSystem(params, params.pNumFeatures, params.pNumPolygons,
+                     params.pNumRobots) {}
 
-CoverageSystem::CoverageSystem(Parameters const &params, int const num_features,
+CoverageSystem::CoverageSystem(Parameters const &params,
+                               int const num_gaussians, int const num_robots)
+    : CoverageSystem(params, num_gaussians, 0, num_robots) {}
+
+CoverageSystem::CoverageSystem(Parameters const &params,
+                               int const num_gaussians, int const num_polygons,
                                int const num_robots)
     : params_{params}, world_idf_{WorldIDF(params_)} {
   // Generate Bivariate Normal Distribution from random numbers
@@ -48,22 +54,34 @@ CoverageSystem::CoverageSystem(Parameters const &params, int const num_features,
                                                params_.pMaxSigma);
   std::uniform_real_distribution<> distrib_peak(params_.pMinPeak,
                                                 params_.pMaxPeak);
-  for (int i = 0; i < num_features; ++i) {
+  for (int i = 0; i < num_gaussians; ++i) {
     Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
     double sigma(distrib_var(gen_));
     double scale(distrib_peak(gen_));
+    scale = 2 * M_PI * sigma * sigma * scale;
     BivariateNormalDistribution dist(mean, sigma, scale);
     world_idf_.AddNormalDistribution(dist);
+  }
+
+  std::vector<PointVector> polygons;
+  GenerateRandomPolygons(num_polygons, params_.pMaxVertices,
+                         params_.pPolygonRadius,
+                         params_.pWorldMapSize * params_.pResolution, polygons);
+
+  for (auto &poly : polygons) {
+    double importance = distrib_peak(gen_) * 0.5;
+    PolygonFeature poly_feature(poly, importance);
+    world_idf_.AddUniformDistributionPolygon(poly_feature);
   }
 
   world_idf_.GenerateMap();
   normalization_factor_ = world_idf_.GetNormalizationFactor();
 
-  std::uniform_real_distribution<> robot_pos_dist(
+  std::uniform_real_distribution<> env_point_dist(
       kLargeEps, params_.pRobotInitDist - kLargeEps);
   robots_.reserve(num_robots);
   for (int i = 0; i < num_robots; ++i) {
-    Point2 start_pos(robot_pos_dist(gen_), robot_pos_dist(gen_));
+    Point2 start_pos(env_point_dist(gen_), env_point_dist(gen_));
     robots_.push_back(RobotModel(params_, start_pos, world_idf_));
   }
   InitSetup();

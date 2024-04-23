@@ -36,8 +36,12 @@
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Partition_traits_2.h>
 #include <CGAL/Polygon_with_holes_2.h>
+#include <CGAL/Random.h>
+#include <CGAL/algorithm.h>
 #include <CGAL/centroid.h>
 #include <CGAL/partition_2.h>
+#include <CGAL/point_generators_2.h>
+#include <CGAL/random_polygon_2.h>
 
 #include <iterator>
 
@@ -57,5 +61,8 @@ typedef CGAL::Arrangement_2<Traits_2> Arrangement_2;
 typedef CGAL::Arr_walk_along_line_point_location<Arrangement_2> CGAL_pl;
 
 typedef CGAL::Partition_traits_2<K> Partition_traits_2;
+
+typedef CGAL::Creator_uniform_2<double, CGAL_Point2> Creator;
+typedef CGAL::Random_points_in_square_2<CGAL_Point2, Creator> Point_generator;
 
 #endif  // CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_CONFIG_H_

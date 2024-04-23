@@ -41,7 +41,8 @@ namespace CoverageControl {
  * left of the vector \return -1 if point r is in clockwise direction, i.e.,
  * right of the vector \return  0 otherwise
  */
-__device__ int Orientation(float2 const &p, float2 const &q, float2 const &r) {
+__host__ __device__ int Orientation(float2 const &p, float2 const &q,
+                                    float2 const &r) {
   float2 qp{q.x - p.x, q.y - p.y};
   float2 rp{r.x - p.x, r.y - p.y};
   float cross_prod1 = qp.x * rp.y;
@@ -55,8 +56,8 @@ __device__ int Orientation(float2 const &p, float2 const &q, float2 const &r) {
  * Check if the point r is inside the monotone polygon defined by the vertices x
  * and y \return true if the point is inside the polygon \return false otherwise
  */
-__device__ bool IsPointInMonotonePolygon(float *x, float *y, int sz,
-                                         float2 const &r) {
+__host__ __device__ bool IsPointInMonotonePolygon(float *x, float *y, int sz,
+                                                  float2 const &r) {
   bool left = false;
   bool right = false;
   for (int ct = 0; ct < sz; ++ct) {

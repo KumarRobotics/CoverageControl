@@ -42,9 +42,9 @@
 #include <cmath>
 
 #include "CoverageControl/constants.h"
+#include "CoverageControl/cuda/geometry_utils.cuh"
 #include "CoverageControl/extern/cuda_helpers/helper_cuda.h"
 #include "CoverageControl/generate_world_map.h"
-#include "CoverageControl/cuda/geometry_utils.cuh"
 
 namespace CoverageControl {
 __device__ __constant__ int cu_num_dists;
@@ -278,3 +278,4 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   }
 }
 } /* namespace CoverageControl */
+

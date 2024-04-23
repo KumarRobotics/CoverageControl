@@ -59,9 +59,27 @@ void Parameters::ParseParameters() {
   }
 
   if (toml_config["NumFeatures"].value<int>()) {
-    pNumFrontiers = toml_config["NumFeatures"].value<int>().value();
+    pNumFeatures = toml_config["NumFeatures"].value<int>().value();
   } else {
     std::cout << "NumFeatures (default): " << pNumFeatures << std::endl;
+  }
+
+  if (toml_config["NumPolygons"].value<int>()) {
+    pNumPolygons = toml_config["NumPolygons"].value<int>().value();
+  } else {
+    std::cout << "NumPolygons (default): " << pNumPolygons << std::endl;
+  }
+
+  if (toml_config["MaxVertices"].value<int>()) {
+    pMaxVertices = toml_config["MaxVertices"].value<int>().value();
+  } else {
+    std::cout << "MaxVertices (default): " << pMaxVertices << std::endl;
+  }
+
+  if (toml_config["PolygonRadius"].value<double>()) {
+    pPolygonRadius = toml_config["PolygonRadius"].value<double>().value();
+  } else {
+    std::cout << "PolygonRadius (default): " << pPolygonRadius << std::endl;
   }
 
   auto toml_EnvironmentMaps = toml_config["Environment.Maps"];
@@ -223,14 +241,17 @@ void Parameters::ParseParameters() {
     auto toml_NumFrontiers =
         toml_Algorithm["Exploration.NumFrontiers"].value<int>();
     if (toml_NumFrontiers) {
-      pNumFrontiers = toml_NumFrontiers.value();
+      pNumFeatures = toml_NumFrontiers.value();
     }
   }
 }
 
 void Parameters::PrintParameters() {
   std::cout << "NumRobots: " << pNumRobots << std::endl;
-  std::cout << "NumFrontiers: " << pNumFrontiers << std::endl;
+  std::cout << "NumFeatures: " << pNumFeatures << std::endl;
+  std::cout << "NumPolygons: " << pNumPolygons << std::endl;
+  std::cout << "MaxVertices: " << pMaxVertices << std::endl;
+  std::cout << "PolygonRadius" << pPolygonRadius << std::endl;
 
   std::cout << "Resolution: " << pResolution << std::endl;
   std::cout << "WorldMapSize: " << pWorldMapSize << std::endl;

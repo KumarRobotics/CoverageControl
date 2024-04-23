@@ -180,6 +180,9 @@ class CoverageSystem {
   CoverageSystem(Parameters const &params, int const num_gaussians,
                  int const num_robots);
 
+  CoverageSystem(Parameters const &params, int const num_gaussians,
+                 int const num_polygons, int const num_robots);
+
   /*! \brief Create with given world IDF and robot positions from file
    *
    *
@@ -441,10 +444,13 @@ class CoverageSystem {
   //
   //! @{
   const auto &GetWorldIDFObject() const { return world_idf_; }
-  const MapType &GetWorldMap() const { return world_idf_.GetWorldMap(); }
   const MapType &GetSystemMap() const { return system_map_; }
   const MapType &GetSystemExplorationMap() const { return exploration_map_; }
   const MapType &GetSystemExploredIDFMap() const { return explored_idf_map_; }
+  //! Get the world map
+  const MapType &GetWorldMap() const { return world_idf_.GetWorldMap(); }
+  //! Get the world map (mutable)
+  MapType &GetWorldMapMutable() { return world_idf_.GetWorldMapMutable(); }
 
   inline auto GetNumRobots() const { return num_robots_; }
   inline auto GetNumFeatures() const { return num_robots_; }
