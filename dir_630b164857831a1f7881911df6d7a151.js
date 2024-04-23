@@ -6,5 +6,6 @@ var dir_630b164857831a1f7881911df6d7a151 =
     [ "parameters.cpp", "parameters_8cpp.html", null ],
     [ "plotter.cpp", "plotter_8cpp.html", null ],
     [ "polygon_utils.cpp", "polygon__utils_8cpp.html", "polygon__utils_8cpp" ],
-    [ "voronoi.cpp", "voronoi_8cpp.html", null ]
+    [ "voronoi.cpp", "voronoi_8cpp.html", null ],
+    [ "world_idf.cpp", "world__idf_8cpp.html", null ]
 ];

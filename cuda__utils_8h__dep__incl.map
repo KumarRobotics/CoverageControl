@@ -1,17 +1,19 @@
 <map id="cuda_utils.h" name="cuda_utils.h">
-<area shape="rect" id="Node000001" title="Utility functions for CUDA." alt="" coords="357,5,448,30"/>
-<area shape="rect" id="Node000002" href="$cuda__utils_8cpp.html" title=" " alt="" coords="224,78,330,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="370,40,299,80,296,75,367,36"/>
-<area shape="rect" id="Node000003" href="$cuda__utils_8cu.html" title="Functions for CUDA utilities based on NVIDIA&#39;s CUDA Helper Library See: extern/cuda_helpers/helper_cu..." alt="" coords="353,78,451,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="405,46,405,78,400,78,400,46"/>
-<area shape="rect" id="Node000004" href="$world__idf_8h.html" title="Contains the class for Importance Density Function (IDF) for the world." alt="" coords="476,78,558,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="435,36,499,75,497,80,432,41"/>
+<area shape="rect" id="Node000001" title="Utility functions for CUDA." alt="" coords="401,5,492,30"/>
+<area shape="rect" id="Node000002" href="$cuda__utils_8cpp.html" title=" " alt="" coords="268,78,374,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="414,40,343,80,340,75,411,36"/>
+<area shape="rect" id="Node000003" href="$cuda__utils_8cu.html" title="Functions for CUDA utilities based on NVIDIA&#39;s CUDA Helper Library See: extern/cuda_helpers/helper_cu..." alt="" coords="397,78,495,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="449,46,449,78,444,78,444,46"/>
+<area shape="rect" id="Node000004" href="$world__idf_8h.html" title="Contains the class for Importance Density Function (IDF) for the world." alt="" coords="520,78,602,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="479,36,543,75,541,80,476,41"/>
 <area shape="rect" id="Node000005" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="867,455,1025,480"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="461,107,185,175,61,211,23,226,10,235,10,310,10,364,17,385,35,405,52,414,79,422,161,436,269,446,395,454,657,462,867,464,867,469,657,467,395,459,269,452,160,441,78,428,49,419,31,409,12,388,5,365,5,310,5,233,20,221,59,206,184,170,460,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="505,107,204,180,66,216,24,229,10,236,10,310,10,364,17,385,35,405,52,414,79,422,161,436,269,446,395,454,657,462,867,464,867,469,657,467,395,459,269,452,160,441,78,428,49,419,31,409,12,388,5,365,5,310,5,233,22,224,65,211,203,174,504,102"/>
 <area shape="rect" id="Node000006" href="$coverage__system_8h.html" title="The file contains the CoverageSystem class, which is the main class for the coverage control library." alt="" coords="540,223,672,248"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="548,111,567,128,583,149,600,188,607,222,602,223,595,190,579,152,563,132,544,114"/>
-<area shape="rect" id="Node000016" href="$robot__model_8h.html" title="Class for handling the robot model." alt="" coords="465,151,569,175"/>
-<area shape="poly" id="edge24_Node000004_Node000016" title=" " alt="" coords="520,118,520,150,514,150,514,118"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="550,117,542,146,541,160,545,174,564,201,589,221,585,225,560,205,540,176,536,161,536,145,545,116"/>
+<area shape="rect" id="Node000016" href="$robot__model_8h.html" title="Class for handling the robot model." alt="" coords="555,151,658,175"/>
+<area shape="poly" id="edge24_Node000004_Node000016" title=" " alt="" coords="579,114,601,149,597,152,574,117"/>
+<area shape="rect" id="Node000017" href="$world__idf_8cpp.html" title="Contains the implementation of the WorldIDF class." alt="" coords="682,151,778,175"/>
+<area shape="poly" id="edge26_Node000004_Node000017" title=" " alt="" coords="604,106,703,148,701,153,602,111"/>
 <area shape="poly" id="edge17_Node000006_Node000005" title=" " alt="" coords="688,241,814,255,958,279,1025,296,1085,316,1132,339,1149,353,1162,367,1170,388,1167,405,1155,420,1136,433,1084,450,1027,461,1026,456,1083,445,1134,428,1152,416,1162,403,1165,388,1157,370,1145,357,1129,344,1083,321,1024,301,957,284,813,260,688,246"/>
 <area shape="rect" id="Node000007" href="$abstract__controller_8h.html" title="Contains the abstract class for coverage control algorithms." alt="" coords="537,296,676,321"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="609,264,609,296,604,296,604,264"/>
@@ -39,5 +41,5 @@
 <area shape="poly" id="edge13_Node000007_Node000013" title=" " alt="" coords="608,336,606,375,600,375,602,336"/>
 <area shape="poly" id="edge14_Node000007_Node000014" title=" " alt="" coords="648,325,759,373,757,378,646,330"/>
 <area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="949,416,949,455,944,455,944,416"/>
-<area shape="poly" id="edge25_Node000016_Node000006" title=" " alt="" coords="545,183,593,221,590,225,542,187"/>
+<area shape="poly" id="edge25_Node000016_Node000006" title=" " alt="" coords="609,191,609,223,604,223,604,191"/>
 </map>

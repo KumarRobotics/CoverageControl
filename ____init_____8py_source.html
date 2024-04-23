@@ -136,13 +136,17 @@ $(function(){initNavTree('____init_____8py_source.html',''); initResizable(); })
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">from</span> __future__ <span class="keyword">import</span> annotations</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">from</span> ._version <span class="keyword">import</span> version <span class="keyword">as</span> __version__</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">from</span> .core <span class="keyword">import</span> *</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">from</span> .io_utils <span class="keyword">import</span> IOUtils</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"># from .nn import *</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> os.path <span class="keyword">as</span> _osp</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">from</span> ._version <span class="keyword">import</span> version <span class="keyword">as</span> __version__</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">from</span> .core <span class="keyword">import</span> *</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">from</span> .io_utils <span class="keyword">import</span> IOUtils</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>__all__ = [<span class="stringliteral">&quot;__version__&quot;</span>, <span class="stringliteral">&quot;core&quot;</span>, <span class="stringliteral">&quot;nn&quot;</span>, <span class="stringliteral">&quot;IOUtils&quot;</span>]</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"># from .nn import *</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>__all__ = [<span class="stringliteral">&quot;__version__&quot;</span>, <span class="stringliteral">&quot;core&quot;</span>, <span class="stringliteral">&quot;nn&quot;</span>, <span class="stringliteral">&quot;IOUtils&quot;</span>]</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>cmake_prefix_path = _osp.join(_osp.dirname(_osp.dirname(__file__)), <span class="stringliteral">&quot;lib&quot;</span>, <span class="stringliteral">&quot;cmake&quot;</span>)</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

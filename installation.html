@@ -144,12 +144,14 @@ PyPI Installation</h1>
 <div class="fragment">
 <div class="line"><span class="keyword">pip</span> install coverage_control</div>
 </div>
- The package depends on the following packages, which are installed as dependencies:</p><ul>
+ The package depends on the following packages</p><ul>
 <li><a href="https://pytorch.org/">PyTorch</a></li>
-<li><a href="https://pytorch-geometric.readthedocs.io/en/latest/">PyTorch Geometric</a></li>
-</ul>
-<dl class="section note"><dt>Note</dt><dd>PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The package installs the default version (latest CUDA).</dd></dl>
-<p>We need the following optional packages for visualization and video generation:</p><ul>
+<li><a href="https://pytorch-geometric.readthedocs.io/en/latest/">PyTorch Geometric</a>  
+<div class="fragment">
+<div class="line"><span class="keyword">pip</span> install torch torchvision torch-geometric</div>
+</div>
+ <dl class="section note"><dt>Note</dt><dd>PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The command installs the default version (latest CUDA).</dd></dl>
+We need the following optional packages for visualization and video generation:</li>
 <li><code>gnuplot</code> or <code>gnuplot-nox</code> (for visualizing environment)</li>
 <li><code>ffmpeg</code> (for generating videos)</li>
 </ul>
@@ -180,7 +182,7 @@ Prerequisites (Optional)</h2>
 Docker Container</h2>
 <p>Container can be created using the script in <code>setup_utils/create_container.sh</code>.  
 <div class="fragment">
-<div class="line"><span class="keyword">cd</span> ${CoverageControl_ws}/src/CoverageControl/setup_utils</div>
+<div class="line"><span class="keyword">cd</span> ${CoverageControl_ws}/src/CoverageControl/setup_utils/docker</div>
 <div class="line"><span class="keyword">bash</span> create_container.sh --with-cuda -d ${CoverageControl_ws} <span class="comment"># See flags below</span></div>
 </div>
  This will land you in a shell inside the container in the directory <code>/workspace</code>. If the workspace directory was specified, it will be mounted to the container at the same location.</p>
@@ -201,13 +203,13 @@ Docker Container</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Tags Suffix   </th><th class="markdownTableHeadNone">Flags    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>python2.2.1-cuda12.3.1-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros --with-cuda</code>    </td></tr>
+<td class="markdownTableBodyNone"><code>python2.2.2-cuda12.2.2-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros --with-cuda</code>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>python2.2.1-cuda12.3.1</code>   </td><td class="markdownTableBodyNone"><code>--with-cuda</code>    </td></tr>
+<td class="markdownTableBodyNone"><code>python2.2.2-cuda12.2.2</code>   </td><td class="markdownTableBodyNone"><code>--with-cuda</code>    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>python2.2.1-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros</code>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>python2.2.1</code>   </td><td class="markdownTableBodyNone">None   </td></tr>
+<td class="markdownTableBodyNone"><code>python2.2.2</code>   </td><td class="markdownTableBodyNone">None   </td></tr>
 </table>
 <p>The library is already built and installed in the container. However, if you want to build it again, you can do so following the <a class="el" href="#installation-from-source">Installation from Source</a> instructions (except for the prerequisites).</p>
 <hr  />
@@ -250,6 +252,7 @@ Automated Installation</h2>
 </p>
 <h2><a class="anchor" id="autotoc_md20"></a>
 Building the Core C++ Library</h2>
+<dl class="section note"><dt>Note</dt><dd>This is only necessary if you want to use the C++ library directly.</dd></dl>
 <p>We will organize files in a <b>workspace</b> directory: <code>${CoverageControl_ws}</code> (e.g., ~/CoverageControl_ws).</p>
 <p>Add the following lines to your <code>~/.bashrc</code> file.  
 <div class="fragment">

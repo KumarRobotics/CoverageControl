@@ -135,8 +135,12 @@ $(function(){initNavTree('config_8h.html',''); initResizable(); });
 <code>#include &lt;CGAL/Exact_predicates_exact_constructions_kernel.h&gt;</code><br />
 <code>#include &lt;CGAL/Partition_traits_2.h&gt;</code><br />
 <code>#include &lt;CGAL/Polygon_with_holes_2.h&gt;</code><br />
+<code>#include &lt;CGAL/Random.h&gt;</code><br />
+<code>#include &lt;CGAL/algorithm.h&gt;</code><br />
 <code>#include &lt;CGAL/centroid.h&gt;</code><br />
 <code>#include &lt;CGAL/partition_2.h&gt;</code><br />
+<code>#include &lt;CGAL/point_generators_2.h&gt;</code><br />
+<code>#include &lt;CGAL/random_polygon_2.h&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for config.h:</div>
@@ -150,7 +154,7 @@ $(function(){initNavTree('config_8h.html',''); initResizable(); });
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="config_8h__dep__incl.svg" width="248" height="182"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="config_8h__dep__incl.svg" width="344" height="182"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="config_8h_source.html">Go to the source code of this file.</a></p>
@@ -183,6 +187,10 @@ Typedefs</h2></td></tr>
 <tr class="separator:a51d016d1f49573ec4c65feead54c9249"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af107b408a890a8935ce22d0592b75ee8" id="r_af107b408a890a8935ce22d0592b75ee8"><td class="memItemLeft" align="right" valign="top">typedef CGAL::Partition_traits_2&lt; K &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af107b408a890a8935ce22d0592b75ee8">Partition_traits_2</a></td></tr>
 <tr class="separator:af107b408a890a8935ce22d0592b75ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4456e5048b0c76733f02921506d4d1ba" id="r_a4456e5048b0c76733f02921506d4d1ba"><td class="memItemLeft" align="right" valign="top">typedef CGAL::Creator_uniform_2&lt; double, CGAL_Point2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4456e5048b0c76733f02921506d4d1ba">Creator</a></td></tr>
+<tr class="separator:a4456e5048b0c76733f02921506d4d1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b42203747afdd1253e77d9af47b80ee" id="r_a1b42203747afdd1253e77d9af47b80ee"><td class="memItemLeft" align="right" valign="top">typedef CGAL::Random_points_in_square_2&lt; CGAL_Point2, Creator &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b42203747afdd1253e77d9af47b80ee">Point_generator</a></td></tr>
+<tr class="separator:a1b42203747afdd1253e77d9af47b80ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains the configuration for the CGAL library. </p>
@@ -201,7 +209,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00056">56</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00060">60</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -217,7 +225,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00057">57</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00061">61</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -233,7 +241,23 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00045">45</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00049">49</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+
+</div>
+</div>
+<a id="a4456e5048b0c76733f02921506d4d1ba" name="a4456e5048b0c76733f02921506d4d1ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4456e5048b0c76733f02921506d4d1ba">&#9670;&#160;</a></span>Creator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef CGAL::Creator_uniform_2&lt;double, CGAL_Point2&gt; Creator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00065">65</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -249,7 +273,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00050">50</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00054">54</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -265,7 +289,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00046">46</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00050">50</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -281,7 +305,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00044">44</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00048">48</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -297,7 +321,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00049">49</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00053">53</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -313,7 +337,23 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00059">59</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00063">63</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+
+</div>
+</div>
+<a id="a1b42203747afdd1253e77d9af47b80ee" name="a1b42203747afdd1253e77d9af47b80ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b42203747afdd1253e77d9af47b80ee">&#9670;&#160;</a></span>Point_generator</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef CGAL::Random_points_in_square_2&lt;CGAL_Point2, Creator&gt; Point_generator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00066">66</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -329,7 +369,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00052">52</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00056">56</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -345,7 +385,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00053">53</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00057">57</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -361,7 +401,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00048">48</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00052">52</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -377,7 +417,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00047">47</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00051">51</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>
@@ -393,7 +433,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00055">55</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8h_source.html#l00059">59</a> of file <a class="el" href="config_8h_source.html">config.h</a>.</p>
 
 </div>
 </div>

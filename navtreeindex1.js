@@ -1,5 +1,9 @@
 var NAVTREEINDEX1 =
 {
+"group__cpp__api__constants.html#ga5e878bac48ebe71bc1593bb64d33a3b7":[5,0,0,2],
+"group__cpp__api__constants.html#ga68173a231b63d8188abeb9a5f0f2b579":[5,0,0,7],
+"group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05":[5,0,0,3],
+"group__cpp__api__constants.html#ga845278ec96128e76681e0e8e6368ccad":[5,0,0,5],
 "group__cpp__api__constants.html#gad08691d2b43666bbc3f8411c3fd3ea7e":[5,0,0,4],
 "group__cpp__api__constants.html#gad78a5d79d202425ef7b63e9e5b0c62f8":[5,0,0,6],
 "group__cpp__api__constants.html#gaf92a1bdb82883a1e0817deea017f5175":[5,0,0,1],
@@ -11,8 +15,8 @@ var NAVTREEINDEX1 =
 "group__cpp__api__typedefs.html#gadf81a587ad324dad417f496ba8df2622":[5,0,1,6],
 "group__cpp__api__typedefs.html#gafb74cd37ffcdf39e89e52b7d18243822":[5,0,1,8],
 "group__python__api.html":[5,1],
-"index.html":[0],
 "index.html":[],
+"index.html":[0],
 "index.html#autotoc_md2":[0,0],
 "index.html#autotoc_md4":[0,1],
 "index.html#autotoc_md5":[0,2],
@@ -67,10 +71,12 @@ var NAVTREEINDEX1 =
 "plotter_8h.html":[6,0,0,0,0,11],
 "plotter_8h_source.html":[6,0,0,0,0,11],
 "polygon__utils_8cpp.html":[6,0,0,1,5],
-"polygon__utils_8cpp.html#a81b475698f6977b0b5e875482dae1042":[6,0,0,1,5,0],
+"polygon__utils_8cpp.html#a30b6ac909474370996122ee0bcb19754":[6,0,0,1,5,0],
+"polygon__utils_8cpp.html#a81b475698f6977b0b5e875482dae1042":[6,0,0,1,5,1],
 "polygon__utils_8cpp_source.html":[6,0,0,1,5],
 "polygon__utils_8h.html":[6,0,0,0,0,1,1],
-"polygon__utils_8h.html#a81b475698f6977b0b5e875482dae1042":[6,0,0,0,0,1,1,0],
+"polygon__utils_8h.html#a30b6ac909474370996122ee0bcb19754":[6,0,0,0,0,1,1,0],
+"polygon__utils_8h.html#a81b475698f6977b0b5e875482dae1042":[6,0,0,0,0,1,1,1],
 "polygon__utils_8h_source.html":[6,0,0,0,0,1,1],
 "quick_start.html":[2],
 "quick_start.html#autotoc_md22":[2,0],
@@ -107,6 +113,10 @@ var NAVTREEINDEX1 =
 "voronoi_8cpp_source.html":[6,0,0,1,6],
 "voronoi_8h.html":[6,0,0,0,0,15],
 "voronoi_8h_source.html":[6,0,0,0,0,15],
+"world__idf_8cpp.html":[6,0,0,1,7],
+"world__idf_8cpp_source.html":[6,0,0,1,7],
 "world__idf_8h.html":[6,0,0,0,0,16],
-"world__idf_8h_source.html":[6,0,0,0,0,16]
+"world__idf_8h_source.html":[6,0,0,0,0,16],
+"world__idf_8py_source.html":[6,2,1,0,2],
+"world__map__numpy_8py_source.html":[6,2,1,0,3]
 };

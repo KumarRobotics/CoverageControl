@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['orientation_0',['Orientation',['../namespaceCoverageControl.html#a63b1cbdc231f239e5124684a556f92eb',1,'CoverageControl']]]
+  ['orientation_0',['Orientation',['../namespaceCoverageControl.html#a895010496ec23b8f83384d65b3adf509',1,'CoverageControl']]]
 ];

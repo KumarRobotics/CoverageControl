@@ -157,45 +157,88 @@ $(function(){initNavTree('polygon__utils_8cpp_source.html',''); initResizable();
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">CoverageControl/cgal/config.h</a>&quot;</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="polygon__utils_8h.html">CoverageControl/cgal/polygon_utils.h</a>&quot;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="utilities_8h.html">CoverageControl/cgal/utilities.h</a>&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceCoverageControl.html">CoverageControl</a> {</div>
-<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042">   37</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042">PolygonYMonotonePartition</a>(<a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> <span class="keyword">const</span> &amp;poly,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                               std::vector&lt;PointVector&gt; &amp;new_polys) {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="comment">// Transform general polygon to CGAL //</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  Partition_traits_2::Polygon_2 cgal_poly;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pt : poly) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    cgal_poly.push_back(Partition_traits_2::Point_2(pt.x(), pt.y()));</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="comment">/* std::cout &lt;&lt; &quot;Is simple: &quot; &lt;&lt; cgal_poly.is_simple() &lt;&lt; std::endl; */</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="comment">/* std::cout &lt;&lt; &quot;Is orientation: &quot; &lt;&lt; cgal_poly.orientation() &lt;&lt; std::endl; */</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">if</span> (cgal_poly.orientation() == CGAL::CLOCKWISE) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    cgal_poly.reverse_orientation();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="comment">// Obtain partition //</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  std::list&lt;Partition_traits_2::Polygon_2&gt; partition_polys;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  CGAL::y_monotone_partition_2(cgal_poly.begin(), cgal_poly.end(),</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                               std::back_inserter(partition_polys));</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="comment">// Transform to coveragecontrol data type</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  new_polys.reserve(new_polys.size() + partition_polys.size());</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;p : partition_polys) {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> new_p;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    new_p.reserve(p.size());</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    std::transform(p.vertices_begin(), p.vertices_end(),</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                   std::back_inserter(new_p),</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                   [](CGAL_Point2 <span class="keyword">const</span> &amp;pt) { return CGALtoCC(pt); });</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    new_polys.push_back(new_p);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="constants_8h.html">CoverageControl/constants.h</a>&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceCoverageControl.html">CoverageControl</a> {</div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="}">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042">   38</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042">PolygonYMonotonePartition</a>(<a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> <span class="keyword">const</span> &amp;poly,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                               std::vector&lt;PointVector&gt; &amp;new_polys) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="comment">// Transform general polygon to CGAL //</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  Partition_traits_2::Polygon_2 cgal_poly;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pt : poly) {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    cgal_poly.push_back(Partition_traits_2::Point_2(pt.x(), pt.y()));</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="comment">/* std::cout &lt;&lt; &quot;Is simple: &quot; &lt;&lt; cgal_poly.is_simple() &lt;&lt; std::endl; */</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="comment">/* std::cout &lt;&lt; &quot;Is orientation: &quot; &lt;&lt; cgal_poly.orientation() &lt;&lt; std::endl; */</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordflow">if</span> (cgal_poly.orientation() == CGAL::CLOCKWISE) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    cgal_poly.reverse_orientation();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="comment">// Obtain partition //</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  std::list&lt;Partition_traits_2::Polygon_2&gt; partition_polys;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  CGAL::y_monotone_partition_2(cgal_poly.begin(), cgal_poly.end(),</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                               std::back_inserter(partition_polys));</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="comment">// Transform to coveragecontrol data type</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  new_polys.reserve(new_polys.size() + partition_polys.size());</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;p : partition_polys) {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> new_p;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    new_p.reserve(p.size());</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::transform(p.vertices_begin(), p.vertices_end(),</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                   std::back_inserter(new_p),</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                   [](CGAL_Point2 <span class="keyword">const</span> &amp;pt) { return CGALtoCC(pt); });</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    new_polys.push_back(new_p);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  }</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
 </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>} <span class="comment">/* namespace CoverageControl */</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="foldopen" id="foldopen00069" data-start="{" data-end="}">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="namespaceCoverageControl.html#a30b6ac909474370996122ee0bcb19754">   69</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceCoverageControl.html#a30b6ac909474370996122ee0bcb19754">GenerateRandomPolygons</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> num_polygons, <span class="keywordtype">int</span> <span class="keyword">const</span> max_vertices,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                            <span class="keywordtype">double</span> <span class="keyword">const</span> half_width, <span class="keywordtype">double</span> <span class="keyword">const</span> world_size,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                            std::vector&lt;PointVector&gt; &amp;polygons) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  polygons.clear();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  polygons.reserve(num_polygons);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  CGAL::Random rand;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; num_polygons; ++i) {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">int</span> num_vertices = rand.get_int(4, max_vertices);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">PointVector</a> poly;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    poly.reserve(num_vertices);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::list&lt;CGAL_Point2&gt; points;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    CGAL::copy_n_unique(Point_generator(half_width), num_vertices,</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                        std::back_inserter(points));</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    Polygon_2 poly_cgal;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    CGAL::random_polygon_2(num_vertices, std::back_inserter(poly_cgal),</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                           points.begin());</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">auto</span> bbox = poly_cgal.bbox();</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    CGAL_Point2 lower_left(bbox.xmin(), bbox.ymin());</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    CGAL_Point2 upper_right(bbox.xmax() - bbox.xmin(),</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                            bbox.ymax() - bbox.ymin());</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    CGAL_Point2 polygon_base = CGAL_Point2(</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        rand.get_double(<a class="code hl_variable" href="group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05">kLargeEps</a>, world_size - <a class="code hl_variable" href="group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05">kLargeEps</a> -</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                                       CGAL::to_double(upper_right.x())),</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        rand.get_double(<a class="code hl_variable" href="group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05">kLargeEps</a>, world_size - <a class="code hl_variable" href="group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05">kLargeEps</a> -</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                                       CGAL::to_double(upper_right.y())));</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pt : poly_cgal) {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      <a class="code hl_typedef" href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">Point2</a> new_pt = CGALtoCC(pt);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>      new_pt += CGALtoCC(polygon_base);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      new_pt -= CGALtoCC(lower_left);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      poly.push_back(new_pt);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    polygons.push_back(poly);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}</div>
+</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>} <span class="comment">/* namespace CoverageControl */</span></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div><div class="ttdoc">Contains the configuration for the CGAL library.</div></div>
+<div class="ttc" id="aconstants_8h_html"><div class="ttname"><a href="constants_8h.html">constants.h</a></div><div class="ttdoc">Constants for the CoverageControl library.</div></div>
+<div class="ttc" id="agroup__cpp__api__constants_html_ga7303a45a00c71dfb231fb50b2af09b05"><div class="ttname"><a href="group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05">CoverageControl::kLargeEps</a></div><div class="ttdeci">double const kLargeEps</div><div class="ttdef"><b>Definition</b> <a href="constants_8h_source.html#l00051">constants.h:51</a></div></div>
 <div class="ttc" id="agroup__cpp__api__typedefs_html_ga3eb2c9229531009f43635928ad308da6"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6">CoverageControl::PointVector</a></div><div class="ttdeci">std::vector&lt; Point2 &gt; PointVector</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00051">typedefs.h:51</a></div></div>
+<div class="ttc" id="agroup__cpp__api__typedefs_html_ga3f07f168f209ff3416eae7485cf2b2ec"><div class="ttname"><a href="group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec">CoverageControl::Point2</a></div><div class="ttdeci">Eigen::Vector2d Point2</div><div class="ttdef"><b>Definition</b> <a href="typedefs_8h_source.html#l00044">typedefs.h:44</a></div></div>
 <div class="ttc" id="anamespaceCoverageControl_html"><div class="ttname"><a href="namespaceCoverageControl.html">CoverageControl</a></div><div class="ttdoc">Namespace for the CoverageControl library.</div><div class="ttdef"><b>Definition</b> <a href="abstract__controller_8h_source.html#l00036">abstract_controller.h:36</a></div></div>
-<div class="ttc" id="anamespaceCoverageControl_html_a81b475698f6977b0b5e875482dae1042"><div class="ttname"><a href="namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042">CoverageControl::PolygonYMonotonePartition</a></div><div class="ttdeci">void PolygonYMonotonePartition(PointVector const &amp;polygon, std::vector&lt; PointVector &gt; &amp;y_monotone_polygons)</div><div class="ttdoc">Partition a polygon into y-monotone polygons.</div><div class="ttdef"><b>Definition</b> <a href="#l00037">polygon_utils.cpp:37</a></div></div>
+<div class="ttc" id="anamespaceCoverageControl_html_a30b6ac909474370996122ee0bcb19754"><div class="ttname"><a href="namespaceCoverageControl.html#a30b6ac909474370996122ee0bcb19754">CoverageControl::GenerateRandomPolygons</a></div><div class="ttdeci">void GenerateRandomPolygons(int const num_polygons, int const max_vertices, double const half_width, double const world_size, std::vector&lt; PointVector &gt; &amp;polygons)</div><div class="ttdoc">Generate random polygons.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">polygon_utils.cpp:69</a></div></div>
+<div class="ttc" id="anamespaceCoverageControl_html_a81b475698f6977b0b5e875482dae1042"><div class="ttname"><a href="namespaceCoverageControl.html#a81b475698f6977b0b5e875482dae1042">CoverageControl::PolygonYMonotonePartition</a></div><div class="ttdeci">void PolygonYMonotonePartition(PointVector const &amp;polygon, std::vector&lt; PointVector &gt; &amp;y_monotone_polygons)</div><div class="ttdoc">Partition a polygon into y-monotone polygons.</div><div class="ttdef"><b>Definition</b> <a href="#l00038">polygon_utils.cpp:38</a></div></div>
 <div class="ttc" id="apolygon__utils_8h_html"><div class="ttname"><a href="polygon__utils_8h.html">polygon_utils.h</a></div><div class="ttdoc">Provides utilities for polygon manipulation using CGAL.</div></div>
 <div class="ttc" id="autilities_8h_html"><div class="ttname"><a href="utilities_8h.html">utilities.h</a></div><div class="ttdoc">Contains utility functions for CGAL.</div></div>
 </div><!-- fragment --></div><!-- contents -->

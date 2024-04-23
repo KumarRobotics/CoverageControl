@@ -5,7 +5,9 @@ var group__cpp__api =
     [ "Parameters", "classCoverageControl_1_1Parameters.html", [
       [ "pCommunicationRange", "classCoverageControl_1_1Parameters.html#ad64f0471d84035f9821a8b7cc8ae0073", null ],
       [ "pLocalMapSize", "classCoverageControl_1_1Parameters.html#ac2469032dfa06a223ed3c2818643fc89", null ],
+      [ "pMaxVertices", "classCoverageControl_1_1Parameters.html#a7f8a9114841b12ea9f7d2f64ae1606a4", null ],
       [ "pNumFeatures", "classCoverageControl_1_1Parameters.html#a6a25fe5fe1213ebcdd169a270914cb90", null ],
+      [ "pNumPolygons", "classCoverageControl_1_1Parameters.html#a218ce6b5f1e5b78953435a084484c37a", null ],
       [ "pNumRobots", "classCoverageControl_1_1Parameters.html#a26bf45b3c898fd1cbea54562f9095026", null ],
       [ "pResolution", "classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1", null ],
       [ "pRobotInitDist", "classCoverageControl_1_1Parameters.html#a2ffd24f087343f91e5e8f76bf82ca119", null ],
@@ -58,6 +60,8 @@ var group__cpp__api =
       [ "GetLocalVoronoiFeatures", "classCoverageControl_1_1CoverageSystem.html#a0e007880c6752418c727f2fd24b4f641", null ],
       [ "GetRobotPositions", "classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3", null ],
       [ "GetWeightedExplorationRatio", "classCoverageControl_1_1CoverageSystem.html#a17ef19df7a66f32777c5c871387401a4", null ],
+      [ "GetWorldMap", "classCoverageControl_1_1CoverageSystem.html#a91b9a44dda454d75760303b63d9e61c2", null ],
+      [ "GetWorldMapMutable", "classCoverageControl_1_1CoverageSystem.html#a0c79535bff619ff628d7482bffae492e", null ],
       [ "SetGlobalRobotPosition", "classCoverageControl_1_1CoverageSystem.html#ac6ac6daa80fd087671034c8793c87d6f", null ],
       [ "SetLocalRobotPosition", "classCoverageControl_1_1CoverageSystem.html#ac89c976b6c5a7a503387660c3bae4a56", null ],
       [ "SetLocalRobotPositions", "classCoverageControl_1_1CoverageSystem.html#a15e0c32c08d66d8316e10c149737c680", null ],
