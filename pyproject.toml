@@ -75,7 +75,7 @@ repair-wheel-command = ""
 # before-test=""
 test-command = "pytest -ra --showlocals --ignore={project}/python/tests/deprecated {project}/python/tests/test_coverage_env_utils.py {project}/python/tests/test_coverage.py {project}/python/tests/test_env_io.py {project}/python/tests/test_map_generation.py {project}/python/tests/test_models.py {project}/python/tests/test_package.py {project}/python/tests/test_parameters.py {project}/python/tests/test_parity.py"
 
-before-test = "pip install pytest torch torchvision torch_geometric && wget https://github.com/KumarRobotics/CoverageControl/files/14644475/pytest_data.tar.gz && tar -xvf pytest_data.tar.gz -C python/tests/ && rm pytest_data.tar.gz"
+before-test = "pip install pytest torch torchvision torch_geometric && wget https://github.com/KumarRobotics/CoverageControl/releases/download/v1.1.0/pytest_data.tar.gz && tar -xvf pytest_data.tar.gz -C python/tests/ && rm pytest_data.tar.gz"
 test-requires = []
 test-extras = []
 
