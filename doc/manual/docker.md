@@ -48,10 +48,10 @@ The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tag
 
 |Tags Suffix | Flags|
 |--- | ---|
-|`python2.2.1-cuda12.3.1-ros2humble` | `--with-ros --with-cuda`|
-|`python2.2.1-cuda12.3.1` | `--with-cuda`|
-|`python2.2.1-ros2humble` | `--with-ros`|
-|`python2.2.1` | None|
+|`python2.2.2-cuda12.2.2-ros2humble` | `--with-ros --with-cuda`|
+|`python2.2.2-cuda12.2.2` | `--with-cuda`|
+|`python2.2.2-ros2humble` | `--with-ros`|
+|`python2.2.2` | None|
 
 --------
 

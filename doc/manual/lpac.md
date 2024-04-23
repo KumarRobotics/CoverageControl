@@ -70,7 +70,7 @@ python python/scripts/evaluators/eval.py \
 or
 ```bash
 python python/scripts/evaluators/eval_single_dataset.py \
-       ${CoverageControl_ws}/lpac/params/eval_single.toml
+       ${CoverageControl_ws}/lpac/params/eval_single_env.toml
 ```
 
 The `eval.toml` and `eval_single.toml` files are also provided in the `params` directory of the repository.

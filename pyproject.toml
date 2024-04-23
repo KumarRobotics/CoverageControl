@@ -26,7 +26,6 @@ classifiers = [
 dynamic = ["version"]
 dependencies = ["numpy", "pyyaml",
   'toml; python_version < "3.11"',
-  "torch", "torchvision", "torch_geometric",
 ]
 
 [project.optional-dependencies]

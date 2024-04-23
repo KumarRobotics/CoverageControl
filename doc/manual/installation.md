@@ -8,11 +8,14 @@ It is recommended to install the library inside a virtual environment.
 pip install coverage_control
 ```
 
-The package depends on the following packages, which are installed as dependencies:
+The package depends on the following packages
 - [PyTorch](https://pytorch.org/)
 - [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/)
+```bash
+pip install torch torchvision torch-geometric
+```
 
-\note PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The package installs the default version (latest CUDA).
+\note PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The command installs the default version (latest CUDA).
 
 We need the following optional packages for visualization and video generation:
 - `gnuplot` or `gnuplot-nox` (for visualizing environment)
@@ -51,7 +54,7 @@ git clone https://github.com/KumarRobotics/CoverageControl.git \
 ## Docker Container
 Container can be created using the script in `setup_utils/create_container.sh`.
 ```bash
-cd ${CoverageControl_ws}/src/CoverageControl/setup_utils
+cd ${CoverageControl_ws}/src/CoverageControl/setup_utils/docker
 bash create_container.sh --with-cuda -d ${CoverageControl_ws} # See flags below
 ```
 
@@ -76,10 +79,10 @@ The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tag
 
 |Tags Suffix | Flags|
 |--- | ---|
-|`python2.2.1-cuda12.3.1-ros2humble` | `--with-ros --with-cuda`|
-|`python2.2.1-cuda12.3.1` | `--with-cuda`|
+|`python2.2.2-cuda12.2.2-ros2humble` | `--with-ros --with-cuda`|
+|`python2.2.2-cuda12.2.2` | `--with-cuda`|
 |`python2.2.1-ros2humble` | `--with-ros`|
-|`python2.2.1` | None|
+|`python2.2.2` | None|
 
 The library is already built and installed in the container.
 However, if you want to build it again, you can do so following the [Installation from Source](#installation-from-source) instructions (except for the prerequisites).
@@ -130,6 +133,9 @@ pytest
 
 
 ## Building the Core C++ Library
+
+
+\note This is only necessary if you want to use the C++ library directly.
 
 We will organize files in a **workspace** directory: `${CoverageControl_ws}` (e.g., ~/CoverageControl\_ws).
 

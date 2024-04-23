@@ -3,6 +3,10 @@
 NumRobots = 32
 NumFeatures = 32
 
+NumPolygons = 0
+MaxVertices = 10
+PolygonRadius = 64
+
 # Parameters for the environment
 [Environment]
 

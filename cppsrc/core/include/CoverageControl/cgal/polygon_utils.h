@@ -47,9 +47,8 @@ void PolygonYMonotonePartition(PointVector const &polygon,
  *
  * @param[in] num_polygons The number of polygons to generate
  * @param[in] max_vertices The maximum number of vertices in each polygon
- * @param[bounding_box_lower] The lower left corner of the bounding box
- * @param[bounding_box_upper] The upper right corner of the bounding box
- * @param[radius] The radius of the circle in which the polygons are generated
+ * @param[in] half_width The half-width of the polygon
+ * @param[in] world_size The size of the world
  * @param[out] polygons The output polygons
  */
 

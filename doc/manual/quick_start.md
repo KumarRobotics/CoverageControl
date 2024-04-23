@@ -87,6 +87,9 @@ See \ref python/scripts/coverage_env/coverage_simple.py and \ref python/scripts/
 
 # C++ Interface
 
+\note The C++ interface is not available in the pip package. You need to build the library from source. See the [Installation](https://kumarrobotics.github.io/CoverageControl/installation.html#installation-from-source) guide for instructions.
+
+
 Include the `CoverageControl` library, algorithms, and other necessary headers:
 ```cpp
 #include <CoverageControl/parameters.h>
