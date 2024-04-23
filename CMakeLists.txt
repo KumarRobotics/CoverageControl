@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_DIAGNOSTICS True)
 
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
 include(FetchContent)
 
 find_package(Python COMPONENTS Interpreter Development)
@@ -22,7 +26,7 @@ else()
 	FetchContent_Declare(
 		pybind11
 		GIT_REPOSITORY https://github.com/pybind/pybind11.git
-		GIT_TAG v2.11.1
+		GIT_TAG v2.12.0
 	)
 	FetchContent_MakeAvailable(pybind11)
 endif()

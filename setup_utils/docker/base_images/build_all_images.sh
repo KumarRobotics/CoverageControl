@@ -4,23 +4,29 @@ print_usage() {
 		echo "Example: ./build_all_images.sh ghcr.io/johndoe/repo_name"
 		exit 1
 }
-echo "Building image pytorch2.2.1"
-docker buildx build --no-cache -t ${1}:pytorch2.2.1 -f ubuntu22.04.Dockerfile .
-docker image tag ${1}:pytorch2.2.1 ghcr.io/${1}:pytorch2.2.1
-docker push ${1}:pytorch2.2.1
-docker push ghcr.io/${1}:pytorch2.2.1
-echo "Building image pytorch2.2.1-cuda12.3.1"
-docker buildx build --no-cache -t ${1}:pytorch2.2.1-cuda12.3.1 -f ubuntu22.04-cuda.Dockerfile .
-docker image tag ${1}:pytorch2.2.1-cuda12.3.1 ghcr.io/${1}:pytorch2.2.1-cuda12.3.1
-docker push ${1}:pytorch2.2.1-cuda12.3.1
-docker push ghcr.io/${1}:pytorch2.2.1-cuda12.3.1
-echo "Building image pytorch2.2.1-ros2humble"
-docker buildx build --no-cache -t ${1}:pytorch2.2.1-ros2humble -f ubuntu22.04-ros2.Dockerfile .
-docker image tag ${1}:pytorch2.2.1-ros2humble ghcr.io/${1}:pytorch2.2.1-ros2humble
-docker push ${1}:pytorch2.2.1-ros2humble
-docker push ghcr.io/${1}:pytorch2.2.1-ros2humble
-echo "Building image pytorch2.2.1-cuda12.3.1-ros2humble"
-docker buildx build --no-cache -t ${1}:pytorch2.2.1-cuda12.3.1-ros2humble -f ubuntu22.04-cuda-ros2.Dockerfile .
-docker image tag ${1}:pytorch2.2.1-cuda12.3.1-ros2humble ghcr.io/${1}:pytorch2.2.1-cuda12.3.1-ros2humble
-docker push ${1}:pytorch2.2.1-cuda12.3.1-ros2humble
-docker push ghcr.io/${1}:pytorch2.2.1-cuda12.3.1-ros2humble
+
+# Function build image takes 2 arguments: 1. username/repo_name 2. tag_name 3. Dockerfile
+# Example: build_image johndoe/repo_name pytorch2.2.2 ubuntu22.04.Dockerfile
+build_image() {
+    echo "Building image $2"
+    TAG_NAME=$2
+    docker buildx build --no-cache -t ${1}:${TAG_NAME} -f $3 .
+    docker push ${1}:${TAG_NAME}
+}
+
+echo "Building image pytorch2.2.2-cuda12.2"
+TAG_NAME=pytorch2.2.2-cuda12.2.2
+# build_image $1 $TAG_NAME ubuntu22.04-cuda.Dockerfile
+
+echo "Building image pytorch2.2.2-ros2humble"
+TAG_NAME=pytorch2.2.2-ros2humble
+build_image $1 $TAG_NAME ubuntu22.04-ros2.Dockerfile
+
+echo "Building image pytorch2.2.2-cuda12.2.2-ros2humble"
+TAG_NAME=pytorch2.2.2-cuda12.2.2-ros2humble
+build_image $1 $TAG_NAME ubuntu22.04-cuda-ros2.Dockerfile
+
+echo "Building image pytorch2.2.2"
+TAG_NAME=pytorch2.2.2
+build_image $1 $TAG_NAME ubuntu22.04.Dockerfile
+

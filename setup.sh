@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
-ORIG_INPUT_PARAMS="$@"
-params="$(getopt -o d:hctpg -l directory:,help,clean,torch,python,global,with-cuda,with-deps,pip-path: --name "$(basename "$0")" -- "$@")"
-
-if [ $? -ne 0 ]
-then
-	print_usage
-fi
-
 print_usage() {
-	printf "bash $0 [-h|--help] [-d|--directory <workspace directory>] [-p|--python] [--with-cuda] [--with-deps] [-g|--global] [-c|--clean] [-t|--torch]\n"
+	printf "bash %s [-h|--help] [-d|--directory <workspace directory>] [-p|--python] [--with-cuda] [--with-deps] [-g|--global] [-c|--clean] [-t|--torch]\n" "$0"
 	printf "Options:\n"
 	printf "  -h, --help                             : Prints this help message\n"
 	printf "  -d, --directory <workspace directory>  : Builds and installs the package in the specified directory\n"
@@ -17,6 +9,15 @@ print_usage() {
 	printf "  --with-deps                            : Installs the dependencies\n"
 	printf "  -g, --global                           : Installs the package globally. Needs sudo permissions\n"
 }
+
+ORIG_INPUT_PARAMS="$@"
+
+params="$(getopt -o d:hctpg -l directory:,help,clean,torch,python,global,with-cuda,with-deps,pip-path: --name "$(basename "$0")" -- "$@")"
+
+if [ $? -ne 0 ]
+then
+	print_usage
+fi
 
 eval set -- "$params"
 echo "Params: $params"

@@ -59,7 +59,7 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/*.bin
 
 RUN mkdir download; \
-		wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.1%2Bcpu.zip -O download/libtorch.zip; \
+		wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcpu.zip -O download/libtorch.zip; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 

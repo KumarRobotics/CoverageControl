@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-TMP_DIR=`mktemp -d`
+TMP_DIR=$(mktemp -d)
 
 params="$(getopt -o d: -l directory:,no-cuda,boost,gmp,mpfr,eigen,cgal,pybind11,yaml-cpp,geographiclib,opencv --name "$(basename "$0")" -- "$@")"
 
 print_usage() {
-	printf "bash $0 [-d|--directory <specify install directory>]\n"
+  printf "bash %s [-d|--directory <specify install directory>] [--no-cuda] [--boost] [--gmp] [--mpfr] [--eigen] [--cgal] [--pybind11] [--yaml-cpp] [--geographiclib] [--opencv]\n" "$(basename "$0")"
 }
 eval set -- "$params"
 unset params
@@ -42,7 +42,11 @@ fi
 
 InstallCGAL () {
 	echo "Setting up CGAL"
-	wget https://github.com/CGAL/cgal/releases/download/v${CGAL_VERSION}/CGAL-${CGAL_VERSION}-library.tar.xz -P ${MAIN_DIR}/src > /dev/null
+	wget --tries=4 https://github.com/CGAL/cgal/releases/download/v${CGAL_VERSION}/CGAL-${CGAL_VERSION}-library.tar.xz -P ${MAIN_DIR}/src > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Failed to download CGAL"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/CGAL-${CGAL_VERSION}-library.tar.xz -C ${MAIN_DIR}/src/ > /dev/null
 	cmake -S ${MAIN_DIR}/src/CGAL-${CGAL_VERSION} -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS} > /dev/null
 	cmake --install ${BUILD_DIR}/cgal > /dev/null
@@ -56,7 +60,11 @@ InstallCGAL () {
 
 InstallGeoGraphicLib () {
 	echo "Setting up geographiclib"
-	wget https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.3.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.3.tar.gz -P ${MAIN_DIR}/src
+  if [ $? -ne 0 ]; then
+    echo "Failed to download geographiclib"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/v2.3.tar.gz -C ${MAIN_DIR}/src/
 	cmake -S ${MAIN_DIR}/src/geographiclib-2.3 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS} -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/geographiclib -j$(nproc)
@@ -71,7 +79,11 @@ InstallGeoGraphicLib () {
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
-	wget https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.tar.gz -P ${MAIN_DIR}/src
+  if [ $? -ne 0 ]; then
+    echo "Failed to download pybind11"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/v2.11.1.tar.gz -C ${MAIN_DIR}/src/
 	cmake -S ${MAIN_DIR}/src/pybind11-2.11.1 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
@@ -86,7 +98,11 @@ InstallPybind11 () {
 
 InstallYamlCPP () {
 	echo "Setting up yaml-cpp"
-	wget https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz -P ${MAIN_DIR}/src
+  if [ $? -ne 0 ]; then
+    echo "Failed to download yaml-cpp"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/0.8.0.tar.gz -C ${MAIN_DIR}/src/
 	cmake -S ${MAIN_DIR}/src/yaml-cpp-0.8.0 -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
@@ -104,7 +120,11 @@ InstallYamlCPP () {
 
 InstallEigen3 () {
 	echo "Setting up eigen3"
-	wget https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/${EIGEN_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/${EIGEN_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
+  if [ $? -ne 0 ]; then
+    echo "Failed to download eigen3"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/${EIGEN_TAR_NAME}.tar.gz -C ${MAIN_DIR}/src/
 	cmake -S ${MAIN_DIR}/src/${EIGEN_TAR_NAME} -B ${BUILD_DIR}/eigen3 ${CMAKE_END_FLAGS} > /dev/null
 	cmake --build ${BUILD_DIR}/eigen3 -j$(nproc) > /dev/null
@@ -119,7 +139,11 @@ InstallEigen3 () {
 
 InstallTorchVision () {
 	echo "Setting up torchvision"
-	wget https://github.com/pytorch/vision/archive/refs/tags/v0.15.2.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://github.com/pytorch/vision/archive/refs/tags/v0.15.2.tar.gz -P ${MAIN_DIR}/src
+  if [ $? -ne 0 ]; then
+    echo "Failed to download torchvision"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/v0.15.2.tar.gz -C ${MAIN_DIR}/src/
 	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision -DWITH_CUDA=ON -DUSE_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/torchvision -j$(nproc)
@@ -162,7 +186,11 @@ InstallTorchSparse () {
 
 InstallOpenCV () {
 	echo "Setting up opencv"
-	wget -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.8.0.tar.gz
+	wget --tries=4 -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.8.0.tar.gz
+  if [ $? -ne 0 ]; then
+    echo "Failed to download opencv"
+    exit 1
+  fi
 	wget -O ${MAIN_DIR}/src/opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.8.0.zip
 	tar -xf ${MAIN_DIR}/src/opencv.tar.gz -C ${MAIN_DIR}/src/
 	unzip ${MAIN_DIR}/src/opencv_contrib.zip -d ${MAIN_DIR}/src/
@@ -179,7 +207,14 @@ InstallOpenCV () {
 
 InstallGMP () {
 	echo "Setting up gmp"
-	wget https://gmplib.org/download/gmp/${GMP_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+	wget --tries=1 https://gmplib.org/download/gmp/${GMP_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+  if [ $? -ne 0 ]; then
+    wget --tries=4 https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${GMP_TAR_NAME}/${GMP_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+  fi
+  if [ $? -ne 0 ]; then
+    echo "Failed to download gmp"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/${GMP_TAR_NAME}.tar.xz -C ${MAIN_DIR}/src/ > /dev/null
 	cd ${MAIN_DIR}/src/${GMP_TAR_NAME}
 	./configure --enable-cxx --disable-shared --with-pic ${CONFIGURE_END_FLAGS}  > /dev/null
@@ -194,7 +229,14 @@ InstallGMP () {
 
 InstallMPFR() {
 	echo "Setting up mpfr"
-	wget https://www.mpfr.org/mpfr-current/${MPFR_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src
+	wget --tries=1 https://www.mpfr.org/mpfr-current/${MPFR_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+  if [ $? -ne 0 ]; then
+    wget --tries=4 https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${MPFR_TAR_NAME}/${MPFR_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+  fi
+  if [ $? -ne 0 ]; then
+    echo "Failed to download mpfr"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/${MPFR_TAR_NAME}.tar.xz -C ${MAIN_DIR}/src/
 	cd ${MAIN_DIR}/src/${MPFR_TAR_NAME}
 	# if ${INSTALL_DIR} is set, then we need to tell where gmp is installed
@@ -214,7 +256,11 @@ InstallMPFR() {
 
 InstallBoost () {
 	echo "Setting up boost"
-	wget https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
+  if [ $? -ne 0 ]; then
+    echo "Failed to download boost"
+    exit 1
+  fi
 	tar -xf ${MAIN_DIR}/src/${BOOST_TAR_NAME}.tar.gz -C ${MAIN_DIR}/src/
 	cd ${MAIN_DIR}/src/${BOOST_TAR_NAME}
 	if [ -z "$INSTALL_DIR" ]; then
@@ -231,16 +277,16 @@ InstallBoost () {
 	fi
 }
 
-BOOST_VERSION=1.82.0
-BOOST_TAR_NAME=`echo boost_${BOOST_VERSION} | tr . _`
+BOOST_VERSION=1.85.0
+BOOST_TAR_NAME=$(echo boost_${BOOST_VERSION} | tr . _)
 GMP_VERSION=6.3.0
-GMP_TAR_NAME=`echo gmp-${GMP_VERSION}`
+GMP_TAR_NAME=$(echo gmp-${GMP_VERSION})
 MPFR_VERSION=4.2.1
-MPFR_TAR_NAME=`echo mpfr-${MPFR_VERSION}`
+MPFR_TAR_NAME=$(echo mpfr-${MPFR_VERSION})
 EIGEN_VERSION=3.4.0
-EIGEN_TAR_NAME=`echo eigen-${EIGEN_VERSION}`
+EIGEN_TAR_NAME=$(echo eigen-${EIGEN_VERSION})
 CGAL_VERSION=5.6.1
-CGAL_TAR_NAME=`echo CGAL-${CGAL_VERSION}`
+CGAL_TAR_NAME=$(echo CGAL-${CGAL_VERSION})
 
 if [ -n "$BOOST" ]; then
 	InstallBoost

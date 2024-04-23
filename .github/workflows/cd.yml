@@ -1,7 +1,11 @@
 name: docker-deploy
 on:
+  workflow_dispatch:
   release:
     types: [published]
+
+env:
+  FORCE_COLOR: 3
 
 jobs:
   docker-deploy:
@@ -15,26 +19,26 @@ jobs:
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.1-cuda12.3.1-ros2humble
+          base_tag: pytorch2.2.2-cuda12.2.2-ros2humble
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.1-ros2humble
+          base_tag: pytorch2.2.2-ros2humble
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.1-cuda12.3.1
+          base_tag: pytorch2.2.2-cuda12.2.2
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.1
+          base_tag: pytorch2.2.2
           github_token: ${{ secrets.GITHUB_TOKEN }}

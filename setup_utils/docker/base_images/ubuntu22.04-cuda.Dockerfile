@@ -1,5 +1,5 @@
 # Start with cuda image
-FROM nvidia/cuda:12.3.1-devel-ubuntu22.04
+FROM nvidia/cuda:12.2.2-devel-ubuntu22.04
 
 SHELL ["/bin/bash", "-c"]
 
@@ -59,7 +59,7 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/*.bin
 
 RUN mkdir download; \
-		wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.1%2Bcu121.zip -O download/libtorch.zip; \
+		wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcu121.zip -O download/libtorch.zip; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 

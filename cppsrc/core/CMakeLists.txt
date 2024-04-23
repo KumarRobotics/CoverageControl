@@ -12,7 +12,7 @@ dynamic_version(PROJECT_PREFIX "CoverageControl_" GIT_ARCHIVAL_FILE "${CMAKE_CUR
 
 project(CoverageControl VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
-if (NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif()
 

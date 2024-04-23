@@ -26,10 +26,10 @@ done
 mkdir -p ${INSTALL_DIR}
 if [[ ${NOCUDA} ]]
 then
-	wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.1%2Bcpu.zip -O ${TMP_DIR}/libtorch.zip
+	wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcpu.zip -O ${TMP_DIR}/libtorch.zip
 
 else
-	wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.1%2Bcu121.zip -O ${TMP_DIR}/libtorch.zip
+	wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.2.2%2Bcu121.zip -O ${TMP_DIR}/libtorch.zip
 fi
 unzip ${TMP_DIR}/libtorch.zip -d ${INSTALL_DIR}/
 # cp -r ${TMP_DIR}/libtorch/* ${1}/.
