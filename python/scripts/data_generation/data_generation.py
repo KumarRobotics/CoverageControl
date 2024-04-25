@@ -1,28 +1,6 @@
-#  This file is part of the CoverageControl library
-#
-#  Author: Saurav Agarwal
-#  Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
-#  Repository: https://github.com/KumarRobotics/CoverageControl
-#
-#  Copyright (c) 2024, Saurav Agarwal
-#
-#  The CoverageControl library is free software: you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or (at your
-#  option) any later version.
-#
-#  The CoverageControl library is distributed in the hope that it will be
-#  useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-#  Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License along with
-#  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
-
 # @file data_generation.py
 # This file contains the code to generate a dataset for learning
 #
-
 # DataDir =  "${CoverageControl_ws}/datasets/lpac" # Absolute location
 # EnvironmentConfig = "${CoverageControl_ws}/datasets/lpac/coverage_control_params.toml" # Absolute location
 #
@@ -48,30 +26,30 @@
 # TrainRatio = 0.7
 # ValRatio =  0.2
 # TestRatio = 0.1
-
-## @file data_generation.py
+# @file data_generation.py
 #  @brief Class to generate CoverageControl dataset for LPAC architecture
-
-import os
-import sys
-import pathlib
 import datetime
 import math
+import os
+import pathlib
+import sys
 
 import coverage_control
 import torch
-from coverage_control import CoverageSystem, IOUtils
+from coverage_control import CoverageSystem
+from coverage_control import IOUtils
 from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
 from coverage_control.nn import CoverageEnvUtils
 
-## @ingroup python_api
+# @ingroup python_api
+
+
 class DatasetGenerator:
     """
     Class to generate CoverageControl dataset for LPAC architecture
     """
 
     def __init__(self, config_file, append_dir=None):
-
         self.config = IOUtils.load_toml(config_file)
         self.data_dir = IOUtils.sanitize_path(self.config["DataDir"])
         self.dataset_dir = self.data_dir + "/data/"

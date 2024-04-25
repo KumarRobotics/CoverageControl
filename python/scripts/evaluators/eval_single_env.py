@@ -1,23 +1,3 @@
-# This file is part of the CoverageControl library
-#
-# Author: Saurav Agarwal
-# Contact: sauravag@seas.upenn.edu, agr.saurav1@gmail.com
-# Repository: https://github.com/KumarRobotics/CoverageControl
-#
-# Copyright (c) 2024, Saurav Agarwal
-#
-# The CoverageControl library is free software: you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or (at your
-# option) any later version.
-#
-# The CoverageControl library is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-# Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 # @file eval_single_env.py
 #  @brief Evaluate a single dataset with multiple controllers
 import os
@@ -62,16 +42,19 @@ class EvaluatorSingle:
         self.pos_file = None
 
         file_exists = False
+
         if "FeatureFile" in self.config and "RobotPosFile" in self.config:
             self.feature_file = self.env_dir + self.config["FeatureFile"]
             self.pos_file = self.env_dir + self.config["RobotPosFile"]
             print(self.feature_file)
             print(self.pos_file)
+
             if os.path.isfile(self.feature_file):
                 feature_file_exists = True
             else:
                 print(f"Feature file {self.feature_file} not found")
                 feature_file_exists = False
+
             if os.path.isfile(self.pos_file):
                 pos_file_exists = True
             else:
@@ -88,6 +71,7 @@ class EvaluatorSingle:
         else:
             self.env_main = CoverageSystem(self.cc_params)
             self.world_idf = self.env_main.GetWorldIDF()
+
             if self.feature_file is not None and self.pos_file is not None:
                 self.env_main.WriteEnvironment(self.pos_file, self.feature_file)
 
