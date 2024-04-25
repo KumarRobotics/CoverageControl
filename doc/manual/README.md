@@ -15,11 +15,10 @@ The library provides a simulation environment, algorithms, and GNN-based archite
 - There are `python` bindings that interface with the core library
 - Several Centroidal Voronoi Tessellation (CVT)-based algorithms (aka Lloyd's algorithms)
 - Learnable Perception-Action-Communication (LPAC) architecture for the coverage control problem is implemented in `PyTorch` and `PyTorch Geometric`
-- GPU and CPU parallelization using `CUDA` and `OpenMP`
 
 ---
 
-## Quick Start
+## Getting Started
 The library is available as a `pip` package. To install the package, run the following command:
 ```bash
 pip install coverage_control

@@ -79,13 +79,13 @@ InstallGeoGraphicLib () {
 
 InstallPybind11 () {
 	echo "Setting up pybind11"
-	wget --tries=4 https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.tar.gz -P ${MAIN_DIR}/src
+	wget --tries=4 https://github.com/pybind/pybind11/archive/refs/tags/v2.12.0.tar.gz -P ${MAIN_DIR}/src
   if [ $? -ne 0 ]; then
     echo "Failed to download pybind11"
     exit 1
   fi
-	tar -xf ${MAIN_DIR}/src/v2.11.1.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/pybind11-2.11.1 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
+	tar -xf ${MAIN_DIR}/src/v2.12.0.tar.gz -C ${MAIN_DIR}/src/
+	cmake -S ${MAIN_DIR}/src/pybind11-2.12.0 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
 	cmake --install ${BUILD_DIR}/pybind11
 	if [ $? -eq 0 ]; then

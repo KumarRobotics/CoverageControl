@@ -5,7 +5,7 @@
 We will organize files in a **workspace** directory: `${CoverageControl_ws}` (e.g., ~/CoverageControl\_ws).
 
 Download and extract the file `lpac_CoverageControl.tar.gz` to the workspace directory.
-The file can be downloaded from the repository's release page.
+The file can be downloaded from the repository [releases](https://github.com/KumarRobotics/CoverageControl/releases).
 ```bash
 tar -xvzf lpac_CoverageControl.tar.gz -C ${CoverageControl_ws}
 ```

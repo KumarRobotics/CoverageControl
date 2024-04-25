@@ -16,7 +16,8 @@ INPUT                  = doc/manual/README.md \
 												 cppsrc/main/coverage_algorithm.cpp \
                          python/coverage_control \
                          python/scripts \
-                         python/utils
+                         python/utils \
+                         python/utils/process_data.sh
 EXCLUDE                = doc/cppsrc/torch doc/cppsrc/main/torch
 OUTPUT_DIRECTORY       = doc/
 LAYOUT_FILE            = doc/config/DoxygenLayout.xml

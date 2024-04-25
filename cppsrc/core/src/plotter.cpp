@@ -48,6 +48,7 @@ namespace CoverageControl {
   gp << "set size ratio -1\n";
   gp << "set xrange [0:" << range_max << "]\n";
   gp << "set yrange [0:" << range_max << "]\n";
+  gp << "set border linewidth 1.5\n";
   if (unset_colorbox) gp << "unset colorbox\n";
   return 0;
 }
@@ -59,7 +60,7 @@ void Plotter::StreamMap(Gnuplot &gp, MapType const &map) {
     }
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 }
 
 void Plotter::PlotMap(Gnuplot &gp, bool begin) {
@@ -117,7 +118,7 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions) {
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << std::endl;
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 }
 
 void Plotter::PlotMap(MapType const &map, PointVector const &positions,
@@ -151,12 +152,12 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     for (auto const &pos : trajectory) {
       gp << pos[0] << " " << pos[1] << std::endl;
     }
-    gp << "e\n";
+    gp << "e" << std::endl;
   }
 
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << std::endl;
-    gp << "e\n";
+    gp << "e" << std::endl;
   }
 }
 
@@ -193,7 +194,7 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     for (auto const &pos : trajectory) {
       gp << pos[0] << " " << pos[1] << std::endl;
     }
-    gp << "e\n";
+    gp << "e" << std::endl;
   }
 
   for (size_t i = 0; i < positions.size(); ++i) {
@@ -205,10 +206,10 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
       }
     }
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << std::endl;
-    gp << "e\n";
+    gp << "e" << std::endl;
   }
 }
 
@@ -235,7 +236,7 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     }
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &vcell : voronoi) {
     for (auto const &pos : vcell) {
@@ -243,12 +244,12 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     }
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 }
 
 void Plotter::PlotMap(MapType const &map, PointVector const &positions,
@@ -274,7 +275,7 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     }
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   auto voronoi_cells = voronoi.GetVoronoiCells();
   for (auto const &vcell : voronoi_cells) {
@@ -285,12 +286,12 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     gp << pos[0] << " " << pos[1] << "\n";
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 }
 
 void Plotter::PlotMap(MapType const &map, PointVector const &positions,
@@ -319,7 +320,7 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     gp << pos[0] << " " << pos[1] << std::endl;
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (size_t i = 0; i < positions.size(); ++i) {
     auto const &pos = positions[i];
@@ -328,17 +329,17 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     gp << goal[0] << " " << goal[1] << std::endl;
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &pos : goals) {
     gp << pos[0] << " " << pos[1] << std::endl;
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << std::endl;
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 }
 
 void Plotter::PlotMap(MapType const &map, PointVector const &positions,
@@ -364,17 +365,17 @@ void Plotter::PlotMap(MapType const &map, PointVector const &positions,
     }
     gp << "\n";
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &pos : positions) {
     gp << pos[0] << " " << pos[1] << std::endl;
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 
   for (auto const &pos : frontiers) {
     gp << pos[0] << " " << pos[1] << std::endl;
   }
-  gp << "e\n";
+  gp << "e" << std::endl;
 }
 
 }  // namespace CoverageControl

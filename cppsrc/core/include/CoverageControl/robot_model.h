@@ -137,16 +137,11 @@ class RobotModel {
     sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
     local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
     obstacle_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
-    if (params_.pRobotMapUseUnknownImportance == true) {
-      robot_map_ =
-          MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize,
-                            params_.pUnknownImportance * params_.pNorm);
-    } else {
-      robot_map_ = MapType::Zero(params_.pRobotMapSize, params_.pRobotMapSize);
-    }
 
     local_start_position_ = Point2{0, 0};
     local_current_position_ = local_start_position_;
+
+    ClearRobotMap();
 
     if (params_.pUpdateExplorationMap == true) {
       exploration_map_ =
@@ -161,6 +156,20 @@ class RobotModel {
           MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 0);
     }
 
+    time_step_dist_ =
+        params_.pMaxRobotSpeed * params_.pTimeStep * params_.pResolution;
+    sensor_area_ = params_.pSensorSize * params_.pSensorSize;
+  }
+
+  void ClearRobotMap() {
+    if (params_.pRobotMapUseUnknownImportance == true) {
+      robot_map_ =
+          MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize,
+                            params_.pUnknownImportance * params_.pNorm);
+    } else {
+      robot_map_ = MapType::Zero(params_.pRobotMapSize, params_.pRobotMapSize);
+    }
+
     if (params_.pUpdateSensorView == true) {
       UpdateSensorView();
     }
@@ -169,10 +178,6 @@ class RobotModel {
     } else {
       UpdateRobotMap();
     }
-
-    time_step_dist_ =
-        params_.pMaxRobotSpeed * params_.pTimeStep * params_.pResolution;
-    sensor_area_ = params_.pSensorSize * params_.pSensorSize;
   }
 
   //! \note Time step robot with the given control direction and speed.

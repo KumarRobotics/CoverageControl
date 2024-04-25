@@ -18,21 +18,21 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
-
-## @file eval.py
+# @file eval.py
 #  @brief Evaluates the performance of the controllers on a set of environments
-
 import os
 import sys
 
 import coverage_control as cc
 import numpy as np
-from coverage_control import CoverageSystem, IOUtils, WorldIDF
+from coverage_control import CoverageSystem
+from coverage_control import IOUtils
+from coverage_control import WorldIDF
+from coverage_control.algorithms import ControllerCVT
+from coverage_control.algorithms import ControllerNN
 
-from controller import ControllerCVT, ControllerNN
 
-
-## @ingroup python_api
+# @ingroup python_api
 class Evaluator:
     """
     Evaluates the performance of the controllers on a set of environments
@@ -127,11 +127,12 @@ class Evaluator:
                     step_count = step_count + 1
 
                     if step_count % 100 == 0:
+                        val = cost_data[controller_id, dataset_count, step_count - 1]
                         print(
-                            f"Step {step_count}, Objective Value {cost_data[controller_id, dataset_count, step_count - 1]}"
-                        )
-                        print(
-                            f"Environment {dataset_count}, {controller.name}, Step {step_count}"
+                            f"Environment {dataset_count} "
+                            f"{controller.name} "
+                            f"Step {step_count} "
+                            f"Objective Value {val}"
                         )
 
                 if save is True:
@@ -155,7 +156,6 @@ class Evaluator:
 
 
 if __name__ == "__main__":
-
     config_file = sys.argv[1]
     config = IOUtils.load_toml(config_file)
 

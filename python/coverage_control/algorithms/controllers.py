@@ -18,20 +18,22 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
-
-## @file controller.py
+# @file controller.py
 #  @brief Base classes for CVT and neural network based controllers
-
 import coverage_control.nn as cc_nn
 import torch
-from coverage_control import CoverageSystem, IOUtils, Parameters, PointVector
-from coverage_control.algorithms import (
-    CentralizedCVT,
-    ClairvoyantCVT,
-    DecentralizedCVT,
-    NearOptimalCVT,
-)
-from coverage_control.nn import CoverageEnvUtils
+
+from . import CentralizedCVT
+from . import ClairvoyantCVT
+from . import DecentralizedCVT
+from . import NearOptimalCVT
+from .. import IOUtils
+from ..core import CoverageSystem
+from ..core import Parameters
+from ..core import PointVector
+from ..nn import CoverageEnvUtils
+
+__all__ = ["ControllerCVT", "ControllerNN"]
 
 
 class ControllerCVT:

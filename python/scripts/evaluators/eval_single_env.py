@@ -18,21 +18,21 @@
 #
 # You should have received a copy of the GNU General Public License along with
 # CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
-
-## @file eval_single_env.py
+# @file eval_single_env.py
 #  @brief Evaluate a single dataset with multiple controllers
-
 import os
 import sys
 
 import coverage_control as cc
 import numpy as np
-from coverage_control import CoverageSystem, IOUtils, WorldIDF
+from coverage_control import CoverageSystem
+from coverage_control import IOUtils
+from coverage_control import WorldIDF
+from coverage_control.algorithms import ControllerCVT
+from coverage_control.algorithms import ControllerNN
 
-from controller import ControllerCVT, ControllerNN
 
-
-## @ingroup python_api
+# @ingroup python_api
 class EvaluatorSingle:
     """
     Class to evaluate a single environment with multiple controllers
@@ -42,17 +42,9 @@ class EvaluatorSingle:
         self.config = in_config
         self.eval_dir = IOUtils.sanitize_path(self.config["EvalDir"]) + "/"
         self.env_dir = IOUtils.sanitize_path(self.config["EnvironmentDataDir"]) + "/"
-        self.feature_file = self.env_dir + self.config["FeatureFile"]
-        self.pos_file = self.env_dir + self.config["RobotPosFile"]
 
         if not os.path.exists(self.env_dir):
             os.makedirs(self.env_dir)
-
-        if not os.path.exists(self.feature_file):
-            raise ValueError(f"Feature file {self.feature_file} does not exist")
-
-        if not os.path.exists(self.pos_file):
-            raise ValueError(f"Robot position file {self.pos_file} does not exist")
 
         self.num_controllers = len(self.config["Controllers"])
         self.controllers_configs = self.config["Controllers"]
@@ -61,27 +53,56 @@ class EvaluatorSingle:
         self.env_config = IOUtils.load_toml(self.env_config_file)
         self.cc_params = cc.Parameters(self.env_config_file)
 
-        self.num_robots = self.cc_params.pNumRobots
-        self.num_features = self.cc_params.pNumFeatures
         self.num_steps = self.config["NumSteps"]
 
         self.plot_map = self.config["PlotMap"]
         self.generate_video = self.config["GenerateVideo"]
 
+        self.feature_file = None
+        self.pos_file = None
+
+        file_exists = False
+        if "FeatureFile" in self.config and "RobotPosFile" in self.config:
+            self.feature_file = self.env_dir + self.config["FeatureFile"]
+            self.pos_file = self.env_dir + self.config["RobotPosFile"]
+            print(self.feature_file)
+            print(self.pos_file)
+            if os.path.isfile(self.feature_file):
+                feature_file_exists = True
+            else:
+                print(f"Feature file {self.feature_file} not found")
+                feature_file_exists = False
+            if os.path.isfile(self.pos_file):
+                pos_file_exists = True
+            else:
+                print(f"Position file {self.pos_file} not found")
+                pos_file_exists = False
+
+            file_exists = feature_file_exists and pos_file_exists
+
+        if file_exists is True:
+            self.world_idf = WorldIDF(self.cc_params, self.feature_file)
+            self.env_main = CoverageSystem(
+                self.cc_params, self.world_idf, self.pos_file
+            )
+        else:
+            self.env_main = CoverageSystem(self.cc_params)
+            self.world_idf = self.env_main.GetWorldIDF()
+            if self.feature_file is not None and self.pos_file is not None:
+                self.env_main.WriteEnvironment(self.pos_file, self.feature_file)
+
     def evaluate(self, save=True):
         cost_data = np.zeros((self.num_controllers, self.num_steps))
-        world_idf = WorldIDF(self.cc_params, self.feature_file)
-        env_main = CoverageSystem(self.cc_params, world_idf, self.pos_file)
-        robot_init_pos = env_main.GetRobotPositions(force_no_noise=True)
+        robot_init_pos = self.env_main.GetRobotPositions(force_no_noise=True)
 
         if self.plot_map:
             map_dir = self.eval_dir + "/plots/"
             os.makedirs(map_dir, exist_ok=True)
-            env_main.PlotInitMap(map_dir, "InitMap")
+            self.env_main.PlotInitMap(map_dir, "InitMap")
 
         for controller_id in range(self.num_controllers):
             step_count = 0
-            env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
+            env = CoverageSystem(self.cc_params, self.world_idf, robot_init_pos)
             controller_name = self.controllers_configs[controller_id]["Name"]
 
             if self.generate_video:
@@ -120,9 +141,15 @@ class EvaluatorSingle:
 
                 if step_count % 100 == 0:
                     print(
-                        f"Step {step_count}, Objective Value {cost_data[controller_id, step_count - 1]}"
+                        f"{controller.name} "
+                        f"Step {step_count} "
+                        f"Obj Value {cost_data[controller_id, step_count - 1]:.3e}"
                     )
-                    print(f"{controller.name}, Step {step_count}")
+            print(
+                f"{controller.name} "
+                f"final step {step_count} "
+                f"Obj Value {cost_data[controller_id, step_count - 1]:.3e}"
+            )
 
             if save is True:
                 controller_dir = self.eval_dir + "/" + controller_name
@@ -146,7 +173,6 @@ class EvaluatorSingle:
 
 
 if __name__ == "__main__":
-
     config_file = sys.argv[1]
     config = IOUtils.load_toml(config_file)
 

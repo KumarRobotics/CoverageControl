@@ -7,6 +7,12 @@ NumPolygons = 0
 MaxVertices = 10
 PolygonRadius = 64
 
+[IO]
+# Determines the quality of the plot and videos
+# > 1: High quality (takes more time to plot)
+# < 1: Low quality (takes less time to plot)
+PlotScale = 1.0
+
 # Parameters for the environment
 [Environment]
 
@@ -81,6 +87,7 @@ PositionsNoiseSigma = 0.1
 
 # Number of steps in an episode
 EpisodeSteps = 2100
+CheckOscillations = true
 
 [Algorithm.Global-CVT]
 # Settings for Global-CVT algorithm

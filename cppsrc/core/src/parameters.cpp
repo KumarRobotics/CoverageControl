@@ -82,6 +82,13 @@ void Parameters::ParseParameters() {
     std::cout << "PolygonRadius (default): " << pPolygonRadius << std::endl;
   }
 
+  auto toml_IO = toml_config["IO"];
+  if (toml_IO["PlotScale"].value<double>()) {
+    pPlotScale = toml_IO["PlotScale"].value<double>().value();
+  } else {
+    std::cout << "PlotScale (default): " << pPlotScale << std::endl;
+  }
+
   auto toml_EnvironmentMaps = toml_config["Environment.Maps"];
 
   if (toml_EnvironmentMaps) {
@@ -226,6 +233,10 @@ void Parameters::ParseParameters() {
     if (toml_EpisodeSteps) {
       pEpisodeSteps = toml_EpisodeSteps.value();
     }
+    if (toml_Algorithm["CheckOscillations"].value<bool>()) {
+      pCheckOscillations =
+          toml_Algorithm["CheckOscillations"].value<bool>().value();
+    }
 
     auto toml_LloydMaxIterations =
         toml_Algorithm["Global-CVT.LloydMaxIterations"].value<int>();
@@ -252,6 +263,8 @@ void Parameters::PrintParameters() {
   std::cout << "NumPolygons: " << pNumPolygons << std::endl;
   std::cout << "MaxVertices: " << pMaxVertices << std::endl;
   std::cout << "PolygonRadius" << pPolygonRadius << std::endl;
+
+  std::cout << "PlotScale: " << pPlotScale << std::endl;
 
   std::cout << "Resolution: " << pResolution << std::endl;
   std::cout << "WorldMapSize: " << pWorldMapSize << std::endl;
@@ -285,6 +298,7 @@ void Parameters::PrintParameters() {
   std::cout << "PositionsNoiseSigma: " << pPositionsNoiseSigma << std::endl;
 
   std::cout << "EpisodeSteps: " << pEpisodeSteps << std::endl;
+  std::cout << "CheckOscillations: " << pCheckOscillations << std::endl;
   std::cout << "LloydMaxIterations: " << pLloydMaxIterations << std::endl;
   std::cout << "LloydNumTries: " << pLloydNumTries << std::endl;
   std::cout << "NumFrontiers: " << pNumFrontiers << std::endl;

@@ -331,6 +331,9 @@ class CoverageSystem {
   //! \warning This function is dependent on the size of the robot positions
   //! history
   bool CheckOscillation(size_t const robot_id) const {
+    if (params_.pCheckOscillations == false) {
+      return false;
+    }
     if (robot_positions_history_[robot_id].size() < 2) {
       return false;
     }
@@ -385,6 +388,18 @@ class CoverageSystem {
    * \return True if any robot is still moving
    */
   bool StepRobotsToGoals(PointVector const &goals, PointVector &actions);
+
+  void ClearRobotMaps() {
+    for (size_t i = 0; i < num_robots_; ++i) {
+      robots_[i].ClearRobotMap();
+    }
+  }
+
+  void ClearExploredIDF() {
+    explored_idf_map_ =
+        MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+  }
+
   //! @}
 
   //! \name I/O

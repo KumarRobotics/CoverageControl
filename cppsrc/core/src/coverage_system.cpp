@@ -380,11 +380,11 @@ void CoverageSystem::RenderRecordedMap(std::string const &dir_name,
   std::filesystem::create_directory(frame_dir);
   Plotter plotter(frame_dir, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(2);
+  plotter.SetScale(params_.pPlotScale);
   Plotter plotter_voronoi(frame_dir,
                           params_.pWorldMapSize * params_.pResolution,
                           params_.pResolution);
-  plotter_voronoi.SetScale(2);
+  plotter_voronoi.SetScale(params_.pPlotScale);
 #pragma omp parallel for
   for (size_t i = 0; i < plotter_data_.size(); ++i) {
     auto iPlotter = plotter;
@@ -450,7 +450,7 @@ void CoverageSystem::PlotSystemMap(std::string const &filename) const {
   std::vector<int> robot_status(num_robots_, 0);
   Plotter plotter("./", params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(2);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName(filename);
   plotter.PlotMap(system_map_, robot_global_positions_,
                   robot_positions_history_, robot_status,
@@ -461,7 +461,7 @@ void CoverageSystem::PlotSystemMap(std::string const &dir_name, int const &step,
                                    std::vector<int> const &robot_status) const {
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(1);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName("map", step);
   plotter.PlotMap(system_map_, robot_global_positions_,
                   robot_positions_history_, robot_status);
@@ -471,7 +471,7 @@ void CoverageSystem::PlotWorldMapRobots(std::string const &dir_name,
                                         std::string const &map_name) const {
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(1);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName(map_name);
   std::vector<int> robot_status(num_robots_, 0);
   plotter.PlotMap(GetWorldMap(), robot_global_positions_,
@@ -482,7 +482,7 @@ void CoverageSystem::PlotWorldMap(std::string const &dir_name,
                                   std::string const &map_name) const {
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(1);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName(map_name);
   plotter.PlotMap(GetWorldMap());
 }
@@ -491,7 +491,7 @@ void CoverageSystem::PlotInitMap(std::string const &dir_name,
                                  std::string const &map_name) const {
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(2);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName(map_name);
   plotter.PlotMap(GetWorldMap(), robot_global_positions_);
 }
@@ -501,7 +501,7 @@ void CoverageSystem::PlotMapVoronoi(std::string const &dir_name,
   ComputeVoronoiCells();
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(2);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName("voronoi_map", step);
   plotter.PlotMap(GetWorldMap(), robot_global_positions_, voronoi_,
                   robot_positions_history_);
@@ -512,7 +512,7 @@ void CoverageSystem::PlotMapVoronoi(std::string const &dir_name,
                                     PointVector const &goals) const {
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(2);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName("map", step);
   plotter.PlotMap(GetWorldMap(), robot_global_positions_, goals, voronoi);
 }
@@ -521,7 +521,7 @@ void CoverageSystem::PlotFrontiers(std::string const &dir_name, int const &step,
                                    PointVector const &frontiers) const {
   Plotter plotter(dir_name, params_.pWorldMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(2);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName("map", step);
   plotter.PlotMap(system_map_, robot_global_positions_,
                   robot_positions_history_, frontiers);
@@ -544,7 +544,7 @@ void CoverageSystem::PlotRobotIDFMap(std::string const &dir_name,
                                      int const &robot_id, int const &step) {
   Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution,
                   params_.pResolution);
-  plotter.SetScale(4);
+  plotter.SetScale(params_.pPlotScale);
   plotter.SetPlotName("robot_" + std::to_string(robot_id) + "_", step);
   plotter.PlotMap(GetRobotLocalMap(robot_id));
 }

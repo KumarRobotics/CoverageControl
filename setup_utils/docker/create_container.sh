@@ -40,15 +40,15 @@ fi
 if [[ ${CUDA_IMAGE} == true ]]; then
 	CONTAINER_OPTIONS+="--gpus all "
 	if [[ ${ROS_IMAGE} == true ]]; then
-		IMAGE_TAG="pytorch2.2.1-cuda12.3.1-ros2humble"
+		IMAGE_TAG="pytorch2.2.2-cuda12.2.2-ros2humble"
 	else
-		IMAGE_TAG="pytorch2.2.1-cuda12.3.1"
+		IMAGE_TAG="pytorch2.2.2-cuda12.2.2"
 	fi
 else
 	if [[ ${ROS_IMAGE} == true ]]; then
-		IMAGE_TAG="pytorch2.2.1-ros2humble"
+		IMAGE_TAG="pytorch2.2.2-ros2humble"
 	else
-		IMAGE_TAG="pytorch2.2.1"
+		IMAGE_TAG="pytorch2.2.2"
 	fi
 fi
 

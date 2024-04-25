@@ -11,6 +11,7 @@ pip install coverage_control
 The package depends on the following packages
 - [PyTorch](https://pytorch.org/)
 - [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/)
+
 ```bash
 pip install torch torchvision torch-geometric
 ```
@@ -81,7 +82,7 @@ The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tag
 |--- | ---|
 |`python2.2.2-cuda12.2.2-ros2humble` | `--with-ros --with-cuda`|
 |`python2.2.2-cuda12.2.2` | `--with-cuda`|
-|`python2.2.1-ros2humble` | `--with-ros`|
+|`python2.2.2-ros2humble` | `--with-ros`|
 |`python2.2.2` | None|
 
 The library is already built and installed in the container.
@@ -122,7 +123,7 @@ pip install .
 
 Testing the installation (from the root of the repository):
 
-Download the file `pytest_data.tar.gz` from the repository's release page and extract it to `python/tests/`.
+Download the file `pytest_data.tar.gz` from the repository's [release page](https://github.com/KumarRobotics/CoverageControl/releases) and extract it to `python/tests/`.
 This will create a directory `python/tests/data`.
 
 Then run the following commands:

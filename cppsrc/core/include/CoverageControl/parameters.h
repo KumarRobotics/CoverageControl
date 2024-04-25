@@ -61,6 +61,15 @@ class Parameters {
   int pMaxVertices = 10;  //!< Maximum number of vertices in a polygon
   double pPolygonRadius = 64;
 
+  /*! \name IO Parameters
+   * @{
+   */
+  //! Determines the quality of the plot and videos
+  //! > 1: High quality (takes more time to plot)
+  //! < 1: Low quality (takes less time to plot)
+  double pPlotScale = 1.0;
+  /*! @} */
+
   /*! \name Map Parameters
    * @{
    */
@@ -144,6 +153,7 @@ class Parameters {
    */
 
   int pEpisodeSteps = 2000;  // Total time is pEpisodeSteps * pTimeStep
+  bool pCheckOscillations = true;
 
   /*! \name Global-CVT
    * @{

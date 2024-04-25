@@ -8,6 +8,68 @@ env:
   FORCE_COLOR: 3
 
 jobs:
+  make_sdist:
+    name: Make SDist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: sudo bash ./setup_utils/install_dependencies.sh  --boost --gmp --mpfr --eigen --cgal
+
+      - name: Build SDist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
+
+  build_wheels:
+    name: Wheel on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pypa/cibuildwheel@v2.17
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: wheelhouse/*.whl
+
+  upload_all:
+    needs: [build_wheels, make_sdist]
+    environment:
+      name: pypi
+      url: https://pypi.org/p/coverage-control
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        # with:
+          # Remember to tell (test-)pypi about this repo before publishing
+          # Remove this line to publish to PyPI
+          # repository-url: https://test.pypi.org/legacy/
   docker-deploy:
     permissions: write-all
     runs-on: ubuntu-latest

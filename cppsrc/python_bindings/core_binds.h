@@ -230,11 +230,13 @@ void pyCoverageControl_core(py::module &m) {
       .def(py::init<>())
       .def(py::init<std::string const &>())
       .def("SetConfig", &Parameters::SetConfig)
+      .def("PrintParameters", &Parameters::PrintParameters)
       .def_readwrite("pNumRobots", &Parameters::pNumRobots)
       .def_readwrite("pNumFeatures", &Parameters::pNumFeatures)
       .def_readwrite("pNumPolygons", &Parameters::pNumPolygons)
       .def_readwrite("pMaxVertices", &Parameters::pMaxVertices)
       .def_readwrite("pPolygonRadius", &Parameters::pPolygonRadius)
+      .def_readwrite("pPlotScale", &Parameters::pPlotScale)
       .def_readwrite("pResolution", &Parameters::pResolution)
       .def_readwrite("pWorldMapSize", &Parameters::pWorldMapSize)
       .def_readwrite("pRobotMapSize", &Parameters::pRobotMapSize)
@@ -248,6 +250,7 @@ void pyCoverageControl_core(py::module &m) {
       .def_readwrite("pTimeStep", &Parameters::pTimeStep)
       .def_readwrite("pMaxRobotSpeed", &Parameters::pMaxRobotSpeed)
       .def_readwrite("pEpisodeSteps", &Parameters::pEpisodeSteps)
+      .def_readwrite("pCheckOscillations", &Parameters::pCheckOscillations)
       .def_readwrite("pTruncationBND", &Parameters::pTruncationBND)
       .def_readwrite("pNorm", &Parameters::pNorm)
       .def_readwrite("pMinSigma", &Parameters::pMinSigma)
@@ -281,6 +284,8 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("GetWorldMapMutable", &CoverageSystem::GetWorldMapMutable,
            py::return_value_policy::reference_internal)
       .def("GetWorldIDFObject", &CoverageSystem::GetWorldIDFObject,
+           py::return_value_policy::reference_internal)
+      .def("GetWorldIDF", &CoverageSystem::GetWorldIDFObject,
            py::return_value_policy::reference_internal)
       .def("StepControl", &CoverageSystem::StepControl)
       .def("StepAction", &CoverageSystem::StepAction)
@@ -368,7 +373,9 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
                                  &CoverageSystem::RecordPlotData))
       .def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
       .def("WriteEnvironment", &CoverageSystem::WriteEnvironment)
-      .def("GetNumRobots", &CoverageSystem::GetNumRobots);
+      .def("GetNumRobots", &CoverageSystem::GetNumRobots)
+      .def("ClearRobotMaps", &CoverageSystem::ClearRobotMaps)
+      .def("ClearExploredIDF", &CoverageSystem::ClearExploredIDF);
 }
 
 // CudaUtils
