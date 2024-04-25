@@ -151,17 +151,17 @@ This will create a directory <code>lpac</code> in the workspace directory. The d
 <h1><a class="anchor" id="autotoc_md28"></a>
 Dataset Generation</h1>
 <p>There are two ways to classes for dataset generation located in <code>python/scripts/data_generation/</code></p><ol type="1">
-<li><code><a class="el" href="simple__data__generation_8py.html" title="Generates a dataset for coverage control learning.">simple_data_generation.py</a></code></li>
-<li><code><a class="el" href="data__generation_8py.html" title="Class to generate CoverageControl dataset for LPAC architecture.">data_generation.py</a></code></li>
+<li><code><a class="el" href="simple__data__generation_8py_source.html">simple_data_generation.py</a></code></li>
+<li><code><a class="el" href="data__generation_8py_source.html">data_generation.py</a></code></li>
 </ol>
-<p>They are similar, except that <code><a class="el" href="data__generation_8py.html" title="Class to generate CoverageControl dataset for LPAC architecture.">data_generation.py</a></code> splits the dataset into training, validation, and test sets.</p>
+<p>They are similar, except that <code><a class="el" href="data__generation_8py_source.html">data_generation.py</a></code> splits the dataset into training, validation, and test sets.</p>
 <p>To generate a dataset, run the following command:  
 <div class="fragment">
 <div class="line"><span class="keyword">python</span> python/scripts/data_generation/data_generation.py \</div>
 <div class="line">       ${CoverageControl_ws}/lpac/params/data_params.toml</div>
 </div>
  A sample <code><a class="el" href="data__params_8toml_source.html">data_params.toml</a></code> file is also provided in the <code>params</code> directory of the repository. See the file for details on the parameters. The class will use a <code><a class="el" href="coverage__control__params_8toml_source.html">coverage_control_params.toml</a></code> configuration file to generate environments and then use the <code>ClairvoyantCVT</code> algorithm to generate the dataset.</p>
-<p>The <code><a class="el" href="simple__data__generation_8py.html" title="Generates a dataset for coverage control learning.">simple_data_generation.py</a></code> is useful for generating a large dataset in parts and then combining them into a single dataset. See <code><a class="el" href="process__data_8sh_source.html">python/utils/process_data.sh</a></code> and <code><a class="el" href="dataset__utils_8py_source.html">python/utils/dataset_utils.py</a></code> for tools to process and combine datasets.</p>
+<p>The <code><a class="el" href="simple__data__generation_8py_source.html">simple_data_generation.py</a></code> is useful for generating a large dataset in parts and then combining them into a single dataset. See <code><a class="el" href="process__data_8sh_source.html">python/utils/process_data.sh</a></code> and <code><a class="el" href="dataset__utils_8py_source.html">python/utils/dataset_utils.py</a></code> for tools to process and combine datasets.</p>
 <h1><a class="anchor" id="autotoc_md29"></a>
 Training</h1>
 <p>To train the LPAC model, run the following command:  

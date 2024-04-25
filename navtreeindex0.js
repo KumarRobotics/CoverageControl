@@ -146,9 +146,6 @@ var NAVTREEINDEX0 =
 "classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a89a306a9cee3440d65c02251ed5050b1":[5,1,10,5],
 "classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#abdf5fd130331afa21b31632b44c22e26":[5,1,10,3],
 "classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#ac6daf0c1d66e796e28b65df17bef112f":[5,1,10,0],
-"classdata__generation_1_1DatasetGenerator.html":[5,1,11],
-"classsimple__data__generation_1_1SimpleDatasetGenerator.html":[5,1,12],
-"classsimple__data__generation_1_1SimpleDatasetGenerator.html#a7d8a01c6e0b4e47d5d43c3d3015ded8c":[5,1,12,0],
 "cnn_8py_source.html":[6,2,0,2,1,1],
 "cnn__backbone_8py_source.html":[6,2,0,2,1,2],
 "config_8h.html":[6,0,0,0,0,1,0],
@@ -185,7 +182,6 @@ var NAVTREEINDEX0 =
 "cuda__utils_8cu_source.html":[6,0,0,1,0,0],
 "cuda__utils_8h.html":[6,0,0,0,0,6],
 "cuda__utils_8h_source.html":[6,0,0,0,0,6],
-"data__generation_8py.html":[6,2,1,1,0],
 "data__generation_8py_source.html":[6,2,1,1,0],
 "data__loader__utils_8py_source.html":[6,2,0,2,0,2],
 "data__params_8toml_source.html":[6,1,1],
@@ -249,5 +245,9 @@ var NAVTREEINDEX0 =
 "group__cpp__api__constants.html#ga5e878bac48ebe71bc1593bb64d33a3b7":[5,0,0,2],
 "group__cpp__api__constants.html#ga68173a231b63d8188abeb9a5f0f2b579":[5,0,0,7],
 "group__cpp__api__constants.html#ga7303a45a00c71dfb231fb50b2af09b05":[5,0,0,3],
-"group__cpp__api__constants.html#ga845278ec96128e76681e0e8e6368ccad":[5,0,0,5]
+"group__cpp__api__constants.html#ga845278ec96128e76681e0e8e6368ccad":[5,0,0,5],
+"group__cpp__api__constants.html#gad08691d2b43666bbc3f8411c3fd3ea7e":[5,0,0,4],
+"group__cpp__api__constants.html#gad78a5d79d202425ef7b63e9e5b0c62f8":[5,0,0,6],
+"group__cpp__api__constants.html#gaf92a1bdb82883a1e0817deea017f5175":[5,0,0,1],
+"group__cpp__api__typedefs.html":[5,0,1]
 };

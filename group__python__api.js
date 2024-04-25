@@ -56,9 +56,5 @@ var group__python__api =
       [ "train", "classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a89a306a9cee3440d65c02251ed5050b1", null ],
       [ "TrainEpoch", "classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a514a739c4aeefe5544f47dcb6445f432", null ],
       [ "validate_epoch", "classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a0df5c3f3313c8840f9a5002f5181db8d", null ]
-    ] ],
-    [ "DatasetGenerator", "classdata__generation_1_1DatasetGenerator.html", null ],
-    [ "SimpleDatasetGenerator", "classsimple__data__generation_1_1SimpleDatasetGenerator.html", [
-      [ "__init__", "classsimple__data__generation_1_1SimpleDatasetGenerator.html#a7d8a01c6e0b4e47d5d43c3d3015ded8c", null ]
     ] ]
 ];
