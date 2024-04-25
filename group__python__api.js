@@ -60,7 +60,5 @@ var group__python__api =
     [ "DatasetGenerator", "classdata__generation_1_1DatasetGenerator.html", null ],
     [ "SimpleDatasetGenerator", "classsimple__data__generation_1_1SimpleDatasetGenerator.html", [
       [ "__init__", "classsimple__data__generation_1_1SimpleDatasetGenerator.html#a7d8a01c6e0b4e47d5d43c3d3015ded8c", null ]
-    ] ],
-    [ "Evaluator", "classeval_1_1Evaluator.html", null ],
-    [ "EvaluatorSingle", "classeval__single__env_1_1EvaluatorSingle.html", null ]
+    ] ]
 ];

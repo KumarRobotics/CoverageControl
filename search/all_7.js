@@ -25,9 +25,10 @@ var searchData=
   ['getrobotpositions_22',['GetRobotPositions',['../classCoverageControl_1_1CoverageSystem.html#a016b2199a409bc057e834a38eb14e6d3',1,'CoverageControl::CoverageSystem']]],
   ['getscale_23',['GetScale',['../classCoverageControl_1_1BivariateNormalDistribution.html#a073500c7bf85d4fed293f6e787a47c74',1,'CoverageControl::BivariateNormalDistribution']]],
   ['getsigma_24',['GetSigma',['../classCoverageControl_1_1BivariateNormalDistribution.html#a7b9d61f59fdc264a7fc9a114ad53a351',1,'CoverageControl::BivariateNormalDistribution']]],
-  ['getweightedexplorationratio_25',['GetWeightedExplorationRatio',['../classCoverageControl_1_1CoverageSystem.html#a17ef19df7a66f32777c5c871387401a4',1,'CoverageControl::CoverageSystem']]],
-  ['getworldmap_26',['GetWorldMap',['../classCoverageControl_1_1CoverageSystem.html#a91b9a44dda454d75760303b63d9e61c2',1,'CoverageControl::CoverageSystem']]],
-  ['getworldmapmutable_27',['GetWorldMapMutable',['../classCoverageControl_1_1CoverageSystem.html#a0c79535bff619ff628d7482bffae492e',1,'CoverageControl::CoverageSystem']]],
-  ['gnnbackbone_28',['GNNBackBone',['../classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html',1,'coverage_control::nn::models::gnn_backbone']]],
-  ['gnnconfigparser_29',['GNNConfigParser',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html',1,'coverage_control::nn::models::config_parser']]]
+  ['getting_20started_25',['Getting Started',['../index.html#autotoc_md2',1,'']]],
+  ['getweightedexplorationratio_26',['GetWeightedExplorationRatio',['../classCoverageControl_1_1CoverageSystem.html#a17ef19df7a66f32777c5c871387401a4',1,'CoverageControl::CoverageSystem']]],
+  ['getworldmap_27',['GetWorldMap',['../classCoverageControl_1_1CoverageSystem.html#a91b9a44dda454d75760303b63d9e61c2',1,'CoverageControl::CoverageSystem']]],
+  ['getworldmapmutable_28',['GetWorldMapMutable',['../classCoverageControl_1_1CoverageSystem.html#a0c79535bff619ff628d7482bffae492e',1,'CoverageControl::CoverageSystem']]],
+  ['gnnbackbone_29',['GNNBackBone',['../classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html',1,'coverage_control::nn::models::gnn_backbone']]],
+  ['gnnconfigparser_30',['GNNConfigParser',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html',1,'coverage_control::nn::models::config_parser']]]
 ];

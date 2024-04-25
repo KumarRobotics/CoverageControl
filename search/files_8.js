@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['near_5foptimal_5fcvt_2eh_0',['near_optimal_cvt.h',['../near__optimal__cvt_8h.html',1,'']]],
-  ['near_5foptimal_5fcvt_5falgorithm_2eh_1',['near_optimal_cvt_algorithm.h',['../near__optimal__cvt__algorithm_8h.html',1,'']]]
+  ['oracle_5fbang_5fexplore_5fexploit_2eh_0',['oracle_bang_explore_exploit.h',['../oracle__bang__explore__exploit_8h.html',1,'']]],
+  ['oracle_5fexplore_5fexploit_2eh_1',['oracle_explore_exploit.h',['../oracle__explore__exploit_8h.html',1,'']]]
 ];

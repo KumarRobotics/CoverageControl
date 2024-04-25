@@ -146,12 +146,14 @@ PyPI Installation</h1>
 </div>
  The package depends on the following packages</p><ul>
 <li><a href="https://pytorch.org/">PyTorch</a></li>
-<li><a href="https://pytorch-geometric.readthedocs.io/en/latest/">PyTorch Geometric</a>  
+<li><a href="https://pytorch-geometric.readthedocs.io/en/latest/">PyTorch Geometric</a></li>
+</ul>
+<p> 
 <div class="fragment">
 <div class="line"><span class="keyword">pip</span> install torch torchvision torch-geometric</div>
 </div>
- <dl class="section note"><dt>Note</dt><dd>PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The command installs the default version (latest CUDA).</dd></dl>
-We need the following optional packages for visualization and video generation:</li>
+ </p><dl class="section note"><dt>Note</dt><dd>PyTorch and PyTorch Geometric have CPU and CUDA-specific versions. The command installs the default version (latest CUDA).</dd></dl>
+<p>We need the following optional packages for visualization and video generation:</p><ul>
 <li><code>gnuplot</code> or <code>gnuplot-nox</code> (for visualizing environment)</li>
 <li><code>ffmpeg</code> (for generating videos)</li>
 </ul>
@@ -207,7 +209,7 @@ Docker Container</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>python2.2.2-cuda12.2.2</code>   </td><td class="markdownTableBodyNone"><code>--with-cuda</code>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>python2.2.1-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros</code>    </td></tr>
+<td class="markdownTableBodyNone"><code>python2.2.2-ros2humble</code>   </td><td class="markdownTableBodyNone"><code>--with-ros</code>    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>python2.2.2</code>   </td><td class="markdownTableBodyNone">None   </td></tr>
 </table>
@@ -243,7 +245,7 @@ Automated Installation</h2>
 <div class="line"><span class="keyword">pip</span> install .</div>
 </div>
  Testing the installation (from the root of the repository):</p>
-<p>Download the file <code>pytest_data.tar.gz</code> from the repository's release page and extract it to <code>python/tests/</code>. This will create a directory <code>python/tests/data</code>.</p>
+<p>Download the file <code>pytest_data.tar.gz</code> from the repository's <a href="https://github.com/KumarRobotics/CoverageControl/releases">release page</a> and extract it to <code>python/tests/</code>. This will create a directory <code>python/tests/data</code>.</p>
 <p>Then run the following commands:  
 <div class="fragment">
 <div class="line"><span class="keyword">pip</span> install pytest</div>

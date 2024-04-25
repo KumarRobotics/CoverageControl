@@ -9,6 +9,7 @@ var group__cpp__api =
       [ "pNumFeatures", "classCoverageControl_1_1Parameters.html#a6a25fe5fe1213ebcdd169a270914cb90", null ],
       [ "pNumPolygons", "classCoverageControl_1_1Parameters.html#a218ce6b5f1e5b78953435a084484c37a", null ],
       [ "pNumRobots", "classCoverageControl_1_1Parameters.html#a26bf45b3c898fd1cbea54562f9095026", null ],
+      [ "pPlotScale", "classCoverageControl_1_1Parameters.html#a3525e9691824d88ebdc4d996584a1921", null ],
       [ "pResolution", "classCoverageControl_1_1Parameters.html#a003727b70c2e2cd53bfadf0ad5109ec1", null ],
       [ "pRobotInitDist", "classCoverageControl_1_1Parameters.html#a2ffd24f087343f91e5e8f76bf82ca119", null ],
       [ "pRobotMapSize", "classCoverageControl_1_1Parameters.html#a16c11f0867b9d184ae9efe007b3c0dde", null ],
