@@ -85,6 +85,7 @@ void pyCoverageControl_core(py::module &m) {
 
   py::bind_vector<PointVector>(m, "PointVector");
   py::bind_vector<std::vector<Point3>>(m, "Point3Vector");
+  py::bind_vector<std::vector<MapType>>(m, "MapTypeVector");
 
   py::class_<PolygonFeature>(m, "PolygonFeature")
       .def(py::init<>())
@@ -307,8 +308,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
            py::return_value_policy::reference_internal)
       .def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView,
            py::return_value_policy::reference_internal)
-      .def("GetCommunicationMap", &CoverageSystem::GetCommunicationMap,
-           py::return_value_policy::reference_internal)
+      .def("GetCommunicationMaps", &CoverageSystem::GetCommunicationMaps)
       .def("GetRobotsInCommunication",
            &CoverageSystem::GetRobotsInCommunication)
       .def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells,

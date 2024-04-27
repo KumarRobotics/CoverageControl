@@ -145,10 +145,10 @@ CoverageSystem::CoverageSystem(
   InitSetup();
 }
 
-std::pair<MapType, MapType> const &CoverageSystem::GetCommunicationMap(
+std::pair<MapType, MapType> CoverageSystem::GetRobotCommunicationMaps(
     size_t const id, size_t map_size) {
-  communication_maps_[id] = std::make_pair(MapType::Zero(map_size, map_size),
-                                           MapType::Zero(map_size, map_size));
+  std::pair<MapType, MapType> communication_maps = std::make_pair(
+      MapType::Zero(map_size, map_size), MapType::Zero(map_size, map_size));
   PointVector robot_neighbors_pos = GetRelativePositonsNeighbors(id);
   double center = map_size / 2. - params_.pResolution / 2.;
   Point2 center_point(center, center);
@@ -157,16 +157,16 @@ std::pair<MapType, MapType> const &CoverageSystem::GetCommunicationMap(
         relative_pos * map_size /
             (params_.pCommunicationRange * params_.pResolution * 2.) +
         center_point;
-    int scaled_indices_x = scaled_indices_val[0];
-    int scaled_indices_y = scaled_indices_val[1];
+    int scaled_indices_x = std::round(scaled_indices_val[0]);
+    int scaled_indices_y = std::round(scaled_indices_val[1]);
     Point2 normalized_relative_pos = relative_pos / params_.pCommunicationRange;
 
-    communication_maps_[id].first(scaled_indices_x, scaled_indices_y) +=
+    communication_maps.first(scaled_indices_x, scaled_indices_y) +=
         normalized_relative_pos[0];
-    communication_maps_[id].second(scaled_indices_x, scaled_indices_y) +=
+    communication_maps.second(scaled_indices_x, scaled_indices_y) +=
         normalized_relative_pos[1];
   }
-  return communication_maps_[id];
+  return communication_maps;
 }
 
 void CoverageSystem::InitSetup() {
@@ -174,7 +174,6 @@ void CoverageSystem::InitSetup() {
   robot_positions_history_.resize(num_robots_);
 
   voronoi_cells_.resize(num_robots_);
-  communication_maps_.resize(num_robots_);
 
   robot_global_positions_.resize(num_robots_);
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -588,7 +587,7 @@ void CoverageSystem::PlotRobotCommunicationMaps(std::string const &dir_name,
                                                 int const &robot_id,
                                                 int const &step,
                                                 size_t const &map_size) {
-  auto robot_communication_maps = GetCommunicationMap(robot_id, map_size);
+  auto robot_communication_maps = GetRobotCommunicationMaps(robot_id, map_size);
   Plotter plotter_x(dir_name, map_size * params_.pResolution,
                     params_.pResolution);
   plotter_x.SetPlotName(

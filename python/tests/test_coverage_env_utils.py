@@ -26,7 +26,7 @@ import coverage_control
 import numpy as np
 import torch
 import torch_geometric
-from coverage_control.nn import CoverageEnvUtils
+from coverage_control import CoverageEnvUtils
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -86,14 +86,14 @@ def test_get_raw_local_maps():
 
     assert isinstance(local_maps, torch.Tensor)
     assert local_maps.shape == (
-        params.pNumRobots,
-        params.pLocalMapSize,
-        params.pLocalMapSize,
-    )
+            params.pNumRobots,
+            params.pLocalMapSize,
+            params.pLocalMapSize,
+            )
     assert local_maps.dtype == torch.float32
     saved_local_maps = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/local_maps.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/local_maps.pt")
+            )
     is_all_close = torch.allclose(local_maps, saved_local_maps)
     assert is_all_close
     is_all_equal = torch.equal(local_maps, saved_local_maps)
@@ -106,14 +106,14 @@ def test_get_raw_obstacle_maps():
     obstacle_maps = CoverageEnvUtils.get_raw_obstacle_maps(env, params)
     assert isinstance(obstacle_maps, torch.Tensor)
     assert obstacle_maps.shape == (
-        params.pNumRobots,
-        params.pLocalMapSize,
-        params.pLocalMapSize,
-    )
+            params.pNumRobots,
+            params.pLocalMapSize,
+            params.pLocalMapSize,
+            )
     assert obstacle_maps.dtype == torch.float32
     saved_obstacle_maps = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/obstacle_maps.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/obstacle_maps.pt")
+            )
     is_all_close = torch.allclose(obstacle_maps, saved_obstacle_maps)
     assert is_all_close
     is_all_equal = torch.equal(obstacle_maps, saved_obstacle_maps)
@@ -128,9 +128,11 @@ def test_get_communication_maps():
     assert comm_maps.shape == (params.pNumRobots, 2, 32, 32)
     assert comm_maps.dtype == torch.float32
     saved_comm_maps = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/comm_maps.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/comm_maps.pt")
+            )
     is_all_close = torch.allclose(comm_maps, saved_comm_maps)
+    max_error = torch.max(torch.abs(comm_maps - saved_comm_maps))
+    print(f"Max error: {max_error}")
     assert is_all_close
     is_all_equal = torch.equal(comm_maps, saved_comm_maps)
 
@@ -145,8 +147,8 @@ def test_resize_maps():
     assert resized_local_maps.shape == (params.pNumRobots, 32, 32)
     assert resized_local_maps.dtype == torch.float32
     saved_resized_local_maps = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/resized_local_maps.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/resized_local_maps.pt")
+            )
     is_all_close = torch.allclose(resized_local_maps, saved_resized_local_maps)
     assert is_all_close
     is_all_equal = torch.equal(resized_local_maps, saved_resized_local_maps)
@@ -176,8 +178,8 @@ def test_get_voronoi_features():
     assert voronoi_features.shape == (params.pNumRobots, feature_len)
     assert voronoi_features.dtype == torch.float32
     saved_voronoi_features = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/voronoi_features.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/voronoi_features.pt")
+            )
     is_all_close = torch.allclose(voronoi_features, saved_voronoi_features)
     assert is_all_close
     is_all_equal = torch.equal(voronoi_features, saved_voronoi_features)
@@ -192,8 +194,8 @@ def test_get_robot_positions():
     assert robot_positions.shape == (params.pNumRobots, 2)
     assert robot_positions.dtype == torch.float32
     saved_robot_positions = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/robot_positions.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/robot_positions.pt")
+            )
     is_all_close = torch.allclose(robot_positions, saved_robot_positions)
     assert is_all_close
     is_all_equal = torch.equal(robot_positions, saved_robot_positions)
@@ -208,8 +210,8 @@ def test_get_weights():
     assert weights.shape == (params.pNumRobots, params.pNumRobots)
     assert weights.dtype == torch.float32
     saved_weights = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/weights.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/weights.pt")
+            )
     is_all_close = torch.allclose(weights, saved_weights)
     assert is_all_close
     is_all_equal = torch.equal(weights, saved_weights)
@@ -220,16 +222,16 @@ def test_get_weights():
 
 def test_get_torch_geometric_data():
     data = CoverageEnvUtils.get_torch_geometric_data(
-        env, params, use_cnn=True, use_comm_map=True, map_size=32
-    )
+            env, params, use_cnn=True, use_comm_map=True, map_size=32
+            )
     assert isinstance(data, torch_geometric.data.Data)
     assert data.x.shape == (params.pNumRobots, 4, 32, 32)
     assert data.x.dtype == torch.float32
     assert data.edge_index.shape == (2, 16)
     assert data.edge_index.dtype == torch.long
     saved_data = torch.load(
-        os.path.join(script_dir, "data/coverage_env_utils/torch_geometric_data.pt")
-    )
+            os.path.join(script_dir, "data/coverage_env_utils/torch_geometric_data.pt")
+            )
     is_all_close = torch.allclose(data.x, saved_data.x)
     assert is_all_close
     is_all_equal = torch.equal(data.x, saved_data.x)

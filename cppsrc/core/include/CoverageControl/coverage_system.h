@@ -70,8 +70,6 @@ class CoverageSystem {
   WorldIDF world_idf_;              //!< World IDF
   size_t num_robots_ = 0;           //!< Number of robots
   std::vector<RobotModel> robots_;  //!< Vector of robots of type RobotModel
-  std::vector<std::pair<MapType, MapType>>
-      communication_maps_;  //!< Communication maps (2 channels) for each robot
   double normalization_factor_ = 0;  //!< Normalization factor for the world IDF
   Voronoi voronoi_;                  //!< Voronoi object
   std::vector<VoronoiCell> voronoi_cells_;  //!< Voronoi cells for each robot
@@ -567,14 +565,17 @@ class CoverageSystem {
     return robot_neighbors_pos;
   }
 
-  std::pair<MapType, MapType> const &GetCommunicationMap(size_t const, size_t);
+  std::pair<MapType, MapType> GetRobotCommunicationMaps(size_t const, size_t);
 
-  const auto &GetCommunicationMaps(size_t map_size) {
-#pragma omp parallel for num_threads(num_robots_)
+  std::vector<MapType> GetCommunicationMaps(size_t map_size) {
+    std::vector<MapType> communication_maps(2 * num_robots_);
+/* #pragma omp parallel for num_threads(num_robots_) */
     for (size_t i = 0; i < num_robots_; ++i) {
-      GetCommunicationMap(i, map_size);
+      auto comm_map = GetRobotCommunicationMaps(i, map_size);
+      communication_maps[2 * i] = comm_map.first;
+      communication_maps[2 * i + 1] = comm_map.second;
     }
-    return communication_maps_;
+    return communication_maps;
   }
 
   auto GetObjectiveValue() {

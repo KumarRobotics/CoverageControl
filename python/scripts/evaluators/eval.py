@@ -44,6 +44,7 @@ class Evaluator:
         self.num_features = self.cc_params.pNumFeatures
         self.num_envs = self.config["NumEnvironments"]
         self.num_steps = self.config["NumSteps"]
+        os.makedirs(self.env_dir + "/init_maps", exist_ok=True)
 
     def evaluate(self, save=True):
         dataset_count = 0
@@ -59,12 +60,11 @@ class Evaluator:
                 env_main = CoverageSystem(self.cc_params, world_idf, pos_file)
             else:
                 print(f"Creating new environment {dataset_count}")
-                env_main = CoverageSystem(
-                    self.cc_params, self.num_features, self.num_robots
-                )
+                env_main = CoverageSystem(self.cc_params)
                 env_main.WriteEnvironment(pos_file, env_file)
                 world_idf = env_main.GetWorldIDFObject()
 
+            # env_main.PlotInitMap(self.env_dir + "/init_maps", f"{dataset_count}")
             robot_init_pos = env_main.GetRobotPositions(force_no_noise=True)
 
             for controller_id in range(self.num_controllers):
@@ -72,8 +72,6 @@ class Evaluator:
                 env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
                 # map_dir = self.eval_dir + "/" + self.controllers[controller_id]["Name"] + "/plots/"
-                # os.makedirs(map_dir, exist_ok = True)
-                # env.PlotInitMap(map_dir, "InitMap")
                 # env.RecordPlotData()
                 # env.PlotMapVoronoi(map_dir, step_count)
 
@@ -112,9 +110,15 @@ class Evaluator:
                             f"Environment {dataset_count} "
                             f"{controller.name} "
                             f"Step {step_count} "
-                            f"Objective Value {val}"
+                            f"Objective Value {val:.3e}"
                         )
 
+                print(
+                    f"Environment {dataset_count} "
+                    f"{controller.name} "
+                    f"Step {step_count} "
+                    f"Objective Value {val:.3e}"
+                )
                 if save is True:
                     self.controller_dir = (
                         self.eval_dir

@@ -36,7 +36,7 @@ import torch_geometric
 import torchvision
 from scipy.spatial import distance_matrix
 
-from ...core import CoverageSystem, DblVector, DblVectorVector, Parameters, PointVector
+from .core import CoverageSystem, DblVector, DblVectorVector, Parameters, PointVector
 
 
 ## @ingroup python_api
@@ -257,9 +257,11 @@ class CoverageEnvUtils:
         )
 
         if use_comm_map:
-            comm_maps = CoverageEnvUtils.get_communication_maps(
-                env, params, resized_map_size
-            )
+            comm_maps = env.GetCommunicationMaps(resized_map_size)
+            comm_maps = torch.tensor(numpy.array(env.GetCommunicationMaps(resized_map_size)), dtype=torch.float32).reshape(num_robots, 2, resized_map_size, resized_map_size)
+            # comm_maps = CoverageEnvUtils.get_communication_maps(
+            #     env, params, resized_map_size
+            # )
             maps = torch.cat(
                 [
                     resized_local_maps.unsqueeze(1),

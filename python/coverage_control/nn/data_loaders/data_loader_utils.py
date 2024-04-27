@@ -204,15 +204,15 @@ class DataLoaderUtils:
         if pos is None:
             data = torch_geometric.data.Data(
                 x=feature,
-                edge_index=edge_index.clone().detach(),
-                edge_weight=weights.clone().detach(),
+                edge_index=edge_index.clone(),
+                edge_weight=weights.clone(),
             )
         else:
             data = torch_geometric.data.Data(
                 x=feature,
-                edge_index=edge_index.clone().detach(),
-                edge_weight=weights.clone().detach(),
-                pos=pos.clone().detach(),
+                edge_index=edge_index.clone(),
+                edge_weight=weights.clone(),
+                pos=pos.clone(),
             )
 
         return data

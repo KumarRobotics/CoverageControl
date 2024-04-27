@@ -28,10 +28,10 @@ from . import ClairvoyantCVT
 from . import DecentralizedCVT
 from . import NearOptimalCVT
 from .. import IOUtils
+from .. import CoverageEnvUtils
 from ..core import CoverageSystem
 from ..core import Parameters
 from ..core import PointVector
-from ..nn import CoverageEnvUtils
 
 __all__ = ["ControllerCVT", "ControllerNN"]
 
@@ -112,11 +112,11 @@ class ControllerNN:
 
         if "ModelFile" in self.config:
             self.model_file = IOUtils.sanitize_path(self.config["ModelFile"])
-            self.model = torch.load(self.model_file)
+            self.model = torch.load(self.model_file).to(self.device)
         else:  # Load from ModelStateDict
             self.learning_params_file = IOUtils.sanitize_path(
-                self.config["LearningParams"]
-            )
+                    self.config["LearningParams"]
+                    )
             self.learning_params = IOUtils.load_toml(self.learning_params_file)
             self.model = cc_nn.LPAC(self.learning_params).to(self.device)
             self.model.load_model(IOUtils.sanitize_path(self.config["ModelStateDict"]))
@@ -125,6 +125,7 @@ class ControllerNN:
         self.actions_std = self.model.actions_std.to(self.device)
         self.model = self.model.to(self.device)
         self.model.eval()
+        self.model = torch.compile(self.model, dynamic=True)
 
     def step(self, env):
         """
@@ -140,8 +141,8 @@ class ControllerNN:
             Objective value and convergence flag
         """
         pyg_data = CoverageEnvUtils.get_torch_geometric_data(
-            env, self.params, True, self.use_comm_map, self.cnn_map_size
-        ).to(self.device)
+                env, self.params, True, self.use_comm_map, self.cnn_map_size
+                ).to(self.device)
         with torch.no_grad():
             actions = self.model(pyg_data)
         actions = actions * self.actions_std + self.actions_mean
