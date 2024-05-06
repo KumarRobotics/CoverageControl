@@ -26,6 +26,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = ["numpy", "pyyaml",
   'toml; python_version < "3.11"',
+  "rich"
 ]
 
 [project.optional-dependencies]

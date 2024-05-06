@@ -107,7 +107,7 @@ class CudaUtils {
       std::cerr << "No CUDA device found" << std::endl;
       return false;
     }
-    std::cout << "Initializing CUDA device " << device_id_ << std::endl;
+    /* std::cout << "Initializing CUDA device " << device_id_ << std::endl; */
     if (GPUDeviceInit(device_id_) != device_id_) {
       std::cerr << "Failed to initialize CUDA device" << std::endl;
       return false;

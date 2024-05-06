@@ -108,7 +108,7 @@ class ControllerNN:
         self.cnn_map_size = self.config["CNNMapSize"]
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"Using device: {self.device}")
+        # print(f"Using device: {self.device}")
 
         if "ModelFile" in self.config:
             self.model_file = IOUtils.sanitize_path(self.config["ModelFile"])
@@ -125,7 +125,7 @@ class ControllerNN:
         self.actions_std = self.model.actions_std.to(self.device)
         self.model = self.model.to(self.device)
         self.model.eval()
-        self.model = torch.compile(self.model, dynamic=True)
+        # self.model = torch.compile(self.model, dynamic=True)
 
     def step(self, env):
         """

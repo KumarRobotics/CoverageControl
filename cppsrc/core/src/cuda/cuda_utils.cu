@@ -94,9 +94,9 @@ namespace CoverageControl {
     }
 
     CheckCudaErrors(cudaSetDevice(dev_id));
-    std::cout << "GPU Device " << dev_id << " has been set" << std::endl;
-    std::cout << "CUDA Device [" << dev_id << "]: \""
-      << _ConvertSMVer2ArchName(major, minor) << "\"" << std::endl;
+    /* std::cout << "GPU Device " << dev_id << " has been set" << std::endl; */
+    /* std::cout << "CUDA Device [" << dev_id << "]: \"" */
+      /* << _ConvertSMVer2ArchName(major, minor) << "\"" << std::endl; */
     is_cuda_initialized_ = true;
     device_id_ = dev_id;
     return dev_id;
@@ -133,10 +133,10 @@ namespace CoverageControl {
               &major, cudaDevAttrComputeCapabilityMajor, current_device));
         CheckCudaErrors(cudaDeviceGetAttribute(
               &minor, cudaDevAttrComputeCapabilityMinor, current_device));
-        std::cout << "GPU Device " << current_device << " has been set"
-          << std::endl;
-        std::cout << "CUDA Device [" << current_device << "]: \""
-          << _ConvertSMVer2ArchName(major, minor) << "\"" << std::endl;
+        /* std::cout << "GPU Device " << current_device << " has been set" */
+        /*   << std::endl; */
+        /* std::cout << "CUDA Device [" << current_device << "]: \"" */
+        /*   << _ConvertSMVer2ArchName(major, minor) << "\"" << std::endl; */
         return current_device;
       } else {
         devices_prohibited++;
