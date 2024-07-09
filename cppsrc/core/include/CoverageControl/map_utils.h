@@ -31,7 +31,9 @@
 
 #include <cmath>
 #include <string>
+#include <fstream>
 
+#include "CoverageControl/typedefs.h"
 #include "CoverageControl/parameters.h"
 
 namespace CoverageControl {
