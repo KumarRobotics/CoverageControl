@@ -26,6 +26,9 @@
  * \brief Parses toml configuration file and sets parameters
  */
 
+#include <filesystem>
+#include <iostream>
+
 #include "CoverageControl/extern/tomlplusplus/toml.hpp"
 #include "CoverageControl/parameters.h"
 

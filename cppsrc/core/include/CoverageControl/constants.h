@@ -31,7 +31,6 @@
 
 #include <cmath>
 #include <limits>
-#include <string>
 
 #include "CoverageControl/Config.h"
 

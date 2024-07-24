@@ -35,7 +35,6 @@
 
 #include <Eigen/Dense>  // Eigen is used for maps
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <list>
 #include <mutex>
@@ -46,7 +45,6 @@
 
 #include "CoverageControl/bivariate_normal_distribution.h"
 #include "CoverageControl/constants.h"
-#include "CoverageControl/extern/lsap/Hungarian.h"
 #include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/plotter.h"

@@ -30,8 +30,8 @@
 
 #include <functional>
 #include <iostream>
-#include <list>
 
+#include "CoverageControl/constants.h"
 #include "CoverageControl/cgal/config.h"
 #include "CoverageControl/cgal/utilities.h"
 #include "CoverageControl/voronoi.h"

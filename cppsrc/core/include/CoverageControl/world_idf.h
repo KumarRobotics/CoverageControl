@@ -43,8 +43,6 @@
 #include "CoverageControl/generate_world_map.h"
 #endif
 #include "CoverageControl/bivariate_normal_distribution.h"
-#include "CoverageControl/cgal/polygon_utils.h"
-#include "CoverageControl/constants.h"
 #include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"

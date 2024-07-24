@@ -27,7 +27,6 @@
  */
 
 #include "CoverageControl/cgal/config.h"
-#include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/constants.h"
 #include "CoverageControl/world_idf.h"
 

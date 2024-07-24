@@ -33,8 +33,6 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_PARAMETERS_H_
 
 #include <cmath>
-#include <filesystem>
-#include <iostream>
 #include <string>
 
 namespace CoverageControl {

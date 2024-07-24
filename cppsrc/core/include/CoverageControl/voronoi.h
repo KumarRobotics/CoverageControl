@@ -30,12 +30,9 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_VORONOI_H_
 
 #include <cmath>
-#include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
-#include "CoverageControl/constants.h"
 #include "CoverageControl/typedefs.h"
 
 namespace CoverageControl {

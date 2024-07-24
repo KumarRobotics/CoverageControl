@@ -26,6 +26,9 @@
  * \brief Contains the implementation of the CoverageSystem class.
  */
 
+#include <fstream>
+
+#include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/coverage_system.h"
 #include "CoverageControl/plotter.h"
 
@@ -534,8 +537,8 @@ void CoverageSystem::PlotRobotSystemMap(std::string const &dir_name,
   plotter.SetPlotName("robot_" + std::to_string(robot_id) + "_", step);
   PointVector neighbours_positions = GetRelativePositonsNeighbors(robot_id);
   for (Point2 &pos : neighbours_positions) {
-    pos[0] += params_.pLocalMapSize / 2;
-    pos[1] += params_.pLocalMapSize / 2;
+    pos[0] += params_.pLocalMapSize / 2.;
+    pos[1] += params_.pLocalMapSize / 2.;
   }
   plotter.PlotMap(GetRobotSystemMap(robot_id), neighbours_positions);
 }

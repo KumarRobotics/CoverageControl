@@ -30,10 +30,8 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_BIVARIATE_NORMAL_DISTRIBUTION_H_
 
 #include <cmath>
-#include <iostream>
 
 #include "CoverageControl/constants.h"
-#include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
 
 namespace CoverageControl {

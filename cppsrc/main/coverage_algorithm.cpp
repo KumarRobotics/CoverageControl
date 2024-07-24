@@ -19,10 +19,10 @@
 #include <CoverageControl/parameters.h>
 #include <CoverageControl/typedefs.h>
 #include <CoverageControl/world_idf.h>
-/* #include <CoverageControl/algorithms/centralized_cvt.h> */
-/* #include <CoverageControl/algorithms/decentralized_cvt.h> */
-/* #include <CoverageControl/algorithms/near_optimal_cvt.h> */
-/* #include <CoverageControl/algorithms/simul_explore_exploit.h> */
+// #include <CoverageControl/algorithms/centralized_cvt.h>
+// #include <CoverageControl/algorithms/decentralized_cvt.h>
+// #include <CoverageControl/algorithms/near_optimal_cvt.h>
+// #include <CoverageControl/algorithms/simul_explore_exploit.h>
 /* #include <CoverageControl/bivariate_normal_distribution.h> */
 
 #include <iostream>

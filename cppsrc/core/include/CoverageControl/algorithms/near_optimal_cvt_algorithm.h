@@ -40,14 +40,12 @@
 #include <time.h>
 
 #include <Eigen/Dense>  // Eigen is used for maps
-#include <fstream>
-#include <iostream>
 #include <random>
 #include <vector>
 
 #include "CoverageControl/extern/lsap/Hungarian.h"
-#include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
+#include "CoverageControl/voronoi.h"
 
 namespace CoverageControl {
 

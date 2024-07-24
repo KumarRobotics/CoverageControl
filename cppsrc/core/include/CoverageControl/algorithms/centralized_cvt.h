@@ -32,11 +32,6 @@
 #include <omp.h>
 
 #include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <queue>
-#include <random>
-#include <set>
 #include <vector>
 
 #include "CoverageControl/algorithms/abstract_controller.h"
