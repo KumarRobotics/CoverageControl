@@ -39,7 +39,11 @@
 #include "CoverageControl/typedefs.h"
 #include "CoverageControl/voronoi.h"
 
+namespace gnuplotio {
 class Gnuplot;
+}
+using namespace gnuplotio;
+
 namespace CoverageControl {
 
 //! Data structure to store plotter data
