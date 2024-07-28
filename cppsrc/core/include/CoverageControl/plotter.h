@@ -77,6 +77,14 @@ class Plotter {
   std::string color_unknown = "#aeb6bf";
   std::string color_communication_links = "#1f77b4";
 
+  bool GnuplotCommands(Gnuplot &gp);
+  void StreamMap(Gnuplot &gp, MapType const &map);
+  void PlotMap(Gnuplot &gp, bool begin = true);
+  void PlotLine(Gnuplot &gp, int marker_sz, std::string color,
+                bool begin = false);
+  void PlotPoints(Gnuplot &gp, int point_type, int marker_sz, std::string color,
+                  bool begin = false);
+
  public:
   Plotter(std::string const &d, int const &r_max, double const &res) {
     SetDir(d);
@@ -110,14 +118,6 @@ class Plotter {
   /* void PlotMap(MapType const &, PointVector const &, PointVector const &,
    * Voronoi const &); */
   /* void PlotMap(MapType const &, PointVector const &, PointVector const &); */
-
-  bool GnuplotCommands(Gnuplot &gp);
-  void StreamMap(Gnuplot &gp, MapType const &map);
-  void PlotMap(Gnuplot &gp, bool begin = true);
-  void PlotLine(Gnuplot &gp, int marker_sz, std::string color,
-                bool begin = false);
-  void PlotPoints(Gnuplot &gp, int point_type, int marker_sz, std::string color,
-                  bool begin = false);
 
   void PlotMap(MapType const &map);
 

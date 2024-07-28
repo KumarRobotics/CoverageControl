@@ -82,6 +82,9 @@ if(OpenMP_FOUND)
   endif()
 endif()
 
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS iostreams)
+
 ###########################
 #### Eigen3 dependency ####
 ###########################
@@ -114,9 +117,6 @@ if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
   find_package(CGAL 5.6 REQUIRED)
 endif()
 ###########################
-
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS iostreams)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.h.in
