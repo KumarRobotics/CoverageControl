@@ -14,19 +14,19 @@ build_image() {
     docker push ${1}:${TAG_NAME}
 }
 
-echo "Building image pytorch2.2.2-cuda12.2"
-TAG_NAME=pytorch2.2.2-cuda12.2.2
-# build_image $1 $TAG_NAME ubuntu22.04-cuda.Dockerfile
+echo "Building image pytorch2.3.1-cuda12.2"
+TAG_NAME=pytorch2.3.1-cuda12.2.2
+build_image $1 $TAG_NAME ubuntu22.04-cuda.Dockerfile
 
-echo "Building image pytorch2.2.2-ros2humble"
-TAG_NAME=pytorch2.2.2-ros2humble
+echo "Building image pytorch2.3.1-ros2humble"
+TAG_NAME=pytorch2.3.1-ros2humble
 build_image $1 $TAG_NAME ubuntu22.04-ros2.Dockerfile
 
-echo "Building image pytorch2.2.2-cuda12.2.2-ros2humble"
-TAG_NAME=pytorch2.2.2-cuda12.2.2-ros2humble
+echo "Building image pytorch2.3.1-cuda12.2.2-ros2humble"
+TAG_NAME=pytorch2.3.1-cuda12.2.2-ros2humble
 build_image $1 $TAG_NAME ubuntu22.04-cuda-ros2.Dockerfile
 
-echo "Building image pytorch2.2.2"
-TAG_NAME=pytorch2.2.2
+echo "Building image pytorch2.3.1"
+TAG_NAME=pytorch2.3.1
 build_image $1 $TAG_NAME ubuntu22.04.Dockerfile
 
