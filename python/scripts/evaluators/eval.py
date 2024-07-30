@@ -61,7 +61,7 @@ class Evaluator:
             MofNCompleteColumn(),
             TextColumn("Controller: {task.fields[info]}"),
             TimeRemainingColumn(),
-            TimeElapsedColumn()
+            TimeElapsedColumn(),
         ]
 
     def evaluate(self, save=True):
