@@ -30,10 +30,8 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_BIVARIATE_NORMAL_DISTRIBUTION_H_
 
 #include <cmath>
-#include <iostream>
 
 #include "CoverageControl/constants.h"
-#include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
 
 namespace CoverageControl {
@@ -69,8 +67,8 @@ class BivariateNormalDistribution {
    */
   BivariateNormalDistribution() {
     is_circular_ = true;
-    sigma_ = Point2(1, 1);
-    mean_ = Point2(0, 0);
+    sigma_ = Point2{1, 1};
+    mean_ = Point2{0, 0};
     rho_ = 0;
   }
 

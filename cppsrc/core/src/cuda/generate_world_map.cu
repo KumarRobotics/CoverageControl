@@ -40,6 +40,7 @@
 #include <thrust/extrema.h>
 
 #include <cmath>
+#include <sstream>
 
 #include "CoverageControl/constants.h"
 #include "CoverageControl/cuda/geometry_utils.cuh"
@@ -58,7 +59,7 @@ __device__ __constant__ int cu_polygons_num_pts;
 __device__ __constant__ int cu_num_polygons;
 
 __device__ float2 TransformPoint(BND_Cuda const *device_dists, int i,
-                                 float2 const &in_point) {
+    float2 const &in_point) {
   float2 pt;
   auto bnd = device_dists[i];
   if (bnd.rho == 0) {
@@ -73,7 +74,7 @@ __device__ float2 TransformPoint(BND_Cuda const *device_dists, int i,
 }
 
 __device__ float IntegrateQuarterPlane(BND_Cuda const &bnd,
-                                       float2 const &in_point) {
+    float2 const &in_point) {
   float2 pt;
   if (bnd.rho == 0) {
     pt.x = (in_point.x - bnd.mean_x) / bnd.sigma_x;
@@ -90,9 +91,9 @@ __device__ float IntegrateQuarterPlane(BND_Cuda const &bnd,
 }
 
 __device__ float ComputeImportanceBND(BND_Cuda const *device_dists,
-                                      float2 const &bottom_left,
-                                      float2 const &top_right,
-                                      float2 const &mid_pt_cell) {
+    float2 const &bottom_left,
+    float2 const &top_right,
+    float2 const &mid_pt_cell) {
   float2 bottom_right = make_float2(top_right.x, bottom_left.y);
   float2 top_left = make_float2(bottom_left.x, top_right.y);
 
@@ -107,7 +108,7 @@ __device__ float ComputeImportanceBND(BND_Cuda const *device_dists,
       mid_pt.x = (mid_pt_cell.x - bnd.mean_x) / bnd.sigma_x;
       mid_pt.y = (mid_pt_cell.y - bnd.mean_y) / bnd.sigma_y;
       mid_pt.x =
-          (mid_pt.x - bnd.rho * mid_pt.y) / (sqrt(1 - bnd.rho * bnd.rho));
+        (mid_pt.x - bnd.rho * mid_pt.y) / (sqrt(1 - bnd.rho * bnd.rho));
     }
     if (mid_pt.x * mid_pt.x + mid_pt.y * mid_pt.y > cu_trun_sq) {
       continue;
@@ -121,7 +122,7 @@ __device__ float ComputeImportanceBND(BND_Cuda const *device_dists,
 }
 
 __device__ float ComputeImportancePoly(Polygons_Cuda const &device_polygons,
-                                       float2 const &mid_pt_cell) {
+    float2 const &mid_pt_cell) {
   float total_importance = 0;
   int start = 0;
   auto &x = device_polygons.x;
@@ -143,8 +144,8 @@ __device__ float ComputeImportancePoly(Polygons_Cuda const &device_polygons,
 }
 
 __global__ void kernel(BND_Cuda const *device_dists,
-                       Polygons_Cuda const device_polygons,
-                       float *importance_vec) {
+    Polygons_Cuda const device_polygons,
+    float *importance_vec) {
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
   int idy = blockIdx.y * blockDim.y + threadIdx.y;
   int vec_idx = idx * cu_map_size + idy;
@@ -153,13 +154,13 @@ __global__ void kernel(BND_Cuda const *device_dists,
   }
   float2 bottom_left = make_float2(idx * cu_resolution, idy * cu_resolution);
   float2 top_right = make_float2(idx * cu_resolution + cu_resolution,
-                                 idy * cu_resolution + cu_resolution);
+      idy * cu_resolution + cu_resolution);
   float2 mid_pt_cell = make_float2((bottom_left.x + top_right.x) / 2.,
-                                   (bottom_left.y + top_right.y) / 2.);
+      (bottom_left.y + top_right.y) / 2.);
   float poly_importance = ComputeImportancePoly(device_polygons, mid_pt_cell);
   importance_vec[vec_idx] =
-      ComputeImportanceBND(device_dists, bottom_left, top_right, mid_pt_cell) +
-      poly_importance;
+    ComputeImportanceBND(device_dists, bottom_left, top_right, mid_pt_cell) +
+    poly_importance;
 }
 
 __global__ void normalize(float *importance_vec) {
@@ -172,11 +173,11 @@ __global__ void normalize(float *importance_vec) {
   importance_vec[vec_idx] *= cu_normalization_factor;
 }
 void generate_world_map_cuda(BND_Cuda *host_dists,
-                             Polygons_Cuda_Host const &host_polygons,
-                             int const num_dists, int const map_size,
-                             float const resolution, float const truncation,
-                             float const pNorm, float *host_importance_vec,
-                             float &normalization_factor) {
+    Polygons_Cuda_Host const &host_polygons,
+    int const num_dists, int const map_size,
+    float const resolution, float const truncation,
+    float const pNorm, float *host_importance_vec,
+    float &normalization_factor) {
   checkCudaErrors(cudaDeviceSynchronize());
 
   checkCudaErrors(cudaMemcpyToSymbol(cu_num_dists, &num_dists, sizeof(int)));
@@ -194,8 +195,8 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   BND_Cuda *device_dists;
   checkCudaErrors(cudaMalloc(&device_dists, num_dists * sizeof(BND_Cuda)));
   checkCudaErrors(cudaMemcpy(device_dists, host_dists,
-                             num_dists * sizeof(BND_Cuda),
-                             cudaMemcpyHostToDevice));
+        num_dists * sizeof(BND_Cuda),
+        cudaMemcpyHostToDevice));
 
   Polygons_Cuda device_polygons;
   checkCudaErrors(
@@ -203,31 +204,31 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   checkCudaErrors(
       cudaMalloc(&(device_polygons.y), host_polygons.num_pts * sizeof(float)));
   checkCudaErrors(cudaMalloc(&(device_polygons.imp),
-                             host_polygons.num_polygons * sizeof(float)));
+        host_polygons.num_polygons * sizeof(float)));
   checkCudaErrors(cudaMalloc(&(device_polygons.sz),
-                             host_polygons.num_polygons * sizeof(int)));
+        host_polygons.num_polygons * sizeof(int)));
   checkCudaErrors(cudaMalloc(&(device_polygons.bounds),
-                             host_polygons.num_polygons * sizeof(Bounds)));
+        host_polygons.num_polygons * sizeof(Bounds)));
 
   checkCudaErrors(cudaMemcpy(device_polygons.x, host_polygons.x.data(),
-                             host_polygons.num_pts * sizeof(float),
-                             cudaMemcpyHostToDevice));
+        host_polygons.num_pts * sizeof(float),
+        cudaMemcpyHostToDevice));
   checkCudaErrors(cudaMemcpy(device_polygons.y, host_polygons.y.data(),
-                             host_polygons.num_pts * sizeof(float),
-                             cudaMemcpyHostToDevice));
+        host_polygons.num_pts * sizeof(float),
+        cudaMemcpyHostToDevice));
   checkCudaErrors(cudaMemcpy(device_polygons.imp, host_polygons.imp.data(),
-                             host_polygons.num_polygons * sizeof(float),
-                             cudaMemcpyHostToDevice));
+        host_polygons.num_polygons * sizeof(float),
+        cudaMemcpyHostToDevice));
   checkCudaErrors(cudaMemcpy(device_polygons.sz, host_polygons.sz.data(),
-                             host_polygons.num_polygons * sizeof(int),
-                             cudaMemcpyHostToDevice));
+        host_polygons.num_polygons * sizeof(int),
+        cudaMemcpyHostToDevice));
   checkCudaErrors(cudaMemcpy(
-      device_polygons.bounds, host_polygons.bounds.data(),
-      host_polygons.num_polygons * sizeof(Bounds), cudaMemcpyHostToDevice));
+        device_polygons.bounds, host_polygons.bounds.data(),
+        host_polygons.num_polygons * sizeof(Bounds), cudaMemcpyHostToDevice));
   checkCudaErrors(cudaMemcpyToSymbol(cu_polygons_num_pts,
-                                     &host_polygons.num_pts, sizeof(int)));
+        &host_polygons.num_pts, sizeof(int)));
   checkCudaErrors(cudaMemcpyToSymbol(cu_num_polygons,
-                                     &host_polygons.num_polygons, sizeof(int)));
+        &host_polygons.num_polygons, sizeof(int)));
 
   float *device_importance_vec;
   checkCudaErrors(
@@ -240,12 +241,12 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   dim3 dimGrid(map_size / dimBlock.x, map_size / dimBlock.x, 1);
 
   kernel<<<dimGrid, dimBlock>>>(device_dists, device_polygons,
-                                device_importance_vec);
+      device_importance_vec);
 
   cudaDeviceSynchronize();
 
   thrust::device_ptr<float> d_ptr =
-      thrust::device_pointer_cast(device_importance_vec);
+    thrust::device_pointer_cast(device_importance_vec);
   float max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
 
   if (max < kEps) {
@@ -255,13 +256,13 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   }
   if (normalization_factor > 1e-5) {
     checkCudaErrors(cudaMemcpyToSymbol(cu_normalization_factor,
-                                       &normalization_factor, sizeof(float)));
+          &normalization_factor, sizeof(float)));
     normalize<<<dimGrid, dimBlock>>>(device_importance_vec);
   }
 
   checkCudaErrors(cudaMemcpy(host_importance_vec, device_importance_vec,
-                             map_size * map_size * sizeof(float),
-                             cudaMemcpyDeviceToHost));
+        map_size * map_size * sizeof(float),
+        cudaMemcpyDeviceToHost));
 
   checkCudaErrors(cudaFree(device_dists));
   checkCudaErrors(cudaFree(device_importance_vec));
@@ -278,4 +279,3 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   }
 }
 } /* namespace CoverageControl */
-

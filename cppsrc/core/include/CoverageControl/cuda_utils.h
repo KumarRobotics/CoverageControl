@@ -30,7 +30,6 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CUDA_UTILS_H_
 
 #include <iostream>
-#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>

@@ -29,9 +29,7 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_GENERATE_WORLD_MAP_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_GENERATE_WORLD_MAP_H_
 
-#include <iostream>
 #include <limits>
-#include <sstream>
 #include <vector>
 
 namespace CoverageControl {

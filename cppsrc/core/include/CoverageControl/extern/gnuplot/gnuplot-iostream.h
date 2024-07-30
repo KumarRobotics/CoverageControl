@@ -2036,7 +2036,9 @@ inline Gnuplot &operator<<(Gnuplot &gp, PlotGroup &&sp) {
 
 // The first version of this library didn't use namespaces, and now this must be here forever
 // for reverse compatibility.
-using gnuplotio::Gnuplot;
+// Saurav: Removed this as this causes forward declaration issues with clang
+// using gnuplotio::Gnuplot;
+using namespace gnuplotio;
 
 #endif // GNUPLOT_IOSTREAM_H
 

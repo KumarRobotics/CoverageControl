@@ -35,7 +35,6 @@
 
 #include <Eigen/Dense>  // Eigen is used for maps
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <list>
 #include <mutex>
@@ -46,7 +45,6 @@
 
 #include "CoverageControl/bivariate_normal_distribution.h"
 #include "CoverageControl/constants.h"
-#include "CoverageControl/extern/lsap/Hungarian.h"
 #include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/plotter.h"
@@ -66,10 +64,10 @@ namespace CoverageControl {
  * library.
  */
 class CoverageSystem {
-  Parameters const params_;         //!< Parameters for the coverage system
-  WorldIDF world_idf_;              //!< World IDF
-  size_t num_robots_ = 0;           //!< Number of robots
-  std::vector<RobotModel> robots_;  //!< Vector of robots of type RobotModel
+  Parameters const params_;          //!< Parameters for the coverage system
+  WorldIDF world_idf_;               //!< World IDF
+  size_t num_robots_ = 0;            //!< Number of robots
+  std::vector<RobotModel> robots_;   //!< Vector of robots of type RobotModel
   double normalization_factor_ = 0;  //!< Normalization factor for the world IDF
   Voronoi voronoi_;                  //!< Voronoi object
   std::vector<VoronoiCell> voronoi_cells_;  //!< Voronoi cells for each robot
@@ -569,7 +567,7 @@ class CoverageSystem {
 
   std::vector<MapType> GetCommunicationMaps(size_t map_size) {
     std::vector<MapType> communication_maps(2 * num_robots_);
-/* #pragma omp parallel for num_threads(num_robots_) */
+    /* #pragma omp parallel for num_threads(num_robots_) */
     for (size_t i = 0; i < num_robots_; ++i) {
       auto comm_map = GetRobotCommunicationMaps(i, map_size);
       communication_maps[2 * i] = comm_map.first;
@@ -606,7 +604,7 @@ class CoverageSystem {
   //! centroid.
   std::vector<double> GetLocalVoronoiFeatures(int const robot_id);
 
-  auto GetLocalVoronoiFeatures() {
+  std::vector<std::vector<double>> GetLocalVoronoiFeatures() {
     std::vector<std::vector<double>> features(num_robots_);
 #pragma omp parallel for num_threads(num_robots_)
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -616,7 +614,7 @@ class CoverageSystem {
   }
 
   auto GetVoronoiCells() { return voronoi_cells_; }
-  auto &GetVoronoi() { return voronoi_; }
+  Voronoi &GetVoronoi() { return voronoi_; }
 
   auto GetVoronoiCell(int const robot_id) { return voronoi_cells_[robot_id]; }
 

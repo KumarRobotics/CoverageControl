@@ -36,18 +36,11 @@
 #include <omp.h>
 
 #include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <queue>
-#include <random>
-#include <set>
 #include <vector>
 
 #include "CoverageControl/algorithms/abstract_controller.h"
 #include "CoverageControl/algorithms/near_optimal_cvt_algorithm.h"
 #include "CoverageControl/coverage_system.h"
-#include "CoverageControl/extern/lsap/Hungarian.h"
-#include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
 

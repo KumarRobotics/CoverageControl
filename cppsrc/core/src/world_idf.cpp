@@ -30,6 +30,9 @@
 #include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/constants.h"
 #include "CoverageControl/world_idf.h"
+#ifdef COVERAGECONTROL_WITH_CUDA
+#include "CoverageControl/generate_world_map.h"
+#endif
 
 namespace CoverageControl {
 
@@ -96,6 +99,69 @@ void WorldIDF::GenerateMapCPU() {
     }
   }
 }
+
+#ifdef COVERAGECONTROL_WITH_CUDA
+void WorldIDF::GenerateMapCuda(float const resolution, float const truncation,
+                               int const map_size) {
+  int num_dists = normal_distributions_.size();
+  /* std::cout << "num_dists: " << num_dists << std::endl; */
+
+  /* BND_Cuda *host_dists = (BND_Cuda*) malloc(num_dists * sizeof(BND_Cuda));
+   */
+  BND_Cuda *host_dists = new BND_Cuda[num_dists];
+
+  for (int i = 0; i < num_dists; ++i) {
+    Point2 mean = normal_distributions_[i].GetMean();
+    host_dists[i].mean_x = static_cast<float>(mean.x());
+    host_dists[i].mean_y = static_cast<float>(mean.y());
+    Point2 sigma = normal_distributions_[i].GetSigma();
+    host_dists[i].sigma_x = static_cast<float>(sigma.x());
+    host_dists[i].sigma_y = static_cast<float>(sigma.y());
+    host_dists[i].rho = static_cast<float>(normal_distributions_[i].GetRho());
+    host_dists[i].scale =
+        static_cast<float>(normal_distributions_[i].GetScale());
+  }
+
+  Polygons_Cuda_Host host_polygons;
+  for (auto const &poly_feature : polygon_features_) {
+    std::vector<PointVector> partition_polys;
+    PolygonYMonotonePartition(poly_feature.poly, partition_polys);
+    for (auto const &poly : partition_polys) {
+      Bounds bounds;
+      for (Point2 const &pt : poly) {
+        float x = static_cast<float>(pt.x());
+        float y = static_cast<float>(pt.y());
+        host_polygons.x.push_back(x);
+        host_polygons.y.push_back(y);
+        if (x < bounds.xmin) {
+          bounds.xmin = x;
+        }
+        if (y < bounds.ymin) {
+          bounds.ymin = y;
+        }
+        if (x > bounds.xmax) {
+          bounds.xmax = x;
+        }
+        if (y > bounds.ymax) {
+          bounds.ymax = y;
+        }
+      }
+      host_polygons.imp.push_back(poly_feature.imp);
+      host_polygons.sz.push_back(poly.size());
+      host_polygons.bounds.push_back(bounds);
+    }
+  }
+
+  host_polygons.num_pts = host_polygons.x.size();
+  host_polygons.num_polygons = host_polygons.imp.size();
+
+  float f_norm = 0;
+  generate_world_map_cuda(host_dists, host_polygons, num_dists, map_size,
+                          resolution, truncation, params_.pNorm,
+                          world_map_.data(), f_norm);
+  normalization_factor_ = static_cast<double>(f_norm);
+}
+#endif
 
 int WorldIDF::WriteDistributions(std::string const &file_name) const {
   std::ofstream file(file_name);

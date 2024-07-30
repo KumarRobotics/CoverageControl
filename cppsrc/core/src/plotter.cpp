@@ -26,6 +26,9 @@
  * \brief Helper function to plot maps
  */
 
+#include <filesystem>
+#include <iostream>
+
 #include "CoverageControl/extern/gnuplot/gnuplot-iostream.h"
 #include "CoverageControl/plotter.h"
 

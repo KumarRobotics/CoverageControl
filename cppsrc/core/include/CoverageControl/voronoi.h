@@ -30,12 +30,9 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_VORONOI_H_
 
 #include <cmath>
-#include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
-#include "CoverageControl/constants.h"
 #include "CoverageControl/typedefs.h"
 
 namespace CoverageControl {
@@ -73,7 +70,7 @@ struct VoronoiCell {
   double sum_idf_goal_dist() const { return sum_idf_goal_dist_; }
   double sum_idf_goal_dist_sqr() const { return sum_idf_goal_dist_sqr_; }
 
-  auto GetFeatureVector() const {
+  std::vector<double> GetFeatureVector() const {
     return std::vector<double>{
         centroid_.x(),          centroid_.y(),          mass_,
         sum_idf_site_dist_sqr_, sum_idf_goal_dist_sqr_, sum_idf_site_dist_,

@@ -43,8 +43,6 @@
 #include <CGAL/point_generators_2.h>
 #include <CGAL/random_polygon_2.h>
 
-#include <iterator>
-
 typedef CGAL::Exact_predicates_exact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point2;
 typedef K::Iso_rectangle_2 Iso_rectangle_2;

@@ -30,11 +30,11 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_MAP_UTILS_H_
 
 #include <cmath>
-#include <string>
 #include <fstream>
+#include <iostream>
+#include <string>
 
 #include "CoverageControl/typedefs.h"
-#include "CoverageControl/parameters.h"
 
 namespace CoverageControl {
 /*!

@@ -70,7 +70,20 @@ set(CMAKEPACKAGE_INSTALL_DIR
 )
 
 
+###########################
+#### OpenMP dependency ####
+###########################
 find_package(OpenMP REQUIRED)
+if(OpenMP_FOUND)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(OpenMP_CXX_FLAGS "-fopenmp=libomp")
+    set(OpenMP_CXX_LIB_NAMES "omp")
+    set(OpenMP_omp_LIBRARY omp)
+  endif()
+endif()
+
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS iostreams)
 
 ###########################
 #### Eigen3 dependency ####
@@ -104,9 +117,6 @@ if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
   find_package(CGAL 5.6 REQUIRED)
 endif()
 ###########################
-
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS iostreams)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.h.in
