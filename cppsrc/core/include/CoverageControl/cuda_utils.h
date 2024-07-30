@@ -100,7 +100,8 @@ class CudaUtils {
     if (devices.empty()) {
       device_id_ = FindDevice();
     } else {
-      device_id_ = GPUGetMaxGflopsDeviceId(devices);
+      /* device_id_ = GPUGetMaxGflopsDeviceId(devices); */
+      device_id_ = 0;
     }
     if (device_id_ < 0) {
       std::cerr << "No CUDA device found" << std::endl;
