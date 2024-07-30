@@ -130,7 +130,7 @@ class Evaluator:
                         if step_count % 10 == 0:
                             info = (
                                 f"{controller_id}/{self.num_controllers} {controller.name} "
-                                f"Step: {step_count} Obj: {cost_data[controller_id, env_count, step_count]:.2e}"
+                                f"Step: {step_count:{len(str(self.num_steps))}} Obj: {cost_data[controller_id, env_count, step_count]:.2e}"
                             )
                             progress.update(task, info=info)
                             progress.refresh()
