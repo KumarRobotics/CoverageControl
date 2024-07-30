@@ -305,6 +305,13 @@ class DatasetGenerator:
 
         return tensor, tensor_mean, tensor_std
 
+    def normalize_tensor_custom(self, tensor, tensor_mean, tensor_std):
+        # tensor_mean = tensor.mean(dim=[0, 1])
+        # tensor_std = tensor.std(dim=[0, 1])
+        tensor = (tensor - tensor_mean) / tensor_std
+
+        return tensor, tensor_mean, tensor_std
+
     def normalize_communication_maps(self):
         min_val = self.comm_maps.min()
         max_val = self.comm_maps.max()
@@ -368,9 +375,12 @@ class DatasetGenerator:
         self.save_tensor(self.coverage_features, "coverage_features.pt")
 
         if self.config["NormalizeQ"]:
-            normalized_actions, actions_mean, actions_std = self.normalize_tensor(
-                self.actions
-            )
+            # normalized_actions, actions_mean, actions_std = self.normalize_tensor(
+            #     self.actions
+            # )
+            actions_mean = torch.tensor([0,0])
+            actions_std = torch.tensor([self.env_params.pMaxRobotSpeed] * 2)
+            normalized_actions = (self.actions - actions_mean) / actions_std
             coverage_features, coverage_features_mean, coverage_features_std = (
                 self.normalize_tensor(self.coverage_features)
             )
