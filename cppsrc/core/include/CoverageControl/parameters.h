@@ -180,7 +180,7 @@ class Parameters {
     ParseParameters();
   }
 
-  void PrintParameters();
+  void PrintParameters() const;
 
  private:
   void ParseParameters();

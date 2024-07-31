@@ -48,6 +48,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
                                int const num_robots)
     : params_{params}, world_idf_{WorldIDF(params_)} {
   // Generate Bivariate Normal Distribution from random numbers
+  params_.PrintParameters();
   std::srand(
       std::time(nullptr));  // use current time as seed for random generator
   gen_ = std::mt19937(
@@ -58,11 +59,23 @@ CoverageSystem::CoverageSystem(Parameters const &params,
                                                params_.pMaxSigma);
   std::uniform_real_distribution<> distrib_peak(params_.pMinPeak,
                                                 params_.pMaxPeak);
+
   for (int i = 0; i < num_gaussians; ++i) {
     Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
-    double sigma(distrib_var(gen_));
-    double scale(distrib_peak(gen_));
-    scale = 2 * M_PI * sigma * sigma * scale;
+    double sigma = 1.0;
+    if (params_.pMinSigma == params_.pMaxSigma) {
+      sigma = params_.pMinSigma;
+    } else {
+      sigma = distrib_var(gen_);
+    }
+    double scale = 1.0;
+    if (params_.pMinPeak == params_.pMaxPeak) {
+      scale = params_.pMinPeak;
+    } else {
+      scale = distrib_peak(gen_);
+    }
+    // double scale(distrib_peak(gen_));
+    scale = 2.0 * M_PI * sigma * sigma * scale;
     BivariateNormalDistribution dist(mean, sigma, scale);
     world_idf_.AddNormalDistribution(dist);
   }
@@ -73,7 +86,13 @@ CoverageSystem::CoverageSystem(Parameters const &params,
                          params_.pWorldMapSize * params_.pResolution, polygons);
 
   for (auto &poly : polygons) {
-    double importance = distrib_peak(gen_) * 0.5;
+    // double importance = distrib_peak(gen_) * 0.5;
+    double importance = 0.5;
+    if (params_.pMinPeak == params_.pMaxPeak) {
+      importance = params_.pMinPeak;
+    } else {
+      importance = distrib_peak(gen_);
+    }
     PolygonFeature poly_feature(poly, importance);
     world_idf_.AddUniformDistributionPolygon(poly_feature);
   }

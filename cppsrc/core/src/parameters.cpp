@@ -92,7 +92,7 @@ void Parameters::ParseParameters() {
     std::cout << "PlotScale (default): " << pPlotScale << std::endl;
   }
 
-  auto toml_EnvironmentMaps = toml_config["Environment.Maps"];
+  auto toml_EnvironmentMaps = toml_config["Environment"]["Maps"];
 
   if (toml_EnvironmentMaps) {
     auto toml_Resolution = toml_EnvironmentMaps["Resolution"].value<double>();
@@ -115,7 +115,7 @@ void Parameters::ParseParameters() {
     }
 
     auto toml_EnvironmentMapsUpdateSettings =
-        toml_config["Environment.Maps.UpdateSettings"];
+        toml_EnvironmentMaps["UpdateSettings"];
 
     if (toml_EnvironmentMapsUpdateSettings) {
       auto toml_UpdateRobotMap =
@@ -143,7 +143,7 @@ void Parameters::ParseParameters() {
     }
   }
 
-  auto toml_EnvironmentIDF = toml_config["Environment.IDF"];
+  auto toml_EnvironmentIDF = toml_config["Environment"]["IDF"];
 
   if (toml_EnvironmentIDF) {
     auto toml_TruncationBND =
@@ -218,9 +218,9 @@ void Parameters::ParseParameters() {
 
   if (toml_RobotModel["AddNoise"]) {
     auto toml_AddNoisePositions =
-        toml_RobotModel["AddNoise.AddNoisePositions"].value<bool>();
+        toml_RobotModel["AddNoise"]["AddNoisePositions"].value<bool>();
     auto toml_PositionsNoiseSigma =
-        toml_RobotModel["AddNoise.PositionsNoiseSigma"].value<double>();
+        toml_RobotModel["AddNoise"]["PositionsNoiseSigma"].value<double>();
     if (toml_AddNoisePositions) {
       pAddNoisePositions = toml_AddNoisePositions.value();
     }
@@ -242,9 +242,9 @@ void Parameters::ParseParameters() {
     }
 
     auto toml_LloydMaxIterations =
-        toml_Algorithm["Global-CVT.LloydMaxIterations"].value<int>();
+        toml_Algorithm["Global-CVT"]["LloydMaxIterations"].value<int>();
     auto toml_LloydNumTries =
-        toml_Algorithm["Global-CVT.LloydNumTries"].value<int>();
+        toml_Algorithm["Global-CVT"]["LloydNumTries"].value<int>();
     if (toml_LloydMaxIterations) {
       pLloydMaxIterations = toml_LloydMaxIterations.value();
     }
@@ -253,14 +253,14 @@ void Parameters::ParseParameters() {
     }
 
     auto toml_NumFrontiers =
-        toml_Algorithm["Exploration.NumFrontiers"].value<int>();
+        toml_Algorithm["Exploration"]["NumFrontiers"].value<int>();
     if (toml_NumFrontiers) {
       pNumFeatures = toml_NumFrontiers.value();
     }
   }
 }
 
-void Parameters::PrintParameters() {
+void Parameters::PrintParameters() const {
   std::cout << "NumRobots: " << pNumRobots << std::endl;
   std::cout << "NumFeatures: " << pNumFeatures << std::endl;
   std::cout << "NumPolygons: " << pNumPolygons << std::endl;
