@@ -28,6 +28,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 
 #include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/coverage_system.h"
@@ -48,7 +49,6 @@ CoverageSystem::CoverageSystem(Parameters const &params,
                                int const num_robots)
     : params_{params}, world_idf_{WorldIDF(params_)} {
   // Generate Bivariate Normal Distribution from random numbers
-  params_.PrintParameters();
   std::srand(
       std::time(nullptr));  // use current time as seed for random generator
   gen_ = std::mt19937(
