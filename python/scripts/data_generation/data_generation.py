@@ -158,7 +158,7 @@ class DatasetGenerator:
             TaskProgressColumn(),
             TextColumn("[progress.description]{task.description}"),
             MofNCompleteColumn(),
-            TextColumn("#Envs (NC): {task.fields[num_envs]}"),
+            TextColumn("#Envs: {task.fields[num_envs]}"),
             TimeRemainingColumn(),
             TimeElapsedColumn(),
         ]
@@ -185,10 +185,9 @@ class DatasetGenerator:
             self.alg = CoverageAlgorithm(self.env_params, self.num_robots, self.env)
             self.env_count += 1
             # print("Environment: " + str(self.env_count))
-            num_envs_info = f"{self.env_count:{len(str(self.num_dataset))}}/{num_non_converged_env:<2}"
             self.progress.update(
                 self.task,
-                num_envs=num_envs_info,
+                num_envs=f"{self.env_count}"
             )
             self.progress.refresh()
             num_steps = 0
