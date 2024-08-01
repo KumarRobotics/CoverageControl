@@ -255,7 +255,7 @@ void Parameters::ParseParameters() {
     auto toml_NumFrontiers =
         toml_Algorithm["Exploration"]["NumFrontiers"].value<int>();
     if (toml_NumFrontiers) {
-      pNumFeatures = toml_NumFrontiers.value();
+      pNumFrontiers = toml_NumFrontiers.value();
     }
   }
 }
@@ -265,7 +265,7 @@ void Parameters::PrintParameters() const {
   std::cout << "NumFeatures: " << pNumFeatures << std::endl;
   std::cout << "NumPolygons: " << pNumPolygons << std::endl;
   std::cout << "MaxVertices: " << pMaxVertices << std::endl;
-  std::cout << "PolygonRadius" << pPolygonRadius << std::endl;
+  std::cout << "PolygonRadius: " << pPolygonRadius << std::endl;
 
   std::cout << "PlotScale: " << pPlotScale << std::endl;
 
