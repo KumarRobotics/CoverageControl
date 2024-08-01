@@ -330,13 +330,12 @@ class CoverageSystem {
     if (params_.pCheckOscillations == false) {
       return false;
     }
-    if (robot_positions_history_[robot_id].size() < 2) {
+    if (robot_positions_history_[robot_id].size() < 3) {
       return false;
     }
     auto const &history = robot_positions_history_[robot_id];
     Point2 const last_pos = history.back();
-    auto it_end = std::next(history.crbegin(),
-                            std::max(6, static_cast<int>(history.size()) - 1));
+    auto it_end = std::next(history.crbegin(), static_cast<int>(history.size()) - 1);
     bool flag = false;
     int count = 0;
     std::for_each(history.crbegin(), it_end,
