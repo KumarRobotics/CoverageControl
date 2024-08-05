@@ -75,7 +75,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
       scale = distrib_peak(gen_);
     }
     // double scale(distrib_peak(gen_));
-    scale = 2.0 * M_PI * sigma * sigma * scale;
+    // scale = 2.0 * M_PI * sigma * sigma * scale;
     BivariateNormalDistribution dist(mean, sigma, scale);
     world_idf_.AddNormalDistribution(dist);
   }
