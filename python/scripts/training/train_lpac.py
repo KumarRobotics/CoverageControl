@@ -41,7 +41,7 @@ weight_decay = training_config["WeightDecay"]
 use_comm_map = config["ModelConfig"]["UseCommMaps"]
 
 model = LPAC(config).to(device)
-model = torch.compile(model, dynamic=True)
+# model = torch.compile(model, dynamic=True)
 
 # cnn_pretrained_model = config["CNNModel"]["Dir"] + config["CNNModel"]["Model"]
 # model.LoadCNNBackBone(cnn_pretrained_model)
