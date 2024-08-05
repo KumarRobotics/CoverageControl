@@ -49,6 +49,7 @@ from coverage_control import CoverageSystem
 from coverage_control import IOUtils
 from coverage_control import CoverageEnvUtils
 from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
+# from coverage_control.algorithms import CentralizedCVT as CoverageAlgorithm
 
 # @ingroup python_api
 

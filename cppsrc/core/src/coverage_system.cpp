@@ -74,7 +74,6 @@ CoverageSystem::CoverageSystem(Parameters const &params,
     } else {
       scale = distrib_peak(gen_);
     }
-    // double scale(distrib_peak(gen_));
     // scale = 2.0 * M_PI * sigma * sigma * scale;
     BivariateNormalDistribution dist(mean, sigma, scale);
     world_idf_.AddNormalDistribution(dist);
@@ -87,11 +86,11 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 
   for (auto &poly : polygons) {
     // double importance = distrib_peak(gen_) * 0.5;
-    double importance = 0.5;
+    double importance = 0.00005;
     if (params_.pMinPeak == params_.pMaxPeak) {
       importance = params_.pMinPeak;
     } else {
-      importance = distrib_peak(gen_);
+      importance = distrib_peak(gen_) * importance;
     }
     PolygonFeature poly_feature(poly, importance);
     world_idf_.AddUniformDistributionPolygon(poly_feature);
