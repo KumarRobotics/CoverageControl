@@ -7,17 +7,35 @@ import plotly.graph_objects as go
 import sys  # Import sys to handle command-line arguments
 
 class CostAnalyzer:
-    def __init__(self, base_dir, controller_dirs, csv_file_name="eval.csv"):
+    def __init__(self, base_dir, csv_file_name="eval.csv"):
         self.base_dir_path = self.str2path(base_dir)
-        self.controller_dirs = controller_dirs
+        if not self.base_dir_path.exists():
+            print(f"Error: The directory {self.base_dir_path} does not exist.")
+            sys.exit(1)
+        self.controller_dirs = self.find_subdirectories(self.base_dir_path)
         self.csv_file_name = csv_file_name
-        self.colors = ['rgba(31, 119, 180, 0.8)', 'rgba(255, 127, 14, 0.8)', 
-                       'rgba(44, 160, 44, 0.8)', 'rgba(214, 39, 40, 0.8)']
-
+        # Catppuccin colors
+        self.colors = [
+            'rgba(239, 159, 118, 1.0)',  # Peach
+            'rgba(166, 209, 137, 1.0)',  # Green
+            'rgba(202, 158, 230, 1.0)',  # Mauve
+            'rgba(133, 193, 220, 1.0)',  # Sapphire
+            'rgba(231, 130, 132, 1.0)',  # Red
+            'rgba(129, 200, 190, 1.0)',  # Teal
+            'rgba(242, 213, 207, 1.0)',  # Rosewater
+            'rgba(229, 200, 144, 1.0)',  # Yellow
+            'rgba(108, 111, 133, 1.0)',  # subtext0
+        ]
     @staticmethod
     def str2path(s):
         """Convert a string path to a pathlib.Path object with expanded user and variables."""
         return pathlib.Path(os.path.expandvars(os.path.expanduser(s)))
+
+    def find_subdirectories(self, base_path):
+        """Find all subdirectories in the given base directory."""
+        subdirs = [d.name for d in base_path.iterdir() if d.is_dir()]
+        print(f"Found subdirectories: {subdirs}")
+        return subdirs
 
     def load_and_normalize_costs(self):
         """Load and normalize the costs from CSV files, store in a dictionary."""
@@ -55,7 +73,7 @@ class CostAnalyzer:
                 x=np.concatenate([time_steps, time_steps[::-1]]),
                 y=np.concatenate([mean_cost + std_cost, (mean_cost - std_cost)[::-1]]),
                 fill="toself",
-                fillcolor=color.replace('0.8', '0.2'),
+                fillcolor=color.replace('1.0', '0.2'),
                 line=dict(color='rgba(255,255,255,0)'),
                 name=controller_dir + " ± std",
                 legendgroup="stds",
@@ -88,7 +106,6 @@ if __name__ == "__main__":
         print("Usage: python script_name.py <base_dir>")
         sys.exit(1)
     base_dir = sys.argv[1]
-    controller_dirs = ["lpac_k1", "lpac_k2", "lpac_k3", "DecentralizedCVT", "CentralizedCVT", "ClairvoyantCVT"]
-    analyzer = CostAnalyzer(base_dir, controller_dirs)
+    analyzer = CostAnalyzer(base_dir)
     analyzer.run_analysis()
 
