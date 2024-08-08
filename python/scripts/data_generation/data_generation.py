@@ -33,6 +33,8 @@ import math
 import os
 import pathlib
 import sys
+import argparse
+from distutils.util import strtobool
 
 from rich.progress import (
     Progress,
@@ -48,8 +50,8 @@ import torch
 from coverage_control import CoverageSystem
 from coverage_control import IOUtils
 from coverage_control import CoverageEnvUtils
-from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
-# from coverage_control.algorithms import CentralizedCVT as CoverageAlgorithm
+from coverage_control.algorithms import ClairvoyantCVT
+from coverage_control.algorithms import CentralizedCVT
 
 # @ingroup python_api
 
@@ -59,17 +61,26 @@ class DatasetGenerator:
     Class to generate CoverageControl dataset for LPAC architecture.
     """
 
-    def __init__(self, config_file, append_dir=None):
-        self.config = IOUtils.load_toml(config_file)
-        self.data_dir = IOUtils.sanitize_path(self.config["DataDir"])
-        self.dataset_dir = self.data_dir + "/data/"
+    def __init__(self, args):
+        self.config_file = args.config_file
+        self.config = IOUtils.load_toml(self.config_file)
+        split = bool(strtobool(args.split))
+        self.config["split"] = split
 
-        if append_dir is not None:
-            self.dataset_dir += append_dir
+        self.algorithm = "ClairvoyantCVT"
 
-        if not pathlib.Path(self.data_dir).exists():
+        if args.algorithm:
+            print("Using CentralizedCVT algorithm")
+            self.algorithm = args.algorithm
+
+        self.data_dir = pathlib.Path(IOUtils.sanitize_path(self.config["DataDir"]))
+
+        if not self.data_dir.exists():
             print(f"{self.data_dir} does not exist")
             sys.exit()
+
+        if args.append_dir:
+            self.dataset_dir = self.data_dir / args.append_dir
 
         self.dataset_dir_path = pathlib.Path(self.dataset_dir)
 
@@ -148,7 +159,7 @@ class DatasetGenerator:
         with open(self.metrics_file, "w", encoding="utf-8") as f:
             # f.write("Time: " + str(datetime.datetime.now()) + "\n")
             f.write(f"Time: {self.start_time}\n")
-            f.write("Dataset directory: " + self.dataset_dir + "\n")
+            f.write("Dataset directory: " + str(self.dataset_dir) + "\n")
             self.print_tensor_sizes(f)
             f.flush()
 
@@ -183,7 +194,12 @@ class DatasetGenerator:
 
         while self.dataset_count < self.num_dataset:
             self.env = CoverageSystem(self.env_params)
-            self.alg = CoverageAlgorithm(self.env_params, self.num_robots, self.env)
+
+            if self.algorithm == "CentralizedCVT":
+                self.alg = CentralizedCVT(self.env_params, self.num_robots, self.env)
+            else:
+                self.alg = ClairvoyantCVT(self.env_params, self.num_robots, self.env)
+
             self.env_count += 1
             # print("Environment: " + str(self.env_count))
             self.progress.update(
@@ -298,19 +314,34 @@ class DatasetGenerator:
 
         self.trigger_start_idx = trigger_end_idx
 
-    def normalize_tensor(self, tensor):
-        tensor_mean = tensor.mean(dim=[0, 1])
-        tensor_std = tensor.std(dim=[0, 1])
-        tensor = (tensor - tensor_mean) / tensor_std
+    def normalize_tensor(self, tensor, epsilon=1e-6, zero_mean=False, is_symmetric=False):
+         dimensions = torch.tensor(range(tensor.dim()))[:-1]
 
-        return tensor, tensor_mean, tensor_std
+         if zero_mean is True:
+             tensor_mean = torch.zeros_like(dimensions)
+         else:
+             tensor_mean = tensor.mean(dim=list(dimensions))
+         tensor_std = tensor.std(dim=list(dimensions))
+         # Set tensor_std to be average of stds and keepdim=True to broadcast
 
-    def normalize_tensor_custom(self, tensor, tensor_mean, tensor_std):
-        # tensor_mean = tensor.mean(dim=[0, 1])
-        # tensor_std = tensor.std(dim=[0, 1])
-        tensor = (tensor - tensor_mean) / tensor_std
+         if is_symmetric is True:
+             tensor_std = torch.ones_like(tensor_std) * tensor_std.mean()
 
-        return tensor, tensor_mean, tensor_std
+         if torch.isnan(tensor_std).any():
+             print("NaN in tensor std")
+
+         if torch.isnan(tensor_mean).any():
+             print("NaN in tensor mean")
+         # Check for division by zero and print warnin
+
+         if torch.any(tensor_std < epsilon):
+             print("Tensor: ", tensor_std)
+             print("normalize_tensor Warning: Division by zero in normalization")
+             print("Adding epsilon to std with zero values")
+             tensor_std = torch.where(tensor_std < epsilon, epsilon, tensor_std)
+         tensor = (tensor - tensor_mean) / tensor_std
+
+         return tensor, tensor_mean, tensor_std
 
     def normalize_communication_maps(self):
         min_val = self.comm_maps.min()
@@ -352,14 +383,14 @@ class DatasetGenerator:
 
         # Make sure the folder exists
 
-        if not os.path.exists(self.dataset_dir + "/train"):
-            os.makedirs(self.dataset_dir + "/train")
+        if not os.path.exists(self.dataset_dir / "train"):
+            os.makedirs(self.dataset_dir / "train")
 
-        if not os.path.exists(self.dataset_dir + "/val"):
-            os.makedirs(self.dataset_dir + "/val")
+        if not os.path.exists(self.dataset_dir / "val"):
+            os.makedirs(self.dataset_dir / "val")
 
-        if not os.path.exists(self.dataset_dir + "/test"):
-            os.makedirs(self.dataset_dir + "/test")
+        if not os.path.exists(self.dataset_dir / "test"):
+            os.makedirs(self.dataset_dir / "test")
 
         self.save_tensor(self.robot_positions, "robot_positions.pt")
         self.save_tensor(self.local_maps, "local_maps.pt", as_sparse)
@@ -375,27 +406,25 @@ class DatasetGenerator:
         self.save_tensor(self.coverage_features, "coverage_features.pt")
 
         if self.config["NormalizeQ"]:
-            # normalized_actions, actions_mean, actions_std = self.normalize_tensor(
-            #     self.actions
-            # )
-            actions_mean = torch.tensor([0,0])
-            actions_std = torch.tensor([self.env_params.pMaxRobotSpeed] * 2)
-            normalized_actions = (self.actions - actions_mean) / actions_std
-            coverage_features, coverage_features_mean, coverage_features_std = (
-                self.normalize_tensor(self.coverage_features)
+            normalized_actions, actions_mean, actions_std = self.normalize_tensor(
+                self.actions, is_symmetric=True, zero_mean=True
             )
             self.save_tensor(normalized_actions, "normalized_actions.pt")
-            self.save_tensor(coverage_features, "normalized_coverage_features.pt")
             torch.save(actions_mean, self.dataset_dir_path / "actions_mean.pt")
             torch.save(actions_std, self.dataset_dir_path / "actions_std.pt")
-            torch.save(
-                coverage_features_mean,
-                self.dataset_dir_path / "coverage_features_mean.pt",
-            )
-            torch.save(
-                coverage_features_std,
-                self.dataset_dir_path / "coverage_features_std.pt",
-            )
+
+            # coverage_features, coverage_features_mean, coverage_features_std = (
+            #     self.normalize_tensor(self.coverage_features)
+            # )
+            # self.save_tensor(coverage_features, "normalized_coverage_features.pt")
+            # torch.save(
+            #     coverage_features_mean,
+            #     self.dataset_dir_path / "coverage_features_mean.pt",
+            # )
+            # torch.save(
+            #     coverage_features_std,
+            #     self.dataset_dir_path / "coverage_features_std.pt",
+            # )
 
     def step_without_save(self):
         self.alg.ComputeActions()
@@ -441,12 +470,25 @@ class DatasetGenerator:
             file=file,
         )
 
-
 if __name__ == "__main__":
-    config_file = sys.argv[1]
-
-    if len(sys.argv) > 2:
-        append_folder = sys.argv[2]
-    else:
-        append_folder = None
-    DatasetGenerator(config_file, append_folder)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config_file", type=str, help="Path to config file")
+    parser.add_argument("--append_dir",
+                        type=str,
+                        default="data",
+                        help="Append directory to dataset path",
+                        required=False
+                        )
+    parser.add_argument("--split",
+                        type=str,
+                        default="False",
+                        help="Split dataset into train, validation and test sets",
+                        required=False
+                        )
+    parser.add_argument("--algorithm",
+                        type=str,
+                        help="Algorithm for generating dataset",
+                        required=False,
+                        )
+    args = parser.parse_args()
+    DatasetGenerator(args)
