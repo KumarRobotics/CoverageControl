@@ -258,10 +258,10 @@ class CoverageEnvUtils:
 
         if use_comm_map:
             comm_maps = env.GetCommunicationMaps(resized_map_size)
-            comm_maps = torch.tensor(numpy.array(env.GetCommunicationMaps(resized_map_size)), dtype=torch.float32).reshape(num_robots, 2, resized_map_size, resized_map_size)
-            # comm_maps = CoverageEnvUtils.get_communication_maps(
-            #     env, params, resized_map_size
-            # )
+            # comm_maps = torch.tensor(numpy.array(env.GetCommunicationMaps(resized_map_size)), dtype=torch.float32).reshape(num_robots, 2, resized_map_size, resized_map_size)
+            comm_maps = CoverageEnvUtils.get_communication_maps(
+                env, params, resized_map_size
+            )
             maps = torch.cat(
                 [
                     resized_local_maps.unsqueeze(1),
