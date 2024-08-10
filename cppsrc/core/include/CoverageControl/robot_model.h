@@ -173,9 +173,7 @@ class RobotModel {
     if (params_.pUpdateSensorView == true) {
       UpdateSensorView();
     }
-    if (params_.pUpdateRobotMap == false) {
-      robot_map_ = world_idf_->GetWorldMap();
-    } else {
+    if (params_.pUpdateRobotMap == true) {
       UpdateRobotMap();
     }
   }
@@ -283,9 +281,10 @@ class RobotModel {
     return system_map_;
   }
 
-  const MapType &GetRobotLocalMap() {
-    /* local_map_ = MapType::Constant(params_.pLocalMapSize,
-     * params_.pLocalMapSize, -1.0); */
+  // const MapType &GetRobotLocalMap() {
+  /* local_map_ = MapType::Constant(params_.pLocalMapSize,
+   * params_.pLocalMapSize, -1.0); */
+  void ComputeLocalMap() {
     local_map_ =
         MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0.);
     if (not MapUtils::IsPointOutsideBoundary(
@@ -295,6 +294,11 @@ class RobotModel {
                           params_.pRobotMapSize, robot_map_,
                           params_.pLocalMapSize, local_map_);
     }
+  }
+  MapType &GetRobotMapMutable() { return robot_map_; }
+
+  const MapType &GetRobotLocalMap() {
+    ComputeLocalMap();
     return local_map_;
   }
 

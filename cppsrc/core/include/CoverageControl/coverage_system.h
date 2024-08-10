@@ -231,6 +231,18 @@ class CoverageSystem {
     robots_[robot_id].SetGlobalRobotPosition(global_pos);
     PostStepCommands(robot_id);
   }
+  //
+  //! Set the global positions of all robots
+  void SetGlobalRobotPositions(PointVector const &global_positions) {
+    if (global_positions.size() != num_robots_) {
+      throw std::length_error{
+          "The size of the positions don't match with the number of robots"};
+    }
+    for (size_t i = 0; i < num_robots_; ++i) {
+      robots_[i].SetGlobalRobotPosition(global_positions[i]);
+    }
+    PostStepCommands();
+  }
 
   //! Set the positions of all robots with respect to their current positions
   //! \note Same as SetLocalRobotPositions
@@ -457,10 +469,16 @@ class CoverageSystem {
   const MapType &GetSystemMap() const { return system_map_; }
   const MapType &GetSystemExplorationMap() const { return exploration_map_; }
   const MapType &GetSystemExploredIDFMap() const { return explored_idf_map_; }
+  MapType &GetSystemExploredIDFMapMutable() { return explored_idf_map_; }
   //! Get the world map
   const MapType &GetWorldMap() const { return world_idf_.GetWorldMap(); }
   //! Get the world map (mutable)
   MapType &GetWorldMapMutable() { return world_idf_.GetWorldMapMutable(); }
+
+  MapType &GetRobotMapMutable(size_t const id) {
+    CheckRobotID(id);
+    return robots_[id].GetRobotMapMutable();
+  }
 
   inline auto GetNumRobots() const { return num_robots_; }
   inline auto GetNumFeatures() const { return num_robots_; }

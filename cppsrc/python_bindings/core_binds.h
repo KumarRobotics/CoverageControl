@@ -49,8 +49,6 @@
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
 
-#include <iostream>
-#include <string>
 #include <vector>
 
 namespace py = pybind11;
@@ -147,8 +145,6 @@ void pyCoverageControl_core(py::module &m) {
       .def("SetGlobalRobotPosition", &RobotModel::SetGlobalRobotPosition)
       .def("GetGlobalStartPosition", &RobotModel::GetGlobalStartPosition)
       .def("GetGlobalCurrentPosition", &RobotModel::GetGlobalCurrentPosition)
-      .def("GetRobotMap", &RobotModel::GetRobotMap,
-           py::return_value_policy::reference_internal)
       .def("GetRobotLocalMap", &RobotModel::GetRobotLocalMap,
            py::return_value_policy::reference_internal)
       .def("GetRobotSystemMap", &RobotModel::GetRobotSystemMap,
@@ -294,6 +290,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("SetLocalRobotPositions", &CoverageSystem::SetLocalRobotPositions)
       .def("SetLocalRobotPosition", &CoverageSystem::SetLocalRobotPosition)
       .def("SetGlobalRobotPosition", &CoverageSystem::SetGlobalRobotPosition)
+      .def("SetGlobalRobotPositions", &CoverageSystem::SetGlobalRobotPositions)
       .def("GetRelativePositonsNeighbors",
            &CoverageSystem::GetRelativePositonsNeighbors)
       .def("SetRobotPositions", &CoverageSystem::SetRobotPositions)
@@ -306,11 +303,20 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
            "Get Positions of Robots", py::arg("force_no_noise") = false)
       .def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap,
            py::return_value_policy::reference_internal)
+      .def("GetRobotMap", &CoverageSystem::GetRobotMap,
+           py::return_value_policy::reference_internal)
+      .def("GetRobotMapMutable", &CoverageSystem::GetRobotMapMutable,
+           py::return_value_policy::reference_internal)
       .def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView,
            py::return_value_policy::reference_internal)
       .def("GetCommunicationMaps", &CoverageSystem::GetCommunicationMaps)
       .def("GetRobotsInCommunication",
            &CoverageSystem::GetRobotsInCommunication)
+      .def("GetSystemExploredIDFMap", &CoverageSystem::GetSystemExploredIDFMap,
+           py::return_value_policy::reference_internal)
+      .def("GetSystemExploredIDFMapMutable",
+           &CoverageSystem::GetSystemExploredIDFMapMutable,
+           py::return_value_policy::reference_internal)
       .def("ComputeVoronoiCells", &CoverageSystem::ComputeVoronoiCells,
            py::return_value_policy::reference_internal)
       .def("GetVoronoiCells", &CoverageSystem::GetVoronoiCells,
