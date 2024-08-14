@@ -75,8 +75,9 @@ class RobotModel {
   MapType
       local_exploration_map_;  //!< Binary map: true for unexplored locations
   MapType exploration_map_;    //!< Binary map: true for unexplored locations
-  std::shared_ptr<const WorldIDF>
-      world_idf_;  //!< Robots cannot change the world
+  // std::shared_ptr<const WorldIDF>
+  //     world_idf_;  //!< Robots cannot change the world
+  const WorldIDF *world_idf_;  //!< Robots cannot change the world
   double time_step_dist_ = 0;
   double sensor_area_ = 0;
 
@@ -130,7 +131,8 @@ class RobotModel {
   RobotModel(Parameters const &params, Point2 const &global_start_position,
              WorldIDF const &world_idf)
       : params_{params}, global_start_position_{global_start_position} {
-    world_idf_ = std::make_shared<const WorldIDF>(world_idf);
+    world_idf_ = &world_idf;
+    // world_idf_ = std::make_shared<const WorldIDF>(world_idf);
     normalization_factor_ = world_idf_->GetNormalizationFactor();
     global_current_position_ = global_start_position_;
 

@@ -108,4 +108,3 @@ if __name__ == "__main__":
     base_dir = sys.argv[1]
     analyzer = CostAnalyzer(base_dir)
     analyzer.run_analysis()
-

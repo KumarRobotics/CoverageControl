@@ -440,7 +440,6 @@ class CoverageSystem {
   void PlotInitMap(std::string const &, std::string const &) const;
   void PlotRobotLocalMap(std::string const &, int const &, int const &);
   void PlotRobotSystemMap(std::string const &, int const &, int const &);
-  void PlotRobotIDFMap(std::string const &, int const &, int const &);
   void PlotRobotExplorationMap(std::string const &, int const &, int const &);
   void PlotRobotSensorView(std::string const &, int const &, int const &);
   void PlotRobotObstacleMap(std::string const &, int const &, int const &);

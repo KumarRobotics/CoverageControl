@@ -363,7 +363,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
                              PointVector const &>(
                &CoverageSystem::PlotMapVoronoi, py::const_))
       .def("PlotRobotLocalMap", &CoverageSystem::PlotRobotLocalMap)
-      .def("PlotRobotIDFMap", &CoverageSystem::PlotRobotIDFMap)
+      // .def("PlotRobotIDFMap", &CoverageSystem::PlotRobotIDFMap)
       .def("PlotRobotExplorationMap", &CoverageSystem::PlotRobotExplorationMap)
       .def("PlotRobotSensorView", &CoverageSystem::PlotRobotSensorView)
       .def("PlotRobotSystemMap", &CoverageSystem::PlotRobotSystemMap)
