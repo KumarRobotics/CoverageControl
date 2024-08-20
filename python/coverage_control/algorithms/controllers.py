@@ -125,7 +125,7 @@ class ControllerNN:
         self.actions_std = self.model.actions_std.to(self.device)
         self.model = self.model.to(self.device)
         self.model.eval()
-        # self.model = torch.compile(self.model, dynamic=True)
+        self.model = torch.compile(self.model, dynamic=True)
 
     def step(self, env):
         """

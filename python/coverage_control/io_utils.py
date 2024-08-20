@@ -76,7 +76,7 @@ class IOUtils:
         if not os.path.exists(path):
             raise FileNotFoundError(f"IOUtils::load_tensor: File not found: {path}")
         # Load data
-        data = torch.load(path)
+        data = torch.load(path, weights_only=True)
         # Extract tensor if data is in jit script format
 
         if isinstance(data, torch.jit.ScriptModule):
