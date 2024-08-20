@@ -86,28 +86,28 @@ class LPAC(torch.nn.Module, GNNConfigParser):
         new_state_dict = {}
         for key in state_dict.keys():
             new_state_dict[key.replace("_orig_mod.", "")] = state_dict[key]
-        self.load_state_dict(new_state_dict, strict=True, weights_only=True)
+        self.load_state_dict(new_state_dict, strict=True)
 
     def load_model(self, model_state_dict_path: str) -> None:
         """
         Load the model from the state dict
         """
-        self.load_state_dict(torch.load(model_state_dict_path), strict=True, weights_only=True)
+        self.load_state_dict(torch.load(model_state_dict_path, weights_only=True), strict=True)
 
     def load_model_state_dict(self, model_state_dict: dict) -> None:
         """
         Load the model from the state dict
         """
-        self.load_state_dict(model_state_dict, strict=True, weights_only=True)
+        self.load_state_dict(model_state_dict, strict=True)
 
     def load_cnn_backbone(self, model_path: str) -> None:
         """
         Load the CNN backbone from the model path
         """
-        self.load_state_dict(torch.load(model_path).state_dict(), strict=True, weights_only=True)
+        self.load_state_dict(torch.load(model_path, weights_only=True).state_dict(), strict=True)
 
     def load_gnn_backbone(self, model_path: str) -> None:
         """
         Load the GNN backbone from the model path
         """
-        self.load_state_dict(torch.load(model_path).state_dict(), strict=True, weights_only=True)
+        self.load_state_dict(torch.load(model_path, weights_only=True).state_dict(), strict=True)
