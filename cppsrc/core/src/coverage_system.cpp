@@ -418,7 +418,7 @@ void CoverageSystem::RenderRecordedMap(std::string const &dir_name,
                      params_.pCommunicationRange);
     auto iPlotterVoronoi = plotter_voronoi;
     iPlotterVoronoi.SetPlotName("voronoi_map", i);
-    iPlotterVoronoi.PlotMap(GetWorldMap(), plotter_data_[i].positions,
+    iPlotterVoronoi.PlotMap(plotter_data_[i].world_map, plotter_data_[i].positions,
                             plotter_data_[i].voronoi,
                             plotter_data_[i].positions_history);
   }
@@ -464,6 +464,7 @@ void CoverageSystem::RecordPlotData(std::vector<int> const &robot_status,
     voronoi.push_back(cell_points);
   }
   data.voronoi = voronoi;
+  data.world_map = GetWorldMap();
   plotter_data_.push_back(data);
 }
 

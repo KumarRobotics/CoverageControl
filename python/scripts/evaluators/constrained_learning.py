@@ -157,7 +157,7 @@ class Evaluator:
         self.controller.step(self.env_main)
         self.step_counter = self.step_counter + 1
 
-        if self.generate_video and self.step_counter % 10 == 0:
+        if self.generate_video and self.step_counter % 1 == 0:
             self.env_main.RecordPlotData()
             # self.env_main.PlotRobotLocalMap("./robot_maps/", 0, self.step_counter)
             # self.env_main.PlotRobotSensorView("./robot_maps/", 0, self.step_counter)
@@ -274,10 +274,10 @@ class Evaluator:
 
 if __name__ == "__main__":
     in_config = IOUtils.load_toml(IOUtils.sanitize_path(sys.argv[1]))
-    envs = list(range(100))
+    # envs = list(range(100))
     # eta_duals = [0.1, 1.0, 10.0, 100.0]
     # T_0s = [25, 50, 75, 100]
-    # envs = [1]
+    envs = [1]
     T_0s = [25]
     eta_duals = [1]
     eval_dir = sys.argv[2]
