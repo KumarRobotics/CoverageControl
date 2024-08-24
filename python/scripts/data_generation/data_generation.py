@@ -73,7 +73,8 @@ class DatasetGenerator:
             print("Using CentralizedCVT algorithm")
             self.algorithm = args.algorithm
 
-        self.data_dir = pathlib.Path(IOUtils.sanitize_path(self.config["DataDir"]))
+        self.data_dir = pathlib.Path(
+            IOUtils.sanitize_path(self.config["DataDir"]))
 
         if not self.data_dir.exists():
             print(f"{self.data_dir} does not exist")
@@ -87,29 +88,37 @@ class DatasetGenerator:
         if not self.dataset_dir_path.exists():
             os.makedirs(self.dataset_dir)
 
-        env_config_file = IOUtils.sanitize_path(self.config["EnvironmentConfig"])
+        env_config_file = IOUtils.sanitize_path(
+            self.config["EnvironmentConfig"])
         env_config_file = pathlib.Path(env_config_file)
 
         if not env_config_file.exists():
             print(f"{env_config_file} does not exist")
             sys.exit()
 
-        self.env_params = coverage_control.Parameters(env_config_file.as_posix())
+        self.env_params = coverage_control.Parameters(
+            env_config_file.as_posix())
 
         # Initialize variables
         self.dataset_count = 0
+        self.non_converged_dataset_count = 0
+        self.converged_dataset_count = 0
         self.env_count = 0
         self.trigger_count = 0
         self.trigger_start_idx = 0
 
         self.num_dataset = self.config["NumDataset"]
+        self.converged_data_ratio = self.config["ConvergedDataRatio"]
+        self.num_converged_dataset = math.ceil(
+            self.converged_data_ratio * self.num_dataset
+        )
+        self.num_non_converged_dataset = self.num_dataset - self.num_converged_dataset
         self.num_robots = self.env_params.pNumRobots
         self.comm_range = self.env_params.pCommunicationRange
         self.resolution = self.env_params.pResolution
         self.cnn_map_size = self.config["CNNMapSize"]
         self.every_num_step = self.config["EveryNumSteps"]
         self.trigger_size = self.config["TriggerPostProcessing"]
-        self.converged_data_ratio = self.config["ConvergedDataRatio"]
 
         if self.trigger_size == 0 or self.trigger_size > self.num_dataset:
             self.trigger_size = self.num_dataset
@@ -121,7 +130,8 @@ class DatasetGenerator:
 
         # Initialize tensors
         self.actions = torch.zeros((self.num_dataset, self.num_robots, 2))
-        self.robot_positions = torch.zeros((self.num_dataset, self.num_robots, 2))
+        self.robot_positions = torch.zeros(
+            (self.num_dataset, self.num_robots, 2))
         self.raw_local_maps = torch.zeros(
             (
                 self.trigger_size,
@@ -139,15 +149,19 @@ class DatasetGenerator:
             )
         )
         self.local_maps = torch.zeros(
-            (self.num_dataset, self.num_robots, self.cnn_map_size, self.cnn_map_size)
+            (self.num_dataset, self.num_robots,
+             self.cnn_map_size, self.cnn_map_size)
         )
         self.obstacle_maps = torch.zeros(
-            (self.num_dataset, self.num_robots, self.cnn_map_size, self.cnn_map_size)
+            (self.num_dataset, self.num_robots,
+             self.cnn_map_size, self.cnn_map_size)
         )
         self.comm_maps = torch.zeros(
-            (self.num_dataset, self.num_robots, 2, self.cnn_map_size, self.cnn_map_size)
+            (self.num_dataset, self.num_robots, 2,
+             self.cnn_map_size, self.cnn_map_size)
         )
-        self.coverage_features = torch.zeros((self.num_dataset, self.num_robots, 7))
+        self.coverage_features = torch.zeros(
+            (self.num_dataset, self.num_robots, 7))
         self.edge_weights = torch.zeros(
             (self.num_dataset, self.num_robots, self.num_robots)
         )
@@ -196,9 +210,11 @@ class DatasetGenerator:
             self.env = CoverageSystem(self.env_params)
 
             if self.algorithm == "CentralizedCVT":
-                self.alg = CentralizedCVT(self.env_params, self.num_robots, self.env)
+                self.alg = CentralizedCVT(
+                    self.env_params, self.num_robots, self.env)
             else:
-                self.alg = ClairvoyantCVT(self.env_params, self.num_robots, self.env)
+                self.alg = ClairvoyantCVT(
+                    self.env_params, self.num_robots, self.env)
 
             self.env_count += 1
             # print("Environment: " + str(self.env_count))
@@ -216,9 +232,10 @@ class DatasetGenerator:
                 and self.dataset_count < self.num_dataset
             ):
 
-                if num_steps % self.every_num_step == 0:
+                if num_steps % self.every_num_step == 0 and self.non_converged_dataset_count < self.num_non_converged_dataset:
                     is_converged = self.step_with_save()
                     self.progress.advance(self.task, advance=1)
+                    self.non_converged_dataset_count += 1
                 else:
                     is_converged = self.step_without_save()
                 num_steps += 1
@@ -227,18 +244,11 @@ class DatasetGenerator:
                 num_non_converged_env += 1
                 # print("Non-converged environment: " + str(num_non_converged_env))
 
-            num_converged_data = math.ceil(
-                self.converged_data_ratio * num_steps / self.every_num_step
-            )
-            converged_data_count = 0
-
-            while (
-                converged_data_count < num_converged_data
-                and self.dataset_count < self.num_dataset
-            ):
+            if self.converged_dataset_count < self.num_converged_dataset and self.dataset_count < self.num_dataset:
                 self.step_with_save()
                 self.progress.advance(self.task, advance=1)
-                converged_data_count += 1
+                self.converged_dataset_count += 1
+                self.dataset_count += 1
 
     def step_with_save(self):
         self.alg.ComputeActions()
@@ -246,8 +256,10 @@ class DatasetGenerator:
         actions = self.alg.GetActions()
         count = self.dataset_count
         self.actions[count] = CoverageEnvUtils.to_tensor(actions)
-        self.robot_positions[count] = CoverageEnvUtils.get_robot_positions(self.env)
-        self.coverage_features[count] = CoverageEnvUtils.get_voronoi_features(self.env)
+        self.robot_positions[count] = CoverageEnvUtils.get_robot_positions(
+            self.env)
+        self.coverage_features[count] = CoverageEnvUtils.get_voronoi_features(
+            self.env)
         self.raw_local_maps[self.trigger_count] = CoverageEnvUtils.get_raw_local_maps(
             self.env, self.env_params
         )
@@ -283,13 +295,13 @@ class DatasetGenerator:
             self.num_dataset, self.trigger_start_idx + self.trigger_size
         )
         raw_local_maps = self.raw_local_maps[
-            0 : trigger_end_idx - self.trigger_start_idx
+            0: trigger_end_idx - self.trigger_start_idx
         ]
         raw_local_maps = raw_local_maps.to(self.device)
         resized_local_maps = CoverageEnvUtils.resize_maps(
             raw_local_maps, self.cnn_map_size
         )
-        self.local_maps[self.trigger_start_idx : trigger_end_idx] = (
+        self.local_maps[self.trigger_start_idx: trigger_end_idx] = (
             resized_local_maps.view(
                 -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
             )
@@ -298,13 +310,13 @@ class DatasetGenerator:
         )
 
         raw_obstacle_maps = self.raw_obstacle_maps[
-            0 : trigger_end_idx - self.trigger_start_idx
+            0: trigger_end_idx - self.trigger_start_idx
         ]
         raw_obstacle_maps = raw_obstacle_maps.to(self.device)
         resized_obstacle_maps = CoverageEnvUtils.resize_maps(
             raw_obstacle_maps, self.cnn_map_size
         )
-        self.obstacle_maps[self.trigger_start_idx : trigger_end_idx] = (
+        self.obstacle_maps[self.trigger_start_idx: trigger_end_idx] = (
             resized_obstacle_maps.view(
                 -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
             )
@@ -315,33 +327,33 @@ class DatasetGenerator:
         self.trigger_start_idx = trigger_end_idx
 
     def normalize_tensor(self, tensor, epsilon=1e-6, zero_mean=False, is_symmetric=False):
-         dimensions = torch.tensor(range(tensor.dim()))[:-1]
+        dimensions = torch.tensor(range(tensor.dim()))[:-1]
 
-         if zero_mean is True:
-             tensor_mean = torch.zeros_like(dimensions)
-         else:
-             tensor_mean = tensor.mean(dim=list(dimensions))
-         tensor_std = tensor.std(dim=list(dimensions))
-         # Set tensor_std to be average of stds and keepdim=True to broadcast
+        if zero_mean is True:
+            tensor_mean = torch.zeros_like(dimensions)
+        else:
+            tensor_mean = tensor.mean(dim=list(dimensions))
+        tensor_std = tensor.std(dim=list(dimensions))
+        # Set tensor_std to be average of stds and keepdim=True to broadcast
 
-         if is_symmetric is True:
-             tensor_std = torch.ones_like(tensor_std) * tensor_std.mean()
+        if is_symmetric is True:
+            tensor_std = torch.ones_like(tensor_std) * tensor_std.mean()
 
-         if torch.isnan(tensor_std).any():
-             print("NaN in tensor std")
+        if torch.isnan(tensor_std).any():
+            print("NaN in tensor std")
 
-         if torch.isnan(tensor_mean).any():
-             print("NaN in tensor mean")
-         # Check for division by zero and print warnin
+        if torch.isnan(tensor_mean).any():
+            print("NaN in tensor mean")
+        # Check for division by zero and print warnin
 
-         if torch.any(tensor_std < epsilon):
-             print("Tensor: ", tensor_std)
-             print("normalize_tensor Warning: Division by zero in normalization")
-             print("Adding epsilon to std with zero values")
-             tensor_std = torch.where(tensor_std < epsilon, epsilon, tensor_std)
-         tensor = (tensor - tensor_mean) / tensor_std
+        if torch.any(tensor_std < epsilon):
+            print("Tensor: ", tensor_std)
+            print("normalize_tensor Warning: Division by zero in normalization")
+            print("Adding epsilon to std with zero values")
+            tensor_std = torch.where(tensor_std < epsilon, epsilon, tensor_std)
+        tensor = (tensor - tensor_mean) / tensor_std
 
-         return tensor, tensor_mean, tensor_std
+        return tensor, tensor_mean, tensor_std
 
     def normalize_communication_maps(self):
         min_val = self.comm_maps.min()
@@ -355,11 +367,11 @@ class DatasetGenerator:
 
     def save_tensor(self, tensor, name, as_sparse=False):
         tensor = tensor.cpu()
-        train_tensor = tensor[0 : self.train_size].clone()
+        train_tensor = tensor[0: self.train_size].clone()
         validation_tensor = tensor[
-            self.train_size : self.train_size + self.validation_size
+            self.train_size: self.train_size + self.validation_size
         ].clone()
-        test_tensor = tensor[self.train_size + self.validation_size :].clone()
+        test_tensor = tensor[self.train_size + self.validation_size:].clone()
 
         if as_sparse:
             train_tensor = train_tensor.to_sparse()
@@ -457,18 +469,21 @@ class DatasetGenerator:
             self.get_tensor_byte_size_mb(self.raw_obstacle_maps),
             file=file,
         )
-        print("Local maps:", self.get_tensor_byte_size_mb(self.local_maps), file=file)
+        print("Local maps:", self.get_tensor_byte_size_mb(
+            self.local_maps), file=file)
         print(
             "Obstacle maps:",
             self.get_tensor_byte_size_mb(self.obstacle_maps),
             file=file,
         )
-        print("Comm maps:", self.get_tensor_byte_size_mb(self.comm_maps), file=file)
+        print("Comm maps:", self.get_tensor_byte_size_mb(
+            self.comm_maps), file=file)
         print(
             "Coverage features:",
             self.get_tensor_byte_size_mb(self.coverage_features),
             file=file,
         )
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

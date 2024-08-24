@@ -22,6 +22,7 @@
 #  @brief Base classes for CVT and neural network based controllers
 import coverage_control.nn as cc_nn
 import torch
+torch.set_float32_matmul_precision('high')
 
 from . import CentralizedCVT
 from . import ClairvoyantCVT
