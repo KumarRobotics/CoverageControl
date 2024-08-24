@@ -52,6 +52,7 @@ struct PlotterData {
   std::vector<std::list<Point2>> positions_history;
   std::vector<int> robot_status;
   std::vector<std::list<Point2>> voronoi;
+  MapType world_map;
 };
 
 //! Class to plot the map
