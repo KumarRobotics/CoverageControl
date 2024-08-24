@@ -118,6 +118,10 @@ class DatasetGenerator:
         self.resolution = self.env_params.pResolution
         self.cnn_map_size = self.config["CNNMapSize"]
         self.every_num_step = self.config["EveryNumSteps"]
+        # Check if SpeedScale is specified
+        if "SpeedScale" in self.config:
+            self.env_params.pMaxRobotSpeed *= self.config["SpeedScale"]
+
         self.trigger_size = self.config["TriggerPostProcessing"]
 
         if self.trigger_size == 0 or self.trigger_size > self.num_dataset:
