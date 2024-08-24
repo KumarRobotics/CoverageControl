@@ -64,8 +64,7 @@ class DatasetGenerator:
     def __init__(self, args):
         self.config_file = args.config_file
         self.config = IOUtils.load_toml(self.config_file)
-        split = bool(strtobool(args.split))
-        self.config["split"] = split
+        self.split_dataset = bool(strtobool(args.split))
 
         self.algorithm = "ClairvoyantCVT"
 
@@ -118,9 +117,9 @@ class DatasetGenerator:
         self.resolution = self.env_params.pResolution
         self.cnn_map_size = self.config["CNNMapSize"]
         self.every_num_step = self.config["EveryNumSteps"]
-        # Check if SpeedScale is specified
-        if "SpeedScale" in self.config:
-            self.env_params.pMaxRobotSpeed *= self.config["SpeedScale"]
+
+        if "TimeStep" in self.config:
+            self.env_params.pTimeStep = self.config["TimeStep"]
 
         self.trigger_size = self.config["TriggerPostProcessing"]
 
@@ -370,6 +369,20 @@ class DatasetGenerator:
         return min_val, range_val
 
     def save_tensor(self, tensor, name, as_sparse=False):
+        if self.split_dataset:
+            self.save_tensor_split(tensor, name, as_sparse)
+        else:
+            self.save_tensor_nosplit(tensor, name, as_sparse)
+
+    def save_tensor_nosplit(self, tensor, name, as_sparse=False):
+        tensor = tensor.cpu()
+        if as_sparse:
+            tensor = tensor.to_sparse()
+
+        dataset_dir_path = pathlib.Path(self.dataset_dir)
+        torch.save(tensor, dataset_dir_path / name)
+
+    def save_tensor_split(self, tensor, name, as_sparse=False):
         tensor = tensor.cpu()
         train_tensor = tensor[0: self.train_size].clone()
         validation_tensor = tensor[
@@ -389,24 +402,29 @@ class DatasetGenerator:
 
     def save_dataset(self):
         as_sparse = self.config["SaveAsSparseQ"]
-        self.train_size = int(
-            self.num_dataset * self.config["DataSetSplit"]["TrainRatio"]
-        )
-        self.validation_size = int(
-            self.num_dataset * self.config["DataSetSplit"]["ValRatio"]
-        )
-        self.test_size = self.num_dataset - self.train_size - self.validation_size
 
-        # Make sure the folder exists
+        if not os.path.exists(self.dataset_dir):
+            os.makedirs(self.dataset_dir)
 
-        if not os.path.exists(self.dataset_dir / "train"):
-            os.makedirs(self.dataset_dir / "train")
+        if self.split_dataset:
+            self.train_size = int(
+                self.num_dataset * self.config["DataSetSplit"]["TrainRatio"]
+            )
+            self.validation_size = int(
+                self.num_dataset * self.config["DataSetSplit"]["ValRatio"]
+            )
+            self.test_size = self.num_dataset - self.train_size - self.validation_size
 
-        if not os.path.exists(self.dataset_dir / "val"):
-            os.makedirs(self.dataset_dir / "val")
+            # Make sure the folder exists
 
-        if not os.path.exists(self.dataset_dir / "test"):
-            os.makedirs(self.dataset_dir / "test")
+            if not os.path.exists(self.dataset_dir / "train"):
+                os.makedirs(self.dataset_dir / "train")
+
+            if not os.path.exists(self.dataset_dir / "val"):
+                os.makedirs(self.dataset_dir / "val")
+
+            if not os.path.exists(self.dataset_dir / "test"):
+                os.makedirs(self.dataset_dir / "test")
 
         self.save_tensor(self.robot_positions, "robot_positions.pt")
         self.save_tensor(self.local_maps, "local_maps.pt", as_sparse)
@@ -492,7 +510,7 @@ class DatasetGenerator:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("config_file", type=str, help="Path to config file")
-    parser.add_argument("--append_dir",
+    parser.add_argument("--append-dir",
                         type=str,
                         default="data",
                         help="Append directory to dataset path",
