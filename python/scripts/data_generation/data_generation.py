@@ -220,7 +220,6 @@ class DatasetGenerator:
                     self.env_params, self.num_robots, self.env)
 
             self.env_count += 1
-            # print("Environment: " + str(self.env_count))
             self.progress.update(
                 self.task,
                 num_envs=f"{self.env_count}"
@@ -245,13 +244,11 @@ class DatasetGenerator:
 
             if num_steps == self.env_params.pEpisodeSteps:
                 num_non_converged_env += 1
-                # print("Non-converged environment: " + str(num_non_converged_env))
 
             if self.converged_dataset_count < self.num_converged_dataset and self.dataset_count < self.num_dataset:
                 self.step_with_save()
                 self.progress.advance(self.task, advance=1)
                 self.converged_dataset_count += 1
-                self.dataset_count += 1
 
     def step_with_save(self):
         self.alg.ComputeActions()
