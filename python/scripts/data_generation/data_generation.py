@@ -118,6 +118,11 @@ class DatasetGenerator:
         self.cnn_map_size = self.config["CNNMapSize"]
         self.every_num_step = self.config["EveryNumSteps"]
 
+        if "SaveObjective" in self.config:
+            self.save_objective = self.config["SaveObjective"]
+        else:
+            self.save_objective = False
+
         if "TimeStep" in self.config:
             self.env_params.pTimeStep = self.config["TimeStep"]
 
@@ -168,6 +173,9 @@ class DatasetGenerator:
         self.edge_weights = torch.zeros(
             (self.num_dataset, self.num_robots, self.num_robots)
         )
+
+        if self.save_objective:
+            self.objectives = torch.zeros(self.num_dataset)
 
         self.start_time = datetime.datetime.now()
         # Write metrics
@@ -272,6 +280,9 @@ class DatasetGenerator:
         self.edge_weights[count] = CoverageEnvUtils.get_weights(
             self.env, self.env_params
         )
+
+        if self.save_objective:
+            self.objectives[count] = self.env.GetObjectiveValue()
         self.dataset_count += 1
 
         # if self.dataset_count % 100 == 0:
@@ -373,6 +384,7 @@ class DatasetGenerator:
 
     def save_tensor_nosplit(self, tensor, name, as_sparse=False):
         tensor = tensor.cpu()
+
         if as_sparse:
             tensor = tensor.to_sparse()
 
@@ -435,6 +447,8 @@ class DatasetGenerator:
 
         self.save_tensor(self.actions, "actions.pt")
         self.save_tensor(self.coverage_features, "coverage_features.pt")
+        if self.save_objective:
+            self.save_tensor(self.objectives, "objectives.pt")
 
         if self.config["NormalizeQ"]:
             normalized_actions, actions_mean, actions_std = self.normalize_tensor(
@@ -443,6 +457,17 @@ class DatasetGenerator:
             self.save_tensor(normalized_actions, "normalized_actions.pt")
             torch.save(actions_mean, self.dataset_dir_path / "actions_mean.pt")
             torch.save(actions_std, self.dataset_dir_path / "actions_std.pt")
+            if self.save_objective:
+                normalize_objectives, objectives_mean, objectives_std = self.normalize_tensor(
+                    self.objectives
+                )
+                self.save_tensor(normalize_objectives, "normalized_objectives.pt")
+                torch.save(
+                    objectives_mean, self.dataset_dir_path / "objectives_mean.pt"
+                )
+                torch.save(
+                    objectives_std, self.dataset_dir_path / "objectives_std.pt"
+                )
 
             # coverage_features, coverage_features_mean, coverage_features_std = (
             #     self.normalize_tensor(self.coverage_features)
