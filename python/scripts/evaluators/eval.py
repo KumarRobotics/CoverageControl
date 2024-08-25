@@ -127,9 +127,9 @@ class Evaluator:
                             cost_data[controller_id, env_count, step_count:] = (
                                 normalized_objective_value
                             )
-                            step_count = self.num_steps - 1
+                            step_count = self.num_steps
 
-                        if (step_count) % 10 == 0 or step_count == self.num_steps - 1:
+                        if (step_count) % 10 == 0 or step_count == self.num_steps:
                             info = f"Controller {controller_id}/{self.num_controllers}: {controller.name} "
 
                             progress.update(
