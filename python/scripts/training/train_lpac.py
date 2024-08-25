@@ -49,7 +49,7 @@ model = LPAC(config).to(device)
 if "PreTrainedModel" in config["LPACModel"]:
     lpac_pretrained_model = (
             IOUtils.sanitize_path(config["LPACModel"]["Dir"])
-            + config["LPACModel"]["PreTrainedModel"]
+            + "/" + config["LPACModel"]["PreTrainedModel"]
             )
     model.load_model(lpac_pretrained_model)
 
