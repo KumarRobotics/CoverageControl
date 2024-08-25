@@ -59,7 +59,9 @@ class Evaluator:
             TaskProgressColumn(),
             TextColumn("[progress.description]{task.description}"),
             MofNCompleteColumn(),
-            TextColumn("Controller: {task.fields[info]}"),
+            TextColumn("{task.fields[info]}"),
+            TextColumn("Step: {task.fields[step_count]:>4}"),
+            TextColumn("Obj: {task.fields[obj]:.2e}"),
             TimeRemainingColumn(),
             TimeElapsedColumn(),
         ]
@@ -71,7 +73,9 @@ class Evaluator:
             task = progress.add_task(
                 "[bold blue]Evaluation",
                 total=self.num_envs,
-                info="",
+                info="Initializing...",
+                step_count=0,
+                obj=np.nan,
                 auto_refresh=False,
             )
 
@@ -95,10 +99,6 @@ class Evaluator:
                     step_count = 0
                     env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
-                    # map_dir = self.eval_dir + "/" + self.controllers[controller_id]["Name"] + "/plots/"
-                    # env.RecordPlotData()
-                    # env.PlotMapVoronoi(map_dir, step_count)
-
                     if self.controllers_configs[controller_id]["Type"] == "Learning":
                         Controller = ControllerNN
                     else:
@@ -114,28 +114,39 @@ class Evaluator:
 
                     while step_count < self.num_steps:
                         objective_value, converged = controller.step(env)
-                        cost_data[controller_id, env_count, step_count] = (
+                        normalized_objective_value = (
                             objective_value / initial_objective_value
                         )
+                        cost_data[controller_id, env_count, step_count] = (
+                            normalized_objective_value
+                        )
+
+                        step_count = step_count + 1
 
                         if converged:
                             cost_data[controller_id, env_count, step_count:] = (
-                                objective_value / initial_objective_value
+                                normalized_objective_value
                             )
+                            step_count = self.num_steps - 1
 
-                            break
-                        # env.PlotMapVoronoi(map_dir, step_count)
-                        # env.RecordPlotData()
+                        if (step_count) % 10 == 0 or step_count == self.num_steps - 1:
+                            info = f"Controller {controller_id}/{self.num_controllers}: {controller.name} "
 
-                        if step_count % 10 == 0:
-                            info = (
-                                f"{controller_id}/{self.num_controllers} {controller.name} "
-                                f"Step: {step_count:{len(str(self.num_steps))}} Obj: {cost_data[controller_id, env_count, step_count]:.2e}"
+                            progress.update(
+                                task,
+                                info=info,
+                                step_count=step_count,
+                                obj=normalized_objective_value,
                             )
-                            progress.update(task, info=info)
                             progress.refresh()
 
-                        step_count = step_count + 1
+                        if converged:
+                            break
+
+                    if controller_id == self.num_controllers - 1:
+                        info = f"Controller {controller_id + 1}/{self.num_controllers}: {controller.name} "
+                        progress.update(task, info=info)
+                        progress.refresh()
 
                     if save is True:
                         self.controller_dir = (

@@ -191,7 +191,7 @@ class DatasetGenerator:
         self.print_tensor_sizes()
 
         columns = [
-            BarColumn(),
+            BarColumn(bar_width=None),
             TaskProgressColumn(),
             TextColumn("[progress.description]{task.description}"),
             MofNCompleteColumn(),
@@ -199,7 +199,7 @@ class DatasetGenerator:
             TimeRemainingColumn(),
             TimeElapsedColumn(),
         ]
-        with Progress(*columns) as self.progress:
+        with Progress(*columns, expand=True) as self.progress:
             self.task = self.progress.add_task(
                 "[bold blue]Generating dataset",
                 total=self.num_dataset,
