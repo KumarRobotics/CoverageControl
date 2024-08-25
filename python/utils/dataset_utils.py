@@ -18,110 +18,170 @@
 #
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
-
-'''
+"""
 Utility functions for combining and splitting datasets.
-'''
+"""
 
 import os
 import sys
-import yaml
 import torch
+import pathlib
+
 if sys.version_info[1] < 11:
-    import tomli as tomllib
+    pass
 else:
-    import tomllib
+    pass
 
 from coverage_control import IOUtils
 
+
 def split_save_data(path, data_name, num_train, num_val, num_test):
-    data = IOUtils.load_tensor(path + data_name + '.pt')
+    data_path = pathlib.Path(IOUtils.sanitize_path(path))
+    data = IOUtils.load_tensor(data_path / (data_name + ".pt"))
     # Check if tensor is sparse, if so, convert to dense
     is_sparse = False
+
     if data.is_sparse:
         data = data.to_dense()
         is_sparse = True
     # Split data into training, validation, and test sets
     train_data = data[:num_train].clone()
-    val_data = data[num_train:num_train+num_val].clone()
-    test_data = data[num_train+num_val:].clone()
+    val_data = data[num_train : num_train + num_val].clone()
+    test_data = data[num_train + num_val :].clone()
     # Save data
+
     if is_sparse:
         train_data = train_data.to_sparse()
         val_data = val_data.to_sparse()
         test_data = test_data.to_sparse()
 
-    torch.save(train_data, path + '/train/' + data_name + '.pt')
-    torch.save(val_data, path + '/val/' + data_name + '.pt')
-    torch.save(test_data, path + '/test/' + data_name + '.pt')
-    # delete data to free up memory
+    torch.save(train_data, data_path / "train" / (data_name + ".pt"))
+    torch.save(val_data, data_path / "val" / (data_name + ".pt"))
+    torch.save(test_data, data_path / "test" / (data_name + ".pt"))
     del data
     del train_data
     del val_data
     del test_data
-    # delete data file
-    os.remove(path + data_name + '.pt')
+    os.remove(data_path / (data_name + ".pt"))
 
-def normalize_data(data):
-    data_mean = torch.mean(data.view(-1, data.shape[-1]), dim=0)
-    data_std = torch.std(data.view(-1, data.shape[-1]), dim=0)
-    data = (data - data_mean) / data_std
-    return data_mean, data_std, data
+
+def normalize_tensor(tensor, epsilon=1e-6, zero_mean=False, is_symmetric=False):
+    dimensions = torch.tensor(range(tensor.dim()))[:-1]
+
+    if zero_mean is True:
+        tensor_mean = torch.zeros_like(dimensions)
+    else:
+        tensor_mean = tensor.mean(dim=list(dimensions))
+    tensor_std = tensor.std(dim=list(dimensions))
+    # Set tensor_std to be average of stds and keepdim=True to broadcast
+
+    if is_symmetric is True:
+        tensor_std = torch.ones_like(tensor_std) * tensor_std.mean()
+
+    if torch.isnan(tensor_std).any():
+        print("NaN in tensor std")
+
+    if torch.isnan(tensor_mean).any():
+        print("NaN in tensor mean")
+    # Check for division by zero and print warnin
+
+    if torch.any(tensor_std < epsilon):
+        print("Tensor: ", tensor_std)
+        print("normalize_tensor Warning: Division by zero in normalization")
+        print("Adding epsilon to std with zero values")
+        tensor_std = torch.where(tensor_std < epsilon, epsilon, tensor_std)
+    tensor = (tensor - tensor_mean) / tensor_std
+
+    return tensor, tensor_mean, tensor_std
+
 
 def split_dataset(config_path):
-    '''
+    """
     Split dataset into training, validation, and test sets.
     The information is received via yaml config file.
-    '''
-    config = IOUtils.load_toml(os.path.expanduser(config_path))
-    data_path = config['DataDir']
-    data_path = os.path.expanduser(data_path)
-    data_dir = data_path + '/data/'
+    """
+    # config = IOUtils.load_toml(os.path.expanduser(config_path))
+    config = IOUtils.load_toml(IOUtils.sanitize_path(config_path))
+    data_path = config["DataDir"]
+    data_path = pathlib.Path(IOUtils.sanitize_path(data_path))
+    data_dir = data_path / "data/"
 
-    train_dir = data_dir + '/train'
-    val_dir = data_dir + '/val'
-    test_dir = data_dir + '/test'
+    train_dir = data_dir / "train"
+    val_dir = data_dir / "val"
+    test_dir = data_dir / "test"
 
     # Create directories if they don't exist
+
     if not os.path.exists(train_dir):
         os.makedirs(train_dir)
+
     if not os.path.exists(val_dir):
         os.makedirs(val_dir)
+
     if not os.path.exists(test_dir):
         os.makedirs(test_dir)
 
-    num_dataset = config['NumDataset']
-    train_ratio = config['DataSetSplit']['TrainRatio']
-    val_ratio = config['DataSetSplit']['ValRatio']
+    num_dataset = config["NumDataset"]
+    train_ratio = config["DataSetSplit"]["TrainRatio"]
+    val_ratio = config["DataSetSplit"]["ValRatio"]
 
     num_train = int(train_ratio * num_dataset)
     num_val = int(val_ratio * num_dataset)
     num_test = num_dataset - num_train - num_val
 
-    data_names = ['local_maps', 'comm_maps', 'obstacle_maps', 'actions', 'normalized_actions', 'edge_weights', 'robot_positions', 'coverage_features', 'normalized_coverage_features']
+    data_names = [
+        "local_maps",
+        "comm_maps",
+        "obstacle_maps",
+        "actions",
+        "normalized_actions",
+        "edge_weights",
+        "robot_positions",
+        "coverage_features",
+    ]
+
     for data_name in data_names:
         split_save_data(data_dir, data_name, num_train, num_val, num_test)
 
+
 def combine_dataset(config_path, subdir_list):
-    '''
+    """
     Combine split datasets into one dataset.
     The information is received via yaml config file.
     subdir_list is a list of subdirectories to combine, e.g. ['0', '1', '2']
-    '''
-    config = IOUtils.load_toml(os.path.expanduser(config_path))
-    data_path = config['DataDir']
-    data_path = os.path.expanduser(data_path)
-    data_dir = data_path + '/data/'
+    """
+    config = IOUtils.load_toml(IOUtils.sanitize_path(config_path))
+    data_path = config["DataDir"]
+    data_path = pathlib.Path(IOUtils.sanitize_path(data_path))
+    data_dir = data_path / "data/"
     # Create directory if it doesn't exist
 
-    data_names = ['local_maps', 'comm_maps', 'obstacle_maps', 'actions', 'edge_weights', 'robot_positions', 'coverage_features']
-    normalize_data_names = ['actions', 'coverage_features']
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+
+    data_names = [
+        "local_maps",
+        "comm_maps",
+        "obstacle_maps",
+        "actions",
+        "edge_weights",
+        "robot_positions",
+        "coverage_features",
+    ]
+    normalize_data_args = [
+        ("actions", True, True),
+        ("objectives", False, False),
+    ]
+
     for data_name in data_names:
         is_sparse = False
+
         for subdir in subdir_list:
-            data = IOUtils.load_tensor(data_dir + subdir + '/' + data_name + '.pt')
+            data = IOUtils.load_tensor(data_dir / subdir / (data_name + ".pt"))
+
             if subdir == subdir_list[0]:
                 is_sparse = data.is_sparse
+
                 if is_sparse:
                     data = data.to_dense()
                 combined_data = data.clone()
@@ -130,24 +190,34 @@ def combine_dataset(config_path, subdir_list):
                     data = data.to_dense()
                 combined_data = torch.cat((combined_data, data.clone()), dim=0)
             del data
+
         if is_sparse:
             combined_data = combined_data.to_sparse()
-        torch.save(combined_data, data_dir + data_name + '.pt')
-        if data_name in normalize_data_names:
+        torch.save(combined_data, data_dir.joinpath(data_name + ".pt"))
+
+        if data_name in [x[0] for x in normalize_data_args]:
+            zero_mean, is_symmetric = [
+                x[1:] for x in normalize_data_args if x[0] == data_name
+            ][0]
             combined_data = combined_data.to_dense()
-            combined_data_mean, combined_data_std, combined_data = normalize_data(combined_data)
+            combined_data, combined_data_mean, combined_data_std = normalize_tensor(
+                combined_data, zero_mean=zero_mean, is_symmetric=is_symmetric
+            )
+
             if is_sparse:
                 combined_data = combined_data.to_sparse()
-            torch.save(combined_data_mean, data_dir + data_name + '_mean.pt')
-            torch.save(combined_data_std, data_dir + data_name + '_std.pt')
-            torch.save(combined_data, data_dir + 'normalized_' + data_name + '.pt')
+            torch.save(combined_data_mean, data_dir.joinpath(data_name + "_mean.pt"))
+            torch.save(combined_data_std, data_dir.joinpath(data_name + "_std.pt"))
+            torch.save(
+                combined_data, data_dir.joinpath("normalized_" + data_name + ".pt")
+            )
         del combined_data
 
-__all__ = ['split_dataset', 'combine_dataset']
+
+__all__ = ["split_dataset", "combine_dataset"]
 
 # Example of how to call split_dataset from terminal
 # python -c 'from dataset_utils import split_dataset; split_dataset("config.yaml")'
 
 # Example of how to call combine_dataset from terminal
 # python -c 'from dataset_utils import combine_dataset; combine_dataset("config.yaml", ["0", "1", "2"])'
-

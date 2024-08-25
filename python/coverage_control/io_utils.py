@@ -28,6 +28,7 @@ The module provides utility functions for loading data from files
 
 import os
 import sys
+import pathlib
 
 import torch
 import yaml
@@ -55,7 +56,7 @@ class IOUtils:
         return os.path.normpath(os.path.expanduser(os.path.expandvars(path_str)))
 
     @staticmethod
-    def load_tensor(path: str) -> torch.tensor:
+    def load_tensor(path: (str, pathlib.Path)) -> torch.tensor:
         """
         Function to load a tensor from a file
         Can load tensors from jit script format files
@@ -70,6 +71,9 @@ class IOUtils:
         Raises:
             FileNotFoundError: If the file does not exist
         """
+
+        if isinstance(path, pathlib.Path):
+            path = str(path)
         # Throw error if path does not exist
         path = IOUtils.sanitize_path(path)
 

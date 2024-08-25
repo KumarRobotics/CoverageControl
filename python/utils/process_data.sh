@@ -1,2 +1,2 @@
-python -c 'from dataset_utils import CombineDataset; CombineDataset("/root/CoverageControl_ws/datasets/1024/data_params.yaml", ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])'
-python -c 'from dataset_utils import SplitDataset; SplitDataset("/root/CoverageControl_ws/datasets/1024/data_params.yaml")'
+python -c 'import dataset_utils; dataset_utils.combine_dataset("${CoverageControl_ws}/lpac/params/data_params.toml", ["0", "1"])'
+python -c 'import dataset_utils; dataset_utils.split_dataset("${CoverageControl_ws}/lpac/params/data_params.toml")'
