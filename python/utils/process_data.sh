@@ -1,5 +1,5 @@
-data_prams=${CoverageControl_ws}/lpac/params/data_params.toml
-num_subsets=2
+data_prams=${CoverageControl_ws}/cl/256/params/data_params.toml
+num_subsets=10
 num_subsets_str="["
 for i in $(seq 0 $((num_subsets-1))); do
     num_subsets_str="${num_subsets_str} \"${i}\", "

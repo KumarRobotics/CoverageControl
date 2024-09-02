@@ -274,10 +274,10 @@ class Evaluator:
 
 if __name__ == "__main__":
     in_config = IOUtils.load_toml(IOUtils.sanitize_path(sys.argv[1]))
-    # envs = list(range(100))
+    envs = list(range(100))
     # eta_duals = [0.1, 1.0, 10.0, 100.0]
     # T_0s = [25, 50, 75, 100]
-    envs = [1]
+    # envs = [1]
     T_0s = [25]
     eta_duals = [1]
     eval_dir = sys.argv[2]
@@ -308,5 +308,3 @@ if __name__ == "__main__":
                 # save max_dual_switch_counter_env_id to file as an integer
                 with open(f"{res_dir}/max_dual_switch_counter_{env_id}.csv", "w") as f:
                     f.write(str(max_dual_switch_counter))
-                
-                # wandb.finish()
