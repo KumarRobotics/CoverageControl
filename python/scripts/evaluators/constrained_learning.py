@@ -107,6 +107,9 @@ class Evaluator:
             self.lambda_duals = np.array([1.0, 1.0, 0.0])
         elif dual_updater == "proj_1":
             self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
+        elif dual_updater == "max_one":
+            self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
+        print(f"Initial Lambda_dual: {self.lambda_duals}")
 
         # Set the real values here
         # self.alphas = np.array([1 / self.num_idfs for i in range(self.num_idfs)])
@@ -209,6 +212,8 @@ class Evaluator:
                 + self.eta_dual * (obj_values - self.alphas) / obj_max,
                 0,
             )
+            if self.dual_updater == "max_one":
+                self.lambda_duals = self.compute_obj_values()
             self.lambda_duals = self.fun_dual_updater(
                 self.dual_updater, self.lambda_duals
             )
@@ -266,6 +271,12 @@ class Evaluator:
             max_index = np.argmax(lambdas)
             lambdas = np.zeros(len(lambdas))
             lambdas[max_index] = 1
+            print(f"max_index: {max_index}")
+            print(f"lambdas: {lambdas}")
+
+            if self.max_dual_index != max_index:
+                self.max_dual_index = max_index
+                self.max_dual_switch_counter += 1
 
             return lambdas
 
@@ -291,7 +302,7 @@ if __name__ == "__main__":
                     env_id,
                     eta_dual,
                     T_0,
-                    dual_updater="proj_1",
+                    dual_updater="max_one",
                     alpha=0.0,
                     normalize=True,
                     obj_normalize_factor=1e10,
