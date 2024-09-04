@@ -109,6 +109,8 @@ class Evaluator:
             self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
         elif dual_updater == "max_one":
             self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
+        elif dual_updater == "avg":
+            self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
         print(f"Initial Lambda_dual: {self.lambda_duals}")
 
         # Set the real values here
@@ -278,6 +280,10 @@ class Evaluator:
                 self.max_dual_index = max_index
                 self.max_dual_switch_counter += 1
 
+            return lambdas
+
+        if dual_updater == "avg":
+            self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
             return lambdas
 
         raise ValueError("configs not recognized")
