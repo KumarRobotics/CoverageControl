@@ -282,7 +282,7 @@ class Evaluator:
 
             return lambdas
 
-        if dual_updater == "avg":
+        if configs == "avg":
             self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
             return lambdas
 
