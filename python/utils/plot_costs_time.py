@@ -34,6 +34,8 @@ class CostAnalyzer:
     def find_subdirectories(self, base_path):
         """Find all subdirectories in the given base directory."""
         subdirs = [d.name for d in base_path.iterdir() if d.is_dir()]
+        # Arrange subdirectories in alphabetical order
+        subdirs.sort()
         print(f"Found subdirectories: {subdirs}")
         return subdirs
 
@@ -64,8 +66,10 @@ class CostAnalyzer:
                 mode="lines",
                 name=controller_dir,
                 line=dict(color=color),
-                legendgroup="means",
-                legendgrouptitle_text="Mean costs",
+                # legendgroup="means",
+                # legendgrouptitle_text="Mean costs",
+                legendgroup=controller_dir,
+                legendgrouptitle_text=controller_dir,
             ))
             
             # Shaded area for standard deviation
@@ -76,8 +80,8 @@ class CostAnalyzer:
                 fillcolor=color.replace('1.0', '0.2'),
                 line=dict(color='rgba(255,255,255,0)'),
                 name=controller_dir + " ± std",
-                legendgroup="stds",
-                legendgrouptitle_text="Standard deviations",
+                legendgroup=controller_dir,
+                legendgrouptitle_text=controller_dir,
             ))
 
         # Update plot layout
@@ -86,10 +90,10 @@ class CostAnalyzer:
             xaxis_title="Time step",
             yaxis_title="Normalized cost",
             legend=dict(
-                orientation="h",
-                xanchor="center",
-                x=0.5,
-                y=1.15,
+                # orientation="h",
+                # xanchor="right",
+                x=1,
+                y=1,
                 bgcolor="rgba(255, 255, 255, 0.8)"
             )
         )
