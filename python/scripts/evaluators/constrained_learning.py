@@ -283,7 +283,7 @@ class Evaluator:
             return lambdas
 
         if configs == "avg":
-            self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
+            lambdas = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
             return lambdas
 
         raise ValueError("configs not recognized")
@@ -308,7 +308,7 @@ if __name__ == "__main__":
                     env_id,
                     eta_dual,
                     T_0,
-                    dual_updater="proj_1",
+                    dual_updater="avg",
                     alpha=0.0,
                     normalize=True,
                     obj_normalize_factor=1e10,
