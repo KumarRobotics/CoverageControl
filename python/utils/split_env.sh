@@ -13,10 +13,10 @@ for file in *.env; do
   base_name="${file%.*}"
   
   # Split the file into parts, each with 16 lines
-  if ! split -l 16 -d --additional-suffix=".env" "$file" "${base_name}_"; then
+  if ! split -l $1 -d --additional-suffix=".env" "$file" "${base_name}_"; then
     echo "Failed to split file $file"
     continue  # Skip to the next file on failure
   fi
 
-  echo "Successfully split $file into 16-line parts."
+  echo "Successfully split $file into $1-line parts."
 done
