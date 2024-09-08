@@ -25,7 +25,13 @@ class RunCoverageAlgorithm:
         else:
             self.params_ = cc.Parameters()
 
+        self.params_.pNumFeatures = 5
+        self.params_.pMaxSigma = 100
+        self.params_.pMinSigma = 100
+
+
         self.env = CoverageSystem(self.params_)
+        self.env.PlotInitMap('Init')
         self.controller = CoverageAlgorithm(
             self.params_, self.params_.pNumRobots, self.env
         )
@@ -64,6 +70,7 @@ class RunCoverageAlgorithm:
 
         final_cost = self.env.GetObjectiveValue()
         print(f"Improvement %: {100 * (init_cost - final_cost)/init_cost:.2f}")
+        self.env.PlotSystemMap('Final')
 
 
 if __name__ == "__main__":

@@ -308,7 +308,7 @@ if __name__ == "__main__":
                     env_id,
                     eta_dual,
                     T_0,
-                    dual_updater="avg",
+                    dual_updater="proj_1",
                     alpha=0.0,
                     normalize=True,
                     obj_normalize_factor=1e10,
