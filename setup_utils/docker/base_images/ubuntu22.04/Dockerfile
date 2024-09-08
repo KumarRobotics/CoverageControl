@@ -1,15 +1,18 @@
-# Start with cuda image
-FROM nvidia/cuda:12.2.2-devel-ubuntu22.04
+FROM ubuntu:22.04
+LABEL maintainer="Saurav Agarwal <sauravag@upenn.edu>"
+LABEL description="Dockerfile for PyTorch CPU"
 
 SHELL ["/bin/bash", "-c"]
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Post actions after apt installs cause errors. This has been fixed in more recent versions of docker
-RUN sed -i -e 's/^APT/# APT/' -e 's/^DPkg/# DPkg/' \
-      /etc/apt/apt.conf.d/docker-clean
+ARG PYTHON_VERSION="3.10"
+ARG PYTORCH_VERSION="2.4.1"
 
-ENV TERM xterm-256color
+ENV PYTHON_VERSION=${PYTHON_VERSION}
+ENV PYTORCH_VERSION=${PYTORCH_VERSION}
+
+ENV TERM=xterm-256color
 
 RUN apt-get update && apt-get install -y apt-utils
 
@@ -23,7 +26,11 @@ RUN apt-get	-y update; \
 											 curl \
 											 gdb \
 											 software-properties-common \
-											 ca-certificates
+											 ca-certificates \
+											 python${PYTHON_VERSION} \
+											 python${PYTHON_VERSION}-dev \
+											 python${PYTHON_VERSION}-venv \
+											 python-is-python3
 
 # Add repo for installing latest version of cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
@@ -32,6 +39,7 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 
 RUN apt install -y kitware-archive-keyring
+
 RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
 RUN apt-get -y install \
@@ -40,10 +48,6 @@ RUN apt-get -y install \
 											 libmpfr-dev \
 											 libboost-all-dev \
 											 libeigen3-dev \
-											 python3.11 \
-											 python3.11-dev \
-											 python3.11-venv \
-											 python-is-python3 \
 											 libgeos-dev \
 											 libyaml-cpp-dev \
 											 vim \
@@ -59,19 +63,18 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/*.bin
 
 RUN mkdir download; \
-		wget https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.4.0%2Bcu121.zip -O download/libtorch.zip; \
+		wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${PYTORCH_VERSION}%2Bcpu.zip -O download/libtorch.zip; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 
-ENV LD_LIBRARY_PATH /usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}
-ENV Torch_DIR /opt/libtorch/share/cmake/
+RUN echo "LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}" >> /etc/environment
+ENV Torch_DIR=/opt/libtorch/share/cmake/
 
-COPY requirements.txt /opt/requirements.txt
-RUN python3.11 -m venv /opt/venv
+COPY requirements_cpu.txt /opt/requirements.txt
+RUN python${PYTHON_VERSION} -m venv /opt/venv
 RUN /opt/venv/bin/pip install --no-cache-dir wheel
 RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
-ENV VENV_PATH /opt/venv
+ENV VENV_PATH=/opt/venv
 
-ENV LD_LIBRARY_PATH /usr/local/lib:${LD_LIBRARY_PATH}
 COPY .bashrc /root/.bashrc
 RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc

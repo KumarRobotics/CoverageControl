@@ -4,10 +4,6 @@ SHELL ["/bin/bash", "-c"]
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Post actions after apt installs cause errors. This has been fixed in more recent versions of docker
-RUN sed -i -e 's/^APT/# APT/' -e 's/^DPkg/# DPkg/' \
-      /etc/apt/apt.conf.d/docker-clean
-
 ENV TERM xterm-256color
 
 RUN apt-get update && apt-get install -y apt-utils
