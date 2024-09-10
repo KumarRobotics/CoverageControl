@@ -150,4 +150,7 @@ class ControllerNN:
         point_vector_actions = PointVector(actions.cpu().numpy())
         env.StepActions(point_vector_actions)
 
+        # Check if actions are all zeros (1e-12)
+        if torch.allclose(actions, torch.zeros_like(actions), atol=1e-5):
+            return env.GetObjectiveValue(), True
         return env.GetObjectiveValue(), False
