@@ -105,11 +105,7 @@ class Evaluator:
             self.lambda_duals = np.array([1.0, 1.0, 1.0])
         elif dual_updater == "ones_first_two":
             self.lambda_duals = np.array([1.0, 1.0, 0.0])
-        elif dual_updater == "proj_1":
-            self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
-        elif dual_updater == "max_one":
-            self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
-        elif dual_updater == "avg":
+        else:
             self.lambda_duals = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
         print(f"Initial Lambda_dual: {self.lambda_duals}")
 
@@ -214,7 +210,7 @@ class Evaluator:
                 + self.eta_dual * (obj_values - self.alphas) / obj_max,
                 0,
             )
-            if self.dual_updater == "max_one":
+            if self.dual_updater == "max_one" or self.dual_updater == "malencia":
                 self.lambda_duals = self.compute_obj_values()
             self.lambda_duals = self.fun_dual_updater(
                 self.dual_updater, self.lambda_duals
@@ -285,6 +281,11 @@ class Evaluator:
         if configs == "avg":
             lambdas = np.array([1.0 / self.num_idfs for i in range(self.num_idfs)])
             return lambdas
+
+        if configs == "malencia":
+            exp_obj_values = np.exp(lambdas)
+            norm_exp_obj_values = np.sum(exp_obj_values)
+            lambdas = exp_obj_values / norm_exp_obj_values
 
         raise ValueError("configs not recognized")
 
