@@ -286,6 +286,7 @@ class Evaluator:
             exp_obj_values = np.exp(lambdas)
             norm_exp_obj_values = np.sum(exp_obj_values)
             lambdas = exp_obj_values / norm_exp_obj_values
+            return lambdas
 
         raise ValueError("configs not recognized")
 
@@ -293,9 +294,8 @@ class Evaluator:
 if __name__ == "__main__":
     in_config = IOUtils.load_toml(IOUtils.sanitize_path(sys.argv[1]))
     envs = list(range(100))
-    # eta_duals = [0.1, 1.0, 10.0, 100.0]
     # T_0s = [25, 50, 75, 100]
-    # envs = [1]
+    # envs = [72]
     T_0s = [25]
     eta_duals = [1]
     eval_dir = sys.argv[2]
