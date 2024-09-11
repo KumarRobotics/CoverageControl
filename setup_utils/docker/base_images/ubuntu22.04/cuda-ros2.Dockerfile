@@ -41,8 +41,8 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 
 RUN apt install -y kitware-archive-keyring
 
-RUN apt-get -y install cmake
 RUN apt-get -y install \
+											 cmake \
 											 libgmp-dev \
 											 libmpfr-dev \
 											 libboost-all-dev \
