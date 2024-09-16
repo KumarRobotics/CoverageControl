@@ -155,19 +155,17 @@ class Evaluator:
             )
 
     def advance_state(self):
-        obj_val, is_converged = self.controller.step(self.env_main)
+        self.controller.step(self.env_main)
         self.step_counter = self.step_counter + 1
 
         if self.generate_video and self.step_counter % 1 == 0:
             self.env_main.RecordPlotData()
             # self.env_main.PlotRobotLocalMap("./robot_maps/", 0, self.step_counter)
             # self.env_main.PlotRobotSensorView("./robot_maps/", 0, self.step_counter)
-        if is_converged == False:
-            robot_positions = self.env_main.GetRobotPositions()
-            for env in self.envs:
-                env.SetGlobalRobotPositions(robot_positions)
-        is_state_updated = not is_converged
-        return is_state_updated
+        robot_positions = self.env_main.GetRobotPositions()
+
+        for env in self.envs:
+            env.SetGlobalRobotPositions(robot_positions)
 
     def compute_obj_values(self):
         obj_values = np.array(
@@ -190,37 +188,33 @@ class Evaluator:
         K = self.num_steps // self.T_0
         self.lambda_duals = self.fun_dual_updater(self.dual_updater, self.lambda_duals)
 
-        self.update_idf(self.lambda_duals, normalize=self.normalize)
         obj_values = self.compute_obj_values()
         print(
             f"{0} Objective values: {obj_values} Lambda duals: {self.lambda_duals}, self alphas: {self.alphas}"
         )
 
         for k in range(K):
+            obj_values = np.zeros(self.num_idfs)
 
-            is_state_updated = False
+            self.update_idf(self.lambda_duals, normalize=self.normalize)
+
             for _ in range(self.T_0):
-                is_state_updated = is_state_updated or self.advance_state()
+                self.advance_state()
                 # obj_values += self.compute_obj_values()  # This is a vector
 
-            if is_state_updated == True:
-                # obj_values /= self.T_0
-                obj_values = self.compute_obj_values()
-                obj_max = np.max(obj_values)
-                self.lambda_duals = np.maximum(
-                    self.lambda_duals
-                    + self.eta_dual * (obj_values - self.alphas) / obj_max,
-                    0,
-                )
-                if self.dual_updater == "max_one" or self.dual_updater == "malencia":
-                    self.lambda_duals = self.compute_obj_values()
-                self.lambda_duals = self.fun_dual_updater(
-                    self.dual_updater, self.lambda_duals
-                )
-                self.update_idf(self.lambda_duals, normalize=self.normalize)
-            else:
-                obj_values = self.all_obj_values[:, k]
-                self.lambda_duals = self.all_lambda_duals[:, k]
+            # obj_values /= self.T_0
+            obj_values = self.compute_obj_values()
+            obj_max = np.max(obj_values)
+            self.lambda_duals = np.maximum(
+                self.lambda_duals
+                + self.eta_dual * (obj_values - self.alphas) / obj_max,
+                0,
+            )
+            if self.dual_updater == "max_one" or self.dual_updater == "malencia":
+                self.lambda_duals = self.compute_obj_values()
+            self.lambda_duals = self.fun_dual_updater(
+                self.dual_updater, self.lambda_duals
+            )
             
             self.all_obj_values[:, k + 1] = obj_values
             self.all_lambda_duals[:, k + 1] = self.lambda_duals
@@ -302,7 +296,7 @@ if __name__ == "__main__":
     envs = list(range(100))
     # T_0s = [25, 50, 75, 100]
     # envs = [72]
-    T_0s = [1]
+    T_0s = [25]
     eta_duals = [1]
     eval_dir = sys.argv[2]
 
@@ -315,7 +309,7 @@ if __name__ == "__main__":
                     env_id,
                     eta_dual,
                     T_0,
-                    dual_updater="malencia",
+                    dual_updater="proj_1",
                     alpha=0.0,
                     normalize=True,
                     obj_normalize_factor=1e10,
