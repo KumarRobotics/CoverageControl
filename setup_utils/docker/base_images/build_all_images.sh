@@ -10,23 +10,28 @@ print_usage() {
 build_image() {
     echo "Building image $2"
     TAG_NAME=$2
-    docker buildx build --no-cache -t ${1}:${TAG_NAME} -f $3 .
-    docker push ${1}:${TAG_NAME}
+    ALL_BUILD_ARGS="--build-arg CUDA_VERSION=${CUDA_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} --build-arg PYTORCH_VERSION=${PYTORCH_VERSION}"
+    echo "docker buildx build ${ALL_BUILD_ARGS} -t ${1}:${TAG_NAME} -f $3 ."
+    docker buildx build --push ${ALL_BUILD_ARGS} -t ${1}:${TAG_NAME} -f $3 .
 }
 
-echo "Building image pytorch2.2.2-cuda12.2"
-TAG_NAME=pytorch2.2.2-cuda12.2.2
-# build_image $1 $TAG_NAME ubuntu22.04-cuda.Dockerfile
+CUDA_VERSION="12.4.1"
+PYTHON_VERSION="3.11"
+PYTORCH_VERSION="2.4.1"
+# echo "Building image pytorch2.3.1-cuda12.2"
+TAG_NAME=jammy-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}
+build_image $1 $TAG_NAME ubuntu22.04/cuda.Dockerfile
 
-echo "Building image pytorch2.2.2-ros2humble"
-TAG_NAME=pytorch2.2.2-ros2humble
-build_image $1 $TAG_NAME ubuntu22.04-ros2.Dockerfile
+PYTHON_VERSION="3.10"
+TAG_NAME=jammy-torch${PYTORCH_VERSION}-humble
+build_image $1 $TAG_NAME ubuntu22.04/ros2.Dockerfile
 
-echo "Building image pytorch2.2.2-cuda12.2.2-ros2humble"
-TAG_NAME=pytorch2.2.2-cuda12.2.2-ros2humble
-build_image $1 $TAG_NAME ubuntu22.04-cuda-ros2.Dockerfile
+TAG_NAME=jammy-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}-humble
+build_image $1 $TAG_NAME ubuntu22.04/cuda-ros2.Dockerfile
 
-echo "Building image pytorch2.2.2"
-TAG_NAME=pytorch2.2.2
-build_image $1 $TAG_NAME ubuntu22.04.Dockerfile
+PYTHON_VERSION="3.11"
+TAG_NAME=jammy-torch${PYTORCH_VERSION}
+build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
 
+TAG_NAME=latest
+build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
