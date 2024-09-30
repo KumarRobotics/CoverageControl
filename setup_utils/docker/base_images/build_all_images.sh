@@ -18,7 +18,6 @@ build_image() {
 CUDA_VERSION="12.4.1"
 PYTHON_VERSION="3.11"
 PYTORCH_VERSION="2.4.1"
-# echo "Building image pytorch2.3.1-cuda12.2"
 TAG_NAME=jammy-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}
 build_image $1 $TAG_NAME ubuntu22.04/cuda.Dockerfile
 

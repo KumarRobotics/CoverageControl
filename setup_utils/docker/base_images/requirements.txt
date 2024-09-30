@@ -4,8 +4,8 @@ pyyaml
 
 opencv-python
 --find-links https://download.pytorch.org/whl/cu124
-torch
-torchvision
+torch==2.4.1
+torchvision==0.19.1
 --find-links https://data.pyg.org/whl/torch-2.4.0+cu124.html
 pyg_lib
 torch_scatter
