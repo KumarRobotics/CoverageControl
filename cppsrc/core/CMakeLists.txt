@@ -30,8 +30,13 @@ if(COVERAGECONTROL_WITH_CUDA)
   include(CheckLanguage)
   check_language(CUDA)
   if(NOT CMAKE_CUDA_COMPILER)
-    message(WARNING "No CUDA compiler found, disabling CUDA support")
-    set(COVERAGECONTROL_WITH_CUDA OFF)
+    find_package(CUDAToolkit)
+    if(CUDAToolkit_FOUND)
+      enable_language(CUDA)
+    else()
+      message(WARNING "No CUDA compiler found, disabling CUDA support")
+      set(COVERAGECONTROL_WITH_CUDA OFF)
+    endif()
   else()
     enable_language(CUDA)
   endif()
@@ -92,11 +97,11 @@ find_package(Eigen3 3.4 QUIET)
 if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 3.4)
   message(STATUS "Eigen3 3.4 not found, fetching it")
   include(FetchContent)
-  FetchContent_Declare(Eigen3
+  FetchContent_Declare(eigen3
     URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
-  FetchContent_Populate(Eigen3)   # finish fetching and unpacking before continuing
+  FetchContent_Populate(eigen3)   # finish fetching and unpacking before continuing
   add_subdirectory(${FETCHCONTENT_BASE_DIR}/eigen3-src ${CMAKE_CURRENT_BINARY_DIR}/eigen3)
 endif()
 
@@ -116,6 +121,7 @@ if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
   set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
   find_package(CGAL 5.6 REQUIRED)
 endif()
+
 ###########################
 
 configure_file(
