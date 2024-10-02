@@ -59,6 +59,25 @@ class CostAnalyzer:
             time_steps = np.arange(costs.shape[1])
             color = self.colors[idx % len(self.colors)]  # Cycle through colors
             
+            # Shaded area for standard deviation
+            fig.add_trace(go.Scatter(
+                x=np.concatenate([time_steps, time_steps[::-1]]),
+                y=np.concatenate([mean_cost + std_cost, (mean_cost - std_cost)[::-1]]),
+                fill="toself",
+                fillcolor=color.replace('1.0', '0.2'),
+                line=dict(color='rgba(255,255,255,0)'),
+                name=controller_dir + " ± std",
+                legendgroup=controller_dir,
+                legendgrouptitle_text=controller_dir,
+            ))
+
+        for idx, controller_dir in enumerate(self.controller_dirs):
+            costs = costs_dict[controller_dir]
+            mean_cost = np.mean(costs, axis=0)
+            std_cost = np.std(costs, axis=0)
+            time_steps = np.arange(costs.shape[1])
+            color = self.colors[idx % len(self.colors)]  # Cycle through colors
+            
             # Mean cost line
             fig.add_trace(go.Scatter(
                 x=time_steps,
@@ -72,18 +91,6 @@ class CostAnalyzer:
                 legendgrouptitle_text=controller_dir,
             ))
             
-            # Shaded area for standard deviation
-            fig.add_trace(go.Scatter(
-                x=np.concatenate([time_steps, time_steps[::-1]]),
-                y=np.concatenate([mean_cost + std_cost, (mean_cost - std_cost)[::-1]]),
-                fill="toself",
-                fillcolor=color.replace('1.0', '0.2'),
-                line=dict(color='rgba(255,255,255,0)'),
-                name=controller_dir + " ± std",
-                legendgroup=controller_dir,
-                legendgrouptitle_text=controller_dir,
-            ))
-
         # Update plot layout
         fig.update_layout(
             title="Normalized costs over time",
