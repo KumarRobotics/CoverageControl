@@ -2,13 +2,15 @@ FROM arm64v8/ubuntu:22.04
 
 SHELL ["/bin/bash", "-c"]
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 ARG PYTHON_VERSION="3.10"
 ARG PYTORCH_VERSION="2.4.1"
+
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 ENV PYTORCH_VERSION=${PYTORCH_VERSION}
-ENV TERM xterm-256color
+
+ENV TERM=xterm-256color
 
 RUN apt-get update && apt-get install -y apt-utils
 
@@ -38,9 +40,8 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 RUN apt install -y kitware-archive-keyring
 
-RUN apt-get -y install cmake
-
 RUN apt-get -y install \
+											 cmake \
 											 libgmp-dev \
 											 libmpfr-dev \
 											 libboost-all-dev \
@@ -73,15 +74,15 @@ RUN mkdir download; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 
-ENV LD_LIBRARY_PATH /usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}
-ENV Torch_DIR /opt/libtorch/share/cmake/
+RUN echo "LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}" >> /etc/environment
+ENV Torch_DIR=/opt/libtorch/share/cmake/
 
 COPY requirements_cpu.txt /opt/requirements.txt
 RUN python${PYTHON_VERSION} -m venv /opt/venv
 RUN /opt/venv/bin/pip install --no-cache-dir wheel
 RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
 RUN /opt/venv/bin/pip install --no-cache-dir catkin_pkg empy==3.3.4 lark
-ENV VENV_PATH /opt/venv
+ENV VENV_PATH=/opt/venv
 
 COPY .ros.humble.bashrc /root/.bashrc
 RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc
