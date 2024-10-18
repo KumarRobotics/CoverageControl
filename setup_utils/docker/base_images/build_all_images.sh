@@ -33,6 +33,6 @@ TAG_NAME=jammy-torch${PYTORCH_VERSION}
 build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
 
 TAG_NAME=latest
-build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
+# build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
 
 # docker buildx build --platform linux/arm64 -t ghcr.io/kumarrobotics/pytorch_base:arm64-jammy-torch2.4.1-humble -f ubuntu22.04/arm64-ros2.Dockerfile --push .

@@ -54,7 +54,7 @@ RUN apt-get -y install \
 											 vim \
 											 tmux \
 											 ffmpeg \
-                       unzip \
+											 unzip \
 											 gnuplot-nox \
 											 ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
