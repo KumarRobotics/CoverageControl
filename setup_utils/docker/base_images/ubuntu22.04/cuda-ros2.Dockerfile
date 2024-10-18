@@ -51,6 +51,7 @@ RUN apt-get -y install \
 											 libyaml-cpp-dev \
 											 vim \
 											 tmux \
+                       unzip \
 											 ffmpeg \
 											 gnuplot-nox \
 											 ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv

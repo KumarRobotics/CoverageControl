@@ -51,6 +51,7 @@ RUN apt-get -y install \
 											 vim \
 											 tmux \
 											 ffmpeg \
+                       unzip \
 											 gnuplot-nox \
 											 ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
@@ -68,6 +69,7 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/archives/parital/*.deb; \
 		rm -f /var/cache/apt/*.bin
 
+RUN mkdir -p /opt
 RUN mkdir download; \
 		wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${PYTORCH_VERSION}%2Bcpu.zip -O download/libtorch.zip; \
 		unzip download/libtorch.zip -d /opt/; \
