@@ -233,14 +233,23 @@ void Voronoi::ComputeVoronoiCells() {
   /* std::cout << "lines inserted" << std::endl; */
   /* CGAL::insert(arr, vor.segments_.begin(), vor.segments_.end()); */
   /* std::cout << "arr end" << std::endl; */
-  CGAL_pl cgal_pl(arr);
+  // CGAL_pl cgal_pl(arr);
   /* std::cout << "cgal_pl end" << std::endl; */
 
+  std::vector<CGAL_Query_result> query_results_vor, query_results_vor_sorted;
   if (compute_single_ == true) {
     auto pt = CGAL_sites[robot_id_];
+    std::list<CGAL_Point2> temp_site; temp_site.push_back(pt);
+    CGAL::locate(arr, temp_site.begin(), temp_site.end(), std::back_inserter(query_results_vor));
     Polygon_2 polygon;
-    auto pt_obj = cgal_pl.locate(pt);
-    auto f = boost::get<Arrangement_2::Face_const_handle>(&pt_obj);
+    const Arrangement_2::Face_const_handle* f;
+    if ((f = std::get_if<Arrangement_2::Face_const_handle>(&query_results_vor[0].second))) {
+      if((*f)->is_unbounded()) {
+        throw std::runtime_error{"inside the unbounded face."};
+      }
+    } else {
+      throw std::runtime_error{"Invalid object."};
+    }
     CGAL_CCBTraversal<Arrangement_2>((*f)->outer_ccb(), polygon);
     if (not polygon.is_counterclockwise_oriented()) {
       polygon.reverse_orientation();
@@ -262,14 +271,30 @@ void Voronoi::ComputeVoronoiCells() {
   /* PrunePolygons(polygon_list, map_size_); */
   // Create voronoi_cells_ such that the correct cell is assigned to the robot
   /* std::cout << "Before parallel for" << std::endl; */
+  CGAL::locate(arr, CGAL_sites.begin(), CGAL_sites.end(), std::back_inserter(query_results_vor));
+  /* Results (point, object) are in xy-lexicographic order */
+  /* Need to sort the results to match the order of the sites */
+  for (int i = 0; i < num_sites_; ++i) {
+
+    auto it = std::find_if(query_results_vor.begin(), query_results_vor.end(),
+                           [i, CGAL_sites](CGAL_Query_result const &qr) {
+                             return qr.first == CGAL_sites[i];
+                           });
+    if (it == query_results_vor.end()) {
+      throw std::runtime_error{"Could not find a query result"};
+    }
+    query_results_vor_sorted.push_back(*it);
+  }
+
 #pragma omp parallel for num_threads(num_sites_)
   for (int iSite = 0; iSite < num_sites_; ++iSite) {
-    auto pt = CGAL_sites[iSite];
-    auto pt_obj = cgal_pl.locate(pt);
-    auto *f = boost::get<Arrangement_2::Face_const_handle>(&pt_obj);
-    if (not f) {
-      std::cout << pt << std::endl;
-      throw std::runtime_error{"Could not find a face for the robot"};
+    const Arrangement_2::Face_const_handle* f;
+    if ((f = std::get_if<Arrangement_2::Face_const_handle>(&query_results_vor_sorted[iSite].second))) {
+      if((*f)->is_unbounded()) {
+        throw std::runtime_error{"inside the unbounded face."};
+      }
+    } else {
+      throw std::runtime_error{"Invalid object."};
     }
     /* CGAL_CCBTraversal<Arrangement_2> ((*f)->outer_ccb(), polygon); */
     Polygon_2 polygon;
@@ -291,7 +316,7 @@ void Voronoi::ComputeVoronoiCells() {
     /*   polygon.reverse_orientation(); */
     /* } */
     VoronoiCell vcell;
-    vcell.site = CGALtoCC(pt);
+    vcell.site = CGALtoCC(CGAL_sites[iSite]);
     vcell.cell.reserve(polygon.size());
     for (auto const &p : polygon) {
       vcell.cell.push_back(CGALtoCC(p));

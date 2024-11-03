@@ -71,7 +71,8 @@ then
 fi
 
 InstallCoverageControl () {
-	cmake -S ${DIR}/core -B ${BUILD_DIR}/CoverageControl ${CMAKE_END_FLAGS}
+  export CGAL_DISABLE_GMP=ON
+	export CGAL_DISABLE_GMP=1; cmake -S ${DIR}/core -B ${BUILD_DIR}/CoverageControl ${CMAKE_END_FLAGS}
 	cmake --build ${BUILD_DIR}/CoverageControl -j$(nproc)
 	if [ $? -ne 0 ]; then
 		echo "CoverageControl build failed"

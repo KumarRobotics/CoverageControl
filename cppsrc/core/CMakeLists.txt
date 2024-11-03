@@ -93,7 +93,7 @@ find_package(Boost REQUIRED COMPONENTS iostreams)
 ###########################
 #### Eigen3 dependency ####
 ###########################
-find_package(Eigen3 3.4 EXACT QUIET)
+find_package(Eigen3 3.4 QUIET)
 if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 3.4)
   message(STATUS "Eigen3 3.4 not found, fetching it")
   include(FetchContent)
@@ -108,18 +108,18 @@ endif()
 ###########################
 #### CGAL dependency ####
 ###########################
-find_package(CGAL 5.6.1 EXACT QUIET)
-if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
-  message(STATUS "CGAL 5.6.1 not found, fetching it")
+find_package(CGAL 6.0.1 EXACT QUIET)
+if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.0.1)
+  message(STATUS "CGAL 6.0.1 not found, fetching it")
   include(FetchContent)
   FetchContent_Declare(CGAL
-    URL https://github.com/CGAL/cgal/releases/download/v5.6.1/CGAL-5.6.1.tar.xz
-    URL_HASH SHA256=cdb15e7ee31e0663589d3107a79988a37b7b1719df3d24f2058545d1bcdd5837
+    URL https://github.com/CGAL/cgal/releases/download/v6.0.1/CGAL-6.0.1.tar.xz
+    URL_HASH SHA256=0acdfbf317c556630dd526f3253780f29b6ec9713ee92903e81b5c93c0f59b7f 
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
   FetchContent_Populate(CGAL)   # finish fetching and unpacking before continuing
   set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
-  find_package(CGAL 5.6.1 REQUIRED)
+  find_package(CGAL 6.0.1 REQUIRED)
 endif()
 
 ###########################
