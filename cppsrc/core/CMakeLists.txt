@@ -93,7 +93,7 @@ find_package(Boost REQUIRED COMPONENTS iostreams)
 ###########################
 #### Eigen3 dependency ####
 ###########################
-find_package(Eigen3 3.4 QUIET)
+find_package(Eigen3 3.4 EXACT QUIET)
 if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 3.4)
   message(STATUS "Eigen3 3.4 not found, fetching it")
   include(FetchContent)
@@ -108,7 +108,7 @@ endif()
 ###########################
 #### CGAL dependency ####
 ###########################
-find_package(CGAL 5.6.1 QUIET)
+find_package(CGAL 5.6.1 EXACT QUIET)
 if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
   message(STATUS "CGAL 5.6.1 not found, fetching it")
   include(FetchContent)
@@ -119,7 +119,7 @@ if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
   FetchContent_Populate(CGAL)   # finish fetching and unpacking before continuing
   set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
-  find_package(CGAL 5.6 REQUIRED)
+  find_package(CGAL 5.6.1 REQUIRED)
 endif()
 
 ###########################
