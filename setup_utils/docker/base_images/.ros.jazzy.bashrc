@@ -139,4 +139,4 @@ source /opt/venv/bin/activate
 source /opt/ros/jazzy/setup.bash
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/jazzy/
-source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
+# source /opt/venv/share/colcon_argcomplete/hook/colcon-argcomplete.bash
