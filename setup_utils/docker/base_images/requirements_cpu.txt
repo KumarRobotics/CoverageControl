@@ -4,9 +4,9 @@ pyyaml
 
 opencv-python
 --find-links https://download.pytorch.org/whl/cpu
-torch==2.4.1
-torchvision==0.19.1
---find-links https://data.pyg.org/whl/torch-2.4.0+cpu.html
+torch==2.5.1
+torchvision==0.20.1
+--find-links https://data.pyg.org/whl/torch-2.5.0+cpu.html
 torch_geometric
 #pyg_lib
 #torch_scatter

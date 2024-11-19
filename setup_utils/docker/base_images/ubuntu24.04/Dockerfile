@@ -1,13 +1,11 @@
-FROM ubuntu:22.04
-LABEL maintainer="Saurav Agarwal <sauravag@upenn.edu>"
-LABEL description="Dockerfile for PyTorch CPU"
+FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-c"]
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG PYTHON_VERSION="3.10"
-ARG PYTORCH_VERSION="2.4.1"
+ARG PYTHON_VERSION="3.12"
+ARG PYTORCH_VERSION="2.5.1"
 
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 ENV PYTORCH_VERSION=${PYTORCH_VERSION}
@@ -27,20 +25,13 @@ RUN apt-get	-y update; \
 											 gdb \
 											 software-properties-common \
 											 ca-certificates \
+											 lsb-release \
+											 net-tools iputils-ping \
+											 locales \
 											 python${PYTHON_VERSION} \
 											 python${PYTHON_VERSION}-dev \
 											 python${PYTHON_VERSION}-venv \
 											 python-is-python3
-
-# Add repo for installing latest version of cmake
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
-		echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null; \
-		apt-get update; \
-		rm /usr/share/keyrings/kitware-archive-keyring.gpg
-
-RUN apt install -y kitware-archive-keyring
-
-RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
 RUN apt-get -y install \
 											 cmake \
@@ -51,6 +42,7 @@ RUN apt-get -y install \
 											 libgeos-dev \
 											 libyaml-cpp-dev \
 											 vim \
+                       neovim \
 											 tmux \
 											 ffmpeg \
 											 unzip \
@@ -63,12 +55,13 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/archives/parital/*.deb; \
 		rm -f /var/cache/apt/*.bin
 
+RUN mkdir -p /opt
 RUN mkdir download; \
 		wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-${PYTORCH_VERSION}%2Bcpu.zip -O download/libtorch.zip; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 
-RUN echo "LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}" >> /etc/environment
+ENV LD_LIBRARY_PATH="/usr/local/lib:/opt/libtorch/lib"
 ENV Torch_DIR=/opt/libtorch/share/cmake/
 
 COPY requirements_cpu.txt /opt/requirements.txt

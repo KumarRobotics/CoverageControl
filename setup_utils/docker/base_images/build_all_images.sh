@@ -17,26 +17,38 @@ build_image() {
 
 CUDA_VERSION="12.4.1"
 PYTHON_VERSION="3.11"
-PYTORCH_VERSION="2.4.1"
+PYTORCH_VERSION="2.5.1"
 TAG_NAME=jammy-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}
-# build_image $1 $TAG_NAME ubuntu22.04/cuda.Dockerfile
+build_image $1 $TAG_NAME ubuntu22.04/cuda.Dockerfile
 
 PYTHON_VERSION="3.10"
 TAG_NAME=jammy-torch${PYTORCH_VERSION}-humble
-# build_image $1 $TAG_NAME ubuntu22.04/ros2.Dockerfile
+build_image $1 $TAG_NAME ubuntu22.04/ros2.Dockerfile
 
-PYTHON_VERSION="3.12"
-TAG_NAME=noble-torch${PYTORCH_VERSION}-jazzy
-build_image $1 $TAG_NAME ubuntu24.04/ros2.Dockerfile
-
+PYTHON_VERSION="3.10"
 TAG_NAME=jammy-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}-humble
-# build_image $1 $TAG_NAME ubuntu22.04/cuda-ros2.Dockerfile
+build_image $1 $TAG_NAME ubuntu22.04/cuda-ros2.Dockerfile
 
 PYTHON_VERSION="3.11"
 TAG_NAME=jammy-torch${PYTORCH_VERSION}
-# build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
+build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
+
+CUDA_VERSION="12.6.2"
+PYTHON_VERSION="3.12"
+PYTORCH_VERSION="2.5.1"
+TAG_NAME=noble-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}
+build_image $1 $TAG_NAME ubuntu24.04/cuda.Dockerfile
+
+TAG_NAME=noble-torch${PYTORCH_VERSION}-jazzy
+build_image $1 $TAG_NAME ubuntu24.04/ros2.Dockerfile
+
+TAG_NAME=noble-torch${PYTORCH_VERSION}-cuda${CUDA_VERSION}-jazzy
+build_image $1 $TAG_NAME ubuntu24.04/cuda-ros2.Dockerfile
+
+TAG_NAME=noble-torch${PYTORCH_VERSION}
+build_image $1 $TAG_NAME ubuntu24.04/Dockerfile
 
 TAG_NAME=latest
-# build_image $1 $TAG_NAME ubuntu22.04/Dockerfile
+build_image $1 $TAG_NAME ubuntu24.04/Dockerfile
 
-# docker buildx build --platform linux/arm64 -t ghcr.io/kumarrobotics/pytorch_base:arm64-jammy-torch2.4.1-humble -f ubuntu22.04/arm64-ros2.Dockerfile --push .
+docker buildx build --platform linux/arm64 -t ${1}:arm64-jammy-torch2.5.1-humble -f ubuntu22.04/arm64-ros2.Dockerfile --push .
