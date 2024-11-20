@@ -29,9 +29,9 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_CONFIG_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CGAL_CONFIG_H_
 
-#include <CGAL/basic.h>
+// #include <CGAL/basic.h>
 #include <CGAL/Arr_linear_traits_2.h>
-#include <CGAL/Arr_walk_along_line_point_location.h>
+// #include <CGAL/Arr_walk_along_line_point_location.h>
 #include <CGAL/Arrangement_2.h>
 #include <CGAL/Delaunay_triangulation_2.h>
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
@@ -65,7 +65,7 @@ typedef CGAL::Partition_traits_2<K> Partition_traits_2;
 typedef CGAL::Creator_uniform_2<double, CGAL_Point2> Creator;
 typedef CGAL::Random_points_in_square_2<CGAL_Point2, Creator> Point_generator;
 
-typedef CGAL::Arr_walk_along_line_point_location<Arrangement_2> CGAL_pl;
+// typedef CGAL::Arr_walk_along_line_point_location<Arrangement_2> CGAL_pl;
 using CGAL_Point_location_result = CGAL::Arr_point_location_result<Arrangement_2>;
 using CGAL_Query_result = std::pair<CGAL_Point2, CGAL_Point_location_result::Type>;
 

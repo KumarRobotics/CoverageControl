@@ -50,7 +50,7 @@ void PolygonYMonotonePartition(PointVector const &poly,
   }
   // Obtain partition //
   std::list<Partition_traits_2::Polygon_2> partition_polys;
-  CGAL::y_monotone_partition_2(cgal_poly.begin(), cgal_poly.end(),
+  CGAL::y_monotone_partition_2(cgal_poly.vertices_begin(), cgal_poly.vertices_end(),
                                std::back_inserter(partition_polys));
 
   // Transform to coveragecontrol data type
