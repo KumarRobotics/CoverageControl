@@ -54,10 +54,6 @@ class Parameters {
    * @{
    */
   int pNumRobots = 32;    //!< Number of robots
-  int pNumFeatures = 32;  //!< Number of features
-  int pNumPolygons = 0;   //!< Number of polygonal features
-  int pMaxVertices = 10;  //!< Maximum number of vertices in a polygon
-  double pPolygonRadius = 64;
 
   /*! \name IO Parameters
    * @{
@@ -103,6 +99,7 @@ class Parameters {
   // Helps in reducing the number of erfc evaluations
   // Needs testing to be sure that the probability masses are not significantly
   // off
+  int pNumGaussianFeatures = 32;  //!< Number of features
   double pTruncationBND = 2;
 
   double pNorm = 1;
@@ -113,6 +110,10 @@ class Parameters {
   double pMaxSigma = 50;
   double pMinPeak = 6;
   double pMaxPeak = 10;
+
+  int pNumPolygons = 0;   //!< Number of polygonal features
+  int pMaxVertices = 10;  //!< Maximum number of vertices in a polygon
+  double pPolygonRadius = 64;
 
   double pUnknownImportance = 0.5;
   bool pRobotMapUseUnknownImportance = false;

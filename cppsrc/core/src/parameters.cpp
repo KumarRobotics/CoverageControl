@@ -61,30 +61,6 @@ void Parameters::ParseParameters() {
     std::cout << "NumRobots (default): " << pNumRobots << std::endl;
   }
 
-  if (toml_config["NumFeatures"].value<int>()) {
-    pNumFeatures = toml_config["NumFeatures"].value<int>().value();
-  } else {
-    std::cout << "NumFeatures (default): " << pNumFeatures << std::endl;
-  }
-
-  if (toml_config["NumPolygons"].value<int>()) {
-    pNumPolygons = toml_config["NumPolygons"].value<int>().value();
-  } else {
-    std::cout << "NumPolygons (default): " << pNumPolygons << std::endl;
-  }
-
-  if (toml_config["MaxVertices"].value<int>()) {
-    pMaxVertices = toml_config["MaxVertices"].value<int>().value();
-  } else {
-    std::cout << "MaxVertices (default): " << pMaxVertices << std::endl;
-  }
-
-  if (toml_config["PolygonRadius"].value<double>()) {
-    pPolygonRadius = toml_config["PolygonRadius"].value<double>().value();
-  } else {
-    std::cout << "PolygonRadius (default): " << pPolygonRadius << std::endl;
-  }
-
   auto toml_IO = toml_config["IO"];
   if (toml_IO["PlotScale"].value<double>()) {
     pPlotScale = toml_IO["PlotScale"].value<double>().value();
@@ -146,6 +122,11 @@ void Parameters::ParseParameters() {
   auto toml_EnvironmentIDF = toml_config["Environment"]["IDF"];
 
   if (toml_EnvironmentIDF) {
+    if (toml_EnvironmentIDF["NumGaussianFeatures"].value<int>()) {
+      pNumGaussianFeatures = toml_EnvironmentIDF["NumGaussianFeatures"].value<int>().value();
+    } else {
+      std::cout << "NumGaussianFeatures (default): " << pNumGaussianFeatures << std::endl;
+    }
     auto toml_TruncationBND =
         toml_EnvironmentIDF["TruncationBND"].value<double>();
     auto toml_Norm = toml_EnvironmentIDF["Norm"].value<double>();
@@ -176,6 +157,25 @@ void Parameters::ParseParameters() {
     if (toml_MaxPeak) {
       pMaxPeak = toml_MaxPeak.value();
     }
+
+    if (toml_EnvironmentIDF["NumPolygons"].value<int>()) {
+      pNumPolygons = toml_EnvironmentIDF["NumPolygons"].value<int>().value();
+    } else {
+      std::cout << "NumPolygons (default): " << pNumPolygons << std::endl;
+    }
+
+    if (toml_EnvironmentIDF["MaxVertices"].value<int>()) {
+      pMaxVertices = toml_EnvironmentIDF["MaxVertices"].value<int>().value();
+    } else {
+      std::cout << "MaxVertices (default): " << pMaxVertices << std::endl;
+    }
+
+    if (toml_EnvironmentIDF["PolygonRadius"].value<double>()) {
+      pPolygonRadius = toml_EnvironmentIDF["PolygonRadius"].value<double>().value();
+    } else {
+      std::cout << "PolygonRadius (default): " << pPolygonRadius << std::endl;
+    }
+
     if (toml_UnknownImportance) {
       pUnknownImportance = toml_UnknownImportance.value();
     }
@@ -262,7 +262,6 @@ void Parameters::ParseParameters() {
 
 void Parameters::PrintParameters() const {
   std::cout << "NumRobots: " << pNumRobots << std::endl;
-  std::cout << "NumFeatures: " << pNumFeatures << std::endl;
   std::cout << "NumPolygons: " << pNumPolygons << std::endl;
   std::cout << "MaxVertices: " << pMaxVertices << std::endl;
   std::cout << "PolygonRadius: " << pPolygonRadius << std::endl;
@@ -279,12 +278,17 @@ void Parameters::PrintParameters() const {
   std::cout << "UpdateExplorationMap: " << pUpdateExplorationMap << std::endl;
   std::cout << "UpdateSystemMap: " << pUpdateSystemMap << std::endl;
 
+  std::cout << "NumGaussianFeatures: " << pNumGaussianFeatures << std::endl;
   std::cout << "TruncationBND: " << pTruncationBND << std::endl;
   std::cout << "Norm: " << pNorm << std::endl;
   std::cout << "MinSigma: " << pMinSigma << std::endl;
   std::cout << "MaxSigma: " << pMaxSigma << std::endl;
   std::cout << "MinPeak: " << pMinPeak << std::endl;
   std::cout << "MaxPeak: " << pMaxPeak << std::endl;
+
+  std::cout << "pNumPolygons: " << pNumPolygons << std::endl;
+  std::cout << "pMaxVertices: " << pMaxVertices << std::endl;
+  std::cout << "pPolygonRadius: " << pPolygonRadius << std::endl;
 
   std::cout << "UnknownImportance: " << pUnknownImportance << std::endl;
   std::cout << "RobotMapUseUnknownImportance: " << pRobotMapUseUnknownImportance

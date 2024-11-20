@@ -13,7 +13,7 @@ if len(sys.argv) > 1:
 else:
     params = coverage_control.Parameters()
     params.pNumRobots = 1
-    params.pNumFeatures = 5
+    params.pNumGaussianFeatures = 5
     params.pNumPolygons = 20
     params.pWorldMapSize = 1024
     params.pMaxVertices = 5

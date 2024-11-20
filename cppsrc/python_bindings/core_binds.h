@@ -229,7 +229,7 @@ void pyCoverageControl_core(py::module &m) {
       .def("SetConfig", &Parameters::SetConfig)
       .def("PrintParameters", &Parameters::PrintParameters)
       .def_readwrite("pNumRobots", &Parameters::pNumRobots)
-      .def_readwrite("pNumFeatures", &Parameters::pNumFeatures)
+      .def_readwrite("pNumGaussianFeatures", &Parameters::pNumGaussianFeatures)
       .def_readwrite("pNumPolygons", &Parameters::pNumPolygons)
       .def_readwrite("pMaxVertices", &Parameters::pMaxVertices)
       .def_readwrite("pPolygonRadius", &Parameters::pPolygonRadius)

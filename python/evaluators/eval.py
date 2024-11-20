@@ -49,7 +49,7 @@ class Evaluator:
         self.cc_params = cc.Parameters(self.env_config_file)
 
         self.num_robots = self.cc_params.pNumRobots
-        self.num_features = self.cc_params.pNumFeatures
+        self.num_features = self.cc_params.pNumGaussianFeatures
         self.num_envs = self.config["NumEnvironments"]
         self.num_steps = self.config["NumSteps"]
         os.makedirs(self.env_dir + "/init_maps", exist_ok=True)

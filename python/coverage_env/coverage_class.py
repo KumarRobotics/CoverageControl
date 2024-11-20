@@ -25,7 +25,7 @@ class RunCoverageAlgorithm:
         else:
             self.params_ = cc.Parameters()
 
-        self.params_.pNumFeatures = 5
+        self.params_.pNumGaussianFeatures = 5
         self.params_.pMaxSigma = 100
         self.params_.pMinSigma = 100
 

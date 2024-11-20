@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
   if (argc == 2) {
     std::string parameter_file = argv[1];
     params = Parameters(parameter_file);
-    env = std::make_unique<CoverageSystem>(params, params.pNumFeatures,
+    env = std::make_unique<CoverageSystem>(params, params.pNumGaussianFeatures,
                                            params.pNumRobots);
   }
 
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
     WorldIDF world_idf(params, idf_file);
     env = std::make_unique<CoverageSystem>(params, world_idf, pos_file);
     params.pNumRobots = env->GetNumRobots();
-    params.pNumFeatures = env->GetNumFeatures();
+    params.pNumGaussianFeatures = env->GetNumFeatures();
   }
 
   env->PlotInitMap("./", "init_map");

@@ -146,7 +146,7 @@ namespace CoverageControlTorch {
 			void Run() {
 				num_non_converged_env_ = 0;
 				while(dataset_count_ < dataset_size_) {
-					env_ = std::make_shared <CoverageSystem>(env_params_, env_params_.pNumFeatures, env_params_.pNumRobots);
+					env_ = std::make_shared <CoverageSystem>(env_params_, env_params_.pNumGaussianFeatures, env_params_.pNumRobots);
 					alg_ = std::make_shared <CoverageAlgorithm>(env_params_, num_robots_, *env_);
 
 					++env_count_;

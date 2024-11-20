@@ -29,7 +29,7 @@ import coverage_control as cc
 from coverage_control.algorithms import CentralizedCVT, ClairvoyantCVT, DecentralizedCVT
 
 params = cc.Parameters()
-params.pNumFeatures = 3
+params.pNumGaussianFeatures = 3
 params.pNumRobots = 3
 
 bnd_list = cc.BNDVector()

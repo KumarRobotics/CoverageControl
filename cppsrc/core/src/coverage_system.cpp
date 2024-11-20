@@ -37,7 +37,7 @@
 namespace CoverageControl {
 
 CoverageSystem::CoverageSystem(Parameters const &params)
-    : CoverageSystem(params, params.pNumFeatures, params.pNumPolygons,
+    : CoverageSystem(params, params.pNumGaussianFeatures, params.pNumPolygons,
                      params.pNumRobots) {}
 
 CoverageSystem::CoverageSystem(Parameters const &params,
