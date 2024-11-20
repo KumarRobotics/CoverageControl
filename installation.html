@@ -228,7 +228,7 @@ Docker Container</h2>
 <li><code>--with-ros</code> : With ROS support</li>
 <li><code>--noble</code> : Ubuntu 24.04 Noble</li>
 </ul>
-<p>The base image is <code>ghcr.io/kumarrobotics/coveragecontrol</code> with different tags for different versions and configurations.</p>
+<p>The base image is <code>agarwalsaurav/pytorch_base</code> with different tags for different versions and configurations.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Tags Suffix   </th><th class="markdownTableHeadNone">Flags    </th></tr>
@@ -241,11 +241,19 @@ Docker Container</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>jammy-torch2.5.1</code>   </td><td class="markdownTableBodyNone">None    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>noble-torch2.5.1-cuda12.6.2-jazzy</code>   </td><td class="markdownTableBodyNone"><code>--with-ros --with-cuda --noble</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>noble-torch2.5.1-cuda12.6.2</code>   </td><td class="markdownTableBodyNone"><code>--with-cuda --noble</code>    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>noble-torch2.5.1-jazzy</code>   </td><td class="markdownTableBodyNone"><code>--with-ros --noble</code>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>noble-torch2.5.1</code>   </td><td class="markdownTableBodyNone">&ndash;noble   </td></tr>
+<td class="markdownTableBodyNone"><code>noble-torch2.5.1</code>   </td><td class="markdownTableBodyNone"><code>--noble</code>   </td></tr>
 </table>
-<p>The library is already built and installed in the container. However, if you want to build it again, you can do so following the <a class="el" href="#installation-from-source">Installation from Source</a> instructions (except for the prerequisites).</p>
+<p>Install the library available on PyPI:  
+<div class="fragment">
+<div class="line"><span class="keyword">pip</span> install coverage_control</div>
+</div>
+ Alternatively, follow the <a class="el" href="#installation-from-source">Installation from Source</a> instructions (except for the prerequisites).</p>
 <hr  />
 <h1><a class="anchor" id="installation-from-source"></a>
 Installation From Source</h1>
@@ -276,14 +284,7 @@ Automated Installation</h2>
 <div class="fragment">
 <div class="line"><span class="keyword">pip</span> install .</div>
 </div>
- Testing the installation (from the root of the repository):</p>
-<p>Download the file <code>pytest_data.tar.gz</code> from the repository's <a href="https://github.com/KumarRobotics/CoverageControl/releases">release page</a> and extract it to <code>python/tests/</code>. This will create a directory <code>python/tests/data</code>.</p>
-<p>Then run the following commands:  
-<div class="fragment">
-<div class="line"><span class="keyword">pip</span> install pytest</div>
-<div class="line"><span class="keyword">pytest</span></div>
-</div>
-</p>
+ </p>
 <h2><a class="anchor" id="autotoc_md20"></a>
 Building the Core C++ Library</h2>
 <dl class="section note"><dt>Note</dt><dd>This is only necessary if you want to use the C++ library directly.</dd></dl>
