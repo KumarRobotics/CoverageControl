@@ -47,7 +47,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 CoverageSystem::CoverageSystem(Parameters const &params,
                                int const num_gaussians, int const num_polygons,
                                int const num_robots)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
+    : params_{params} {
   // Generate Bivariate Normal Distribution from random numbers
   std::srand(
       std::time(nullptr));  // use current time as seed for random generator
@@ -60,6 +60,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
   std::uniform_real_distribution<> distrib_peak(params_.pMinPeak,
                                                 params_.pMaxPeak);
 
+  world_idf_ptr_ = std::make_shared<WorldIDF>(params_);
   for (int i = 0; i < num_gaussians; ++i) {
     Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
     double sigma = 1.0;
@@ -76,7 +77,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
     }
     // scale = 2.0 * M_PI * sigma * sigma * scale;
     BivariateNormalDistribution dist(mean, sigma, scale);
-    world_idf_.AddNormalDistribution(dist);
+    world_idf_ptr_->AddNormalDistribution(dist);
   }
 
   std::vector<PointVector> polygons;
@@ -93,18 +94,18 @@ CoverageSystem::CoverageSystem(Parameters const &params,
       importance = distrib_peak(gen_) * importance;
     }
     PolygonFeature poly_feature(poly, importance);
-    world_idf_.AddUniformDistributionPolygon(poly_feature);
+    world_idf_ptr_->AddUniformDistributionPolygon(poly_feature);
   }
 
-  world_idf_.GenerateMap();
-  normalization_factor_ = world_idf_.GetNormalizationFactor();
+  world_idf_ptr_->GenerateMap();
+  normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
 
   std::uniform_real_distribution<> env_point_dist(
       kLargeEps, params_.pRobotInitDist - kLargeEps);
   robots_.reserve(num_robots);
   for (int i = 0; i < num_robots; ++i) {
     Point2 start_pos(env_point_dist(gen_), env_point_dist(gen_));
-    robots_.push_back(RobotModel(params_, start_pos, world_idf_));
+    robots_.push_back(RobotModel(params_, start_pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -112,7 +113,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 CoverageSystem::CoverageSystem(Parameters const &params,
                                WorldIDF const &world_idf,
                                std::string const &pos_file_name)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
+    : params_{params} {
   SetWorldIDF(world_idf);
 
   // Load initial positions
@@ -129,7 +130,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
   for (Point2 const &pos : robot_positions) {
-    robots_.push_back(RobotModel(params_, pos, world_idf_));
+    robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -137,13 +138,13 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 CoverageSystem::CoverageSystem(Parameters const &params,
                                WorldIDF const &world_idf,
                                std::vector<Point2> const &robot_positions)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
+    : params_{params} {
   SetWorldIDF(world_idf);
 
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
   for (auto const &pos : robot_positions) {
-    robots_.push_back(RobotModel(params_, pos, world_idf_));
+    robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -152,17 +153,18 @@ CoverageSystem::CoverageSystem(
     Parameters const &params,
     std::vector<BivariateNormalDistribution> const &dists,
     std::vector<Point2> const &robot_positions)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
-  world_idf_.AddNormalDistribution(dists);
+    : params_{params} {
+  world_idf_ptr_ = std::make_shared<WorldIDF>(params_);
+  world_idf_ptr_->AddNormalDistribution(dists);
   num_robots_ = robot_positions.size();
 
   // Generate the world map
-  world_idf_.GenerateMap();
-  normalization_factor_ = world_idf_.GetNormalizationFactor();
+  world_idf_ptr_->GenerateMap();
+  normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
 
   robots_.reserve(num_robots_);
   for (auto const &pos : robot_positions) {
-    robots_.push_back(RobotModel(params_, pos, world_idf_));
+    robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -391,7 +393,7 @@ int CoverageSystem::WriteRobotPositions(std::string const &file_name,
 int CoverageSystem::WriteEnvironment(std::string const &pos_filename,
                                      std::string const &env_filename) const {
   WriteRobotPositions(pos_filename);
-  world_idf_.WriteDistributions(env_filename);
+  world_idf_ptr_->WriteDistributions(env_filename);
   return 0;
 }
 

@@ -65,7 +65,7 @@ namespace CoverageControl {
  */
 class CoverageSystem {
   Parameters const params_;          //!< Parameters for the coverage system
-  WorldIDF world_idf_;               //!< World IDF
+  std::shared_ptr <WorldIDF> world_idf_ptr_; //!< World IDF object
   size_t num_robots_ = 0;            //!< Number of robots
   std::vector<RobotModel> robots_;   //!< Vector of robots of type RobotModel
   double normalization_factor_ = 0;  //!< Normalization factor for the world IDF
@@ -259,8 +259,8 @@ class CoverageSystem {
 
   //! Set the world IDF and recompute the world map
   void SetWorldIDF(WorldIDF const &world_idf) {
-    world_idf_ = world_idf;
-    normalization_factor_ = world_idf_.GetNormalizationFactor();
+    world_idf_ptr_.reset(new WorldIDF{world_idf});
+    normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
   }
   //! @}
 
@@ -464,15 +464,18 @@ class CoverageSystem {
   //! \name Getters
   //
   //! @{
-  const auto &GetWorldIDFObject() const { return world_idf_; }
+  std::shared_ptr<const WorldIDF> GetWorldIDFPtr() const {
+    return world_idf_ptr_;
+  }
+  const WorldIDF &GetWorldIDFObject() const { return *world_idf_ptr_; }
   const MapType &GetSystemMap() const { return system_map_; }
   const MapType &GetSystemExplorationMap() const { return exploration_map_; }
   const MapType &GetSystemExploredIDFMap() const { return explored_idf_map_; }
   MapType &GetSystemExploredIDFMapMutable() { return explored_idf_map_; }
   //! Get the world map
-  const MapType &GetWorldMap() const { return world_idf_.GetWorldMap(); }
+  const MapType &GetWorldMap() const { return world_idf_ptr_->GetWorldMap(); }
   //! Get the world map (mutable)
-  MapType &GetWorldMapMutable() { return world_idf_.GetWorldMapMutable(); }
+  MapType &GetWorldMapMutable() { return world_idf_ptr_->GetWorldMapMutable(); }
 
   MapType &GetRobotMapMutable(size_t const id) {
     CheckRobotID(id);
@@ -635,7 +638,7 @@ class CoverageSystem {
   auto GetVoronoiCell(int const robot_id) { return voronoi_cells_[robot_id]; }
 
   double GetNormalizationFactor() {
-    normalization_factor_ = world_idf_.GetNormalizationFactor();
+    normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
     return normalization_factor_;
   }
 
