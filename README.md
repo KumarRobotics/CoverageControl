@@ -4,7 +4,7 @@ See full documentation at [https://KumarRobotics.github.io/CoverageControl/](htt
 
 Coverage control is the problem of navigating a robot swarm to collaboratively monitor features or a phenomenon of interest not known _a priori_.
 The library provides a simulation environment, algorithms, and GNN-based architectures for the coverage control problem.  
-<img align="right" width="300" src="https://kumarrobotics.github.io/CoverageControl/LPAC.gif">
+<img src="https://kumarrobotics.github.io/CoverageControl/LPAC.gif" align="right" width="300">
 
 **Key features:**  
 - The core library is written in `C++` and `CUDA` to handle large-scale simulations
