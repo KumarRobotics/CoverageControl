@@ -75,10 +75,12 @@ class RobotModel {
   MapType
       local_exploration_map_;  //!< Binary map: true for unexplored locations
   MapType exploration_map_;    //!< Binary map: true for unexplored locations
-  std::shared_ptr<const WorldIDF>
-      world_idf_;  //!< Robots cannot change the world
   double time_step_dist_ = 0;
   double sensor_area_ = 0;
+
+  std::shared_ptr<const WorldIDF>
+      world_idf_;  //!< Robots cannot change the world
+  // const WorldIDF *world_idf_;  //!< Robots cannot change the world
 
   // Gets the sensor data from world IDF at the global_current_position_ and
   // updates robot_map_
@@ -119,18 +121,7 @@ class RobotModel {
         offset.height) = MapType::Zero(offset.width, offset.height);
   }
 
- public:
-  /*!
-   * \brief Constructor for the robot model
-   *
-   * \param params Parameters for the robot model
-   * \param global_start_position The global start position of the robot
-   * \param world_idf The world IDF object
-   */
-  RobotModel(Parameters const &params, Point2 const &global_start_position,
-             WorldIDF const &world_idf)
-      : params_{params}, global_start_position_{global_start_position} {
-    world_idf_ = std::make_shared<const WorldIDF>(world_idf);
+  void Initialize() {
     normalization_factor_ = world_idf_->GetNormalizationFactor();
     global_current_position_ = global_start_position_;
 
@@ -161,6 +152,31 @@ class RobotModel {
     sensor_area_ = params_.pSensorSize * params_.pSensorSize;
   }
 
+ public:
+  /*!
+   * \brief Constructor for the robot model
+   *
+   * \param params Parameters for the robot model
+   * \param global_start_position The global start position of the robot
+   * \param world_idf The world IDF object
+   */
+
+  RobotModel(Parameters const &params, Point2 const &global_start_position,
+             std::shared_ptr<const WorldIDF> const &world_idf)
+      : params_{params},
+        global_start_position_{global_start_position},
+        world_idf_{world_idf} {
+    Initialize();
+  }
+
+  RobotModel(Parameters const &params, Point2 const &global_start_position,
+             WorldIDF const &world_idf)
+      : params_{params},
+        global_start_position_{global_start_position},
+        world_idf_{std::make_shared<const WorldIDF>(world_idf)} {
+    Initialize();
+  }
+
   void ClearRobotMap() {
     if (params_.pRobotMapUseUnknownImportance == true) {
       robot_map_ =
@@ -173,9 +189,7 @@ class RobotModel {
     if (params_.pUpdateSensorView == true) {
       UpdateSensorView();
     }
-    if (params_.pUpdateRobotMap == false) {
-      robot_map_ = world_idf_->GetWorldMap();
-    } else {
+    if (params_.pUpdateRobotMap == true) {
       UpdateRobotMap();
     }
   }
@@ -283,9 +297,10 @@ class RobotModel {
     return system_map_;
   }
 
-  const MapType &GetRobotLocalMap() {
-    /* local_map_ = MapType::Constant(params_.pLocalMapSize,
-     * params_.pLocalMapSize, -1.0); */
+  // const MapType &GetRobotLocalMap() {
+  /* local_map_ = MapType::Constant(params_.pLocalMapSize,
+   * params_.pLocalMapSize, -1.0); */
+  void ComputeLocalMap() {
     local_map_ =
         MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0.);
     if (not MapUtils::IsPointOutsideBoundary(
@@ -295,6 +310,11 @@ class RobotModel {
                           params_.pRobotMapSize, robot_map_,
                           params_.pLocalMapSize, local_map_);
     }
+  }
+  MapType &GetRobotMapMutable() { return robot_map_; }
+
+  const MapType &GetRobotLocalMap() {
+    ComputeLocalMap();
     return local_map_;
   }
 

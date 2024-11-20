@@ -30,8 +30,7 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_PLOTTER_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_PLOTTER_H_
 
-#include <filesystem>
-#include <iostream>
+#include <iomanip>
 #include <list>
 #include <string>
 #include <vector>
@@ -39,7 +38,11 @@
 #include "CoverageControl/typedefs.h"
 #include "CoverageControl/voronoi.h"
 
+namespace gnuplotio {
 class Gnuplot;
+}
+using namespace gnuplotio;
+
 namespace CoverageControl {
 
 //! Data structure to store plotter data
@@ -49,6 +52,7 @@ struct PlotterData {
   std::vector<std::list<Point2>> positions_history;
   std::vector<int> robot_status;
   std::vector<std::list<Point2>> voronoi;
+  MapType world_map;
 };
 
 //! Class to plot the map
@@ -72,6 +76,14 @@ class Plotter {
   std::string color_voronoi = "#196f3d";
   std::string color_unknown = "#aeb6bf";
   std::string color_communication_links = "#1f77b4";
+
+  bool GnuplotCommands(Gnuplot &gp);
+  void StreamMap(Gnuplot &gp, MapType const &map);
+  void PlotMap(Gnuplot &gp, bool begin = true);
+  void PlotLine(Gnuplot &gp, int marker_sz, std::string color,
+                bool begin = false);
+  void PlotPoints(Gnuplot &gp, int point_type, int marker_sz, std::string color,
+                  bool begin = false);
 
  public:
   Plotter(std::string const &d, int const &r_max, double const &res) {
@@ -106,14 +118,6 @@ class Plotter {
   /* void PlotMap(MapType const &, PointVector const &, PointVector const &,
    * Voronoi const &); */
   /* void PlotMap(MapType const &, PointVector const &, PointVector const &); */
-
-  bool GnuplotCommands(Gnuplot &gp);
-  void StreamMap(Gnuplot &gp, MapType const &map);
-  void PlotMap(Gnuplot &gp, bool begin = true);
-  void PlotLine(Gnuplot &gp, int marker_sz, std::string color,
-                bool begin = false);
-  void PlotPoints(Gnuplot &gp, int point_type, int marker_sz, std::string color,
-                  bool begin = false);
 
   void PlotMap(MapType const &map);
 

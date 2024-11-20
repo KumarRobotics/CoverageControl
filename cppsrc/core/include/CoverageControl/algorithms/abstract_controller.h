@@ -29,8 +29,6 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_ABSTRACT_CONTROLLER_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_ALGORITHMS_ABSTRACT_CONTROLLER_H_
 
-#include "CoverageControl/coverage_system.h"
-#include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
 
 namespace CoverageControl {

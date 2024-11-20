@@ -30,8 +30,13 @@ if(COVERAGECONTROL_WITH_CUDA)
   include(CheckLanguage)
   check_language(CUDA)
   if(NOT CMAKE_CUDA_COMPILER)
-    message(WARNING "No CUDA compiler found, disabling CUDA support")
-    set(COVERAGECONTROL_WITH_CUDA OFF)
+    find_package(CUDAToolkit)
+    if(CUDAToolkit_FOUND)
+      enable_language(CUDA)
+    else()
+      message(WARNING "No CUDA compiler found, disabling CUDA support")
+      set(COVERAGECONTROL_WITH_CUDA OFF)
+    endif()
   else()
     enable_language(CUDA)
   endif()
@@ -70,7 +75,20 @@ set(CMAKEPACKAGE_INSTALL_DIR
 )
 
 
+###########################
+#### OpenMP dependency ####
+###########################
 find_package(OpenMP REQUIRED)
+if(OpenMP_FOUND)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(OpenMP_CXX_FLAGS "-fopenmp=libomp")
+    set(OpenMP_CXX_LIB_NAMES "omp")
+    set(OpenMP_omp_LIBRARY omp)
+  endif()
+endif()
+
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS iostreams)
 
 ###########################
 #### Eigen3 dependency ####
@@ -79,34 +97,32 @@ find_package(Eigen3 3.4 QUIET)
 if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 3.4)
   message(STATUS "Eigen3 3.4 not found, fetching it")
   include(FetchContent)
-  FetchContent_Declare(Eigen3
+  FetchContent_Declare(eigen3
     URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
-  FetchContent_Populate(Eigen3)   # finish fetching and unpacking before continuing
+  FetchContent_Populate(eigen3)   # finish fetching and unpacking before continuing
   add_subdirectory(${FETCHCONTENT_BASE_DIR}/eigen3-src ${CMAKE_CURRENT_BINARY_DIR}/eigen3)
 endif()
 
 ###########################
 #### CGAL dependency ####
 ###########################
-find_package(CGAL 5.6.1 QUIET)
-if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 5.6.1)
-  message(STATUS "CGAL 5.6.1 not found, fetching it")
+find_package(CGAL 6.0.1 EXACT QUIET)
+if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.0.1)
+  message(STATUS "CGAL 6.0.1 not found, fetching it")
   include(FetchContent)
   FetchContent_Declare(CGAL
-    URL https://github.com/CGAL/cgal/releases/download/v5.6.1/CGAL-5.6.1.tar.xz
-    URL_HASH SHA256=cdb15e7ee31e0663589d3107a79988a37b7b1719df3d24f2058545d1bcdd5837
+    URL https://github.com/CGAL/cgal/releases/download/v6.0.1/CGAL-6.0.1.tar.xz
+    URL_HASH SHA256=0acdfbf317c556630dd526f3253780f29b6ec9713ee92903e81b5c93c0f59b7f 
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
   FetchContent_Populate(CGAL)   # finish fetching and unpacking before continuing
   set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
-  find_package(CGAL 5.6 REQUIRED)
+  find_package(CGAL 6.0.1 REQUIRED)
 endif()
-###########################
 
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS iostreams)
+###########################
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.h.in

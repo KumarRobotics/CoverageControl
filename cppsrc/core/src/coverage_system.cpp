@@ -26,13 +26,18 @@
  * \brief Contains the implementation of the CoverageSystem class.
  */
 
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+
+#include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/coverage_system.h"
 #include "CoverageControl/plotter.h"
 
 namespace CoverageControl {
 
 CoverageSystem::CoverageSystem(Parameters const &params)
-    : CoverageSystem(params, params.pNumFeatures, params.pNumPolygons,
+    : CoverageSystem(params, params.pNumGaussianFeatures, params.pNumPolygons,
                      params.pNumRobots) {}
 
 CoverageSystem::CoverageSystem(Parameters const &params,
@@ -42,7 +47,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 CoverageSystem::CoverageSystem(Parameters const &params,
                                int const num_gaussians, int const num_polygons,
                                int const num_robots)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
+    : params_{params} {
   // Generate Bivariate Normal Distribution from random numbers
   std::srand(
       std::time(nullptr));  // use current time as seed for random generator
@@ -54,13 +59,25 @@ CoverageSystem::CoverageSystem(Parameters const &params,
                                                params_.pMaxSigma);
   std::uniform_real_distribution<> distrib_peak(params_.pMinPeak,
                                                 params_.pMaxPeak);
+
+  world_idf_ptr_ = std::make_shared<WorldIDF>(params_);
   for (int i = 0; i < num_gaussians; ++i) {
     Point2 mean(distrib_pts_(gen_), distrib_pts_(gen_));
-    double sigma(distrib_var(gen_));
-    double scale(distrib_peak(gen_));
-    scale = 2 * M_PI * sigma * sigma * scale;
+    double sigma = 1.0;
+    if (params_.pMinSigma == params_.pMaxSigma) {
+      sigma = params_.pMinSigma;
+    } else {
+      sigma = distrib_var(gen_);
+    }
+    double scale = 1.0;
+    if (params_.pMinPeak == params_.pMaxPeak) {
+      scale = params_.pMinPeak;
+    } else {
+      scale = distrib_peak(gen_);
+    }
+    // scale = 2.0 * M_PI * sigma * sigma * scale;
     BivariateNormalDistribution dist(mean, sigma, scale);
-    world_idf_.AddNormalDistribution(dist);
+    world_idf_ptr_->AddNormalDistribution(dist);
   }
 
   std::vector<PointVector> polygons;
@@ -69,20 +86,26 @@ CoverageSystem::CoverageSystem(Parameters const &params,
                          params_.pWorldMapSize * params_.pResolution, polygons);
 
   for (auto &poly : polygons) {
-    double importance = distrib_peak(gen_) * 0.5;
+    // double importance = distrib_peak(gen_) * 0.5;
+    double importance = 0.00005;
+    if (params_.pMinPeak == params_.pMaxPeak) {
+      importance = params_.pMinPeak;
+    } else {
+      importance = distrib_peak(gen_) * importance;
+    }
     PolygonFeature poly_feature(poly, importance);
-    world_idf_.AddUniformDistributionPolygon(poly_feature);
+    world_idf_ptr_->AddUniformDistributionPolygon(poly_feature);
   }
 
-  world_idf_.GenerateMap();
-  normalization_factor_ = world_idf_.GetNormalizationFactor();
+  world_idf_ptr_->GenerateMap();
+  normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
 
   std::uniform_real_distribution<> env_point_dist(
       kLargeEps, params_.pRobotInitDist - kLargeEps);
   robots_.reserve(num_robots);
   for (int i = 0; i < num_robots; ++i) {
     Point2 start_pos(env_point_dist(gen_), env_point_dist(gen_));
-    robots_.push_back(RobotModel(params_, start_pos, world_idf_));
+    robots_.push_back(RobotModel(params_, start_pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -90,7 +113,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 CoverageSystem::CoverageSystem(Parameters const &params,
                                WorldIDF const &world_idf,
                                std::string const &pos_file_name)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
+    : params_{params} {
   SetWorldIDF(world_idf);
 
   // Load initial positions
@@ -106,8 +129,13 @@ CoverageSystem::CoverageSystem(Parameters const &params,
   }
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
+  if(params_.pNumRobots != num_robots_) {
+    std::cerr << "Number of robots in the file does not match the number of robots in the parameters\n";
+    std::cerr << "Number of robots in the file: " << num_robots_ << " Number of robots in the parameters: " << params_.pNumRobots << std::endl;
+    exit(1);
+  }
   for (Point2 const &pos : robot_positions) {
-    robots_.push_back(RobotModel(params_, pos, world_idf_));
+    robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -115,13 +143,13 @@ CoverageSystem::CoverageSystem(Parameters const &params,
 CoverageSystem::CoverageSystem(Parameters const &params,
                                WorldIDF const &world_idf,
                                std::vector<Point2> const &robot_positions)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
+    : params_{params} {
   SetWorldIDF(world_idf);
 
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
   for (auto const &pos : robot_positions) {
-    robots_.push_back(RobotModel(params_, pos, world_idf_));
+    robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
   InitSetup();
 }
@@ -130,25 +158,26 @@ CoverageSystem::CoverageSystem(
     Parameters const &params,
     std::vector<BivariateNormalDistribution> const &dists,
     std::vector<Point2> const &robot_positions)
-    : params_{params}, world_idf_{WorldIDF(params_)} {
-  world_idf_.AddNormalDistribution(dists);
+    : params_{params} {
+  world_idf_ptr_ = std::make_shared<WorldIDF>(params_);
+  world_idf_ptr_->AddNormalDistribution(dists);
   num_robots_ = robot_positions.size();
 
   // Generate the world map
-  world_idf_.GenerateMap();
-  normalization_factor_ = world_idf_.GetNormalizationFactor();
+  world_idf_ptr_->GenerateMap();
+  normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
 
   robots_.reserve(num_robots_);
   for (auto const &pos : robot_positions) {
-    robots_.push_back(RobotModel(params_, pos, world_idf_));
+    robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
   InitSetup();
 }
 
-std::pair<MapType, MapType> const &CoverageSystem::GetCommunicationMap(
+std::pair<MapType, MapType> CoverageSystem::GetRobotCommunicationMaps(
     size_t const id, size_t map_size) {
-  communication_maps_[id] = std::make_pair(MapType::Zero(map_size, map_size),
-                                           MapType::Zero(map_size, map_size));
+  std::pair<MapType, MapType> communication_maps = std::make_pair(
+      MapType::Zero(map_size, map_size), MapType::Zero(map_size, map_size));
   PointVector robot_neighbors_pos = GetRelativePositonsNeighbors(id);
   double center = map_size / 2. - params_.pResolution / 2.;
   Point2 center_point(center, center);
@@ -157,16 +186,16 @@ std::pair<MapType, MapType> const &CoverageSystem::GetCommunicationMap(
         relative_pos * map_size /
             (params_.pCommunicationRange * params_.pResolution * 2.) +
         center_point;
-    int scaled_indices_x = scaled_indices_val[0];
-    int scaled_indices_y = scaled_indices_val[1];
+    int scaled_indices_x = std::round(scaled_indices_val[0]);
+    int scaled_indices_y = std::round(scaled_indices_val[1]);
     Point2 normalized_relative_pos = relative_pos / params_.pCommunicationRange;
 
-    communication_maps_[id].first(scaled_indices_x, scaled_indices_y) +=
+    communication_maps.first(scaled_indices_x, scaled_indices_y) +=
         normalized_relative_pos[0];
-    communication_maps_[id].second(scaled_indices_x, scaled_indices_y) +=
+    communication_maps.second(scaled_indices_x, scaled_indices_y) +=
         normalized_relative_pos[1];
   }
-  return communication_maps_[id];
+  return communication_maps;
 }
 
 void CoverageSystem::InitSetup() {
@@ -174,7 +203,6 @@ void CoverageSystem::InitSetup() {
   robot_positions_history_.resize(num_robots_);
 
   voronoi_cells_.resize(num_robots_);
-  communication_maps_.resize(num_robots_);
 
   robot_global_positions_.resize(num_robots_);
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -370,7 +398,7 @@ int CoverageSystem::WriteRobotPositions(std::string const &file_name,
 int CoverageSystem::WriteEnvironment(std::string const &pos_filename,
                                      std::string const &env_filename) const {
   WriteRobotPositions(pos_filename);
-  world_idf_.WriteDistributions(env_filename);
+  world_idf_ptr_->WriteDistributions(env_filename);
   return 0;
 }
 
@@ -397,7 +425,7 @@ void CoverageSystem::RenderRecordedMap(std::string const &dir_name,
                      params_.pCommunicationRange);
     auto iPlotterVoronoi = plotter_voronoi;
     iPlotterVoronoi.SetPlotName("voronoi_map", i);
-    iPlotterVoronoi.PlotMap(GetWorldMap(), plotter_data_[i].positions,
+    iPlotterVoronoi.PlotMap(plotter_data_[i].world_map, plotter_data_[i].positions,
                             plotter_data_[i].voronoi,
                             plotter_data_[i].positions_history);
   }
@@ -443,6 +471,7 @@ void CoverageSystem::RecordPlotData(std::vector<int> const &robot_status,
     voronoi.push_back(cell_points);
   }
   data.voronoi = voronoi;
+  data.world_map = GetWorldMap();
   plotter_data_.push_back(data);
 }
 
@@ -534,13 +563,13 @@ void CoverageSystem::PlotRobotSystemMap(std::string const &dir_name,
   plotter.SetPlotName("robot_" + std::to_string(robot_id) + "_", step);
   PointVector neighbours_positions = GetRelativePositonsNeighbors(robot_id);
   for (Point2 &pos : neighbours_positions) {
-    pos[0] += params_.pLocalMapSize / 2;
-    pos[1] += params_.pLocalMapSize / 2;
+    pos[0] += params_.pLocalMapSize / 2.;
+    pos[1] += params_.pLocalMapSize / 2.;
   }
   plotter.PlotMap(GetRobotSystemMap(robot_id), neighbours_positions);
 }
 
-void CoverageSystem::PlotRobotIDFMap(std::string const &dir_name,
+void CoverageSystem::PlotRobotLocalMap(std::string const &dir_name,
                                      int const &robot_id, int const &step) {
   Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution,
                   params_.pResolution);
@@ -566,14 +595,6 @@ void CoverageSystem::PlotRobotSensorView(std::string const &dir_name,
   plotter.PlotMap(GetRobotSensorView(robot_id));
 }
 
-void CoverageSystem::PlotRobotLocalMap(std::string const &dir_name,
-                                       int const &robot_id, int const &step) {
-  Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution,
-                  params_.pResolution);
-  plotter.SetPlotName("robot_map_" + std::to_string(robot_id) + "_", step);
-  plotter.PlotMap(GetRobotLocalMap(robot_id));
-}
-
 void CoverageSystem::PlotRobotObstacleMap(std::string const &dir_name,
                                           int const &robot_id,
                                           int const &step) {
@@ -588,7 +609,7 @@ void CoverageSystem::PlotRobotCommunicationMaps(std::string const &dir_name,
                                                 int const &robot_id,
                                                 int const &step,
                                                 size_t const &map_size) {
-  auto robot_communication_maps = GetCommunicationMap(robot_id, map_size);
+  auto robot_communication_maps = GetRobotCommunicationMaps(robot_id, map_size);
   Plotter plotter_x(dir_name, map_size * params_.pResolution,
                     params_.pResolution);
   plotter_x.SetPlotName(

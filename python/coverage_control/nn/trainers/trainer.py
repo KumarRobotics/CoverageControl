@@ -24,6 +24,7 @@ Train a model using pytorch
 """
 
 import time
+from copy import deepcopy
 
 import torch
 
@@ -38,17 +39,16 @@ class TrainModel:
     """
 
     def __init__(
-        self,
-        model: torch.nn.Module,
-        train_loader: torch.utils.data.DataLoader,
-        val_loader: torch.utils.data.DataLoader,
-        optimizer: torch.optim.Optimizer,
-        criterion: torch.nn.Module,
-        epochs: int,
-        device: torch.device,
-        model_file: str,
-        optimizer_file: str,
-    ):
+            self,
+            model: torch.nn.Module,
+            train_loader: torch.utils.data.DataLoader,
+            val_loader: torch.utils.data.DataLoader,
+            optimizer: torch.optim.Optimizer,
+            criterion: torch.nn.Module,
+            num_epochs: int,
+            device: torch.device,
+            model_dir: str,
+            ):
         """
         Initialize the model trainer
 
@@ -58,38 +58,37 @@ class TrainModel:
             val_loader: loader for the validation data
             optimizer: optimizer for the model
             criterion: loss function
-            epochs: number of epochs
+            num_epochs: number of epochs
             device: device to train the model
-            model_file: file to save the model
-            optimizer_file: file to save the optimizer
+            model_dir: dir to save the model
         """
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.optimizer = optimizer
         self.criterion = criterion
-        self.epochs = epochs
+        self.num_epochs = num_epochs
         self.device = device
-        self.model_file = model_file
-        self.optimizer_file = optimizer_file
+        self.model_dir = model_dir
+        self.start_time = time.time()
 
-    def load_saved_model_dict(self, model_path: str) -> None:
+    def load_saved_model_dict(self, model_file: str) -> None:
         """
         Load the saved model
 
         Args:
-            model_path: model path
+            model_file: model file
         """
-        self.model.load_state_dict(torch.load(model_path))
+        self.model.load_state_dict(torch.load(model_file))
 
-    def load_saved_model(self, model_path: str) -> None:
+    def load_saved_model(self, model_file: str) -> None:
         """
         Load the saved model
 
         Args:
-            model_path: model path
+            model_file: model path
         """
-        self.model = torch.load(model_path)
+        self.model = torch.load(model_file)
 
     def load_saved_optimizer(self, optimizer_path: str) -> None:
         """
@@ -114,53 +113,59 @@ class TrainModel:
         val_loss_history = []
         start_time = time.time()
 
-        model_path = self.model_file.split(".")[0]
+        best_model_state_dict = None
+        best_train_model_state_dict = None
+
         # Train the model
 
-        for epoch in range(self.epochs):
+        for epoch in range(self.num_epochs):
             # Training
-            train_loss = self.TrainEpoch()
+            train_loss = self.train_epoch()
             train_loss_history.append(train_loss)
-            torch.save(train_loss_history, model_path + "_train_loss.pt")
+            torch.save(train_loss_history, self.model_dir + "/train_loss.pt")
             # Print the loss
-            print(
-                "Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
-                "Training Loss: {:.5f}.. ".format(train_loss),
-            )
+            print(f"Epoch: {epoch + 1}/{self.num_epochs} ",
+                  f"Training Loss: {train_loss:.3e} ")
 
             # Validation
 
             if self.val_loader is not None:
                 val_loss = self.validate_epoch(self.val_loader)
                 val_loss_history.append(val_loss)
-                torch.save(val_loss_history, model_path + "_val_loss.pt")
+                torch.save(val_loss_history, self.model_dir + "/val_loss.pt")
 
                 # Save the best model
 
                 if val_loss < best_val_loss:
                     best_val_loss = val_loss
-                    torch.save(self.model, self.model_file)
-                    torch.save(self.optimizer, self.optimizer_file)
-                print(
-                    "Epoch: {}/{}.. ".format(epoch + 1, self.epochs),
-                    "Validation Loss: {:.5f}.. ".format(val_loss),
-                    "Best Validation Loss: {:.5f}.. ".format(best_val_loss),
-                )
+                    best_model_state_dict = deepcopy(self.model.state_dict())
+                    # torch.save(self.model.state_dict(), self.model_dir + "/model.pt")
+                    # torch.save(self.optimizer.state_dict(), self.model_dir + "/optimizer.pt")
+                print(f"Epoch: {epoch + 1}/{self.num_epochs} ",
+                      f"Validation Loss: {val_loss:.3e} ",
+                      f"Best Validation Loss: {best_val_loss:.3e}")
 
             if train_loss < best_train_loss:
                 best_train_loss = train_loss
-                torch.save(self.model, model_path + "_curr.pt")
-                torch.save(self.optimizer, model_path + "_optimizer_curr.pt")
+                best_train_model_state_dict = deepcopy(self.model.state_dict())
+                # torch.save(self.model.state_dict(), self.model_dir + "/model_curr.pt")
+                # torch.save(self.optimizer.state_dict(), self.model_dir + "/optimizer_curr.pt")
 
             if epoch % 5 == 0:
-                torch.save(self.model, model_path + "_epoch" + str(epoch) + ".pt")
+                torch.save({"epoch": epoch,
+                            "model_state_dict": self.model.state_dict(),
+                            "optimizer_state_dict": self.optimizer.state_dict(),
+                            "loss": train_loss},
+                           self.model_dir + "/model_epoch" + str(epoch) + ".pt")
 
+            torch.save(best_model_state_dict, self.model_dir + "/model.pt")
+            torch.save(best_train_model_state_dict, self.model_dir + "/model_train.pt")
             elapsed_time = time.time() - start_time
             # Print elapsed time in minutes
-            print("Elapsed time: {:.2f} minutes".format(elapsed_time / 60))
+            print(f"Elapsed time: {elapsed_time / 60:.2f} minutes")
 
     # Train the model in batches
-    def TrainEpoch(self) -> float:
+    def train_epoch(self) -> float:
         """
         Train the model in batches
 
@@ -195,7 +200,7 @@ class TrainModel:
             # Print batch number and loss
 
             if batch_idx % 10 == 0:
-                print("Batch: {}, Loss: {}".format(batch_idx, loss))
+                print(f"Batch: {batch_idx}, Loss: {loss:.3e} ")
 
             # Backward propagation
             loss.backward()
@@ -204,10 +209,8 @@ class TrainModel:
             self.optimizer.step()
 
             # Update the training loss
-            # train_loss += loss.item() * data.size(0)
-            # num_dataset += data.size(0)
-            train_loss += loss.item()
-            num_dataset += 1
+            train_loss += loss.item() * data.size(0)
+            num_dataset += data.size(0)
 
         # Return the training loss
 
@@ -247,17 +250,15 @@ class TrainModel:
                 loss = self.criterion(output, target)
 
                 # Update the validation loss
-                # val_loss += loss.item() * data.size(0)
-                # num_dataset += data.size(0)
-                val_loss += loss.item()
-                num_dataset += 1
+                val_loss += loss.item() * data.size(0)
+                num_dataset += data.size(0)
 
         # Return the validation loss
 
         return val_loss / num_dataset
 
     # Test the model in batches
-    def Test(self, test_loader: torch.utils.data.DataLoader) -> float:
+    def test(self, test_loader: torch.utils.data.DataLoader) -> float:
         """
         Test the model in batches
 
@@ -268,4 +269,7 @@ class TrainModel:
             test loss
         """
 
-        return self.validate_epoch(test_loader)
+        test_loss = self.validate_epoch(test_loader)
+        print("Test Loss: {:.3e} ".format(test_loss))
+        torch.save(test_loss, self.model_dir + "/test_loss.pt")
+

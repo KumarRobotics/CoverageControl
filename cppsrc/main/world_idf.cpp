@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
   CoverageControl::CudaUtils::SetUseCuda(false);
   Parameters params;
   params.pNumRobots = 1;
-  params.pNumFeatures = 2;
+  params.pNumGaussianFeatures = 2;
   params.pNumPolygons = 20;
   params.pWorldMapSize = 1024;
   params.pMaxVertices = 7;

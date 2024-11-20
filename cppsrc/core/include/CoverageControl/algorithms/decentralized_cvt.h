@@ -32,16 +32,11 @@
 #include <omp.h>
 
 #include <algorithm>
-#include <fstream>
 #include <iostream>
-#include <queue>
-#include <random>
-#include <set>
 #include <vector>
 
 #include "CoverageControl/algorithms/abstract_controller.h"
 #include "CoverageControl/coverage_system.h"
-#include "CoverageControl/extern/lsap/Hungarian.h"
 #include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
@@ -85,17 +80,17 @@ class DecentralizedCVT : public AbstractController {
 
   PointVector GetActions() { return actions_; }
 
-  auto GetGoals() { return goals_; }
+  PointVector GetGoals() { return goals_; }
 
   void ComputeGoals() {
 #pragma omp parallel for num_threads(num_robots_)
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-      auto const &pos = robot_global_positions_[iRobot];
+      Point2 const &pos = robot_global_positions_[iRobot];
       MapUtils::MapBounds index, offset;
       MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize,
                                params_.pWorldMapSize, index, offset);
-      auto robot_map = env_.GetRobotMap(iRobot);
-      auto robot_local_map = robot_map.block(index.left + offset.left,
+      MapType robot_map = env_.GetRobotMap(iRobot);
+      MapType robot_local_map = robot_map.block(index.left + offset.left,
                                              index.bottom + offset.bottom,
                                              offset.width, offset.height);
       Point2 map_translation(
@@ -119,7 +114,7 @@ class DecentralizedCVT : public AbstractController {
       /* std::cout << "Voronoi: " << robot_positions[0][0] << " " <<
        * robot_positions[0][1] << std::endl; */
       int count = 1;
-      for (auto const &pos : robot_neighbors_pos) {
+      for (Point2 const &pos : robot_neighbors_pos) {
         robot_positions[count] = pos - map_translation;
         ++count;
       }

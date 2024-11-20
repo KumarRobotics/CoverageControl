@@ -30,7 +30,6 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_CUDA_UTILS_H_
 
 #include <iostream>
-#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -101,13 +100,14 @@ class CudaUtils {
     if (devices.empty()) {
       device_id_ = FindDevice();
     } else {
-      device_id_ = GPUGetMaxGflopsDeviceId(devices);
+      /* device_id_ = GPUGetMaxGflopsDeviceId(devices); */
+      device_id_ = 0;
     }
     if (device_id_ < 0) {
       std::cerr << "No CUDA device found" << std::endl;
       return false;
     }
-    std::cout << "Initializing CUDA device " << device_id_ << std::endl;
+    /* std::cout << "Initializing CUDA device " << device_id_ << std::endl; */
     if (GPUDeviceInit(device_id_) != device_id_) {
       std::cerr << "Failed to initialize CUDA device" << std::endl;
       return false;

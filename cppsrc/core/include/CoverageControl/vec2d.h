@@ -30,7 +30,6 @@
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_VEC2D_H_
 
 #include <cmath>
-#include <ostream>
 
 #include "CoverageControl/constants.h"
 

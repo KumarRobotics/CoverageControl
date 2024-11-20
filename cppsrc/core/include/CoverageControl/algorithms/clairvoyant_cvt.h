@@ -32,16 +32,10 @@
 #include <omp.h>
 
 #include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <queue>
-#include <random>
-#include <set>
 #include <vector>
 
 #include "CoverageControl/algorithms/abstract_controller.h"
 #include "CoverageControl/coverage_system.h"
-#include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/typedefs.h"
 

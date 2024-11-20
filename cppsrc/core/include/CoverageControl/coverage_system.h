@@ -35,7 +35,6 @@
 
 #include <Eigen/Dense>  // Eigen is used for maps
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <list>
 #include <mutex>
@@ -46,7 +45,6 @@
 
 #include "CoverageControl/bivariate_normal_distribution.h"
 #include "CoverageControl/constants.h"
-#include "CoverageControl/extern/lsap/Hungarian.h"
 #include "CoverageControl/map_utils.h"
 #include "CoverageControl/parameters.h"
 #include "CoverageControl/plotter.h"
@@ -66,12 +64,10 @@ namespace CoverageControl {
  * library.
  */
 class CoverageSystem {
-  Parameters const params_;         //!< Parameters for the coverage system
-  WorldIDF world_idf_;              //!< World IDF
-  size_t num_robots_ = 0;           //!< Number of robots
-  std::vector<RobotModel> robots_;  //!< Vector of robots of type RobotModel
-  std::vector<std::pair<MapType, MapType>>
-      communication_maps_;  //!< Communication maps (2 channels) for each robot
+  Parameters const params_;          //!< Parameters for the coverage system
+  std::shared_ptr <WorldIDF> world_idf_ptr_; //!< World IDF object
+  size_t num_robots_ = 0;            //!< Number of robots
+  std::vector<RobotModel> robots_;   //!< Vector of robots of type RobotModel
   double normalization_factor_ = 0;  //!< Normalization factor for the world IDF
   Voronoi voronoi_;                  //!< Voronoi object
   std::vector<VoronoiCell> voronoi_cells_;  //!< Voronoi cells for each robot
@@ -235,6 +231,18 @@ class CoverageSystem {
     robots_[robot_id].SetGlobalRobotPosition(global_pos);
     PostStepCommands(robot_id);
   }
+  //
+  //! Set the global positions of all robots
+  void SetGlobalRobotPositions(PointVector const &global_positions) {
+    if (global_positions.size() != num_robots_) {
+      throw std::length_error{
+          "The size of the positions don't match with the number of robots"};
+    }
+    for (size_t i = 0; i < num_robots_; ++i) {
+      robots_[i].SetGlobalRobotPosition(global_positions[i]);
+    }
+    PostStepCommands();
+  }
 
   //! Set the positions of all robots with respect to their current positions
   //! \note Same as SetLocalRobotPositions
@@ -251,8 +259,8 @@ class CoverageSystem {
 
   //! Set the world IDF and recompute the world map
   void SetWorldIDF(WorldIDF const &world_idf) {
-    world_idf_ = world_idf;
-    normalization_factor_ = world_idf_.GetNormalizationFactor();
+    world_idf_ptr_.reset(new WorldIDF{world_idf});
+    normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
   }
   //! @}
 
@@ -334,13 +342,12 @@ class CoverageSystem {
     if (params_.pCheckOscillations == false) {
       return false;
     }
-    if (robot_positions_history_[robot_id].size() < 2) {
+    if (robot_positions_history_[robot_id].size() < 3) {
       return false;
     }
     auto const &history = robot_positions_history_[robot_id];
     Point2 const last_pos = history.back();
-    auto it_end = std::next(history.crbegin(),
-                            std::max(6, static_cast<int>(history.size()) - 1));
+    auto it_end = std::next(history.crbegin(), std::min(6, static_cast<int>(history.size()) - 1));
     bool flag = false;
     int count = 0;
     std::for_each(history.crbegin(), it_end,
@@ -433,7 +440,6 @@ class CoverageSystem {
   void PlotInitMap(std::string const &, std::string const &) const;
   void PlotRobotLocalMap(std::string const &, int const &, int const &);
   void PlotRobotSystemMap(std::string const &, int const &, int const &);
-  void PlotRobotIDFMap(std::string const &, int const &, int const &);
   void PlotRobotExplorationMap(std::string const &, int const &, int const &);
   void PlotRobotSensorView(std::string const &, int const &, int const &);
   void PlotRobotObstacleMap(std::string const &, int const &, int const &);
@@ -458,14 +464,23 @@ class CoverageSystem {
   //! \name Getters
   //
   //! @{
-  const auto &GetWorldIDFObject() const { return world_idf_; }
+  std::shared_ptr<const WorldIDF> GetWorldIDFPtr() const {
+    return world_idf_ptr_;
+  }
+  const WorldIDF &GetWorldIDFObject() const { return *world_idf_ptr_; }
   const MapType &GetSystemMap() const { return system_map_; }
   const MapType &GetSystemExplorationMap() const { return exploration_map_; }
   const MapType &GetSystemExploredIDFMap() const { return explored_idf_map_; }
+  MapType &GetSystemExploredIDFMapMutable() { return explored_idf_map_; }
   //! Get the world map
-  const MapType &GetWorldMap() const { return world_idf_.GetWorldMap(); }
+  const MapType &GetWorldMap() const { return world_idf_ptr_->GetWorldMap(); }
   //! Get the world map (mutable)
-  MapType &GetWorldMapMutable() { return world_idf_.GetWorldMapMutable(); }
+  MapType &GetWorldMapMutable() { return world_idf_ptr_->GetWorldMapMutable(); }
+
+  MapType &GetRobotMapMutable(size_t const id) {
+    CheckRobotID(id);
+    return robots_[id].GetRobotMapMutable();
+  }
 
   inline auto GetNumRobots() const { return num_robots_; }
   inline auto GetNumFeatures() const { return num_robots_; }
@@ -567,14 +582,17 @@ class CoverageSystem {
     return robot_neighbors_pos;
   }
 
-  std::pair<MapType, MapType> const &GetCommunicationMap(size_t const, size_t);
+  std::pair<MapType, MapType> GetRobotCommunicationMaps(size_t const, size_t);
 
-  const auto &GetCommunicationMaps(size_t map_size) {
-#pragma omp parallel for num_threads(num_robots_)
+  std::vector<MapType> GetCommunicationMaps(size_t map_size) {
+    std::vector<MapType> communication_maps(2 * num_robots_);
+    /* #pragma omp parallel for num_threads(num_robots_) */
     for (size_t i = 0; i < num_robots_; ++i) {
-      GetCommunicationMap(i, map_size);
+      auto comm_map = GetRobotCommunicationMaps(i, map_size);
+      communication_maps[2 * i] = comm_map.first;
+      communication_maps[2 * i + 1] = comm_map.second;
     }
-    return communication_maps_;
+    return communication_maps;
   }
 
   auto GetObjectiveValue() {
@@ -605,7 +623,7 @@ class CoverageSystem {
   //! centroid.
   std::vector<double> GetLocalVoronoiFeatures(int const robot_id);
 
-  auto GetLocalVoronoiFeatures() {
+  std::vector<std::vector<double>> GetLocalVoronoiFeatures() {
     std::vector<std::vector<double>> features(num_robots_);
 #pragma omp parallel for num_threads(num_robots_)
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -615,12 +633,12 @@ class CoverageSystem {
   }
 
   auto GetVoronoiCells() { return voronoi_cells_; }
-  auto &GetVoronoi() { return voronoi_; }
+  Voronoi &GetVoronoi() { return voronoi_; }
 
   auto GetVoronoiCell(int const robot_id) { return voronoi_cells_[robot_id]; }
 
   double GetNormalizationFactor() {
-    normalization_factor_ = world_idf_.GetNormalizationFactor();
+    normalization_factor_ = world_idf_ptr_->GetNormalizationFactor();
     return normalization_factor_;
   }
 

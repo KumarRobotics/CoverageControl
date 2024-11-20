@@ -31,13 +31,13 @@
 
 #include <CGAL/Boolean_set_operations_2.h>
 #include <CGAL/Polygon_2_algorithms.h>
-
 #include <omp.h>
-#include <vector>
-#include <list>
 
-#include "CoverageControl/typedefs.h"
+#include <list>
+#include <vector>
+
 #include "CoverageControl/cgal/config.h"
+#include "CoverageControl/typedefs.h"
 
 namespace CoverageControl {
 
