@@ -34,7 +34,6 @@ import numpy
 import torch
 import torch_geometric
 import torchvision
-from scipy.spatial import distance_matrix
 
 from .core import CoverageSystem, DblVector, DblVectorVector, Parameters, PointVector
 
@@ -335,33 +334,6 @@ class CoverageEnvUtils:
 
         return edge_weights
 
-    # Legacy edge weights used in previous research
-    # The weights are proportional to the distance
-    # Trying to move away from this
-    @staticmethod
-    def robot_positions_to_edge_weights(
-        robot_positions: PointVector, world_map_size: int, comm_range: float
-    ) -> torch.Tensor:
-        """
-        Convert robot positions to edge weights
-
-        Args:
-            robot_positions: robot positions
-            world_map_size: size of the world map
-            comm_range: communication range
-
-        Returns:
-            torch.Tensor: edge weights
-        """
-        x = numpy.array(robot_positions)
-        s_mat = distance_matrix(x, x)
-        s_mat[s_mat > comm_range] = 0
-        c_mat = (world_map_size**2) / (s_mat.shape[0] ** 2)
-        c_mat = 3 / c_mat
-        graph_obs = c_mat * s_mat
-
-        return graph_obs
-
     @staticmethod
     def get_torch_geometric_data(
         env: CoverageSystem,
@@ -431,3 +403,32 @@ class CoverageEnvUtils:
     #         maps[r_idx][3] = heatmap_y
 
     #     return maps
+
+
+    # Legacy edge weights used in previous research
+    # The weights are proportional to the distance
+    # Trying to move away from this
+    # @staticmethod
+    # def robot_positions_to_edge_weights(
+    #     robot_positions: PointVector, world_map_size: int, comm_range: float
+    # ) -> torch.Tensor:
+    #     """
+    #     Convert robot positions to edge weights
+
+    #     Args:
+    #         robot_positions: robot positions
+    #         world_map_size: size of the world map
+    #         comm_range: communication range
+
+    #     Returns:
+    #         torch.Tensor: edge weights
+    #     """
+    #     x = numpy.array(robot_positions)
+    #     s_mat = distance_matrix(x, x)
+    #     s_mat[s_mat > comm_range] = 0
+    #     c_mat = (world_map_size**2) / (s_mat.shape[0] ** 2)
+    #     c_mat = 3 / c_mat
+    #     graph_obs = c_mat * s_mat
+
+    #     return graph_obs
+

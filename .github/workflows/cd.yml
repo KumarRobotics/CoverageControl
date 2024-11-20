@@ -40,7 +40,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pypa/cibuildwheel@v2.17
+      - uses: pypa/cibuildwheel@v2.21
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
@@ -81,26 +81,40 @@ jobs:
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.2-cuda12.2.2-ros2humble
+          base_tag: jammy-torch2.5.1-cuda12.4.1
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.2-ros2humble
+          base_tag: jammy-torch2.5.1-humble
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.2-cuda12.2.2
+          base_tag: jammy-torch2.5.1-cuda12.4.1-humble
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f
       - name: 'CI docker base'
         uses: ./.github/docker-base-action
         with:
-          base_tag: pytorch2.2.2
+          base_tag: jammy-torch2.5.1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: noble-torch2.5.1-jazzy
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: noble-torch2.5.1
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -33,26 +33,30 @@ device = torch.device("cpu")
 
 with torch.no_grad():
     model_file = os.path.join(
-        script_dir, "data/lpac/models/model_k3_1024_state_dict.pt"
-    )
+            script_dir, "data/lpac/models/model_k3_1024_state_dict.pt"
+            )
     learning_config_file = os.path.join(
-        script_dir, "data/params/learning_params.toml"
-    )
+            script_dir, "data/params/learning_params.toml"
+            )
     learning_config = IOUtils.load_toml(learning_config_file)
     lpac_model = cc_nn.LPAC(learning_config).to(device)
-    lpac_model.load_state_dict(torch.load(model_file))
+    lpac_model.load_state_dict(torch.load(model_file, weights_only=True))
 
     lpac_model.eval()
 
     use_comm_maps = learning_config["ModelConfig"]["UseCommMaps"]
     map_size = learning_config["CNNBackBone"]["ImageSize"]
 
-    lpac_inputs = torch.load(os.path.join(script_dir, "data/lpac/lpac_inputs.pt"))
+    lpac_inputs_dict = torch.load(os.path.join(script_dir, "data/lpac/lpac_inputs.pt"), weights_only=True)
+    lpac_inputs = [torch_geometric.data.Data.from_dict(d) for d in lpac_inputs_dict]
 
 
 def test_cnn():
     with torch.no_grad():
-        ref_cnn_outputs = torch.load(os.path.join(script_dir, "data/lpac/cnn_outputs.pt"))
+        ref_cnn_outputs = torch.load(
+                os.path.join(script_dir, "data/lpac/cnn_outputs.pt"),
+                weights_only=True
+                )
         cnn_model = lpac_model.cnn_backbone.to(device).eval()
 
         for i in range(0, len(lpac_inputs)):
@@ -76,8 +80,9 @@ def test_cnn():
 def test_lpac():
     with torch.no_grad():
         ref_lpac_outputs = torch.load(
-            os.path.join(script_dir, "data/lpac/lpac_outputs.pt")
-        )
+                os.path.join(script_dir, "data/lpac/lpac_outputs.pt"),
+                weights_only=True
+                )
 
         for i in range(0, len(lpac_inputs)):
             lpac_output = lpac_model(lpac_inputs[i])

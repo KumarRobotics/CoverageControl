@@ -1,5 +1,5 @@
 ARG BASE_IMAGE=ghcr.io/kumarrobotics/pytorch_base
-ARG BASE_TAG=pytorch2.2.2
+ARG BASE_TAG=latest
 ARG SETUP_ARGS="--with-cuda"
 
 FROM ${BASE_IMAGE}:${BASE_TAG}
