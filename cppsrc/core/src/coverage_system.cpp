@@ -129,6 +129,11 @@ CoverageSystem::CoverageSystem(Parameters const &params,
   }
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
+  if(params_.pNumRobots != num_robots_) {
+    std::cerr << "Number of robots in the file does not match the number of robots in the parameters\n";
+    std::cerr << "Number of robots in the file: " << num_robots_ << " Number of robots in the parameters: " << params_.pNumRobots << std::endl;
+    exit(1);
+  }
   for (Point2 const &pos : robot_positions) {
     robots_.push_back(RobotModel(params_, pos, world_idf_ptr_));
   }
