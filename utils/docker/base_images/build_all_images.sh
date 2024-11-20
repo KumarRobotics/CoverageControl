@@ -52,3 +52,4 @@ TAG_NAME=latest
 build_image $1 $TAG_NAME ubuntu24.04/Dockerfile
 
 docker buildx build --platform linux/arm64 -t ${1}:arm64-jammy-torch2.5.1-humble -f ubuntu22.04/arm64-ros2.Dockerfile --push .
+docker buildx build --platform linux/arm64 -t ${1}:arm64-noble-torch2.5.1-jazzy -f ubuntu24.04/arm64-ros2.Dockerfile --push .

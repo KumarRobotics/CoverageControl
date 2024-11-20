@@ -23,6 +23,7 @@ RUN apt-get	-y update; \
 											 gpg \
 											 curl \
 											 gdb \
+                       libbz2-dev \
 											 software-properties-common \
 											 ca-certificates \
 											 lsb-release \
@@ -71,4 +72,4 @@ RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
 ENV VENV_PATH=/opt/venv
 
 COPY .bashrc /root/.bashrc
-RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc
+RUN echo 'LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}' >> /root/.bashrc

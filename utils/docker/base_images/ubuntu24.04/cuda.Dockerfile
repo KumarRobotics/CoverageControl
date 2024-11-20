@@ -23,6 +23,7 @@ RUN apt-get	-y update; \
 											 gpg \
 											 curl \
 											 gdb \
+                       libbz2-dev \
 											 software-properties-common \
 											 ca-certificates \
 											 lsb-release \

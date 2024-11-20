@@ -14,7 +14,7 @@ print_usage() {
 eval set -- "$params"
 unset params
 
-IMAGE_BASE_NAME=ghcr.io/kumarrobotics/coveragecontrol
+IMAGE_BASE_NAME=ghcr.io/kumarrobotics/pytorch_base
 IMAGE_TAG=latest
 
 NOBLE=false
@@ -73,6 +73,7 @@ fi
 docker run -it \
 	--name=${CONTAINER_NAME} \
 	${CONTAINER_OPTIONS} \
+  --env=CoverageControl_WS=${CONTAINER_CC_WS} \
 	--net=host \
 	--privileged \
 	--ipc=host \

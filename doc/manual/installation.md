@@ -77,7 +77,7 @@ docker start -i coverage-control-$USER # Replace with the name of the container
 - `--with-ros` : With ROS support
 - `--noble` : Ubuntu 24.04 Noble
 
-The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tags for different versions and configurations.
+The base image is `ghcr.io/\repo_owner_lower/pytorch_base` with different tags for different versions and configurations.
 
 |Tags Suffix | Flags|
 |--- | ---|
@@ -85,11 +85,18 @@ The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tag
 |`jammy-torch2.5.1-cuda12.4.1` | `--with-cuda`|
 |`jammy-torch2.5.1-humble` | `--with-ros`|
 |`jammy-torch2.5.1` | None|
+|`noble-torch2.5.1-cuda12.6.2-jazzy` | `--with-ros --with-cuda --noble`|
+|`noble-torch2.5.1-cuda12.6.2` | `--with-cuda --noble`|
 |`noble-torch2.5.1-jazzy` | `--with-ros --noble`|
 |`noble-torch2.5.1` | --noble|
 
-The library is already built and installed in the container.
-However, if you want to build it again, you can do so following the [Installation from Source](#installation-from-source) instructions (except for the prerequisites).
+
+Install the library available on PyPI:
+```bash
+pip install coverage_control
+```
+
+Alternatively, follow the [Installation from Source](#installation-from-source) instructions (except for the prerequisites).
 
 --------
 

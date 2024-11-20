@@ -129,7 +129,7 @@ CoverageSystem::CoverageSystem(Parameters const &params,
   }
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
-  if(params_.pNumRobots != num_robots_) {
+  if(params_.pNumRobots != static_cast<int>(num_robots_)) {
     std::cerr << "Number of robots in the file does not match the number of robots in the parameters\n";
     std::cerr << "Number of robots in the file: " << num_robots_ << " Number of robots in the parameters: " << params_.pNumRobots << std::endl;
     exit(1);

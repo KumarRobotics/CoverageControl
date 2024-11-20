@@ -49,10 +49,11 @@ RUN apt-get -y install \
 											 libgeos-dev \
 											 libyaml-cpp-dev \
 											 vim \
+                       neovim \
 											 tmux \
 											 ffmpeg \
+											 unzip \
 											 gnuplot-nox \
-                       unzip \
 											 ninja-build libpng-dev libjpeg-dev libopencv-dev python3-opencv
 
 RUN add-apt-repository universe
@@ -69,6 +70,7 @@ RUN rm -rf /var/lib/apt/lists/*; \
 		rm -f /var/cache/apt/archives/parital/*.deb; \
 		rm -f /var/cache/apt/*.bin
 
+RUN mkdir -p /opt
 RUN mkdir download; \
 		wget https://github.com/AgarwalSaurav/libtorch_arm64/releases/download/v${PYTORCH_VERSION}/libtorch-cxx11-abi-shared-with-deps-${PYTORCH_VERSION}.zip -O download/libtorch.zip; \
 		unzip download/libtorch.zip -d /opt/; \
