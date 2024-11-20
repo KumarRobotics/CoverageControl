@@ -87,7 +87,7 @@ manylinux-aarch64-image = "manylinux_2_28"
 
 [tool.cibuildwheel.linux]
 environment = { PATH="/usr/local/cuda/bin:$PATH", LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH" }
-before-all = "bash setup_utils/manylinux_2_28_before-all.sh"
+before-all = "bash utils/setup/manylinux_2_28_before-all.sh"
 repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
 
 [tool.cibuildwheel.macos]
@@ -101,7 +101,7 @@ testpaths = ["python/tests"]
 
 [tool.pylint]
 py-version = "3.10"
-ignore-paths = [".*/_version.py", "cppsrc/*", "setup_utils/*", "python/coverage_control/_version.py"]
+ignore-paths = [".*/_version.py", "cppsrc/*", "utils/*", "python/coverage_control/_version.py"]
 extension-pkg-allow-list = ["coverage_control._core"]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"

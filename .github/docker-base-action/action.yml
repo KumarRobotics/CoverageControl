@@ -48,7 +48,7 @@ runs:
       with:
         provenance: false
         platforms: linux/amd64
-        file: setup_utils/docker/Dockerfile
+        file: utils/docker/Dockerfile
         build-args: |
           BASE_TAG=${{ inputs.base_tag }}
           BUILDKIT_CONTEXT_KEEP_GIT_DIR=1

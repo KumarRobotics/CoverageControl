@@ -21,9 +21,9 @@ git clone https://github.com/KumarRobotics/CoverageControl.git \
 --------
 
 ## Docker Container
-Container can be created using the script in `setup_utils/create_container.sh`.
+Container can be created using the script in `utils/docker/create_container.sh`.
 ```bash
-cd ${CoverageControl_ws}/src/CoverageControl/setup_utils
+cd ${CoverageControl_ws}/src/CoverageControl/utils/docker
 bash create_container.sh --with-cuda -d ${CoverageControl_ws} # See flags below
 ```
 

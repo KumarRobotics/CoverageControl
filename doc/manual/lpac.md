@@ -25,7 +25,7 @@ The models folder already contains a trained LPAC model for a 1024x1024 environm
 
 # Dataset Generation
 
-There are two ways to classes for dataset generation located in `python/scripts/data_generation/`
+There are two ways to classes for dataset generation located in `python/data_generation/`
 1. `simple_data_generation.py`
 2. `data_generation.py`
 
@@ -33,7 +33,7 @@ They are similar, except that `data_generation.py` splits the dataset into train
 
 To generate a dataset, run the following command:
 ```bash
-python python/scripts/data_generation/data_generation.py \
+python python/data_generation/data_generation.py \
        ${CoverageControl_ws}/lpac/params/data_params.toml
 ```
 
@@ -48,7 +48,7 @@ See `python/utils/process_data.sh` and `python/utils/dataset_utils.py` for tools
 
 To train the LPAC model, run the following command:
 ```bash
-python python/scripts/training/train_lpac.py \
+python python/training/train_lpac.py \
        ${CoverageControl_ws}/lpac/params/learning_params.toml 1024
 ```
 
@@ -56,21 +56,21 @@ The second argument is the environment size, used to normalize the input feature
 A sample `learning_params.toml` file is also provided in the `params` directory of the repository. See the file for details on the parameters.
 
 # Evaluation
-There are two scripts for evaluation located in `python/scripts/evaluators/`
-1. [eval_single_env.py](python/scripts/evaluators/eval_single_env.py)
-2. [eval.py](python/scripts/evaluators/eval.py)
+There are two scripts for evaluation located in `python/evaluators/`
+1. [eval_single_env.py](python/evaluators/eval_single_env.py)
+2. [eval.py](python/evaluators/eval.py)
 
 `eval_single_env.py` evaluates a single environment and `eval.py` evaluates multiple environments.
 
 To evaluate a trained model, run the following command:
 ```bash
-python python/scripts/evaluators/eval.py \
+python python/evaluators/eval.py \
        ${CoverageControl_ws}/lpac/params/eval.toml
 ```
 or
 ```bash
-python python/scripts/evaluators/eval_single_dataset.py \
-       ${CoverageControl_ws}/lpac/params/eval_single_env.toml
+python python/evaluators/eval_single_env.py \
+       ${CoverageControl_ws}/lpac/params/eval_single.toml
 ```
 
 The `eval.toml` and `eval_single.toml` files are also provided in the `params` directory of the repository.

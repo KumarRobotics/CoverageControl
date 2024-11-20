@@ -53,9 +53,9 @@ git clone https://github.com/KumarRobotics/CoverageControl.git \
 --------
 
 ## Docker Container
-Container can be created using the script in `setup_utils/create_container.sh`.
+Container can be created using the script in `utils/docker/create_container.sh`.
 ```bash
-cd ${CoverageControl_ws}/src/CoverageControl/setup_utils/docker
+cd ${CoverageControl_ws}/src/CoverageControl/utils/docker
 bash create_container.sh --with-cuda -d ${CoverageControl_ws} # See flags below
 ```
 
@@ -75,15 +75,18 @@ docker start -i coverage-control-$USER # Replace with the name of the container
 - `-n <name>`: Name of the container (default: `coverage-control-$USER`)
 - `--with-cuda` : With CUDA support
 - `--with-ros` : With ROS support
+- `--noble` : Ubuntu 24.04 Noble
 
 The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tags for different versions and configurations.
 
 |Tags Suffix | Flags|
 |--- | ---|
-|`python2.2.2-cuda12.2.2-ros2humble` | `--with-ros --with-cuda`|
-|`python2.2.2-cuda12.2.2` | `--with-cuda`|
-|`python2.2.2-ros2humble` | `--with-ros`|
-|`python2.2.2` | None|
+|`jammy-torch2.5.1-cuda12.4.1-humble` | `--with-ros --with-cuda`|
+|`jammy-torch2.5.1-cuda12.4.1` | `--with-cuda`|
+|`jammy-torch2.5.1-humble` | `--with-ros`|
+|`jammy-torch2.5.1` | None|
+|`noble-torch2.5.1-jazzy` | `--with-ros --noble`|
+|`noble-torch2.5.1` | --noble|
 
 The library is already built and installed in the container.
 However, if you want to build it again, you can do so following the [Installation from Source](#installation-from-source) instructions (except for the prerequisites).

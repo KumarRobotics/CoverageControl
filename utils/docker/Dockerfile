@@ -9,7 +9,7 @@ RUN ["bash", "-c", "/app/setup.sh ${SETUP_ARGS}"]
 RUN ${VENV_PATH}/bin/pip install coverage_control
 
 RUN echo "export CoverageControl_ws=/workspace" >> /root/.bashrc
-COPY setup_utils/docker/entrypoint.sh /entrypoint.sh
+COPY utils/docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 

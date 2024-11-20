@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install dependencies
-        run: sudo bash ./setup_utils/install_dependencies.sh  --boost --gmp --mpfr --eigen --cgal
+        run: sudo bash ./utils/setup/install_dependencies.sh  --boost --gmp --mpfr --eigen --cgal
 
       - name: Build SDist
         run: pipx run build --sdist
@@ -103,6 +103,20 @@ jobs:
         uses: ./.github/docker-base-action
         with:
           base_tag: jammy-torch2.5.1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: noble-torch2.5.1-cuda12.6.2
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: cleanup
+        run: docker system prune -a -f
+      - name: 'CI docker base'
+        uses: ./.github/docker-base-action
+        with:
+          base_tag: noble-torch2.5.1-cuda12.6.2-jazzy
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: cleanup
         run: docker system prune -a -f

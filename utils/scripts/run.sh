@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Set the script directory based on the CoverageControl_ws environment variable
-SCRIPT_DIR="${CoverageControl_ws}/src/CoverageControl/python/scripts"
+SCRIPT_DIR="${CoverageControl_ws}/src/CoverageControl/python"
 
 # Set the parameters directory based on the environment variable
-PARAMS_DIR="${CoverageControl_ws}/zh/256/params/"
+PARAMS_DIR="${CoverageControl_ws}/lpac/params/"
 
 # Define the parameter file names
 DATA_PARAMS_FILE="data_params.toml"
 # DATA_GEN_ALGORITHM="--algorithm CentralizedCVT"
-LEARNING_PARAMS_FILE="learning_params_k3.toml"
+LEARNING_PARAMS_FILE="learning_params.toml"
 EVAL_PARAMS_FILE="eval.toml"
 
 # Function to print messages in red
