@@ -1,33 +1,24 @@
 <map id="robot_model.h" name="robot_model.h">
-<area shape="rect" id="Node000001" title="Class for handling the robot model." alt="" coords="484,5,587,30"/>
-<area shape="rect" id="Node000002" href="$coverage__system_8h.html" title="The file contains the CoverageSystem class, which is the main class for the coverage control library." alt="" coords="469,78,601,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="538,46,538,78,533,78,533,46"/>
-<area shape="rect" id="Node000003" href="$abstract__controller_8h.html" title="Contains the abstract class for coverage control algorithms." alt="" coords="412,151,552,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="519,117,493,152,488,149,515,114"/>
-<area shape="rect" id="Node000004" href="$centralized__cvt_8h.html" title="Contains the class CentralizedCVT." alt="" coords="24,230,142,255"/>
-<area shape="poly" id="edge11_Node000002_Node000004" title=" " alt="" coords="479,110,335,153,114,232,113,227,333,148,477,105"/>
-<area shape="rect" id="Node000005" href="$clairvoyant__cvt_8h.html" title="Clairvoyant CVT algorithm." alt="" coords="167,230,285,255"/>
-<area shape="poly" id="edge12_Node000002_Node000005" title=" " alt="" coords="487,111,383,153,305,195,245,232,242,227,303,190,381,148,485,106"/>
-<area shape="rect" id="Node000006" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="27,310,185,335"/>
-<area shape="poly" id="edge13_Node000002_Node000006" title=" " alt="" coords="454,103,336,118,203,144,141,160,86,179,43,201,15,225,8,242,15,261,26,276,41,289,74,307,71,312,38,293,22,280,10,263,3,242,10,222,40,196,84,174,139,155,202,138,336,113,453,97"/>
-<area shape="rect" id="Node000007" href="$decentralized__cvt_8h.html" title="Contains the DecentralizedCVT class." alt="" coords="309,230,441,255"/>
-<area shape="poly" id="edge15_Node000002_Node000007" title=" " alt="" coords="469,111,433,128,403,152,391,171,383,192,378,230,373,229,378,191,386,169,399,149,430,123,466,106"/>
-<area shape="rect" id="Node000008" href="$near__optimal__cvt_8h.html" title="NearOptimalCVT class Global offline oracle: has complete information about the environment...." alt="" coords="466,230,596,255"/>
-<area shape="poly" id="edge16_Node000002_Node000008" title=" " alt="" coords="553,115,565,143,567,160,566,176,555,207,541,231,537,228,550,204,561,175,562,160,559,145,548,117"/>
-<area shape="rect" id="Node000009" href="$oracle__bang__explore__exploit_8h.html" title="First trial of oracle with exploration and exploitation. The oracle uses complete information about t..." alt="" coords="621,223,761,262"/>
-<area shape="poly" id="edge17_Node000002_Node000009" title=" " alt="" coords="560,111,674,221,670,225,556,115"/>
-<area shape="rect" id="Node000010" href="$oracle__explore__exploit_8h.html" title="Old trial of exploration and exploitation Uses system map for exploration as well." alt="" coords="786,230,946,255"/>
-<area shape="poly" id="edge18_Node000002_Node000010" title=" " alt="" coords="576,107,842,227,839,232,573,112"/>
-<area shape="rect" id="Node000011" href="$simul__explore__exploit_8h.html" title="Simultaneous exploration and exploitation algorithm Uses frontier&#45;based exploration with bias towards..." alt="" coords="970,230,1127,255"/>
-<area shape="poly" id="edge19_Node000002_Node000011" title=" " alt="" coords="587,105,710,148,767,173,870,199,994,227,993,232,869,205,765,178,708,153,586,111"/>
-<area shape="rect" id="Node000012" href="$coverage__system_8cpp.html" title="Contains the implementation of the CoverageSystem class." alt="" coords="778,151,924,175"/>
-<area shape="poly" id="edge14_Node000002_Node000012" title=" " alt="" coords="603,104,799,147,798,153,602,109"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="398,181,156,226,128,232,127,227,155,221,397,175"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="430,183,265,232,264,227,428,178"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="456,187,393,232,390,228,453,182"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="499,187,526,228,522,231,495,190"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="529,179,641,220,640,225,527,184"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="555,176,809,227,808,232,554,181"/>
-<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="567,170,747,191,958,221,994,227,993,232,957,226,747,196,566,176"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="197,266,126,312,123,307,194,261"/>
+<area shape="rect" id="Node000001" title="Class for handling the robot model." alt="" coords="526,5,630,30"/>
+<area shape="rect" id="Node000002" href="$coverage__system_8h.html" title="The file contains the CoverageSystem class, which is the main class for the coverage control library." alt="" coords="512,78,644,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="580,46,580,78,575,78,575,46"/>
+<area shape="rect" id="Node000003" href="$centralized__cvt_8h.html" title="Contains the class CentralizedCVT." alt="" coords="5,158,124,182"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="497,102,330,122,137,153,108,160,107,154,136,148,330,117,496,97"/>
+<area shape="rect" id="Node000004" href="$clairvoyant__cvt_8h.html" title="Clairvoyant CVT algorithm." alt="" coords="148,158,266,182"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="503,109,285,153,257,160,256,154,284,148,502,104"/>
+<area shape="rect" id="Node000005" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="176,237,334,262"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="497,99,412,116,370,132,330,153,307,173,288,196,263,239,258,236,283,193,303,169,327,148,367,127,411,111,496,94"/>
+<area shape="rect" id="Node000006" href="$coverage__system_8cpp.html" title="Contains the implementation of the CoverageSystem class." alt="" coords="341,158,487,182"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="541,112,440,159,437,155,538,107"/>
+<area shape="rect" id="Node000007" href="$decentralized__cvt_8h.html" title="Contains the DecentralizedCVT class." alt="" coords="512,158,644,182"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="580,118,580,157,575,157,575,118"/>
+<area shape="rect" id="Node000008" href="$near__optimal__cvt_8h.html" title="NearOptimalCVT class Global offline oracle: has complete information about the environment...." alt="" coords="669,158,799,182"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="616,107,711,155,709,159,614,112"/>
+<area shape="rect" id="Node000009" href="$oracle__bang__explore__exploit_8h.html" title="First trial of oracle with exploration and exploitation. The oracle uses complete information about t..." alt="" coords="824,151,964,189"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="641,104,824,149,823,154,639,109"/>
+<area shape="rect" id="Node000010" href="$oracle__explore__exploit_8h.html" title="Old trial of exploration and exploitation Uses system map for exploration as well." alt="" coords="988,158,1149,182"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="660,100,977,148,1012,154,1011,160,976,153,659,105"/>
+<area shape="rect" id="Node000011" href="$simul__explore__exploit_8h.html" title="Simultaneous exploration and exploitation algorithm Uses frontier&#45;based exploration with bias towards..." alt="" coords="1173,158,1329,182"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="660,95,886,115,1161,148,1198,154,1197,160,1160,153,886,120,660,100"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="225,194,250,236,246,238,220,197"/>
 </map>

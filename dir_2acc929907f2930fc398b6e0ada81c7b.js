@@ -5,7 +5,7 @@ var dir_2acc929907f2930fc398b6e0ada81c7b =
     [ "cuda", "dir_157d0757e964408a5e9fc69aa128c467.html", "dir_157d0757e964408a5e9fc69aa128c467" ],
     [ "bivariate_normal_distribution.h", "bivariate__normal__distribution_8h.html", null ],
     [ "constants.h", "constants_8h.html", "constants_8h" ],
-    [ "coverage_system.h", "coverage__system_8h.html", null ],
+    [ "coverage_system.h", "coverage__system_8h.html", "coverage__system_8h" ],
     [ "cuda_utils.h", "cuda__utils_8h.html", "cuda__utils_8h" ],
     [ "generate_world_map.h", "generate__world__map_8h.html", "generate__world__map_8h" ],
     [ "geographiclib_wrapper.h", "geographiclib__wrapper_8h.html", "geographiclib__wrapper_8h" ],
@@ -16,5 +16,5 @@ var dir_2acc929907f2930fc398b6e0ada81c7b =
     [ "typedefs.h", "typedefs_8h.html", "typedefs_8h" ],
     [ "vec2d.h", "vec2d_8h.html", null ],
     [ "voronoi.h", "voronoi_8h.html", null ],
-    [ "world_idf.h", "world__idf_8h.html", null ]
+    [ "world_idf.h", "world__idf_8h.html", "world__idf_8h" ]
 ];

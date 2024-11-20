@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['point2_0',['Point2',['../group__cpp__api__typedefs.html#ga3f07f168f209ff3416eae7485cf2b2ec',1,'CoverageControl']]],
-  ['point2f_1',['Point2f',['../group__cpp__api__typedefs.html#ga86b8dfa83d90450009753e3bd911e07d',1,'CoverageControl']]],
-  ['point3_2',['Point3',['../group__cpp__api__typedefs.html#gadf81a587ad324dad417f496ba8df2622',1,'CoverageControl']]],
-  ['pointvector_3',['PointVector',['../group__cpp__api__typedefs.html#ga3eb2c9229531009f43635928ad308da6',1,'CoverageControl']]]
+  ['cgal_5fpoint2_0',['CGAL_Point2',['../config_8h.html#aff3df9085b0be78296757b1e359ec49b',1,'config.h']]],
+  ['cgal_5fpoint_5flocation_5fresult_1',['CGAL_Point_location_result',['../config_8h.html#a858baa47253d3a34d977d83ed77553da',1,'config.h']]],
+  ['cgal_5fquery_5fresult_2',['CGAL_Query_result',['../config_8h.html#ad8c79168f14a2b56d08a2fa040407ff6',1,'config.h']]],
+  ['coveragealgorithm_3',['CoverageAlgorithm',['../coverage__algorithm_8cpp.html#a2d9117d71606e53fa600a4eee2a71e5b',1,'coverage_algorithm.cpp']]],
+  ['creator_4',['Creator',['../config_8h.html#a4456e5048b0c76733f02921506d4d1ba',1,'config.h']]]
 ];

@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['optimizer_0',['optimizer',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a6e7f6ae6228957cb12294e2ffbc0fbc8',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['origin_5fshift_1',['origin_shift',['../structCoverageControl_1_1VoronoiCell.html#aad5f735c3664e9e5c72728aa0e04f0f8',1,'CoverageControl::VoronoiCell']]],
+  ['output_5fdim_2',['output_dim',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.data_loaders.loaders.LocalMapCNNDataset.output_dim'],['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1VoronoiGNNDataset.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.data_loaders.loaders.VoronoiGNNDataset.output_dim'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.models.config_parser.CNNConfigParser.output_dim'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.models.config_parser.GNNConfigParser.output_dim'],['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.models.lpac.LPAC.output_dim']]],
+  ['output_5flinear_3',['output_linear',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a67eccc967f604a48f7dd2028fff7fc8a',1,'coverage_control::nn::models::lpac::LPAC']]]
+];

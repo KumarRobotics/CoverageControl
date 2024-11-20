@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mapbounds_0',['MapBounds',['../structCoverageControl_1_1MapUtils_1_1MapBounds.html',1,'CoverageControl::MapUtils']]]
+  ['nearoptimalcvt_0',['NearOptimalCVT',['../classCoverageControl_1_1NearOptimalCVT.html',1,'CoverageControl']]]
 ];

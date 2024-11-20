@@ -1,9 +1,9 @@
 var generate__world__map_8h =
 [
-    [ "BND_Cuda", "structCoverageControl_1_1BND__Cuda.html", null ],
-    [ "Bounds", "structCoverageControl_1_1Bounds.html", null ],
-    [ "Polygons_Cuda_Host", "structCoverageControl_1_1Polygons__Cuda__Host.html", null ],
-    [ "Polygons_Cuda", "structCoverageControl_1_1Polygons__Cuda.html", null ],
+    [ "BND_Cuda", "structCoverageControl_1_1BND__Cuda.html", "structCoverageControl_1_1BND__Cuda" ],
+    [ "Bounds", "structCoverageControl_1_1Bounds.html", "structCoverageControl_1_1Bounds" ],
+    [ "Polygons_Cuda_Host", "structCoverageControl_1_1Polygons__Cuda__Host.html", "structCoverageControl_1_1Polygons__Cuda__Host" ],
+    [ "Polygons_Cuda", "structCoverageControl_1_1Polygons__Cuda.html", "structCoverageControl_1_1Polygons__Cuda" ],
     [ "generate_world_map_cuda", "generate__world__map_8h.html#af8efa372a0ff2cc930d9071434e40bea", null ],
     [ "kFloatMax", "generate__world__map_8h.html#a6a0b6d725318748eaa58165861adb78f", null ],
     [ "kFloatMin", "generate__world__map_8h.html#a442da004e1f4be1a1125f6272a6c99bf", null ]

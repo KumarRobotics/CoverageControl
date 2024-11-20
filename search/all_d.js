@@ -1,11 +1,24 @@
 var searchData=
 [
-  ['navigation_20of_20robot_20swarms_0',['Navigation of Robot Swarms',['../coverage-control-problem.html#autotoc_md40',1,'']]],
-  ['near_5foptimal_5fcvt_2eh_1',['near_optimal_cvt.h',['../near__optimal__cvt_8h.html',1,'']]],
-  ['near_5foptimal_5fcvt_5falgorithm_2eh_2',['near_optimal_cvt_algorithm.h',['../near__optimal__cvt__algorithm_8h.html',1,'']]],
-  ['nearoptimalcvt_3',['NearOptimalCVT',['../classCoverageControl_1_1NearOptimalCVT.html',1,'CoverageControl']]],
-  ['network_4',['LPAC Neural Network',['../lpac.html',1,'']]],
-  ['neural_20network_5',['LPAC Neural Network',['../lpac.html',1,'']]],
-  ['norm_6',['Norm',['../classCoverageControl_1_1Vec2d.html#aa7aa5b0e9c11b93537a0bd8e1f23c85c',1,'CoverageControl::Vec2d']]],
-  ['normsqr_7',['NormSqr',['../classCoverageControl_1_1Vec2d.html#a29d21f2eab134db6eef4417568af02cd',1,'CoverageControl::Vec2d']]]
+  ['name_0',['name',['../classcoverage__control_1_1algorithms_1_1controllers_1_1ControllerCVT.html#ab74e6bf80237ddc4109968cedc58c151',1,'coverage_control.algorithms.controllers.ControllerCVT.name'],['../classcoverage__control_1_1algorithms_1_1controllers_1_1ControllerNN.html#ab74e6bf80237ddc4109968cedc58c151',1,'coverage_control.algorithms.controllers.ControllerNN.name']]],
+  ['navigation_20of_20robot_20swarms_1',['Navigation of Robot Swarms',['../coverage-control-problem.html#autotoc_md40',1,'']]],
+  ['near_5foptimal_5fcvt_2eh_2',['near_optimal_cvt.h',['../near__optimal__cvt_8h.html',1,'']]],
+  ['near_5foptimal_5fcvt_5falgorithm_2eh_3',['near_optimal_cvt_algorithm.h',['../near__optimal__cvt__algorithm_8h.html',1,'']]],
+  ['nearoptimalcvt_4',['NearOptimalCVT',['../classCoverageControl_1_1NearOptimalCVT.html',1,'NearOptimalCVT'],['../classCoverageControl_1_1NearOptimalCVT.html#aa5db39813bc2e57f7ecac9ab8ba12ebc',1,'CoverageControl::NearOptimalCVT::NearOptimalCVT(Parameters const &amp;params, CoverageSystem &amp;env)'],['../classCoverageControl_1_1NearOptimalCVT.html#aaebab047c47aadad2485fe469b875ad4',1,'CoverageControl::NearOptimalCVT::NearOptimalCVT(Parameters const &amp;params, size_t const &amp;num_robots, CoverageSystem &amp;env)']]],
+  ['nearoptimalcvtalgorithm_5',['NearOptimalCVTAlgorithm',['../group__cpp__api.html#gadee8e9ec0555950f65bc8f5cfbcc659e',1,'CoverageControl::NearOptimalCVTAlgorithm(int const num_tries, int const max_iterations, int const num_sites, MapType const &amp;map, int const map_size, double const res)'],['../group__cpp__api.html#ga8d1ebb07f0a4a7b4108de340ff5a9c98',1,'CoverageControl::NearOptimalCVTAlgorithm(int const num_tries, int const max_iterations, int const num_sites, MapType const &amp;map, int const map_size, double const res, PointVector const &amp;positions, Voronoi &amp;voronoi)'],['../group__cpp__api.html#ga5845b0dc46f9b9ff76a1c3dfa6458f4d',1,'CoverageControl::NearOptimalCVTAlgorithm(int const num_tries, int const max_iterations, int const num_sites, MapType const &amp;map, int const map_size, double const res, PointVector const &amp;positions)']]],
+  ['network_6',['LPAC Neural Network',['../lpac.html',1,'']]],
+  ['neural_20network_7',['LPAC Neural Network',['../lpac.html',1,'']]],
+  ['nn_2f_5f_5finit_5f_5f_2epy_8',['__init__.py',['../nn_2____init_____8py.html',1,'']]],
+  ['nn_2fdata_5floaders_2f_5f_5finit_5f_5f_2epy_9',['__init__.py',['../nn_2data__loaders_2____init_____8py.html',1,'']]],
+  ['nn_2fmodels_2f_5f_5finit_5f_5f_2epy_10',['__init__.py',['../nn_2models_2____init_____8py.html',1,'']]],
+  ['nn_2ftrainers_2f_5f_5finit_5f_5f_2epy_11',['__init__.py',['../nn_2trainers_2____init_____8py.html',1,'']]],
+  ['norm_12',['Norm',['../classCoverageControl_1_1Vec2d.html#aa7aa5b0e9c11b93537a0bd8e1f23c85c',1,'CoverageControl::Vec2d']]],
+  ['normalize_13',['Normalize',['../classCoverageControl_1_1Vec2d.html#a4102985b13c0750b09e4698fde66ad46',1,'CoverageControl::Vec2d']]],
+  ['normalize_14',['normalize',['../namespaceCoverageControl.html#ae8423bc5f83c50cbcbb83a94d5b0253d',1,'CoverageControl']]],
+  ['normsqr_15',['NormSqr',['../classCoverageControl_1_1Vec2d.html#a29d21f2eab134db6eef4417568af02cd',1,'CoverageControl::Vec2d']]],
+  ['num_5fepochs_16',['num_epochs',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a050e7ca8e0fbdc0d0b46e75bc458bedc',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['num_5fhops_17',['num_hops',['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#abbdd66ebd718046403685519e9a2e8b0',1,'coverage_control::nn::models::config_parser::GNNConfigParser']]],
+  ['num_5flayers_18',['num_layers',['../classcoverage__control_1_1nn_1_1models_1_1cnn__backbone_1_1CNNBackBone.html#aedf8516949b5868a670a467b12362706',1,'coverage_control.nn.models.cnn_backbone.CNNBackBone.num_layers'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#aedf8516949b5868a670a467b12362706',1,'coverage_control.nn.models.config_parser.CNNConfigParser.num_layers'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#aedf8516949b5868a670a467b12362706',1,'coverage_control.nn.models.config_parser.GNNConfigParser.num_layers'],['../classcoverage__control_1_1nn_1_1models_1_1gnn__backbone_1_1GNNBackBone.html#aedf8516949b5868a670a467b12362706',1,'coverage_control.nn.models.gnn_backbone.GNNBackBone.num_layers']]],
+  ['num_5fpolygons_19',['num_polygons',['../structCoverageControl_1_1Polygons__Cuda__Host.html#ae5fd296fb89a421e6caec13b0045c7cd',1,'CoverageControl::Polygons_Cuda_Host::num_polygons'],['../structCoverageControl_1_1Polygons__Cuda.html#ae5fd296fb89a421e6caec13b0045c7cd',1,'CoverageControl::Polygons_Cuda::num_polygons']]],
+  ['num_5fpts_20',['num_pts',['../structCoverageControl_1_1Polygons__Cuda__Host.html#a904bdf8284504a39ea89ef3a09025ee5',1,'CoverageControl::Polygons_Cuda_Host::num_pts'],['../structCoverageControl_1_1Polygons__Cuda.html#a904bdf8284504a39ea89ef3a09025ee5',1,'CoverageControl::Polygons_Cuda::num_pts']]]
 ];

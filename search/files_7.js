@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['near_5foptimal_5fcvt_2eh_0',['near_optimal_cvt.h',['../near__optimal__cvt_8h.html',1,'']]],
-  ['near_5foptimal_5fcvt_5falgorithm_2eh_1',['near_optimal_cvt_algorithm.h',['../near__optimal__cvt__algorithm_8h.html',1,'']]]
+  ['installation_2emd_0',['installation.md',['../installation_8md.html',1,'']]],
+  ['io_5futils_2epy_1',['io_utils.py',['../io__utils_8py.html',1,'']]]
 ];

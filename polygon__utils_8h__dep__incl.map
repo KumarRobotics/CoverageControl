@@ -1,44 +1,9 @@
 <map id="polygon_utils.h" name="polygon_utils.h">
-<area shape="rect" id="Node000001" title="Provides utilities for polygon manipulation using CGAL." alt="" coords="588,5,696,30"/>
-<area shape="rect" id="Node000002" href="$polygon__utils_8cpp.html" title="Helper functions for polygon operations using CGAL." alt="" coords="483,78,604,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="615,41,561,80,558,75,612,37"/>
-<area shape="rect" id="Node000003" href="$world__idf_8cpp.html" title="Contains the implementation of the WorldIDF class." alt="" coords="591,151,687,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="644,45,642,150,637,150,639,45"/>
-<area shape="rect" id="Node000004" href="$world__idf_8h.html" title="Contains the class for Importance Density Function (IDF) for the world." alt="" coords="683,78,766,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="669,38,713,76,709,80,665,43"/>
-<area shape="poly" id="edge26_Node000004_Node000003" title=" " alt="" coords="700,115,655,152,651,148,697,111"/>
-<area shape="rect" id="Node000005" href="$coverage__algorithm_8cpp.html" title="Program to test the CVT&#45;based (Lloyd&#39;s) coverage control algorithms." alt="" coords="1065,455,1224,480"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="782,94,899,109,1036,136,1098,154,1149,176,1184,203,1194,218,1198,234,1198,310,1193,353,1181,395,1153,456,1148,454,1176,393,1188,352,1193,310,1193,235,1189,220,1181,206,1147,181,1096,159,1035,141,898,114,781,99"/>
-<area shape="rect" id="Node000006" href="$coverage__system_8h.html" title="The file contains the CoverageSystem class, which is the main class for the coverage control library." alt="" coords="658,223,791,248"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="727,118,727,223,722,223,722,118"/>
-<area shape="rect" id="Node000016" href="$robot__model_8h.html" title="Class for handling the robot model." alt="" coords="762,151,866,175"/>
-<area shape="poly" id="edge24_Node000004_Node000016" title=" " alt="" coords="753,110,801,148,798,152,749,115"/>
-<area shape="poly" id="edge17_Node000006_Node000005" title=" " alt="" coords="807,244,903,262,955,276,1005,294,1071,320,1096,338,1121,367,1134,390,1141,414,1147,455,1142,455,1136,415,1129,392,1117,370,1092,342,1068,325,1004,298,954,281,902,267,806,249"/>
-<area shape="rect" id="Node000007" href="$abstract__controller_8h.html" title="Contains the abstract class for coverage control algorithms." alt="" coords="548,296,688,321"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="696,259,637,298,634,293,693,255"/>
-<area shape="rect" id="Node000008" href="$centralized__cvt_8h.html" title="Contains the class CentralizedCVT." alt="" coords="5,376,124,400"/>
-<area shape="poly" id="edge15_Node000006_Node000008" title=" " alt="" coords="644,252,525,272,393,299,231,340,103,378,101,372,229,335,392,293,524,267,643,247"/>
-<area shape="rect" id="Node000009" href="$clairvoyant__cvt_8h.html" title="Clairvoyant CVT algorithm." alt="" coords="989,376,1108,400"/>
-<area shape="poly" id="edge16_Node000006_Node000009" title=" " alt="" coords="807,241,890,258,933,273,973,294,996,312,1017,334,1044,374,1040,377,1013,338,993,316,970,298,930,278,888,264,806,246"/>
-<area shape="rect" id="Node000010" href="$decentralized__cvt_8h.html" title="Contains the DecentralizedCVT class." alt="" coords="148,376,280,400"/>
-<area shape="poly" id="edge19_Node000006_Node000010" title=" " alt="" coords="651,254,564,274,469,299,343,340,244,378,242,373,341,335,468,293,563,269,650,249"/>
-<area shape="rect" id="Node000011" href="$near__optimal__cvt_8h.html" title="NearOptimalCVT class Global offline oracle: has complete information about the environment...." alt="" coords="305,376,435,400"/>
-<area shape="poly" id="edge20_Node000006_Node000011" title=" " alt="" coords="656,255,590,273,522,298,445,339,387,377,384,373,442,335,519,294,588,268,655,250"/>
-<area shape="rect" id="Node000012" href="$oracle__bang__explore__exploit_8h.html" title="First trial of oracle with exploration and exploitation. The oracle uses complete information about t..." alt="" coords="460,369,600,407"/>
-<area shape="poly" id="edge21_Node000006_Node000012" title=" " alt="" coords="644,245,614,251,586,262,560,277,539,298,530,314,526,332,528,368,523,368,521,332,525,312,534,294,557,273,584,257,613,246,642,239"/>
-<area shape="rect" id="Node000013" href="$oracle__explore__exploit_8h.html" title="Old trial of exploration and exploitation Uses system map for exploration as well." alt="" coords="624,376,785,400"/>
-<area shape="poly" id="edge22_Node000006_Node000013" title=" " alt="" coords="724,264,709,376,703,375,718,263"/>
-<area shape="rect" id="Node000014" href="$simul__explore__exploit_8h.html" title="Simultaneous exploration and exploitation algorithm Uses frontier&#45;based exploration with bias towards..." alt="" coords="809,376,965,400"/>
-<area shape="poly" id="edge23_Node000006_Node000014" title=" " alt="" coords="745,258,802,319,872,373,869,377,799,323,741,262"/>
-<area shape="rect" id="Node000015" href="$coverage__system_8cpp.html" title="Contains the implementation of the CoverageSystem class." alt="" coords="813,296,959,321"/>
-<area shape="poly" id="edge18_Node000006_Node000015" title=" " alt="" coords="766,252,860,293,858,298,764,257"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="533,319,350,339,136,371,107,378,106,372,135,366,349,334,533,314"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="703,319,833,339,978,366,1006,372,1005,378,977,371,832,344,703,324"/>
-<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="534,326,293,371,263,378,262,372,292,366,533,321"/>
-<area shape="poly" id="edge11_Node000007_Node000011" title=" " alt="" coords="567,328,408,378,406,373,565,323"/>
-<area shape="poly" id="edge12_Node000007_Node000012" title=" " alt="" coords="595,333,553,370,549,366,592,329"/>
-<area shape="poly" id="edge13_Node000007_Node000013" title=" " alt="" coords="644,329,693,373,690,377,640,333"/>
-<area shape="poly" id="edge14_Node000007_Node000014" title=" " alt="" coords="673,323,847,372,846,378,672,328"/>
-<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="1076,408,1132,453,1129,457,1073,412"/>
-<area shape="poly" id="edge25_Node000016_Node000006" title=" " alt="" coords="789,187,741,225,737,221,786,183"/>
+<area shape="rect" id="Node000001" title="Provides utilities for polygon manipulation using CGAL." alt="" coords="182,5,290,30"/>
+<area shape="rect" id="Node000002" href="$coverage__system_8cpp.html" title="Contains the implementation of the CoverageSystem class." alt="" coords="5,78,152,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,39,106,80,103,75,195,34"/>
+<area shape="rect" id="Node000003" href="$polygon__utils_8cpp.html" title="Helper functions for polygon operations using CGAL." alt="" coords="175,78,296,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="238,46,238,78,233,78,233,46"/>
+<area shape="rect" id="Node000004" href="$world__idf_8cpp.html" title="Contains the implementation of the WorldIDF class." alt="" coords="321,78,417,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="273,35,348,75,346,80,270,40"/>
 </map>

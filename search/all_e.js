@@ -1,11 +1,22 @@
 var searchData=
 [
   ['of_20robot_20swarms_0',['Navigation of Robot Swarms',['../coverage-control-problem.html#autotoc_md40',1,'']]],
-  ['optional_1',['Prerequisites (Optional)',['../installation.html#autotoc_md12',1,'']]],
-  ['oracle_5fbang_5fexplore_5fexploit_2eh_2',['oracle_bang_explore_exploit.h',['../oracle__bang__explore__exploit_8h.html',1,'']]],
-  ['oracle_5fexplore_5fexploit_2eh_3',['oracle_explore_exploit.h',['../oracle__explore__exploit_8h.html',1,'']]],
-  ['oraclebangexploreexploit_4',['OracleBangExploreExploit',['../classCoverageControl_1_1OracleBangExploreExploit.html',1,'CoverageControl']]],
-  ['oracleexploreexploit_5',['OracleExploreExploit',['../classCoverageControl_1_1OracleExploreExploit.html',1,'CoverageControl']]],
-  ['oraclesimulexploreexploit_6',['OracleSimulExploreExploit',['../classCoverageControl_1_1OracleSimulExploreExploit.html',1,'CoverageControl']]],
-  ['orientation_7',['Orientation',['../namespaceCoverageControl.html#a895010496ec23b8f83384d65b3adf509',1,'CoverageControl']]]
+  ['operator_28_29_1',['operator()',['../structCoverageControl_1_1FrontierCompare.html#a99982134d8f7dace43bd280684db84e3',1,'CoverageControl::FrontierCompare']]],
+  ['operator_2a_2',['operator*',['../classCoverageControl_1_1Vec2d.html#acdbbdef1af32e6fd3736cd797984cc52',1,'CoverageControl::Vec2d']]],
+  ['operator_2b_3',['operator+',['../classCoverageControl_1_1Vec2d.html#a6126fccfc648ae4cdda006de74c4a288',1,'CoverageControl::Vec2d']]],
+  ['operator_2d_4',['operator-',['../classCoverageControl_1_1Vec2d.html#a6433cabc3bcbeb466282c516d8959963',1,'CoverageControl::Vec2d::operator-(Vec2d const &amp;vec) const'],['../classCoverageControl_1_1Vec2d.html#aecabd44e209a2ea6c4c51c8ceb46b092',1,'CoverageControl::Vec2d::operator-() const']]],
+  ['operator_2f_5',['operator/',['../classCoverageControl_1_1Vec2d.html#a2d87e509d157019391ae649869f852dd',1,'CoverageControl::Vec2d']]],
+  ['operator_3c_3c_6',['operator&lt;&lt;',['../structCoverageControl_1_1CGAL__DelaunayHelper.html#a547d19481f3bce023a4e10f05f7de605',1,'CoverageControl::CGAL_DelaunayHelper::operator&lt;&lt;(const Ray_2 &amp;ray)'],['../structCoverageControl_1_1CGAL__DelaunayHelper.html#abbca3603a6f6f9b4f0145ec85afbfc8b',1,'CoverageControl::CGAL_DelaunayHelper::operator&lt;&lt;(const Line_2 &amp;line)'],['../structCoverageControl_1_1CGAL__DelaunayHelper.html#ada910527363bd58291845bf0819292e7',1,'CoverageControl::CGAL_DelaunayHelper::operator&lt;&lt;(const Segment_2 &amp;seg)']]],
+  ['operator_3d_7',['operator=',['../classCoverageControl_1_1WorldIDF.html#a7d6771fdecb8476fa2e4ece4d62f4816',1,'CoverageControl::WorldIDF']]],
+  ['optimizer_8',['optimizer',['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#a6e7f6ae6228957cb12294e2ffbc0fbc8',1,'coverage_control::nn::trainers::trainer::TrainModel']]],
+  ['optional_9',['Prerequisites (Optional)',['../installation.html#autotoc_md12',1,'']]],
+  ['oracle_5fbang_5fexplore_5fexploit_2eh_10',['oracle_bang_explore_exploit.h',['../oracle__bang__explore__exploit_8h.html',1,'']]],
+  ['oracle_5fexplore_5fexploit_2eh_11',['oracle_explore_exploit.h',['../oracle__explore__exploit_8h.html',1,'']]],
+  ['oraclebangexploreexploit_12',['OracleBangExploreExploit',['../classCoverageControl_1_1OracleBangExploreExploit.html',1,'OracleBangExploreExploit'],['../classCoverageControl_1_1OracleBangExploreExploit.html#acb84df81d1e5d6b752212c28b31c11c5',1,'CoverageControl::OracleBangExploreExploit::OracleBangExploreExploit()']]],
+  ['oracleexploreexploit_13',['OracleExploreExploit',['../classCoverageControl_1_1OracleExploreExploit.html',1,'OracleExploreExploit'],['../classCoverageControl_1_1OracleExploreExploit.html#ae4642c3125f6e9200546e79c95381e19',1,'CoverageControl::OracleExploreExploit::OracleExploreExploit()']]],
+  ['oraclesimulexploreexploit_14',['OracleSimulExploreExploit',['../classCoverageControl_1_1OracleSimulExploreExploit.html',1,'OracleSimulExploreExploit'],['../classCoverageControl_1_1OracleSimulExploreExploit.html#abb8fafe172ee35862af8610df6934778',1,'CoverageControl::OracleSimulExploreExploit::OracleSimulExploreExploit()']]],
+  ['orientation_15',['Orientation',['../namespaceCoverageControl.html#a895010496ec23b8f83384d65b3adf509',1,'CoverageControl']]],
+  ['origin_5fshift_16',['origin_shift',['../structCoverageControl_1_1VoronoiCell.html#aad5f735c3664e9e5c72728aa0e04f0f8',1,'CoverageControl::VoronoiCell']]],
+  ['output_5fdim_17',['output_dim',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.data_loaders.loaders.LocalMapCNNDataset.output_dim'],['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1VoronoiGNNDataset.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.data_loaders.loaders.VoronoiGNNDataset.output_dim'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1CNNConfigParser.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.models.config_parser.CNNConfigParser.output_dim'],['../classcoverage__control_1_1nn_1_1models_1_1config__parser_1_1GNNConfigParser.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.models.config_parser.GNNConfigParser.output_dim'],['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#ac02d798a7d5b86155b5f39511946bd36',1,'coverage_control.nn.models.lpac.LPAC.output_dim']]],
+  ['output_5flinear_18',['output_linear',['../classcoverage__control_1_1nn_1_1models_1_1lpac_1_1LPAC.html#a67eccc967f604a48f7dd2028fff7fc8a',1,'coverage_control::nn::models::lpac::LPAC']]]
 ];

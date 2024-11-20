@@ -1,16 +1,12 @@
 <map id="vec2d.h" name="vec2d.h">
-<area shape="rect" id="Node000001" title="Contains Vec2d class for 2D vector." alt="" coords="38,5,105,30"/>
+<area shape="rect" id="Node000001" title="Contains Vec2d class for 2D vector." alt="" coords="40,5,106,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,151,63,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,32,42,53,27,79,24,108,28,136,23,137,18,108,22,77,37,50,56,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="37,78,106,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,31,74,62,69,62,69,31"/>
-<area shape="rect" id="Node000004" href="$constants_8h.html" title="Constants for the CoverageControl library." alt="" coords="130,78,320,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,28,187,69,185,74,96,33"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="194,106,78,148,76,143,192,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="121,151,174,175"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="214,105,173,142,169,138,210,101"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="198,151,251,175"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="227,103,227,135,222,135,222,103"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="275,151,446,175"/>
-<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="248,101,326,141,323,146,246,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,32,48,53,35,79,31,108,32,136,27,136,26,107,30,77,43,50,60,29"/>
+<area shape="rect" id="Node000003" href="$constants_8h.html" title="Constants for the CoverageControl library." alt="" coords="44,78,234,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="86,29,120,65,116,69,82,32"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="123,105,66,144,63,139,120,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="100,151,152,175"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="140,104,134,136,128,135,135,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="176,151,348,175"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="161,101,230,140,228,145,158,106"/>
 </map>

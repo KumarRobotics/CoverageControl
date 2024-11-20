@@ -1,34 +1,29 @@
 <map id="near_optimal_cvt_algorithm.h" name="near_optimal_cvt_algorithm.h">
-<area shape="rect" id="Node000001" title="Near Optimal Centroidal Voronoi Tessellation (CVT) algorithm Near&#45;optimal Centroidal Voronoi Tessella..." alt="" coords="380,5,571,30"/>
+<area shape="rect" id="Node000001" title="Near Optimal Centroidal Voronoi Tessellation (CVT) algorithm Near&#45;optimal Centroidal Voronoi Tessella..." alt="" coords="277,5,468,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,85,63,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="380,28,234,46,154,61,75,81,72,82,70,76,73,75,153,56,234,41,379,23"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="288,33,185,52,75,81,72,81,71,76,73,75,184,47,287,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="87,85,144,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="393,33,284,53,164,81,159,82,158,77,163,75,283,47,393,28"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="149,165,245,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="380,31,277,49,236,63,209,80,200,95,195,113,195,150,189,150,190,113,195,93,205,76,233,58,276,44,379,26"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="479,85,544,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="483,29,502,70,497,72,478,31"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="546,165,618,189"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="500,28,530,48,558,76,574,113,582,149,577,150,569,115,553,80,527,52,497,33"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="843,85,908,110"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="572,26,697,45,832,75,836,77,835,82,831,81,696,50,571,32"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="389,165,445,189"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="474,31,429,151,424,149,469,29"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="932,78,1091,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="572,27,729,47,917,75,916,80,728,53,571,33"/>
-<area shape="rect" id="Node000010" href="$parameters_8h.html" title="Contains parameters." alt="" coords="620,85,819,110"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="513,28,669,77,667,82,511,33"/>
-<area shape="rect" id="Node000014" href="$typedefs_8h.html" title="Contains typedefs for the library." alt="" coords="220,85,403,110"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="452,33,351,80,349,75,450,28"/>
-<area shape="poly" id="edge12_Node000010_Node000006" title=" " alt="" coords="700,112,617,159,615,154,698,108"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="641,165,699,189"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="714,111,688,153,683,150,710,109"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="722,165,802,189"/>
-<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="728,109,751,150,746,153,723,111"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="826,165,879,189"/>
-<area shape="poly" id="edge13_Node000010_Node000013" title=" " alt="" coords="740,108,821,154,818,159,738,112"/>
-<area shape="poly" id="edge15_Node000014_Node000004" title=" " alt="" coords="296,112,228,158,225,153,293,108"/>
-<area shape="poly" id="edge17_Node000014_Node000008" title=" " alt="" coords="328,108,390,153,387,157,325,112"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="283,165,340,189"/>
-<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="314,110,314,149,309,149,309,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="328,33,164,81,160,82,158,77,163,75,327,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="148,237,245,262"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="353,33,320,54,280,84,241,121,210,166,201,194,198,222,193,221,195,193,205,163,237,118,277,80,317,49,350,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="652,85,717,110"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="440,28,535,48,640,75,644,77,642,82,639,81,534,53,439,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="412,237,469,262"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="379,29,435,222,430,223,373,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="742,78,900,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="447,28,727,75,726,80,446,33"/>
+<area shape="rect" id="Node000008" href="$typedefs_8h.html" title="Contains typedefs for the library." alt="" coords="220,165,403,189"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="371,31,324,151,319,149,366,29"/>
+<area shape="rect" id="Node000010" href="$voronoi_8h.html" title="Class for computing Voronoi cells." alt="" coords="454,85,628,110"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="399,28,503,76,501,81,397,33"/>
+<area shape="poly" id="edge8_Node000008_Node000004" title=" " alt="" coords="294,192,230,231,227,227,291,188"/>
+<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="334,188,408,227,405,232,331,192"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="283,237,340,262"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="314,190,314,222,309,222,309,190"/>
+<area shape="poly" id="edge14_Node000010_Node000006" title=" " alt="" coords="535,111,459,226,455,223,531,108"/>
+<area shape="poly" id="edge15_Node000010_Node000008" title=" " alt="" coords="507,113,361,162,359,157,505,108"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="529,165,587,189"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="546,109,555,149,550,150,541,111"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="611,165,681,189"/>
+<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="558,108,620,153,616,157,555,112"/>
 </map>

@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['orientation_0',['Orientation',['../namespaceCoverageControl.html#a895010496ec23b8f83384d65b3adf509',1,'CoverageControl']]]
+  ['nearoptimalcvt_0',['NearOptimalCVT',['../classCoverageControl_1_1NearOptimalCVT.html#aa5db39813bc2e57f7ecac9ab8ba12ebc',1,'CoverageControl::NearOptimalCVT::NearOptimalCVT(Parameters const &amp;params, CoverageSystem &amp;env)'],['../classCoverageControl_1_1NearOptimalCVT.html#aaebab047c47aadad2485fe469b875ad4',1,'CoverageControl::NearOptimalCVT::NearOptimalCVT(Parameters const &amp;params, size_t const &amp;num_robots, CoverageSystem &amp;env)']]],
+  ['nearoptimalcvtalgorithm_1',['NearOptimalCVTAlgorithm',['../group__cpp__api.html#gadee8e9ec0555950f65bc8f5cfbcc659e',1,'CoverageControl::NearOptimalCVTAlgorithm(int const num_tries, int const max_iterations, int const num_sites, MapType const &amp;map, int const map_size, double const res)'],['../group__cpp__api.html#ga8d1ebb07f0a4a7b4108de340ff5a9c98',1,'CoverageControl::NearOptimalCVTAlgorithm(int const num_tries, int const max_iterations, int const num_sites, MapType const &amp;map, int const map_size, double const res, PointVector const &amp;positions, Voronoi &amp;voronoi)'],['../group__cpp__api.html#ga5845b0dc46f9b9ff76a1c3dfa6458f4d',1,'CoverageControl::NearOptimalCVTAlgorithm(int const num_tries, int const max_iterations, int const num_sites, MapType const &amp;map, int const map_size, double const res, PointVector const &amp;positions)']]],
+  ['norm_2',['Norm',['../classCoverageControl_1_1Vec2d.html#aa7aa5b0e9c11b93537a0bd8e1f23c85c',1,'CoverageControl::Vec2d']]],
+  ['normalize_3',['Normalize',['../classCoverageControl_1_1Vec2d.html#a4102985b13c0750b09e4698fde66ad46',1,'CoverageControl::Vec2d']]],
+  ['normalize_4',['normalize',['../namespaceCoverageControl.html#ae8423bc5f83c50cbcbb83a94d5b0253d',1,'CoverageControl']]],
+  ['normsqr_5',['NormSqr',['../classCoverageControl_1_1Vec2d.html#a29d21f2eab134db6eef4417568af02cd',1,'CoverageControl::Vec2d']]]
 ];

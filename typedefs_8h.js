@@ -1,5 +1,6 @@
 var typedefs_8h =
 [
+    [ "EIGEN_NO_CUDA", "typedefs_8h.html#a7bcd27225fe0b0f2a353791036da5c33", null ],
     [ "MapType", "typedefs_8h.html#ga1e7223b1ff04a86829e728711282b957", null ],
     [ "Point2", "typedefs_8h.html#ga3f07f168f209ff3416eae7485cf2b2ec", null ],
     [ "Point2f", "typedefs_8h.html#ga86b8dfa83d90450009753e3bd911e07d", null ],

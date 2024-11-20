@@ -2,23 +2,21 @@
 <area shape="rect" id="Node000001" title="Functions for CUDA utilities based on NVIDIA&#39;s CUDA Helper Library See: extern/cuda_helpers/helper_cu..." alt="" coords="215,5,314,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,85,116,110"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,33,106,82,104,77,233,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="60,165,131,189"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,33,214,53,180,80,143,118,114,154,110,151,139,114,176,76,211,49,243,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="84,165,155,189"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,33,212,53,180,80,152,116,133,152,128,150,148,113,176,76,209,49,241,28"/>
 <area shape="rect" id="Node000004" href="$cuda__utils_8h.html" title="Utility functions for CUDA." alt="" coords="189,78,340,117"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="267,30,267,62,262,62,262,30"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="364,78,552,117"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="294,28,398,69,396,74,292,33"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="576,78,769,117"/>
-<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="315,26,562,72,561,78,314,31"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="225,120,136,160,133,155,222,115"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="154,165,207,189"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="246,119,206,156,202,152,242,115"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="230,165,299,189"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="267,117,267,149,262,149,262,117"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="323,165,377,189"/>
-<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="287,115,328,152,324,156,283,119"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="400,165,457,189"/>
-<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="305,115,391,155,389,160,303,120"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="480,165,652,189"/>
-<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="338,115,507,158,505,163,337,120"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="364,78,552,117"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="294,28,398,69,396,74,292,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="576,78,769,117"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="315,26,562,72,561,78,314,31"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="231,120,155,160,153,155,228,115"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="178,165,247,189"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="254,119,231,153,227,150,250,116"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="271,165,324,189"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="275,116,289,149,284,151,270,118"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="348,165,405,189"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="293,115,349,154,346,158,290,120"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="428,165,600,189"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="326,115,462,157,461,162,324,120"/>
 </map>

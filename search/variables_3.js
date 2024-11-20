@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['size_0',['size',['../structCoverageControl_1_1PolygonFeature.html#a439227feff9d7f55384e8780cfc2eb82',1,'CoverageControl::PolygonFeature']]]
+  ['data_5fdir_0',['data_dir',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html#aaaef1244e0a05abda3f6d56d6831953e',1,'coverage_control::nn::data_loaders::loaders::LocalMapCNNDataset']]],
+  ['dataset_5fsize_1',['dataset_size',['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1LocalMapCNNDataset.html#a7bcdbaf2fa7b446923e8317ddf3a9984',1,'coverage_control.nn.data_loaders.loaders.LocalMapCNNDataset.dataset_size'],['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1CNNGNNDataset.html#a7bcdbaf2fa7b446923e8317ddf3a9984',1,'coverage_control.nn.data_loaders.loaders.CNNGNNDataset.dataset_size'],['../classcoverage__control_1_1nn_1_1data__loaders_1_1loaders_1_1VoronoiGNNDataset.html#a7bcdbaf2fa7b446923e8317ddf3a9984',1,'coverage_control.nn.data_loaders.loaders.VoronoiGNNDataset.dataset_size']]],
+  ['device_2',['device',['../classcoverage__control_1_1algorithms_1_1controllers_1_1ControllerNN.html#adbdec58595587fea1750c91cd18315fb',1,'coverage_control.algorithms.controllers.ControllerNN.device'],['../classcoverage__control_1_1nn_1_1trainers_1_1trainer_1_1TrainModel.html#adbdec58595587fea1750c91cd18315fb',1,'coverage_control.nn.trainers.trainer.TrainModel.device']]]
 ];
