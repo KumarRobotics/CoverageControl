@@ -70,7 +70,7 @@ RUN mkdir download; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 
-RUN echo 'LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}' >> /etc/environment
+ENV LD_LIBRARY_PATH="/usr/local/lib:/opt/libtorch/lib"
 ENV Torch_DIR=/opt/libtorch/share/cmake/
 
 COPY requirements_cpu.txt /opt/requirements.txt
@@ -81,4 +81,3 @@ RUN /opt/venv/bin/pip install --no-cache-dir catkin_pkg lark
 ENV VENV_PATH=/opt/venv
 
 COPY .ros.jazzy.bashrc /root/.bashrc
-RUN echo 'LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}' >> /root/.bashrc

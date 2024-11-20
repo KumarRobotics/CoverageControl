@@ -72,4 +72,3 @@ RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
 ENV VENV_PATH=/opt/venv
 
 COPY .bashrc /root/.bashrc
-RUN echo 'LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}' >> /root/.bashrc

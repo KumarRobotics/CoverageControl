@@ -75,6 +75,7 @@ RUN mkdir download; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 
+ENV LD_LIBRARY_PATH="/usr/local/lib:/opt/libtorch/lib"
 ENV Torch_DIR=/opt/libtorch/share/cmake/
 
 COPY requirements.txt /opt/requirements.txt
@@ -85,4 +86,3 @@ RUN /opt/venv/bin/pip install --no-cache-dir catkin_pkg empy==3.3.4 lark tomli
 ENV VENV_PATH=/opt/venv
 
 COPY .ros.humble.bashrc /root/.bashrc
-RUN echo 'LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}' >> /root/.bashrc
