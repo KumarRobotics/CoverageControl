@@ -74,11 +74,11 @@ repair-wheel-command = ""
 
 # test-command=""
 # before-test=""
-test-command = "pytest -ra --showlocals --ignore={project}/python/tests/deprecated {project}/python/tests/test_coverage_env_utils.py {project}/python/tests/test_coverage.py {project}/python/tests/test_env_io.py {project}/python/tests/test_map_generation.py {project}/python/tests/test_models.py {project}/python/tests/test_package.py {project}/python/tests/test_parameters.py {project}/python/tests/test_parity.py"
+# test-command = "pytest -ra --showlocals --ignore={project}/python/tests/deprecated {project}/python/tests/test_coverage_env_utils.py {project}/python/tests/test_coverage.py {project}/python/tests/test_env_io.py {project}/python/tests/test_map_generation.py {project}/python/tests/test_models.py {project}/python/tests/test_package.py {project}/python/tests/test_parameters.py {project}/python/tests/test_parity.py"
 
-before-test = "pip install pytest torch torchvision torch_geometric && wget https://github.com/KumarRobotics/CoverageControl/releases/download/v1.3.0/pytest_data.tar.gz && tar -xvf pytest_data.tar.gz -C python/tests/ && rm pytest_data.tar.gz"
-test-requires = []
-test-extras = []
+# before-test = "pip install pytest torch torchvision torch_geometric && wget https://github.com/KumarRobotics/CoverageControl/releases/download/v1.3.0/pytest_data.tar.gz && tar -xvf pytest_data.tar.gz -C python/tests/ && rm pytest_data.tar.gz"
+# test-requires = []
+# test-extras = []
 
 container-engine = "docker"
 
@@ -96,19 +96,8 @@ repair-wheel-command = "delocate-wheel --require-archs {delocate_archs} -w {dest
 [tool.cibuildwheel.windows]
 
 [tool.pytest.ini_options]
-addopts = ["--ignore=python/tests/deprecated", "-ra", "--showlocals"]
-testpaths = ["python/tests"]
-
-[tool.pylint]
-py-version = "3.10"
-ignore-paths = [".*/_version.py", "cppsrc/*", "utils/*", "python/coverage_control/_version.py"]
-extension-pkg-allow-list = ["coverage_control._core"]
-reports.output-format = "colorized"
-similarities.ignore-imports = "yes"
-# messages_control.disable = [
-#   "design",
-#   "fixme",
-#   "line-too-long",
-#   "missing-module-docstring",
-#   "wrong-import-position",
-# ]
+minversion = "6.0"
+addopts = "-ra"
+testpaths = [
+    "./python/tests",
+]

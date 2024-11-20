@@ -124,18 +124,6 @@ The package also supports GPU acceleration using CUDA. To enable this feature, t
 pip install .
 ```
 
-Testing the installation (from the root of the repository):
-
-Download the file `pytest_data.tar.gz` from the repository's [release page](https://github.com/KumarRobotics/CoverageControl/releases) and extract it to `python/tests/`.
-This will create a directory `python/tests/data`.
-
-Then run the following commands:
-```bash
-pip install pytest
-pytest
-```
-
-
 ## Building the Core C++ Library
 
 
