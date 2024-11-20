@@ -3,7 +3,7 @@
 yum install -y epel-release
 yum install -y wget yum-utils python3-devel
 
-dnf config-manger --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo
+dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo
 dnf -y install --setopt=obsoletes=0 \
   cuda-compiler-12-4-12.4.1-1 \
   cuda-libraries-12-4-12.4.1-1 \
