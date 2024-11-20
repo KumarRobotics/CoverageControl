@@ -26,11 +26,14 @@ RUN apt-get	-y update; \
 											 curl \
 											 gdb \
 											 software-properties-common \
-											 ca-certificates \
-											 python${PYTHON_VERSION} \
-											 python${PYTHON_VERSION}-dev \
-											 python${PYTHON_VERSION}-venv \
-											 python-is-python3
+											 ca-certificates
+
+RUN add-apt-repository -y ppa:deadsnakes/ppa; \
+    apt-get -y update; \
+    apt-get -y install \
+                       python${PYTHON_VERSION} \
+                       python${PYTHON_VERSION}-dev \
+                       python${PYTHON_VERSION}-venv
 
 # Add repo for installing latest version of cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
@@ -68,7 +71,6 @@ RUN mkdir download; \
 		unzip download/libtorch.zip -d /opt/; \
 		rm -r download
 
-RUN echo "LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}" >> /etc/environment
 ENV Torch_DIR=/opt/libtorch/share/cmake/
 
 COPY requirements_cpu.txt /opt/requirements.txt
@@ -78,4 +80,4 @@ RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
 ENV VENV_PATH=/opt/venv
 
 COPY .bashrc /root/.bashrc
-RUN echo "source /opt/venv/bin/activate" >> /root/.bashrc
+RUN echo 'LD_LIBRARY_PATH=/usr/local/lib:/opt/libtorch/lib:${LD_LIBRARY_PATH}' >> /root/.bashrc

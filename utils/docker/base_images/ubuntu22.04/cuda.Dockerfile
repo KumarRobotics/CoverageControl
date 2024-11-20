@@ -4,7 +4,7 @@ FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04 AS base
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG PYTHON_VERSION="3.10"
+ARG PYTHON_VERSION="3.11"
 ARG PYTORCH_VERSION="2.5.1"
 
 ENV PYTHON_VERSION=${PYTHON_VERSION}
@@ -28,11 +28,14 @@ RUN apt-get	-y update; \
 											 curl \
 											 gdb \
 											 software-properties-common \
-											 ca-certificates \
+											 ca-certificates
+
+RUN add-apt-repository -y ppa:deadsnakes/ppa; \
+    apt-get -y update; \
+    apt-get -y install \
                        python${PYTHON_VERSION} \
                        python${PYTHON_VERSION}-dev \
-                       python${PYTHON_VERSION}-venv \
-                       python-is-python3
+                       python${PYTHON_VERSION}-venv
 
 # Add repo for installing latest version of cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null; \
@@ -41,7 +44,6 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 		rm /usr/share/keyrings/kitware-archive-keyring.gpg
 
 RUN apt install -y kitware-archive-keyring
-RUN add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; apt-get upgrade
 
 RUN apt-get -y install \
 											 cmake \

@@ -130,3 +130,4 @@ export EDITOR="$VISUAL"
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 export PYTHONPATH=/opt/venv/lib/python3.11/site-packages:$PYTHONPATH
+source /opt/venv/bin/activate

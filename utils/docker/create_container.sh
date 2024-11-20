@@ -65,6 +65,7 @@ if [[ ${ROS_IMAGE} == true ]]; then
 fi
 
 IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
+docker pull ${IMAGE_NAME}
 
 if [ -z ${CONTAINER_NAME} ]; then
 	CONTAINER_NAME="coverage-control-${USER}"
@@ -73,7 +74,7 @@ fi
 docker run -it \
 	--name=${CONTAINER_NAME} \
 	${CONTAINER_OPTIONS} \
-  --env=CoverageControl_WS=${CONTAINER_CC_WS} \
+  --env=CoverageControl_ws=${CONTAINER_CC_WS} \
 	--net=host \
 	--privileged \
 	--ipc=host \

@@ -14,9 +14,13 @@ fi
 build_image() {
     echo "Building image $2"
     TAG_NAME=$2
-    ALL_BUILD_ARGS="--build-arg CUDA_VERSION=${CUDA_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} --build-arg PYTORCH_VERSION=${PYTORCH_VERSION}"
+    ALL_BUILD_ARGS="--no-cache --build-arg CUDA_VERSION=${CUDA_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} --build-arg PYTORCH_VERSION=${PYTORCH_VERSION}"
     echo "docker buildx build ${ALL_BUILD_ARGS} -t ${1}:${TAG_NAME} -f $3 ."
     docker buildx build --push ${ALL_BUILD_ARGS} -t ${1}:${TAG_NAME} -f $3 .
+    if [ $? -ne 0 ]; then
+        echo "Failed to build image $2"
+        exit 1
+    fi
 }
 
 CUDA_VERSION="12.4.1"

@@ -81,7 +81,7 @@ env.PlotSystemMap("final_map");
 ```
 
 
-See \ref python/coverage_env/coverage_simple.py and \ref python/coverage_env/coverage_class.py for complete examples.
+See \ref python/system_env/coverage_simple.py and \ref python/system_env/coverage_class.py for complete examples.
 
 ---
 

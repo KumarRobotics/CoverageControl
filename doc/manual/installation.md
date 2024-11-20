@@ -88,7 +88,7 @@ The base image is `agarwalsaurav/pytorch_base` with different tags for different
 |`noble-torch2.5.1-cuda12.6.2-jazzy` | `--with-ros --with-cuda --noble`|
 |`noble-torch2.5.1-cuda12.6.2` | `--with-cuda --noble`|
 |`noble-torch2.5.1-jazzy` | `--with-ros --noble`|
-|`noble-torch2.5.1` | --noble|
+|`noble-torch2.5.1` | `--noble`|
 
 
 Install the library available on PyPI:
