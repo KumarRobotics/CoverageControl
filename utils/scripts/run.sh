@@ -49,8 +49,16 @@ if [ -z "${CoverageControl_ws}" ]; then
     exit 1
 fi
 
+# Data generation in parts
+# for i in {0..4}
+# do
+#   echo "Running data generation for $i"
+#   run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} --append-dir data/$i --split False" "Data Generation"
+# done
+# Edit and execute process_data.sh
+
 # Running the data generation script
-run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} ${DATA_GEN_ALGORITHM}" "Data Generation"
+run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} ${DATA_GEN_ALGORITHM} --split True" "Data Generation"
 
 # Running the training script
 run_command "python ${SCRIPT_DIR}/training/train_lpac.py ${PARAMS_DIR}/${LEARNING_PARAMS_FILE} 1024" "Model Training"
