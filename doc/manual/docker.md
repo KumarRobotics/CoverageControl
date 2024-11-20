@@ -44,7 +44,7 @@ docker start -i coverage-control-$USER # Replace with the name of the container
 - `--with-cuda` : With CUDA support
 - `--with-ros` : With ROS support
 
-The base image is `ghcr.io/\repo_owner_lower/coveragecontrol` with different tags for different versions and configurations.
+The base image is `agarwalsaurav/coveragecontrol` with different tags for different versions and configurations.
 
 |Tags Suffix | Flags|
 |--- | ---|

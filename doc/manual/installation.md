@@ -77,7 +77,7 @@ docker start -i coverage-control-$USER # Replace with the name of the container
 - `--with-ros` : With ROS support
 - `--noble` : Ubuntu 24.04 Noble
 
-The base image is `ghcr.io/\repo_owner_lower/pytorch_base` with different tags for different versions and configurations.
+The base image is `agarwalsaurav/pytorch_base` with different tags for different versions and configurations.
 
 |Tags Suffix | Flags|
 |--- | ---|

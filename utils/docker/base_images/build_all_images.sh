@@ -5,6 +5,10 @@ print_usage() {
 		exit 1
 }
 
+if [ "$#" -ne 1 ]; then
+    print_usage
+fi
+
 # Function build image takes 2 arguments: 1. username/repo_name 2. tag_name 3. Dockerfile
 # Example: build_image johndoe/repo_name pytorch2.2.2 ubuntu22.04.Dockerfile
 build_image() {

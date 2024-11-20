@@ -14,7 +14,7 @@ print_usage() {
 eval set -- "$params"
 unset params
 
-IMAGE_BASE_NAME=ghcr.io/kumarrobotics/pytorch_base
+IMAGE_BASE_NAME=agarwalsaurav/pytorch_base
 IMAGE_TAG=latest
 
 NOBLE=false
