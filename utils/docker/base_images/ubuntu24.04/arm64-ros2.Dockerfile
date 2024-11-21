@@ -77,7 +77,7 @@ COPY requirements_cpu.txt /opt/requirements.txt
 RUN python${PYTHON_VERSION} -m venv /opt/venv
 RUN /opt/venv/bin/pip install --no-cache-dir wheel setuptools==68.1.2
 RUN /opt/venv/bin/pip install --no-cache-dir -r /opt/requirements.txt
-RUN /opt/venv/bin/pip install --no-cache-dir catkin_pkg lark
+RUN /opt/venv/bin/pip install --no-cache-dir catkin_pkg lark empy==3.3.4
 ENV VENV_PATH=/opt/venv
 
 COPY .ros.jazzy.bashrc /root/.bashrc
