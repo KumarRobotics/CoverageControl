@@ -1,4 +1,4 @@
-name: docker-deploy
+name: cd
 on:
   workflow_dispatch:
   release:
