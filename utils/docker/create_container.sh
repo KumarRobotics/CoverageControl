@@ -70,6 +70,7 @@ if [[ ${ARM} == true ]]; then
     IMAGE_TAG="arm64-noble-torch2.5.1-jazzy"
   else
     IMAGE_TAG="arm64-jammy-torch2.5.1-humble"
+  fi
 fi
 
 IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"
