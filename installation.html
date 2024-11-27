@@ -227,6 +227,7 @@ Docker Container</h2>
 <li><code>--with-cuda</code> : With CUDA support</li>
 <li><code>--with-ros</code> : With ROS support</li>
 <li><code>--noble</code> : Ubuntu 24.04 Noble</li>
+<li><code>--arm64</code> : ARM64 architecture</li>
 </ul>
 <p>The base image is <code>agarwalsaurav/pytorch_base</code> with different tags for different versions and configurations.</p>
 <table class="markdownTable">
@@ -247,7 +248,11 @@ Docker Container</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>noble-torch2.5.1-jazzy</code>   </td><td class="markdownTableBodyNone"><code>--with-ros --noble</code>    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>noble-torch2.5.1</code>   </td><td class="markdownTableBodyNone"><code>--noble</code>   </td></tr>
+<td class="markdownTableBodyNone"><code>noble-torch2.5.1</code>   </td><td class="markdownTableBodyNone"><code>--noble</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>arm64-jammy-torch2.5.1-humble</code>   </td><td class="markdownTableBodyNone"><code>--arm64</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>arm64-noble-torch2.5.1-jazzy</code>   </td><td class="markdownTableBodyNone"><code>--arm64 --noble</code>   </td></tr>
 </table>
 <p>Install the library available on PyPI:  
 <div class="fragment">

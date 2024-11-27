@@ -172,7 +172,7 @@ Dataset Generation</h1>
 <p>To generate a dataset, run the following command:  
 <div class="fragment">
 <div class="line"><span class="keyword">python</span> python/data_generation/data_generation.py \</div>
-<div class="line">       ${CoverageControl_ws}/lpac/params/data_params.toml</div>
+<div class="line">       ${CoverageControl_ws}/lpac/params/data_params.toml --split True</div>
 </div>
  A sample <code><a class="el" href="data__params_8toml.html">data_params.toml</a></code> file is also provided in the <code>params</code> directory of the repository. See the file for details on the parameters. The class will use a <code><a class="el" href="coverage__control__params_8toml.html">coverage_control_params.toml</a></code> configuration file to generate environments and then use the <code>ClairvoyantCVT</code> algorithm to generate the dataset.</p>
 <p>The <code>simple_data_generation.py</code> is useful for generating a large dataset in parts and then combining them into a single dataset. See <code>python/utils/process_data.sh</code> and <code>python/utils/dataset_utils.py</code> for tools to process and combine datasets.</p>
