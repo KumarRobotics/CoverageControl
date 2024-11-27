@@ -1,5 +1,5 @@
 ORIG_INPUT_PARAMS="$@"
-params="$(getopt -o d:n: -l directory: -l name:,with-cuda,with-ros,noble --name "$(basename "$0")" -- "$@")"
+params="$(getopt -o d:n: -l directory: -l name:,with-cuda,with-ros,noble,arm64 --name "$(basename "$0")" -- "$@")"
 
 if [ $? -ne 0 ]
 then
@@ -8,7 +8,7 @@ then
 fi
 
 print_usage() {
-	printf "bash $0 [-d|--directory <workspace directory>] [--with-cuda] [--with-ros]\n"
+	printf "bash $0 [-d|--directory <workspace directory>] [--with-cuda] [--with-ros] [--noble] [--arm64] [-n|--name <container name>]\n"
 }
 
 eval set -- "$params"
@@ -25,6 +25,7 @@ while true; do
 		--with-cuda) CUDA_IMAGE=true;shift;;
 		--with-ros) ROS_IMAGE=true;shift;;
 		--noble) NOBLE=true;shift;;
+    --arm64) ARM=true;shift;;
 		--) shift;break;;
 		*) print_usage
 			exit 1 ;;
@@ -62,6 +63,13 @@ if [[ ${ROS_IMAGE} == true ]]; then
   else
     IMAGE_TAG="${IMAGE_TAG}-humble"
   fi
+fi
+
+if [[ ${ARM} == true ]]; then
+  if [[ ${NOBLE} == true ]]; then
+    IMAGE_TAG="arm64-noble-torch2.5.1-jazzy"
+  else
+    IMAGE_TAG="arm64-jammy-torch2.5.1-humble"
 fi
 
 IMAGE_NAME="${IMAGE_BASE_NAME}:${IMAGE_TAG}"

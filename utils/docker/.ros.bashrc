@@ -133,10 +133,8 @@ export PYTHONPATH=/opt/venv/lib/python3.10/site-packages:$PYTHONPATH
 
 export ROS_DOMAIN_ID=7
 export ROS_VERSION=2
-export ROS_DISTRO=humble
 export ROS_PYTHON_VERSION=3
-source /opt/venv/bin/activate
-source /opt/ros/humble/setup.bash
+source /opt/ros/${ROS_DISTRO}/setup.bash
 source /usr/share/colcon_cd/function/colcon_cd.sh
-export _colcon_cd_root=/opt/ros/humble/
+export _colcon_cd_root=/opt/ros/${ROS_DISTRO}/
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash

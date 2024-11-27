@@ -1,6 +1,7 @@
 wheel
 numpy
 pyyaml
+tomli
 
 opencv-python
 --find-links https://download.pytorch.org/whl/cu124

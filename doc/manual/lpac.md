@@ -34,7 +34,7 @@ They are similar, except that `data_generation.py` splits the dataset into train
 To generate a dataset, run the following command:
 ```bash
 python python/data_generation/data_generation.py \
-       ${CoverageControl_ws}/lpac/params/data_params.toml
+       ${CoverageControl_ws}/lpac/params/data_params.toml --split True
 ```
 
 A sample `data_params.toml` file is also provided in the `params` directory of the repository.

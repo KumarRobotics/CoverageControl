@@ -76,6 +76,7 @@ docker start -i coverage-control-$USER # Replace with the name of the container
 - `--with-cuda` : With CUDA support
 - `--with-ros` : With ROS support
 - `--noble` : Ubuntu 24.04 Noble
+- `--arm64` : ARM64 architecture
 
 The base image is `agarwalsaurav/pytorch_base` with different tags for different versions and configurations.
 
@@ -89,6 +90,8 @@ The base image is `agarwalsaurav/pytorch_base` with different tags for different
 |`noble-torch2.5.1-cuda12.6.2` | `--with-cuda --noble`|
 |`noble-torch2.5.1-jazzy` | `--with-ros --noble`|
 |`noble-torch2.5.1` | `--noble`|
+|`arm64-jammy-torch2.5.1-humble` | `--arm64`|
+|`arm64-noble-torch2.5.1-jazzy` | `--arm64 --noble`|
 
 
 Install the library available on PyPI:
