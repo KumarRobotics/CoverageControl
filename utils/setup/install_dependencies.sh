@@ -1,340 +1,329 @@
 #!/usr/bin/env bash
 
-TMP_DIR=$(mktemp -d)
+set -euo pipefail
 
-params="$(getopt -o d: -l directory:,no-cuda,boost,gmp,mpfr,eigen,cgal,pybind11,yaml-cpp,geographiclib,opencv --name "$(basename "$0")" -- "$@")"
+RED='\033[0;31m'    # Red
+GREEN='\033[0;32m'  # Green
+YELLOW='\033[0;33m' # Yellow
+NC='\033[0m'        # No Color
+
+error_exit() {
+  echo -e "${RED}Error: $1${NC}" >&2
+  exit 1
+}
+
+info_message() {
+  echo -e "${GREEN}$1${NC}"
+}
+
+warning_message() {
+  echo -e "${YELLOW}$1${NC}"
+}
+
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
 
 print_usage() {
-  printf "bash %s [-d|--directory <specify install directory>] [--no-cuda] [--boost] [--gmp] [--mpfr] [--eigen] [--cgal] [--pybind11] [--yaml-cpp] [--geographiclib] [--opencv]\n" "$(basename "$0")"
-}
-eval set -- "$params"
-unset params
+  cat <<EOF
+Usage: bash $(basename "$0") [OPTIONS]
 
-while true; do
-	case ${1} in
-		-d|--directory) INSTALL_DIR+=("${2}");shift 2;;
-		--no-cuda) NOCUDA=true;shift;;
-		--boost) BOOST=true;shift;;
-		--gmp) GMP=true;shift;;
-		--mpfr) MPFR=true;shift;;
-		--eigen) EIGEN=true;shift;;
-		--cgal) CGAL=true;shift;;
-		--pybind11) PYBIND11=true;shift;;
-		--yaml-cpp) YAML_CPP=true;shift;;
-		--geographiclib) GEOGRAPHICLIB=true;shift;;
-		--opencv) OPENCV=true;shift;;
-		--) shift;break;;
-		*) print_usage
-			exit 1 ;;
-	esac
+Options:
+  -d, --directory <install directory>  Specify the installation directory.
+      --boost                          Install Boost library.
+      --gmp                            Install GMP library.
+      --mpfr                           Install MPFR library.
+      --eigen                          Install Eigen library.
+      --cgal                           Install CGAL library.
+      --pybind11                       Install PyBind11 library.
+      --yaml-cpp                       Install YAML-CPP library.
+      --geographiclib                  Install GeographicLib library.
+      --opencv                         Install OpenCV library.
+
+  -h, --help                           Show this help message and exit.
+
+Examples:
+  bash $(basename "$0") --boost --gmp
+  bash $(basename "$0") -d /usr/local --opencv
+
+Note:
+  - You can specify multiple libraries to install.
+EOF
+}
+
+for cmd in wget cmake make tar; do
+  if ! command_exists "$cmd"; then
+    error_exit "'$cmd' command is not found. Please install it before running this script."
+  fi
 done
 
-MAIN_DIR=${TMP_DIR}/main/
-BUILD_DIR=${TMP_DIR}/build/
+# Create a temporary directory and ensure it is cleaned up on exit
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
 
-if [ -z "$INSTALL_DIR" ]; then
-	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
-else
-	CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR"
-	CONFIGURE_END_FLAGS="--prefix=$INSTALL_DIR"
-	echo "Installing to $INSTALL_DIR"
+MAIN_DIR="${TMP_DIR}/main"
+BUILD_DIR="${TMP_DIR}/build"
+mkdir -p "$MAIN_DIR/src"
+mkdir -p "$BUILD_DIR"
+
+if [[ $# -eq 0 ]]; then
+  print_usage
+  exit 1
 fi
 
-InstallCGAL () {
-	echo "Setting up CGAL"
-	wget --tries=4 https://github.com/CGAL/cgal/releases/download/v${CGAL_VERSION}/CGAL-${CGAL_VERSION}-library.tar.xz -P ${MAIN_DIR}/src > /dev/null
-  if [ $? -ne 0 ]; then
-    echo "Failed to download CGAL"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/CGAL-${CGAL_VERSION}-library.tar.xz -C ${MAIN_DIR}/src/ > /dev/null
-	cmake -S ${MAIN_DIR}/src/CGAL-${CGAL_VERSION} -B ${BUILD_DIR}/cgal ${CMAKE_END_FLAGS} > /dev/null
-	cmake --install ${BUILD_DIR}/cgal > /dev/null
-	if [ $? -eq 0 ]; then
-		echo "cgal install succeeded"
-	else
-		echo "cgal install failed"
-		exit 1
-	fi
+INSTALL_DIR=""
+BOOST=false
+GMP=false
+MPFR=false
+EIGEN=false
+CGAL=false
+PYBIND11=false
+YAML_CPP=false
+GEOGRAPHICLIB=false
+OPENCV=false
+
+SHORT_OPTS="d:h"
+LONG_OPTS="directory:,boost,gmp,mpfr,eigen,cgal,pybind11,yaml-cpp,geographiclib,opencv,help"
+
+# Parse options using getopt
+PARSED_PARAMS=$(getopt -o "$SHORT_OPTS" -l "$LONG_OPTS" --name "$(basename "$0")" -- "$@") || {
+  error_exit "Failed to parse arguments."
 }
 
-InstallGeoGraphicLib () {
-	echo "Setting up geographiclib"
-	wget --tries=4 https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.3.tar.gz -P ${MAIN_DIR}/src
-  if [ $? -ne 0 ]; then
-    echo "Failed to download geographiclib"
-    exit 1
+eval set -- "$PARSED_PARAMS"
+
+while true; do
+  case "$1" in
+    -d|--directory)
+      INSTALL_DIR="$2"
+      shift 2
+      ;;
+    --boost)
+      BOOST=true
+      shift
+      ;;
+    --gmp)
+      GMP=true
+      shift
+      ;;
+    --mpfr)
+      MPFR=true
+      shift
+      ;;
+    --eigen)
+      EIGEN=true
+      shift
+      ;;
+    --cgal)
+      CGAL=true
+      shift
+      ;;
+    --pybind11)
+      PYBIND11=true
+      shift
+      ;;
+    --yaml-cpp)
+      YAML_CPP=true
+      shift
+      ;;
+    --geographiclib)
+      GEOGRAPHICLIB=true
+      shift
+      ;;
+    --opencv)
+      OPENCV=true
+      shift
+      ;;
+    -h|--help)
+      print_usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      error_exit "Unknown option: $1"
+      ;;
+  esac
+done
+
+# Set CMake and configure flags
+if [[ -z "$INSTALL_DIR" ]]; then
+  CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release"
+  CONFIGURE_END_FLAGS=""
+else
+  CMAKE_END_FLAGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR"
+  CONFIGURE_END_FLAGS="--prefix=$INSTALL_DIR"
+  info_message "Installing to $INSTALL_DIR"
+fi
+
+# ----------------------------
+# Library Versions
+# ----------------------------
+
+BOOST_VERSION="1.86.0"
+BOOST_TAR_NAME="boost_$(echo $BOOST_VERSION | tr '.' '_')"
+GMP_VERSION="6.3.0"
+GMP_TAR_NAME="gmp-${GMP_VERSION}"
+MPFR_VERSION="4.2.1"
+MPFR_TAR_NAME="mpfr-${MPFR_VERSION}"
+EIGEN_VERSION="3.4.0"
+EIGEN_TAR_NAME="eigen-${EIGEN_VERSION}"
+CGAL_VERSION="6.0.1"
+CGAL_TAR_NAME="CGAL-${CGAL_VERSION}"
+OPENCV_VERSION="4.8.0"
+
+InstallBoost() {
+  info_message "Setting up Boost"
+  wget -q --tries=4 "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Boost"
+  tar -xf "${MAIN_DIR}/src/${BOOST_TAR_NAME}.tar.gz" -C "${MAIN_DIR}/src"
+  cd "${MAIN_DIR}/src/${BOOST_TAR_NAME}"
+  if [[ -z "$INSTALL_DIR" ]]; then
+    ./bootstrap.sh
+  else
+    ./bootstrap.sh --prefix="${INSTALL_DIR}"
   fi
-	tar -xf ${MAIN_DIR}/src/v2.3.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/geographiclib-2.3 -B ${BUILD_DIR}/geographiclib ${CMAKE_END_FLAGS} -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-	cmake --build ${BUILD_DIR}/geographiclib -j$(nproc)
-	cmake --install ${BUILD_DIR}/geographiclib
-	if [ $? -eq 0 ]; then
-		echo "geographiclib install succeeded"
-	else
-		echo "geographiclib install failed"
-		exit 1
-	fi
+  ./b2 cxxflags="-fPIC" cflags="-fPIC" -a link=static install -j"$(nproc)" || error_exit "Boost install failed"
+  info_message "Boost install succeeded"
 }
 
-InstallPybind11 () {
-	echo "Setting up pybind11"
-	wget --tries=4 https://github.com/pybind/pybind11/archive/refs/tags/v2.12.0.tar.gz -P ${MAIN_DIR}/src
-  if [ $? -ne 0 ]; then
-    echo "Failed to download pybind11"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/v2.12.0.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/pybind11-2.12.0 -B ${BUILD_DIR}/pybind11 -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/pybind11 -j$(nproc)
-	cmake --install ${BUILD_DIR}/pybind11
-	if [ $? -eq 0 ]; then
-		echo "pybind11 install succeeded"
-	else
-		echo "pybind11 install failed"
-		exit 1
-	fi
-}
-
-InstallYamlCPP () {
-	echo "Setting up yaml-cpp"
-	wget --tries=4 https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz -P ${MAIN_DIR}/src
-  if [ $? -ne 0 ]; then
-    echo "Failed to download yaml-cpp"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/0.8.0.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/yaml-cpp-0.8.0 -B ${BUILD_DIR}/yaml-cpp -DYAML_BUILD_SHARED_LIBS=ON  ${CMAKE_END_FLAGS} -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-	cmake --build ${BUILD_DIR}/yaml-cpp -j$(nproc)
-	if [ $? -ne 0 ]; then
-		echo "YAML build failed"
-	fi
-	cmake --install ${BUILD_DIR}/yaml-cpp
-	if [ $? -eq 0 ]; then
-		echo "yaml-cpp install succeeded"
-	else
-		echo "yaml-cpp install failed"
-		exit 1
-	fi
-}
-
-InstallEigen3 () {
-	echo "Setting up eigen3"
-	wget --tries=4 https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/${EIGEN_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
-  if [ $? -ne 0 ]; then
-    echo "Failed to download eigen3"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/${EIGEN_TAR_NAME}.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/${EIGEN_TAR_NAME} -B ${BUILD_DIR}/eigen3 ${CMAKE_END_FLAGS} > /dev/null
-	cmake --build ${BUILD_DIR}/eigen3 -j$(nproc) > /dev/null
-	cmake --install ${BUILD_DIR}/eigen3 > /dev/null
-	if [ $? -eq 0 ]; then
-		echo "eigen3 install succeeded"
-	else
-		echo "eigen3 install failed"
-		exit 1
-	fi
-}
-
-InstallTorchVision () {
-	echo "Setting up torchvision"
-	wget --tries=4 https://github.com/pytorch/vision/archive/refs/tags/v0.15.2.tar.gz -P ${MAIN_DIR}/src
-  if [ $? -ne 0 ]; then
-    echo "Failed to download torchvision"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/v0.15.2.tar.gz -C ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/vision-0.15.2 -B ${BUILD_DIR}/torchvision -DWITH_CUDA=ON -DUSE_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/torchvision -j$(nproc)
-	cmake --install ${BUILD_DIR}/torchvision
-	if [ $? -eq 0 ]; then
-		echo "torchvision install succeeded"
-	else
-		echo "torchvision install failed"
-		exit 1
-	fi
-}
-
-InstallTorchScatter () {
-	echo "Setting up torchscatter"
-	git clone --recurse-submodules https://github.com/rusty1s/pytorch_scatter.git ${MAIN_DIR}/src/pytorch_scatter
-	cmake -S ${MAIN_DIR}/src/pytorch_scatter -B ${BUILD_DIR}/torchscatter -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/torchscatter -j$(nproc)
-	cmake --install ${BUILD_DIR}/torchscatter
-	if [ $? -eq 0 ]; then
-		echo "torchscatter install succeeded"
-	else
-		echo "torchscatter install failed"
-		exit 1
-	fi
-}
-
-InstallTorchSparse () {
-	echo "Setting up torchsparse"
-	git clone --recurse-submodules https://github.com/rusty1s/pytorch_sparse.git ${MAIN_DIR}/src/pytorch_sparse
-	cmake -S ${MAIN_DIR}/src/pytorch_sparse -B ${BUILD_DIR}/torchsparse -DWITH_CUDA=ON -DWITH_PYTHON=ON -DCMAKE_INSTALL_PREFIX=${Torch_ROOT} ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/torchsparse -j$(nproc)
-	cmake --install ${BUILD_DIR}/torchsparse
-	if [ $? -eq 0 ]; then
-		echo "torchsparse install succeeded"
-	else
-		echo "torchsparse install failed"
-		exit 1
-	fi
-}
-
-InstallOpenCV () {
-	echo "Setting up opencv"
-	wget --tries=4 -O ${MAIN_DIR}/src/opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.8.0.tar.gz
-  if [ $? -ne 0 ]; then
-    echo "Failed to download opencv"
-    exit 1
-  fi
-	wget -O ${MAIN_DIR}/src/opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.8.0.zip
-	tar -xf ${MAIN_DIR}/src/opencv.tar.gz -C ${MAIN_DIR}/src/
-	unzip ${MAIN_DIR}/src/opencv_contrib.zip -d ${MAIN_DIR}/src/
-	cmake -S ${MAIN_DIR}/src/opencv-4.8.0 -B ${BUILD_DIR}/opencv -DWITH_CUDA=ON -DWITH_CUBLAS=ON -DWITH_CUDNN=ON -DWITH_FFMPEG=ON -DWITH_EIGEN=ON -DWITH_OPENMP=ON -DWITH_JPEG=ON -DWITH_PNG=ON -DWITH_TIFF=ON -DWITH_OPENJPEG=ON -DOPENCV_EXTRA_MODULES_PATH=${MAIN_DIR}/src/opencv_contrib-4.8.0/modules ${CMAKE_END_FLAGS}
-	cmake --build ${BUILD_DIR}/opencv -j$(nproc)
-	cmake --install ${BUILD_DIR}/opencv
-	if [ $? -eq 0 ]; then
-		echo "opencv install succeeded"
-	else
-		echo "opencv install failed"
-		exit 1
-	fi
-}
-
-InstallGMP () {
-	echo "Setting up gmp"
-	wget --tries=1 https://gmplib.org/download/gmp/${GMP_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
-  if [ $? -ne 0 ]; then
-    wget --tries=4 https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${GMP_TAR_NAME}/${GMP_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
-  fi
-  if [ $? -ne 0 ]; then
-    echo "Failed to download gmp"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/${GMP_TAR_NAME}.tar.xz -C ${MAIN_DIR}/src/ > /dev/null
-	cd ${MAIN_DIR}/src/${GMP_TAR_NAME}
-	./configure --enable-cxx --disable-shared --with-pic ${CONFIGURE_END_FLAGS}  > /dev/null
-	make -C ${MAIN_DIR}/src/${GMP_TAR_NAME} install -j$(nproc) > /dev/null
-	if [ $? -eq 0 ]; then
-		echo "gmp install succeeded"
-	else
-		echo "gmp install failed"
-		exit 1
-	fi
+InstallGMP() {
+  info_message "Setting up GMP"
+  wget -q --tries=1 "https://gmplib.org/download/gmp/${GMP_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
+  wget -q --tries=4 "https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${GMP_TAR_NAME}/${GMP_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
+  error_exit "Failed to download GMP"
+  tar -xf "${MAIN_DIR}/src/${GMP_TAR_NAME}.tar.xz" -C "${MAIN_DIR}/src"
+  cd "${MAIN_DIR}/src/${GMP_TAR_NAME}"
+  ./configure --enable-cxx --disable-shared --with-pic ${CONFIGURE_END_FLAGS}
+  make -j"$(nproc)" install || error_exit "GMP install failed"
+  info_message "GMP install succeeded"
 }
 
 InstallMPFR() {
-	echo "Setting up mpfr"
-	wget --tries=1 https://www.mpfr.org/mpfr-current/${MPFR_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
-  if [ $? -ne 0 ]; then
-    wget --tries=4 https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${MPFR_TAR_NAME}/${MPFR_TAR_NAME}.tar.xz -P ${MAIN_DIR}/src > /dev/null
+  info_message "Setting up MPFR"
+  wget -q --tries=1 "https://www.mpfr.org/mpfr-current/${MPFR_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
+  wget -q --tries=4 "https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${MPFR_TAR_NAME}/${MPFR_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
+  error_exit "Failed to download MPFR"
+  tar -xf "${MAIN_DIR}/src/${MPFR_TAR_NAME}.tar.xz" -C "${MAIN_DIR}/src"
+  cd "${MAIN_DIR}/src/${MPFR_TAR_NAME}"
+  if [[ -z "$INSTALL_DIR" ]]; then
+    ./configure --disable-shared --with-pic ${CONFIGURE_END_FLAGS}
+  else
+    ./configure --disable-shared --with-pic --with-gmp="${INSTALL_DIR}" ${CONFIGURE_END_FLAGS}
   fi
-  if [ $? -ne 0 ]; then
-    echo "Failed to download mpfr"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/${MPFR_TAR_NAME}.tar.xz -C ${MAIN_DIR}/src/
-	cd ${MAIN_DIR}/src/${MPFR_TAR_NAME}
-	# if ${INSTALL_DIR} is set, then we need to tell where gmp is installed
-	if [ -z "$INSTALL_DIR" ]; then
-		./configure --disable-shared --with-pic ${CONFIGURE_END_FLAGS}
-	else
-		./configure --disable-shared --with-pic --with-gmp=${INSTALL_DIR} ${CONFIGURE_END_FLAGS}
-	fi
-	make -C ${MAIN_DIR}/src/${MPFR_TAR_NAME} install -j$(nproc)
-	if [ $? -eq 0 ]; then
-		echo "mpfr install succeeded"
-	else
-		echo "mpfr install failed"
-		exit 1
-	fi
+  make -j"$(nproc)" install || error_exit "MPFR install failed"
+  info_message "MPFR install succeeded"
 }
 
-InstallBoost () {
-	echo "Setting up boost"
-	wget --tries=4 https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz -P ${MAIN_DIR}/src
-  if [ $? -ne 0 ]; then
-    echo "Failed to download boost"
-    exit 1
-  fi
-	tar -xf ${MAIN_DIR}/src/${BOOST_TAR_NAME}.tar.gz -C ${MAIN_DIR}/src/
-	cd ${MAIN_DIR}/src/${BOOST_TAR_NAME}
-	if [ -z "$INSTALL_DIR" ]; then
-		./bootstrap.sh
-	else
-		./bootstrap.sh --prefix=${INSTALL_DIR}
-	fi
-	./b2 cxxflags="-fPIC" cflags="-fPIC" -a link=static install -j$(nproc)
-	if [ $? -eq 0 ]; then
-		echo "boost install succeeded"
-	else
-		echo "boost install failed"
-		exit 1
-	fi
+InstallEigen3() {
+  info_message "Setting up Eigen3"
+  wget -q --tries=4 "https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/${EIGEN_TAR_NAME}.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Eigen3"
+  tar -xf "${MAIN_DIR}/src/${EIGEN_TAR_NAME}.tar.gz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/${EIGEN_TAR_NAME}" -B "${BUILD_DIR}/eigen3" ${CMAKE_END_FLAGS}
+  cmake --build "${BUILD_DIR}/eigen3" -j"$(nproc)"
+  cmake --install "${BUILD_DIR}/eigen3" || error_exit "Eigen3 install failed"
+  info_message "Eigen3 install succeeded"
 }
 
-BOOST_VERSION=1.86.0
-BOOST_TAR_NAME=$(echo boost_${BOOST_VERSION} | tr . _)
-GMP_VERSION=6.3.0
-GMP_TAR_NAME=$(echo gmp-${GMP_VERSION})
-MPFR_VERSION=4.2.1
-MPFR_TAR_NAME=$(echo mpfr-${MPFR_VERSION})
-EIGEN_VERSION=3.4.0
-EIGEN_TAR_NAME=$(echo eigen-${EIGEN_VERSION})
-CGAL_VERSION=6.0.1
-CGAL_TAR_NAME=$(echo CGAL-${CGAL_VERSION})
+InstallCGAL() {
+  info_message "Setting up CGAL"
+  wget -q --tries=4 "https://github.com/CGAL/cgal/releases/download/v${CGAL_VERSION}/${CGAL_TAR_NAME}-library.tar.xz" -P "${MAIN_DIR}/src" || error_exit "Failed to download CGAL"
+  tar -xf "${MAIN_DIR}/src/${CGAL_TAR_NAME}-library.tar.xz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/${CGAL_TAR_NAME}" -B "${BUILD_DIR}/cgal" ${CMAKE_END_FLAGS}
+  cmake --build "${BUILD_DIR}/cgal" -j"$(nproc)"
+  cmake --install "${BUILD_DIR}/cgal" || error_exit "CGAL install failed"
+  info_message "CGAL install succeeded"
+}
 
-if [ -n "$BOOST" ]; then
-	InstallBoost
+InstallPybind11() {
+  info_message "Setting up Pybind11"
+  wget -q --tries=4 "https://github.com/pybind/pybind11/archive/refs/tags/v2.12.0.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Pybind11"
+  tar -xf "${MAIN_DIR}/src/v2.12.0.tar.gz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/pybind11-2.12.0" -B "${BUILD_DIR}/pybind11" -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
+  cmake --build "${BUILD_DIR}/pybind11" -j"$(nproc)"
+  cmake --install "${BUILD_DIR}/pybind11" || error_exit "Pybind11 install failed"
+  info_message "Pybind11 install succeeded"
+}
+
+InstallYamlCPP() {
+  info_message "Setting up yaml-cpp"
+  wget -q --tries=4 "https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download yaml-cpp"
+  tar -xf "${MAIN_DIR}/src/0.8.0.tar.gz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/yaml-cpp-0.8.0" -B "${BUILD_DIR}/yaml-cpp" -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON ${CMAKE_END_FLAGS}
+  cmake --build "${BUILD_DIR}/yaml-cpp" -j"$(nproc)"
+  cmake --install "${BUILD_DIR}/yaml-cpp" || error_exit "yaml-cpp install failed"
+  info_message "yaml-cpp install succeeded"
+}
+
+InstallGeographicLib() {
+  info_message "Setting up GeographicLib"
+  wget -q --tries=4 "https://github.com/geographiclib/geographiclib/archive/refs/tags/v2.3.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download GeographicLib"
+  tar -xf "${MAIN_DIR}/src/v2.3.tar.gz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/geographiclib-2.3" -B "${BUILD_DIR}/geographiclib" -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ${CMAKE_END_FLAGS}
+  cmake --build "${BUILD_DIR}/geographiclib" -j"$(nproc)"
+  cmake --install "${BUILD_DIR}/geographiclib" || error_exit "GeographicLib install failed"
+  info_message "GeographicLib install succeeded"
+}
+
+InstallOpenCV() {
+  info_message "Setting up OpenCV"
+  wget -q --tries=4 -O "${MAIN_DIR}/src/opencv.tar.gz" "https://github.com/opencv/opencv/archive/refs/tags/${OPENCV_VERSION}.tar.gz" || error_exit "Failed to download OpenCV"
+  wget -q --tries=4 -O "${MAIN_DIR}/src/opencv_contrib.tar.gz" "https://github.com/opencv/opencv_contrib/archive/refs/tags/${OPENCV_VERSION}.tar.gz" || error_exit "Failed to download OpenCV contrib modules"
+  tar -xf "${MAIN_DIR}/src/opencv.tar.gz" -C "${MAIN_DIR}/src"
+  tar -xf "${MAIN_DIR}/src/opencv_contrib.tar.gz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/opencv-${OPENCV_VERSION}" -B "${BUILD_DIR}/opencv" \
+    -DWITH_CUDA=ON \
+    -DWITH_CUBLAS=ON \
+    -DWITH_CUDNN=ON \
+    -DWITH_FFMPEG=ON \
+    -DWITH_EIGEN=ON \
+    -DWITH_OPENMP=ON \
+    -DWITH_JPEG=ON \
+    -DWITH_PNG=ON \
+    -DWITH_TIFF=ON \
+    -DWITH_OPENJPEG=ON \
+    -DOPENCV_EXTRA_MODULES_PATH="${MAIN_DIR}/src/opencv_contrib-${OPENCV_VERSION}/modules" \
+    ${CMAKE_END_FLAGS}
+  cmake --build "${BUILD_DIR}/opencv" -j"$(nproc)"
+  cmake --install "${BUILD_DIR}/opencv" || error_exit "OpenCV install failed"
+  info_message "OpenCV install succeeded"
+}
+
+if [[ "$BOOST" == true ]]; then
+  InstallBoost
 fi
 
-if [ -n "$GMP" ]; then
-	InstallGMP
+if [[ "$GMP" == true ]]; then
+  InstallGMP
 fi
 
-if [ -n "$MPFR" ]; then
-	InstallMPFR
+if [[ "$MPFR" == true ]]; then
+  InstallMPFR
 fi
 
-if [ -n "$EIGEN" ]; then
-	InstallEigen3
+if [[ "$EIGEN" == true ]]; then
+  InstallEigen3
 fi
 
-if [ -n "$CGAL" ]; then
-	InstallCGAL
+if [[ "$CGAL" == true ]]; then
+  InstallCGAL
 fi
 
-if [ -n "$PYBIND11" ]; then
-	InstallPybind11
+if [[ "$PYBIND11" == true ]]; then
+  InstallPybind11
 fi
 
-if [ -n "$YAML_CPP" ]; then
-	InstallYamlCPP
+if [[ "$YAML_CPP" == true ]]; then
+  InstallYamlCPP
 fi
 
-if [ -n "$GEOGRAPHICLIB" ]; then
-	InstallGeoGraphicLib
+if [[ "$GEOGRAPHICLIB" == true ]]; then
+  InstallGeographicLib
 fi
 
-if [ -n "$OPENCV" ]; then
-	InstallOpenCV
+if [[ "$OPENCV" == true ]]; then
+  InstallOpenCV
 fi
 
-
-# InstallGMP
-# InstallMPFR
-# InstallEigen3
-# InstallCGAL
-# InstallPybind11
-# InstallYamlCPP
-# InstallGeoGraphicLib
-# InstallOpenCV
-# InstallTorchVision
-# InstallTorchSparse
-# InstallTorchScatter
-#
-rm -rf ${TMP_DIR}
+info_message "Installation completed successfully."
