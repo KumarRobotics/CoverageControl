@@ -152,11 +152,11 @@ class TrainModel:
                 # torch.save(self.optimizer.state_dict(), self.model_dir + "/optimizer_curr.pt")
 
             if epoch % 5 == 0:
-                torch.save({"epoch": epoch,
-                            "model_state_dict": self.model.state_dict(),
-                            "optimizer_state_dict": self.optimizer.state_dict(),
-                            "loss": train_loss},
-                           self.model_dir + "/model_epoch" + str(epoch) + ".pt")
+                model_state_dict = self.model.state_dict()
+                model_state_dict["epoch"] = epoch
+                model_state_dict["optimizer_state_dict"] = self.optimizer.state_dict()
+                model_state_dict["loss"] = train_loss
+                torch.save(model_state_dict, self.model_dir + "/model_epoch" + str(epoch) + ".pt")
 
             torch.save(best_model_state_dict, self.model_dir + "/model.pt")
             torch.save(best_train_model_state_dict, self.model_dir + "/model_train.pt")
