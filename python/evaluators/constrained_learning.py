@@ -299,6 +299,7 @@ if __name__ == "__main__":
     T_0s = [25]
     eta_duals = [1]
     eval_dir = sys.argv[2]
+    dual_updater = sys.argv[3]
 
     for eta_dual in eta_duals:
         for T_0 in T_0s:
@@ -309,7 +310,7 @@ if __name__ == "__main__":
                     env_id,
                     eta_dual,
                     T_0,
-                    dual_updater="proj_1",
+                    dual_updater,
                     alpha=0.0,
                     normalize=True,
                     obj_normalize_factor=1e10,
