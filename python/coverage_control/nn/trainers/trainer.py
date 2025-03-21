@@ -139,6 +139,7 @@ class TrainModel:
                 if val_loss < best_val_loss:
                     best_val_loss = val_loss
                     best_model_state_dict = deepcopy(self.model.state_dict())
+                    best_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": val_loss}
                     # torch.save(self.model.state_dict(), self.model_dir + "/model.pt")
                     # torch.save(self.optimizer.state_dict(), self.model_dir + "/optimizer.pt")
                 print(f"Epoch: {epoch + 1}/{self.num_epochs} ",
@@ -148,18 +149,18 @@ class TrainModel:
             if train_loss < best_train_loss:
                 best_train_loss = train_loss
                 best_train_model_state_dict = deepcopy(self.model.state_dict())
-                # torch.save(self.model.state_dict(), self.model_dir + "/model_curr.pt")
-                # torch.save(self.optimizer.state_dict(), self.model_dir + "/optimizer_curr.pt")
+                best_train_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
 
-            if epoch % 5 == 0:
+            if (epoch + 1) % 5 == 0:
                 model_state_dict = self.model.state_dict()
-                model_state_dict["epoch"] = epoch
-                model_state_dict["optimizer_state_dict"] = self.optimizer.state_dict()
-                model_state_dict["loss"] = train_loss
                 torch.save(model_state_dict, self.model_dir + "/model_epoch" + str(epoch) + ".pt")
+                model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
+                torch.save(model_data, self.model_dir + "/model_data_epoch" + str(epoch) + ".pt")
 
             torch.save(best_model_state_dict, self.model_dir + "/model.pt")
+            torch.save(best_model_data, self.model_dir + "/model_data.pt")
             torch.save(best_train_model_state_dict, self.model_dir + "/model_train.pt")
+            torch.save(best_train_model_data, self.model_dir + "/model_train_data.pt")
             elapsed_time = time.time() - start_time
             # Print elapsed time in minutes
             print(f"Elapsed time: {elapsed_time / 60:.2f} minutes")
