@@ -23,10 +23,19 @@
 Train a model using pytorch
 """
 
-import time
 from copy import deepcopy
 
 import torch
+
+from rich.progress import (
+    Progress,
+    BarColumn,
+    TextColumn,
+    TaskProgressColumn,
+    TimeRemainingColumn,
+    TimeElapsedColumn,
+    MofNCompleteColumn,
+)
 
 __all__ = ["TrainModel"]
 
@@ -70,7 +79,6 @@ class TrainModel:
         self.num_epochs = num_epochs
         self.device = device
         self.model_dir = model_dir
-        self.start_time = time.time()
 
     def load_saved_model_dict(self, model_file: str) -> None:
         """
@@ -111,59 +119,82 @@ class TrainModel:
         # Initialize the loss history
         train_loss_history = []
         val_loss_history = []
-        start_time = time.time()
 
         best_model_state_dict = None
         best_train_model_state_dict = None
 
-        # Train the model
+        columns = [
+            BarColumn(),
+            TaskProgressColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            MofNCompleteColumn(),
+            TextColumn("[bold]Loss ", justify="right"),
+            TextColumn("[bold blue]T:[/] {task.fields[train_loss]:>.2e}"),
+            TextColumn("[bold blue]V:[/] {task.fields[val_loss]:>.2e}"),
+            TextColumn("[bold blue]B:[/] {task.fields[best_val_loss]:>.2e}"),
+            TextColumn("[bold blue]@[/] {task.fields[best_epoch]:<3.0f}"),
+            TimeRemainingColumn(),
+            TimeElapsedColumn(),
+        ]
 
-        for epoch in range(self.num_epochs):
-            # Training
-            train_loss = self.train_epoch()
-            train_loss_history.append(train_loss)
+        val_loss = float("Inf")
+        train_loss = float("Inf")
+        best_val_loss_epoch = -1
+
+        with Progress(*columns) as progress:
+            epoch_task = progress.add_task(
+                "[bold blue]Training",
+                total=self.num_epochs,
+                auto_refresh=False,
+                train_loss=train_loss,
+                val_loss=val_loss,
+                best_val_loss=best_val_loss,
+                best_epoch=best_val_loss_epoch,
+            )
+
+            best_train_model_state_dict = deepcopy(self.model.state_dict())
+            for epoch in range(self.num_epochs):
+                # Training
+                train_loss = self.train_epoch()
+                train_loss_history.append(train_loss)
+
+                if train_loss < best_train_loss:
+                    best_train_loss = train_loss
+                    best_train_model_state_dict = deepcopy(self.model.state_dict())
+                    best_train_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
+
+                if self.val_loader is not None:
+                    val_loss = self.validate_epoch(self.val_loader)
+                    val_loss_history.append(val_loss)
+
+                    if val_loss < best_val_loss:
+                        best_val_loss = val_loss
+                        best_model_state_dict = deepcopy(self.model.state_dict())
+                        best_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": val_loss}
+                        best_val_loss_epoch = epoch
+
+                if (epoch + 1) % 5 == 0:
+                    model_state_dict = self.model.state_dict()
+                    torch.save(model_state_dict, self.model_dir + "/model_epoch" + str(epoch) + ".pt")
+                    model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
+                    torch.save(model_data, self.model_dir + "/model_data_epoch" + str(epoch) + ".pt")
+
+                progress.update(
+                    epoch_task,
+                    advance=1,
+                    train_loss=train_loss,
+                    val_loss=val_loss,
+                    best_val_loss=best_val_loss,
+                    best_epoch=best_val_loss_epoch,
+                )
+                progress.refresh()
+
+            torch.save(val_loss_history, self.model_dir + "/val_loss.pt")
             torch.save(train_loss_history, self.model_dir + "/train_loss.pt")
-            # Print the loss
-            print(f"Epoch: {epoch + 1}/{self.num_epochs} ",
-                  f"Training Loss: {train_loss:.3e} ")
-
-            # Validation
-
-            if self.val_loader is not None:
-                val_loss = self.validate_epoch(self.val_loader)
-                val_loss_history.append(val_loss)
-                torch.save(val_loss_history, self.model_dir + "/val_loss.pt")
-
-                # Save the best model
-
-                if val_loss < best_val_loss:
-                    best_val_loss = val_loss
-                    best_model_state_dict = deepcopy(self.model.state_dict())
-                    best_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": val_loss}
-                    # torch.save(self.model.state_dict(), self.model_dir + "/model.pt")
-                    # torch.save(self.optimizer.state_dict(), self.model_dir + "/optimizer.pt")
-                print(f"Epoch: {epoch + 1}/{self.num_epochs} ",
-                      f"Validation Loss: {val_loss:.3e} ",
-                      f"Best Validation Loss: {best_val_loss:.3e}")
-
-            if train_loss < best_train_loss:
-                best_train_loss = train_loss
-                best_train_model_state_dict = deepcopy(self.model.state_dict())
-                best_train_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
-
-            if (epoch + 1) % 5 == 0:
-                model_state_dict = self.model.state_dict()
-                torch.save(model_state_dict, self.model_dir + "/model_epoch" + str(epoch) + ".pt")
-                model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
-                torch.save(model_data, self.model_dir + "/model_data_epoch" + str(epoch) + ".pt")
-
             torch.save(best_model_state_dict, self.model_dir + "/model.pt")
             torch.save(best_model_data, self.model_dir + "/model_data.pt")
             torch.save(best_train_model_state_dict, self.model_dir + "/model_train.pt")
             torch.save(best_train_model_data, self.model_dir + "/model_train_data.pt")
-            elapsed_time = time.time() - start_time
-            # Print elapsed time in minutes
-            print(f"Elapsed time: {elapsed_time / 60:.2f} minutes")
 
     # Train the model in batches
     def train_epoch(self) -> float:
@@ -197,11 +228,6 @@ class TrainModel:
 
             # Calculate the loss
             loss = self.criterion(output, target)
-
-            # Print batch number and loss
-
-            if batch_idx % 10 == 0:
-                print(f"Batch: {batch_idx}, Loss: {loss:.3e} ")
 
             # Backward propagation
             loss.backward()
