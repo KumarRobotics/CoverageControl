@@ -4,13 +4,13 @@
 SCRIPT_DIR="${CoverageControl_ws}/src/CoverageControl/python"
 
 # Set the parameters directory based on the environment variable
-PARAMS_DIR="${CoverageControl_ws}/lpac_512/params/"
+PARAMS_DIR="${CoverageControl_ws}/lpac/params/"
 
 # Define the parameter file names
 DATA_PARAMS_FILE="data_params.toml"
 # DATA_GEN_ALGORITHM="--algorithm CentralizedCVT"
 LEARNING_PARAMS_FILE="learning_params.toml"
-EVAL_PARAMS_FILE="eval_multi.toml"
+EVAL_PARAMS_FILE="eval.toml"
 
 # Function to print messages in red
 print_error() {
@@ -58,10 +58,10 @@ fi
 # Edit and execute process_data.sh
 
 # Running the data generation script
-# run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} ${DATA_GEN_ALGORITHM} --split True" "Data Generation"
+run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} ${DATA_GEN_ALGORITHM} --split True" "Data Generation"
 
 # Running the training script
-# run_command "python ${SCRIPT_DIR}/training/train_lpac.py ${PARAMS_DIR}/${LEARNING_PARAMS_FILE} 512" "Model Training"
+run_command "python ${SCRIPT_DIR}/training/train_lpac.py ${PARAMS_DIR}/${LEARNING_PARAMS_FILE} 1024" "Model Training"
 
 # Running the evaluation script
 run_command "python ${SCRIPT_DIR}/evaluators/eval.py ${PARAMS_DIR}/${EVAL_PARAMS_FILE}" "Model Evaluation"
