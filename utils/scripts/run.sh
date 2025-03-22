@@ -61,7 +61,7 @@ fi
 # Edit and execute process_data.sh
 
 # Running the data generation script
-# run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} ${DATA_GEN_ALGORITHM} --split True" "Data Generation"
+run_command "python ${SCRIPT_DIR}/data_generation/data_generation.py ${PARAMS_DIR}/${DATA_PARAMS_FILE} ${DATA_GEN_ALGORITHM} --split True" "Data Generation"
 
 # Running the training script
 run_command "python ${SCRIPT_DIR}/training/train_lpac.py ${PARAMS_DIR}/${LEARNING_PARAMS_FILE} ${ENV_SIZE}" "Model Training"

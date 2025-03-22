@@ -173,7 +173,7 @@ class TrainModel:
                         best_model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": val_loss}
                         best_val_loss_epoch = epoch
 
-                if (epoch + 1) % 5 == 0:
+                if (epoch) % 5 == 0 or epoch == self.num_epochs - 1:
                     model_state_dict = self.model.state_dict()
                     torch.save(model_state_dict, self.model_dir + "/model_epoch" + str(epoch) + ".pt")
                     model_data = {"epoch": epoch, "optimizer_state_dict": deepcopy(self.optimizer.state_dict()), "loss": train_loss}
