@@ -85,7 +85,7 @@ class ControllerCVT:
         if error_flag:
             raise ValueError("Error in step")
 
-        return env.GetObjectiveValue(), converged
+        return converged
 
 
 class ControllerNN:
@@ -153,4 +153,4 @@ class ControllerNN:
         # Check if actions are all zeros (1e-12)
         if torch.allclose(actions, torch.zeros_like(actions), atol=1e-5):
             return env.GetObjectiveValue(), True
-        return env.GetObjectiveValue(), False
+        return False

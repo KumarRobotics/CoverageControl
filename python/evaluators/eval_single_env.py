@@ -106,7 +106,8 @@ class EvaluatorSingle:
             step_count = step_count + 1
 
             while step_count < self.num_steps:
-                objective_value, converged = controller.step(env)
+                converged = controller.step(env)
+                objective_value = env.GetObjectiveValue()
                 cost_data[controller_id, step_count] = (
                     objective_value / initial_objective_value
                 )

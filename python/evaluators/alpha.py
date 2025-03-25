@@ -156,7 +156,7 @@ class Evaluator:
             )
 
     def advance_state(self):
-        obj_val, is_converged = self.controller.step(self.env_main)
+        is_converged = self.controller.step(self.env_main)
         self.step_counter = self.step_counter + 1
 
         if self.generate_video and self.step_counter % 1 == 0:

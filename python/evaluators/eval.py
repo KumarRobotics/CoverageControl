@@ -113,7 +113,8 @@ class Evaluator:
                     step_count = step_count + 1
 
                     while step_count < self.num_steps:
-                        objective_value, converged = controller.step(env)
+                        converged = controller.step(env)
+                        objective_value = env.GetObjectiveValue()
                         normalized_objective_value = (
                             objective_value / initial_objective_value
                         )
