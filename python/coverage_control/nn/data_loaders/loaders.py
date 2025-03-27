@@ -115,7 +115,7 @@ class CNNGNNDataset(Dataset):
         self.robot_positions = DataLoaderUtils.load_robot_positions(
                 f"{data_dir}/{stage}"
                 )
-        self.robot_positions = (self.robot_positions + world_size / 2) / world_size
+        self.robot_positions = CoverageEnvUtils.normalize_robot_positions(self.robot_positions, world_size)
 
         # Print the details of the dataset with device information
         print(f"Dataset: {self.stage} | Size: {self.dataset_size}",
@@ -132,7 +132,6 @@ class CNNGNNDataset(Dataset):
         data = DataLoaderUtils.to_torch_geometric_data(
                 self.maps[idx], self.edge_weights[idx], self.robot_positions[idx]
                 )
-        # data = CoverageEnvUtils.GetTorchGeometricDataRobotPositions(self.maps[idx], self.robot_positions[idx])
         targets = self.targets[idx]
 
         if targets.dim == 3:

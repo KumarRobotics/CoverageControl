@@ -311,6 +311,23 @@ class CoverageEnvUtils:
         return robot_positions
 
     @staticmethod
+    def normalize_robot_positions(robot_positions: torch.Tensor, map_size: int) -> torch.Tensor:
+        """
+        Normalize robot positions
+
+        Args:
+            robot_positions: robot positions
+            map_size: size of the map
+
+        Returns:
+            torch.Tensor: normalized robot positions
+        """
+        # half_map_size = map_size / 2.0
+        # normalized_positions = (robot_positions - half_map_size) / half_map_size
+        normalized_positions = (robot_positions + map_size / 2.0) / map_size
+        return normalized_positions
+
+    @staticmethod
     def get_weights(env: CoverageSystem, params: Parameters) -> torch.Tensor:
         """
         Get edge weights for the communication graph
@@ -366,7 +383,7 @@ class CoverageEnvUtils:
         edge_index = edge_weights.indices().long()
         weights = edge_weights.values().float()
         pos = CoverageEnvUtils.get_robot_positions(env)
-        pos = (pos + params.pWorldMapSize / 2.0) / params.pWorldMapSize
+        pos = CoverageEnvUtils.normalize_robot_positions(pos, params.pWorldMapSize)
         data = torch_geometric.data.Data(
             x=features,
             edge_index=edge_index.clone().detach(),
