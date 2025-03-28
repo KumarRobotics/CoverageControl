@@ -4,6 +4,7 @@ import os
 import pathlib
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import sys  # Import sys to handle command-line arguments
 
 class CostAnalyzer:
@@ -26,6 +27,12 @@ class CostAnalyzer:
             'rgba(229, 200, 144, 1.0)',  # Yellow
             'rgba(108, 111, 133, 1.0)',  # subtext0
         ]
+        self.num_controllers = len(self.controller_dirs)
+        self.num_envs = 0
+        self.num_steps = 0
+        self.all_costs = None
+        self.best_envs = None
+
     @staticmethod
     def str2path(s):
         """Convert a string path to a pathlib.Path object with expanded user and variables."""
@@ -47,11 +54,28 @@ class CostAnalyzer:
             costs = np.loadtxt(csv_file_path, delimiter=",")
             costs = costs / costs[:, 0][:, None]  # Normalize each row by the first element
             costs_dict[controller_dir] = costs
+        self.num_envs = costs_dict[self.controller_dirs[0]].shape[0]
+        self.num_steps = costs_dict[self.controller_dirs[0]].shape[1]
+        self.all_costs = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
+        for idx, controller_dir in enumerate(self.controller_dirs):
+            self.all_costs[idx] = costs_dict[controller_dir]
         return costs_dict
+
+    def compute_best_num_envs(self, costs_dict):
+        """Compute the best number of environments for each controller over time."""
+        all_costs_temp = self.all_costs.copy()
+        # Find index of ClairvoyantCVT controller, if it exists, if not ignore it
+        clair_str = "ClairvoyantCVT"
+        clairvoyant_idx = self.controller_dirs.index(clair_str) if clair_str in self.controller_dirs else None
+        if clairvoyant_idx is not None:
+            all_costs_temp[clairvoyant_idx] = np.inf
+        controller_indices = np.arange(self.num_controllers)[:, None, None]
+        self.best_envs = (controller_indices == np.argmin(all_costs_temp, axis=0)[None, ...]).sum(axis=1)
+        self.best_envs[:, 0] = self.num_envs // (self.num_controllers - 1)
 
     def plot_costs(self, costs_dict):
         """Plot the normalized costs over time for each controller."""
-        fig = go.Figure()
+        fig = make_subplots(rows=3, cols=1, vertical_spacing=0.05, shared_xaxes=True, specs=[[{'rowspan': 2}], [{}], [{}]])
         for idx, controller_dir in enumerate(self.controller_dirs):
             costs = costs_dict[controller_dir]
             mean_cost = np.mean(costs, axis=0)
@@ -66,10 +90,10 @@ class CostAnalyzer:
                 fill="toself",
                 fillcolor=color.replace('1.0', '0.2'),
                 line=dict(color='rgba(255,255,255,0)'),
-                name=controller_dir + " ± std",
                 legendgroup=controller_dir,
-                legendgrouptitle_text=controller_dir,
-            ))
+                showlegend=False,
+            ),
+                          row=1, col=1)
 
         for idx, controller_dir in enumerate(self.controller_dirs):
             costs = costs_dict[controller_dir]
@@ -77,24 +101,34 @@ class CostAnalyzer:
             std_cost = np.std(costs, axis=0)
             time_steps = np.arange(costs.shape[1])
             color = self.colors[idx % len(self.colors)]  # Cycle through colors
+
+            best_envs = self.best_envs[idx]
             
             # Mean cost line
             fig.add_trace(go.Scatter(
                 x=time_steps,
                 y=mean_cost,
                 mode="lines",
-                name=controller_dir,
+                name="",
                 line=dict(color=color),
-                # legendgroup="means",
-                # legendgrouptitle_text="Mean costs",
                 legendgroup=controller_dir,
                 legendgrouptitle_text=controller_dir,
-            ))
+            ),
+                          row=1, col=1)
+
+            fig.add_trace(go.Scatter(
+                x=time_steps,
+                y=best_envs,
+                mode="lines",
+                showlegend=False,
+                line=dict(color=color),
+                legendgroup=controller_dir,
+            ),
+                          row=3, col=1)
             
+
         # Update plot layout
         fig.update_layout(
-            title="Normalized costs over time",
-            xaxis_title="Time step",
             yaxis_title="Normalized cost",
             legend=dict(
                 # orientation="h",
@@ -102,13 +136,18 @@ class CostAnalyzer:
                 x=1,
                 y=1,
                 bgcolor="rgba(255, 255, 255, 0.8)"
-            )
+
+            ),
+            yaxis3_title="Number of Best Environments",
+            xaxis3_title="Time Step",
         )
+
         return fig
 
     def run_analysis(self):
         """Load data, generate plots, and output results."""
         costs_dict = self.load_and_normalize_costs()
+        self.compute_best_num_envs(costs_dict)
         fig = self.plot_costs(costs_dict)
         fig.write_html(self.base_dir_path / "costs_time.html")
 
