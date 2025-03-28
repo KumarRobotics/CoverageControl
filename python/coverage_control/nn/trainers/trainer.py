@@ -191,10 +191,10 @@ class TrainModel:
 
             torch.save(val_loss_history, self.model_dir + "/val_loss.pt")
             torch.save(train_loss_history, self.model_dir + "/train_loss.pt")
-            torch.save(best_model_state_dict, self.model_dir + "/model.pt")
-            torch.save(best_model_data, self.model_dir + "/model_data.pt")
+            torch.save(best_model_state_dict, self.model_dir + "/model_val.pt")
+            torch.save(best_model_data, self.model_dir + "/model_data_val.pt")
             torch.save(best_train_model_state_dict, self.model_dir + "/model_train.pt")
-            torch.save(best_train_model_data, self.model_dir + "/model_train_data.pt")
+            torch.save(best_train_model_data, self.model_dir + "/model_data_train.pt")
 
     # Train the model in batches
     def train_epoch(self) -> float:
