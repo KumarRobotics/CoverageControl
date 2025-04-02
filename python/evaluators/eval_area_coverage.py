@@ -52,7 +52,6 @@ class Evaluator:
         self.num_features = self.cc_params.pNumGaussianFeatures
         self.num_envs = self.config["NumEnvironments"]
         self.num_steps = self.config["NumSteps"]
-        os.makedirs(self.env_dir + "/init_maps", exist_ok=True)
 
         self.columns = [
             BarColumn(bar_width=None),
@@ -93,7 +92,6 @@ class Evaluator:
                     env_main.WriteEnvironment(pos_file, env_file)
                     world_idf = env_main.GetWorldIDFObject()
 
-                # env_main.PlotInitMap(self.env_dir + "/init_maps", f"{env_count}")
                 robot_init_pos = env_main.GetRobotPositions(force_no_noise=True)
 
                 for controller_id in range(self.num_controllers):

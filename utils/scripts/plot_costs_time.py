@@ -17,19 +17,20 @@ class CostAnalyzer:
         self.csv_file_name = csv_file_name
         # Catppuccin colors
         self.colors = [
-            'rgba(239, 159, 118, 1.0)',  # Peach
-            'rgba(166, 209, 137, 1.0)',  # Green
-            'rgba(202, 158, 230, 1.0)',  # Mauve
-            'rgba(133, 193, 220, 1.0)',  # Sapphire
-            'rgba(231, 130, 132, 1.0)',  # Red
-            'rgba(129, 200, 190, 1.0)',  # Teal
-            'rgba(242, 213, 207, 1.0)',  # Rosewater
-            'rgba(229, 200, 144, 1.0)',  # Yellow
-            'rgba(108, 111, 133, 1.0)',  # subtext0
-        ]
+                'rgba(239, 159, 118, 1.0)',  # Peach
+                'rgba(166, 209, 137, 1.0)',  # Green
+                'rgba(202, 158, 230, 1.0)',  # Mauve
+                'rgba(133, 193, 220, 1.0)',  # Sapphire
+                'rgba(231, 130, 132, 1.0)',  # Red
+                'rgba(129, 200, 190, 1.0)',  # Teal
+                'rgba(242, 213, 207, 1.0)',  # Rosewater
+                'rgba(229, 200, 144, 1.0)',  # Yellow
+                'rgba(108, 111, 133, 1.0)',  # subtext0
+                ]
         self.num_controllers = len(self.controller_dirs)
         self.num_envs = 0
         self.num_steps = 0
+        self.time_steps = None
         self.all_costs = None
         self.best_envs = None
 
@@ -56,6 +57,7 @@ class CostAnalyzer:
             costs_dict[controller_dir] = costs
         self.num_envs = costs_dict[self.controller_dirs[0]].shape[0]
         self.num_steps = costs_dict[self.controller_dirs[0]].shape[1]
+        self.time_steps = np.arange(self.num_steps)
         self.all_costs = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
         for idx, controller_dir in enumerate(self.controller_dirs):
             self.all_costs[idx] = costs_dict[controller_dir]
@@ -75,74 +77,140 @@ class CostAnalyzer:
 
     def plot_costs(self, costs_dict):
         """Plot the normalized costs over time for each controller."""
-        fig = make_subplots(rows=3, cols=1, vertical_spacing=0.05, shared_xaxes=True, specs=[[{'rowspan': 2}], [{}], [{}]])
+        fig = go.Figure()
         for idx, controller_dir in enumerate(self.controller_dirs):
             costs = costs_dict[controller_dir]
             mean_cost = np.mean(costs, axis=0)
             std_cost = np.std(costs, axis=0)
-            time_steps = np.arange(costs.shape[1])
             color = self.colors[idx % len(self.colors)]  # Cycle through colors
-            
+
             # Shaded area for standard deviation
             fig.add_trace(go.Scatter(
-                x=np.concatenate([time_steps, time_steps[::-1]]),
+                x=np.concatenate([self.time_steps, self.time_steps[::-1]]),
                 y=np.concatenate([mean_cost + std_cost, (mean_cost - std_cost)[::-1]]),
                 fill="toself",
                 fillcolor=color.replace('1.0', '0.2'),
                 line=dict(color='rgba(255,255,255,0)'),
                 legendgroup=controller_dir,
                 showlegend=False,
-            ),
-                          row=1, col=1)
+                visible=True,
+                ))
 
         for idx, controller_dir in enumerate(self.controller_dirs):
             costs = costs_dict[controller_dir]
             mean_cost = np.mean(costs, axis=0)
-            std_cost = np.std(costs, axis=0)
-            time_steps = np.arange(costs.shape[1])
             color = self.colors[idx % len(self.colors)]  # Cycle through colors
 
-            best_envs = self.best_envs[idx]
-            
             # Mean cost line
             fig.add_trace(go.Scatter(
-                x=time_steps,
+                x=self.time_steps,
                 y=mean_cost,
                 mode="lines",
-                name="",
+                name=controller_dir,
                 line=dict(color=color),
                 legendgroup=controller_dir,
-                legendgrouptitle_text=controller_dir,
-            ),
-                          row=1, col=1)
+                visible=True,
+                ))
 
+        for idx, controller_dir in enumerate(self.controller_dirs):
+            best_envs = self.best_envs[idx]
+            color = self.colors[idx % len(self.colors)]  # Cycle through colors
             fig.add_trace(go.Scatter(
-                x=time_steps,
+                x=self.time_steps,
                 y=best_envs,
                 mode="lines",
-                showlegend=False,
+                showlegend=True,
+                name=controller_dir,
                 line=dict(color=color),
                 legendgroup=controller_dir,
-            ),
-                          row=3, col=1)
-            
+                visible=False,
+                ))
 
-        # Update plot layout
+        for idx, controller_dir in enumerate(self.controller_dirs):
+            final_costs = costs_dict[controller_dir][:, -1]
+            color = self.colors[idx % len(self.colors)]
+            fig.add_trace(
+                go.Violin(
+                    y=final_costs,
+                    name=controller_dir,
+                    line_color=color,
+                    box_visible=True,
+                    meanline_visible=True,
+                    showlegend=False,
+                    points="all",visible=False,),
+                )
+
+
+        costs_button = dict(label="Costs",
+                            method="update",
+                            args=[{"visible": self.visibility_masking([True, True, False, False])},
+                                  {"xaxis.title.text": "Time Steps",
+                                   "yaxis.title.text": "Normalized Cost",
+                                   "xaxis.type": "linear"}])
+
+        costs_button_wo_std = dict(label="Costs (mean only)",
+                            method="update",
+                            args=[{"visible": self.visibility_masking([False, True, False, False])},
+                                  {"xaxis.title.text": "Time Steps",
+                                   "yaxis.title.text": "Normalized Cost",
+                                   "xaxis.type": "linear"}])
+
+        best_envs_button = dict(label="Best Environments",
+                                method="update",
+                                args=[{"visible": self.visibility_masking([False, False, True, False])},
+                                      {"xaxis.title.text": "Time Steps",
+                                       "yaxis.title.text": "Number of Best Environments",
+                                       "xaxis.type": "linear"}])
+
+        viols_button = dict(label="Violin Plots",
+                            method="update",
+                            args=[{"visible": self.visibility_masking([False, False, False, True])},
+                                  {"xaxis.title.text": "",
+                                   "yaxis.title.text": "Final Normalized Cost",
+                                   "xaxis.type": "category"}])
+
         fig.update_layout(
-            yaxis_title="Normalized cost",
-            legend=dict(
-                # orientation="h",
-                # xanchor="right",
-                x=1,
-                y=1,
-                bgcolor="rgba(255, 255, 255, 0.8)"
-
-            ),
-            yaxis3_title="Number of Best Environments",
-            xaxis3_title="Time Step",
-        )
+                updatemenus=[
+                    dict(
+                        type="buttons",
+                        direction="left",
+                        buttons=[costs_button, costs_button_wo_std, best_envs_button, viols_button],
+                        showactive=True,
+                        x=0.01, y=1.05,
+                        xanchor='left',
+                        yanchor='top'
+                        )
+                    ],
+                legend=dict(x=1.01, y=1),
+                autosize=True,
+                template="plotly_white",
+                xaxis=dict(
+                    title="Time Steps",
+                    showgrid=True,         # Show vertical grid lines
+                    gridcolor='lightgray', # Color of grid lines
+                    gridwidth=1,
+                    mirror=True,
+                    ticks='outside',
+                    showline=True,
+                    # make axis lines thicker
+                    linecolor='black',
+                ),
+                yaxis=dict(
+                    title="Normalized Cost",
+                    showgrid=True,         
+                    gridcolor='lightgray', 
+                    gridwidth=1,
+                    mirror=True,
+                    ticks='outside',
+                    showline=True,
+                    linecolor='black',
+                ),)
 
         return fig
+
+    def visibility_masking(self, group_masks):
+        return [val for group_visible in group_masks for val in [group_visible] * self.num_controllers]
+
 
     def run_analysis(self):
         """Load data, generate plots, and output results."""
