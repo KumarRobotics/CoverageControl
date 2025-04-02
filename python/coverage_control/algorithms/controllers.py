@@ -64,6 +64,16 @@ class ControllerCVT:
             case _:
                 raise ValueError(f"Unknown controller type: {controller_type}")
 
+    def get_actions(self, env=None):
+        """
+        Get the actions from the CVT controller
+        Returns:
+            Actions as a PointVector object
+            Convergence flag
+        """
+        self.alg.ComputeActions()
+        return self.alg.GetActions(), self.alg.IsConverged()
+
     def step(self, env: CoverageSystem) -> (float, bool):
         """
         Step function for the CVT controller
@@ -77,9 +87,7 @@ class ControllerCVT:
         Returns:
             Objective value and convergence flag
         """
-        self.alg.ComputeActions()
-        actions = self.alg.GetActions()
-        converged = self.alg.IsConverged()
+        actions, converged = self.get_actions()
         error_flag = env.StepActions(actions)
 
         if error_flag:
@@ -128,18 +136,14 @@ class ControllerNN:
         self.model.eval()
         self.model = torch.compile(self.model, dynamic=True)
 
-    def step(self, env):
+    def get_actions(self, env):
         """
-        step function for the neural network controller
-
-        Performs three steps:
-        1. Get the data from the environment
-        2. Get the actions from the model
-        3. Step the environment using the actions
+        Get the actions from the neural network controller
         Args:
             env: CoverageSystem object
         Returns:
-            Objective value and convergence flag
+            Actions as a PointVector object
+            Convergence flag
         """
         pyg_data = CoverageEnvUtils.get_torch_geometric_data(
                 env, self.params, True, self.use_comm_map, self.cnn_map_size
@@ -147,10 +151,22 @@ class ControllerNN:
         with torch.no_grad():
             actions = self.model(pyg_data)
         actions = actions * self.actions_std + self.actions_mean
+        converged = False
+        if torch.allclose(actions, torch.zeros_like(actions), atol=1e-5):
+            converged = True
         point_vector_actions = PointVector(actions.cpu().numpy())
-        env.StepActions(point_vector_actions)
+        return point_vector_actions, converged
+
+    def step(self, env):
+        """
+        step function for the neural network controller
+        Args:
+            env: CoverageSystem object
+        Returns:
+            Objective value and convergence flag
+        """
+        actions, converged = self.get_actions(env)
+        env.StepActions(actions)
 
         # Check if actions are all zeros (1e-12)
-        if torch.allclose(actions, torch.zeros_like(actions), atol=1e-5):
-            return True
-        return False
+        return converged
