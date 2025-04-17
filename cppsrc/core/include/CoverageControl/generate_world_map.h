@@ -43,6 +43,7 @@ struct BND_Cuda {
   float mean_x, mean_y;
   float sigma_x, sigma_y;
   float scale, rho;
+  float sqrt_one_minus_rho_squared;
 };
 
 //! Structure to store the rectangular bounds of the polygons

@@ -38,6 +38,8 @@
 #include <cuda_runtime.h>
 #include <thrust/device_ptr.h>
 #include <thrust/extrema.h>
+#include <thrust/transform.h>
+#include <thrust/functional.h>
 
 #include <cmath>
 #include <sstream>
@@ -58,6 +60,12 @@ __device__ __constant__ float cu_normalization_factor;
 __device__ __constant__ int cu_polygons_num_pts;
 __device__ __constant__ int cu_num_polygons;
 
+struct Normalize {
+  __device__
+  float operator()(float x) {
+    return x * cu_normalization_factor;
+  }
+};
 __device__ float2 TransformPoint(BND_Cuda const *device_dists, int i,
     float2 const &in_point) {
   float2 pt;
@@ -69,7 +77,7 @@ __device__ float2 TransformPoint(BND_Cuda const *device_dists, int i,
   }
   pt.x = (in_point.x - bnd.mean_x) / bnd.sigma_x;
   pt.y = (in_point.y - bnd.mean_y) / bnd.sigma_y;
-  pt.x = (pt.x - bnd.rho * pt.y) / (sqrt(1 - bnd.rho * bnd.rho));
+  pt.x = (pt.x - bnd.rho * pt.y) / bnd.sqrt_one_minus_rho_squared;
   return pt;
 }
 
@@ -82,11 +90,11 @@ __device__ float IntegrateQuarterPlane(BND_Cuda const &bnd,
   } else {
     pt.x = (in_point.x - bnd.mean_x) / bnd.sigma_x;
     pt.y = (in_point.y - bnd.mean_y) / bnd.sigma_y;
-    pt.x = (pt.x - bnd.rho * pt.y) / (sqrt(1 - bnd.rho * bnd.rho));
+    pt.x = (pt.x - bnd.rho * pt.y) / bnd.sqrt_one_minus_rho_squared;
   }
   /* auto transformed_point = TransformPoint(i, in_point); */
   float sc = bnd.scale;
-  /* return sc; */
+  // return sc;
   return sc * erfc(pt.x * cu_OneBySqrt2) * erfc(pt.y * cu_OneBySqrt2) / 4.f;
 }
 
@@ -108,7 +116,7 @@ __device__ float ComputeImportanceBND(BND_Cuda const *device_dists,
       mid_pt.x = (mid_pt_cell.x - bnd.mean_x) / bnd.sigma_x;
       mid_pt.y = (mid_pt_cell.y - bnd.mean_y) / bnd.sigma_y;
       mid_pt.x =
-        (mid_pt.x - bnd.rho * mid_pt.y) / (sqrt(1 - bnd.rho * bnd.rho));
+        (mid_pt.x - bnd.rho * mid_pt.y) / bnd.sqrt_one_minus_rho_squared;
     }
     if (mid_pt.x * mid_pt.x + mid_pt.y * mid_pt.y > cu_trun_sq) {
       continue;
@@ -146,8 +154,8 @@ __device__ float ComputeImportancePoly(Polygons_Cuda const &device_polygons,
 __global__ void kernel(BND_Cuda const *device_dists,
     Polygons_Cuda const device_polygons,
     float *importance_vec) {
-  int idx = blockIdx.x * blockDim.x + threadIdx.x;
-  int idy = blockIdx.y * blockDim.y + threadIdx.y;
+  int idy = blockIdx.x * blockDim.x + threadIdx.x;
+  int idx = blockIdx.y * blockDim.y + threadIdx.y;
   int vec_idx = idx * cu_map_size + idy;
   if (not(idx < cu_map_size and idy < cu_map_size)) {
     return;
@@ -163,15 +171,6 @@ __global__ void kernel(BND_Cuda const *device_dists,
     poly_importance;
 }
 
-__global__ void normalize(float *importance_vec) {
-  int idx = blockIdx.x * blockDim.x + threadIdx.x;
-  int idy = blockIdx.y * blockDim.y + threadIdx.y;
-  int vec_idx = idx * cu_map_size + idy;
-  if (not(idx < cu_map_size and idy < cu_map_size)) {
-    return;
-  }
-  importance_vec[vec_idx] *= cu_normalization_factor;
-}
 void generate_world_map_cuda(BND_Cuda *host_dists,
     Polygons_Cuda_Host const &host_polygons,
     int const num_dists, int const map_size,
@@ -234,9 +233,6 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   checkCudaErrors(
       cudaMalloc(&device_importance_vec, map_size * map_size * sizeof(float)));
 
-  /* dim3 dimBlock(1, 1, 1); */
-  /* dim3 dimGrid(1,1,1); */
-
   dim3 dimBlock(32, 32, 1);
   dim3 dimGrid(map_size / dimBlock.x, map_size / dimBlock.x, 1);
 
@@ -245,19 +241,17 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
 
   cudaDeviceSynchronize();
 
-  thrust::device_ptr<float> d_ptr =
-    thrust::device_pointer_cast(device_importance_vec);
-  float max = *(thrust::max_element(d_ptr, d_ptr + map_size * map_size));
+  // thrust::device_ptr<float> d_ptr =
+  //   thrust::device_pointer_cast(device_importance_vec);
+  thrust::device_ptr<float> d_ptr(device_importance_vec);
+  size_t num_map_cells = size_t(map_size) * map_size;
+  float max = *(thrust::max_element(d_ptr, d_ptr + num_map_cells));
 
-  if (max < kEps) {
-    normalization_factor = pNorm;
-  } else {
+  if (max > kEps) {
     normalization_factor = pNorm / max;
-  }
-  if (normalization_factor > 1e-5) {
     checkCudaErrors(cudaMemcpyToSymbol(cu_normalization_factor,
           &normalization_factor, sizeof(float)));
-    normalize<<<dimGrid, dimBlock>>>(device_importance_vec);
+    thrust::transform(d_ptr, d_ptr + num_map_cells, d_ptr, Normalize());
   }
 
   checkCudaErrors(cudaMemcpy(host_importance_vec, device_importance_vec,
@@ -268,6 +262,7 @@ void generate_world_map_cuda(BND_Cuda *host_dists,
   checkCudaErrors(cudaFree(device_importance_vec));
   checkCudaErrors(cudaFree(device_polygons.x));
   checkCudaErrors(cudaFree(device_polygons.y));
+  checkCudaErrors(cudaFree(device_polygons.imp));
   checkCudaErrors(cudaFree(device_polygons.sz));
   checkCudaErrors(cudaFree(device_polygons.bounds));
 
