@@ -379,6 +379,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
                                  &CoverageSystem::RecordPlotData))
       .def("RenderRecordedMap", &CoverageSystem::RenderRecordedMap)
       .def("WriteEnvironment", &CoverageSystem::WriteEnvironment)
+      .def("WriteWorldMap", &CoverageSystem::WriteWorldMap)
       .def("GetNumRobots", &CoverageSystem::GetNumRobots)
       .def("ClearRobotMaps", &CoverageSystem::ClearRobotMaps)
       .def("ClearExploredIDF", &CoverageSystem::ClearExploredIDF);

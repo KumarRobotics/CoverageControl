@@ -398,8 +398,11 @@ int CoverageSystem::WriteRobotPositions(std::string const &file_name,
 int CoverageSystem::WriteEnvironment(std::string const &pos_filename,
                                      std::string const &env_filename) const {
   WriteRobotPositions(pos_filename);
-  world_idf_ptr_->WriteDistributions(env_filename);
-  return 0;
+  return world_idf_ptr_->WriteDistributions(env_filename);
+}
+
+int CoverageSystem::WriteWorldMap(std::string const &file_name) const {
+  return world_idf_ptr_->WriteWorldMap(file_name);
 }
 
 void CoverageSystem::RenderRecordedMap(std::string const &dir_name,

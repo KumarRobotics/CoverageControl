@@ -29,10 +29,12 @@ def main(env_config_file: str, num_envs: int, env_dir: str):
         os.makedirs(envs_path)
 
     for i in range(num_envs):
+        cc_system = CoverageSystem(cc_params)
         pos_file = str(envs_path / f"{i:04}.pos")
         env_file = str(envs_path / f"{i:04}.env")
-        cc_system = CoverageSystem(cc_params)
+        map_file = str(envs_path / f"{i:04}.map")
         cc_system.WriteEnvironment(pos_file, env_file)
+        cc_system.WriteWorldMap(map_file)
 
 
 if __name__ == "__main__":

@@ -416,6 +416,7 @@ class CoverageSystem {
                           PointVector const &positions) const;
   int WriteEnvironment(std::string const &pos_filename,
                        std::string const &env_filename) const;
+  int WriteWorldMap(std::string const &) const;
   //! @}
 
   //! \name Plot related functions
