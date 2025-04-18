@@ -60,7 +60,13 @@ class CostAnalyzer:
         self.time_steps = np.arange(self.num_steps)
         self.all_costs = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
         for idx, controller_dir in enumerate(self.controller_dirs):
-            self.all_costs[idx] = costs_dict[controller_dir]
+            try:
+                self.all_costs[idx] = costs_dict[controller_dir]
+            except ValueError as e:
+                print(f"[Shape Error] controller_dir={controller_dir}, "
+                      f"self.all_costs[idx].shape={self.all_costs[idx].shape}, "
+                      f"costs_dict[controller_dir].shape={costs_dict[controller_dir].shape}")
+                raise
         return costs_dict
 
     def compute_best_num_envs(self, costs_dict):
