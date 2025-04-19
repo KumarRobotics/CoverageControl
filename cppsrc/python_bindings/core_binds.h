@@ -344,6 +344,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("GetSystemMap", &CoverageSystem::GetSystemMap,
            py::return_value_policy::reference_internal)
       .def("GetObjectiveValue", &CoverageSystem::GetObjectiveValue)
+      .def("GetNormalizationFactor", &CoverageSystem::GetNormalizationFactor)
       .def("PlotSystemMap", py::overload_cast<std::string const &>(
                                 &CoverageSystem::PlotSystemMap, py::const_))
       .def("PlotSystemMap", py::overload_cast<std::string const &, int const &>(
