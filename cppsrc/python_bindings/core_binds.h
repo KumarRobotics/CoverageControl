@@ -188,7 +188,9 @@ void pyCoverageControl_core(py::module &m) {
 
   py::class_<ClairvoyantCVT>(m, "ClairvoyantCVT")
       .def(py::init<Parameters const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
       .def("ComputeActions", &ClairvoyantCVT::ComputeActions)
       .def("IsConverged", &ClairvoyantCVT::IsConverged)
       .def("GetActions", &ClairvoyantCVT::GetActions)
@@ -197,7 +199,9 @@ void pyCoverageControl_core(py::module &m) {
 
   py::class_<DecentralizedCVT>(m, "DecentralizedCVT")
       .def(py::init<Parameters const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
       .def("ComputeActions", &DecentralizedCVT::ComputeActions)
       .def("IsConverged", &DecentralizedCVT::IsConverged)
       .def("GetActions", &DecentralizedCVT::GetActions)
@@ -205,7 +209,9 @@ void pyCoverageControl_core(py::module &m) {
 
   py::class_<CentralizedCVT>(m, "CentralizedCVT")
       .def(py::init<Parameters const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
       .def("ComputeActions", &CentralizedCVT::ComputeActions)
       .def("IsConverged", &CentralizedCVT::IsConverged)
       .def("GetActions", &CentralizedCVT::GetActions)
@@ -310,8 +316,6 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("GetRobotSensorView", &CoverageSystem::GetRobotSensorView,
            py::return_value_policy::reference_internal)
       .def("GetCommunicationMaps", &CoverageSystem::GetCommunicationMaps)
-      .def("GetRobotsInCommunication",
-           &CoverageSystem::GetRobotsInCommunication)
       .def("GetSystemExploredIDFMap", &CoverageSystem::GetSystemExploredIDFMap,
            py::return_value_policy::reference_internal)
       .def("GetSystemExploredIDFMapMutable",

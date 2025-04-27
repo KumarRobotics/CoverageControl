@@ -205,6 +205,7 @@ void CoverageSystem::InitSetup() {
   voronoi_cells_.resize(num_robots_);
 
   robot_global_positions_.resize(num_robots_);
+  noisy_robot_global_positions_.resize(num_robots_);
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
     robot_global_positions_[iRobot] =
         robots_[iRobot].GetGlobalCurrentPosition();
@@ -276,10 +277,11 @@ void CoverageSystem::UpdateNeighbors() {
     relative_positions_neighbors_[iRobot].clear();
     neighbor_ids_[iRobot].clear();
   }
+  PointVector robot_global_positions = GetRobotPositions(); // Can be noisy
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
     for (size_t jRobot = iRobot + 1; jRobot < num_robots_; ++jRobot) {
       Point2 relative_pos =
-          robot_global_positions_[jRobot] - robot_global_positions_[iRobot];
+          robot_global_positions[jRobot] - robot_global_positions[iRobot];
       if (relative_pos.norm() < params_.pCommunicationRange) {
         relative_positions_neighbors_[iRobot].push_back(relative_pos);
         neighbor_ids_[iRobot].push_back(jRobot);
@@ -336,35 +338,6 @@ bool CoverageSystem::StepRobotsToGoals(PointVector const &goals,
   return cont_flag;
 }
 
-Point2 CoverageSystem::AddNoise(Point2 const pt) const {
-  Point2 noisy_pt;
-  noisy_pt[0] = pt[0];
-  noisy_pt[1] = pt[1];
-  auto noise_sigma = params_.pPositionsNoiseSigma;
-  {  // Wrap noise generation in a mutex to avoid issues with random number
-     // generation
-     // Random number generation is not thread safe
-    std::lock_guard<std::mutex> lock(mutex_);
-    std::normal_distribution pos_noise{0.0, noise_sigma};
-    noisy_pt += Point2(pos_noise(gen_), pos_noise(gen_));
-  }
-
-  /* std::normal_distribution pos_noise{0.0, noise_sigma}; */
-  /* noisy_pt += Point2(pos_noise(gen_), pos_noise(gen_)); */
-  if (noisy_pt[0] < kLargeEps) {
-    noisy_pt[0] = kLargeEps;
-  }
-  if (noisy_pt[1] < kLargeEps) {
-    noisy_pt[1] = kLargeEps;
-  }
-  if (noisy_pt[0] > params_.pWorldMapSize - kLargeEps) {
-    noisy_pt[0] = params_.pWorldMapSize - kLargeEps;
-  }
-  if (noisy_pt[1] > params_.pWorldMapSize - kLargeEps) {
-    noisy_pt[1] = params_.pWorldMapSize - kLargeEps;
-  }
-  return noisy_pt;
-}
 int CoverageSystem::WriteRobotPositions(std::string const &file_name) const {
   std::ofstream file_obj(file_name);
   if (!file_obj) {
@@ -627,24 +600,6 @@ void CoverageSystem::PlotRobotCommunicationMaps(std::string const &dir_name,
 
 PointVector CoverageSystem::GetRelativePositonsNeighbors(
     size_t const robot_id) {
-  if (params_.pAddNoisePositions) {
-    PointVector noisy_positions = GetRobotPositions();
-    for (Point2 &pt : noisy_positions) {
-      pt = AddNoise(pt);
-    }
-    PointVector relative_positions;
-    for (size_t i = 0; i < num_robots_; ++i) {
-      if (i == robot_id) {
-        continue;
-      }
-      if ((noisy_positions[i] - noisy_positions[robot_id]).norm() <
-          params_.pCommunicationRange) {
-        relative_positions.push_back(noisy_positions[i] -
-                                     noisy_positions[robot_id]);
-      }
-    }
-    return relative_positions;
-  }
   return relative_positions_neighbors_[robot_id];
 }
 
@@ -663,7 +618,7 @@ std::vector<double> CoverageSystem::GetLocalVoronoiFeatures(
   Point2 map_translation((index.left + offset.left) * params_.pResolution,
                          (index.bottom + offset.bottom) * params_.pResolution);
 
-  auto robot_neighbors_pos = GetRobotsInCommunication(robot_id);
+  PointVector robot_neighbors_pos = relative_positions_neighbors_[robot_id];
   PointVector robot_positions(robot_neighbors_pos.size() + 1);
 
   robot_positions[0] = pos - map_translation;

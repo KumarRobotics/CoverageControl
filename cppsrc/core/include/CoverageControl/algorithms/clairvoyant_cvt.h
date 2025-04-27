@@ -63,14 +63,15 @@ class ClairvoyantCVT : public AbstractController {
   std::vector<double> voronoi_mass_;
 
   bool is_converged_ = false;
+  bool force_no_noise_ = false;
 
  public:
-  ClairvoyantCVT(Parameters const &params, CoverageSystem &env)
-      : ClairvoyantCVT(params, params.pNumRobots, env) {}
+  ClairvoyantCVT(Parameters const &params, CoverageSystem &env, bool force_no_noise = false)
+      : ClairvoyantCVT(params, params.pNumRobots, env, force_no_noise) {}
   ClairvoyantCVT(Parameters const &params, size_t const &num_robots,
-                 CoverageSystem &env)
-      : params_{params}, num_robots_{num_robots}, env_{env} {
-    robot_global_positions_ = env_.GetRobotPositions();
+                 CoverageSystem &env, bool force_no_noise = false)
+      : params_{params}, num_robots_{num_robots}, env_{env}, force_no_noise_{force_no_noise} {
+    robot_global_positions_ = env_.GetRobotPositions(force_no_noise_);
     actions_.resize(num_robots_);
     goals_ = robot_global_positions_;
     voronoi_mass_.resize(num_robots_, 0);
@@ -99,7 +100,7 @@ class ClairvoyantCVT : public AbstractController {
 
   int ComputeActions() {
     is_converged_ = true;
-    robot_global_positions_ = env_.GetRobotPositions();
+    robot_global_positions_ = env_.GetRobotPositions(force_no_noise_);
     ComputeGoals();
     auto voronoi_cells = voronoi_.GetVoronoiCells();
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {

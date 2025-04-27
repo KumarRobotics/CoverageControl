@@ -42,7 +42,7 @@ class ControllerCVT:
     Controller class for CVT based controllers
     """
 
-    def __init__(self, config: dict, params: Parameters, env: CoverageSystem):
+    def __init__(self, config: dict, params: Parameters, env: CoverageSystem, force_no_noise=False):
         """
         Constructor for the CVT controller
         Args:
@@ -54,13 +54,13 @@ class ControllerCVT:
         self.params = params
         match config["Algorithm"]:
             case "DecentralizedCVT":
-                self.alg = DecentralizedCVT(params, env)
+                self.alg = DecentralizedCVT(params, env, force_no_noise)
             case "ClairvoyantCVT":
-                self.alg = ClairvoyantCVT(params, env)
+                self.alg = ClairvoyantCVT(params, env, force_no_noise)
             case "CentralizedCVT":
-                self.alg = CentralizedCVT(params, env)
+                self.alg = CentralizedCVT(params, env, force_no_noise)
             case "NearOptimalCVT":
-                self.alg = NearOptimalCVT(params, env)
+                self.alg = NearOptimalCVT(params, env, force_no_noise)
             case _:
                 raise ValueError(f"Unknown controller type: {controller_type}")
 

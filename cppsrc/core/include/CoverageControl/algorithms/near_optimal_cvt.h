@@ -67,14 +67,15 @@ class NearOptimalCVT : public AbstractController {
   PointVector goals_, actions_;
 
   bool is_converged_ = false;
+  bool force_no_noise_ = false;
 
  public:
-  NearOptimalCVT(Parameters const &params, CoverageSystem &env)
-      : NearOptimalCVT(params, params.pNumRobots, env) {}
+  NearOptimalCVT(Parameters const &params, CoverageSystem &env, bool force_no_noise = false)
+      : NearOptimalCVT(params, params.pNumRobots, env, force_no_noise) {}
   NearOptimalCVT(Parameters const &params, size_t const &num_robots,
-                 CoverageSystem &env)
-      : params_{params}, num_robots_{num_robots}, env_{env} {
-    robot_global_positions_ = env_.GetRobotPositions();
+                 CoverageSystem &env, bool force_no_noise = false)
+      : params_{params}, num_robots_{num_robots}, env_{env}, force_no_noise_{force_no_noise} {
+    robot_global_positions_ = env_.GetRobotPositions(force_no_noise_);
     actions_.resize(num_robots_);
     goals_ = robot_global_positions_;
     ComputeGoals();
@@ -95,7 +96,7 @@ class NearOptimalCVT : public AbstractController {
 
   int ComputeActions() {
     is_converged_ = true;
-    robot_global_positions_ = env_.GetRobotPositions();
+    robot_global_positions_ = env_.GetRobotPositions(force_no_noise_);
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
       actions_[iRobot] = Point2(0, 0);
       Point2 diff = goals_[iRobot] - robot_global_positions_[iRobot];

@@ -220,12 +220,13 @@ class DatasetGenerator:
         while self.dataset_count < self.num_dataset:
             self.env = CoverageSystem(self.env_params)
 
+            self.force_no_noise = True
             if self.algorithm == "CentralizedCVT":
                 self.alg = CentralizedCVT(
-                    self.env_params, self.num_robots, self.env)
+                    self.env_params, self.num_robots, self.env, self.force_no_noise)
             else:
                 self.alg = ClairvoyantCVT(
-                    self.env_params, self.num_robots, self.env)
+                    self.env_params, self.num_robots, self.env, self.force_no_noise)
 
             self.env_count += 1
             self.progress.update(
