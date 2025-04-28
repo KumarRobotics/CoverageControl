@@ -116,6 +116,7 @@ class CostAnalyzer:
                 line=dict(color=color),
                 legendgroup=controller_dir,
                 visible=True,
+                hovertemplate="(%{x}, %{y:.2f})"
                 ))
 
         for idx, controller_dir in enumerate(self.controller_dirs):
