@@ -111,8 +111,8 @@ class IOUtils:
         if not os.path.exists(path):
             raise FileNotFoundError(f"IOUtils::load_yaml File not found: {path}")
         # Load data
-        with open(path, "rb") as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
+        with open(path, "r") as f:
+            data = yaml.load(f, Loader=yaml.SafeLoader)
 
         return data
 
