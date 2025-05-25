@@ -119,7 +119,7 @@ void WorldIDF::GenerateMapCuda(float const resolution, float const truncation,
     host_dists[i].sigma_y = static_cast<float>(sigma.y());
     float rho = static_cast<float>(normal_distributions_[i].GetRho());
     host_dists[i].rho = rho;
-    host_dists[i].sqrt_one_minus_rho_squared = std::sqrtf(1. - rho * rho);
+    host_dists[i].sqrt_one_minus_rho_squared = std::sqrt(1. - rho * rho);
     host_dists[i].scale =
         static_cast<float>(normal_distributions_[i].GetScale());
   }
