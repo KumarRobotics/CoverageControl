@@ -545,6 +545,11 @@ class CoverageSystem {
     return robots_[id].GetRobotMap();
   }
 
+  const MapType &GetRobotWorldMap(size_t const id) {
+    CheckRobotID(id);
+    return robots_[id].GetWorldLocalMap();
+  }
+
   const MapType &GetRobotExplorationMap(size_t const id) {
     CheckRobotID(id);
     return robots_[id].GetExplorationMap();

@@ -19,6 +19,10 @@
 # TriggerPostProcessing = 100
 #
 # CNNMapSize = 32
+# EveryNumSteps = 5
+# SaveObjective = false
+# TimeStep = 5
+# SaveRobotWorldLocalMaps = false
 # SaveAsSparseQ = true
 # NormalizeQ = true
 #
@@ -26,6 +30,7 @@
 # TrainRatio = 0.7
 # ValRatio =  0.2
 # TestRatio = 0.1
+#
 # @file data_generation.py
 #  @brief Class to generate CoverageControl dataset for LPAC architecture
 import datetime
@@ -37,14 +42,14 @@ import argparse
 from distutils.util import strtobool
 
 from rich.progress import (
-    Progress,
-    BarColumn,
-    TextColumn,
-    TimeRemainingColumn,
-    TimeElapsedColumn,
-    TaskProgressColumn,
-    MofNCompleteColumn,
-)
+        Progress,
+        BarColumn,
+        TextColumn,
+        TimeRemainingColumn,
+        TimeElapsedColumn,
+        TaskProgressColumn,
+        MofNCompleteColumn,
+        )
 import coverage_control
 import torch
 from coverage_control import CoverageSystem
@@ -73,7 +78,7 @@ class DatasetGenerator:
             self.algorithm = args.algorithm
 
         self.data_dir = pathlib.Path(
-            IOUtils.sanitize_path(self.config["DataDir"]))
+                IOUtils.sanitize_path(self.config["DataDir"]))
 
         if not self.data_dir.exists():
             print(f"{self.data_dir} does not exist")
@@ -88,7 +93,7 @@ class DatasetGenerator:
             os.makedirs(self.dataset_dir)
 
         env_config_file = IOUtils.sanitize_path(
-            self.config["EnvironmentConfig"])
+                self.config["EnvironmentConfig"])
         env_config_file = pathlib.Path(env_config_file)
 
         if not env_config_file.exists():
@@ -96,7 +101,7 @@ class DatasetGenerator:
             sys.exit()
 
         self.env_params = coverage_control.Parameters(
-            env_config_file.as_posix())
+                env_config_file.as_posix())
 
         # Initialize variables
         self.dataset_count = 0
@@ -109,8 +114,8 @@ class DatasetGenerator:
         self.num_dataset = self.config["NumDataset"]
         self.converged_data_ratio = self.config["ConvergedDataRatio"]
         self.num_converged_dataset = math.ceil(
-            self.converged_data_ratio * self.num_dataset
-        )
+                self.converged_data_ratio * self.num_dataset
+                )
         self.num_non_converged_dataset = self.num_dataset - self.num_converged_dataset
         self.num_robots = self.env_params.pNumRobots
         self.comm_range = self.env_params.pCommunicationRange
@@ -126,6 +131,10 @@ class DatasetGenerator:
         if "TimeStep" in self.config:
             self.env_params.pTimeStep = self.config["TimeStep"]
 
+        self.save_robot_world_local_maps = False
+        if "SaveRobotWorldLocalMaps" in self.config:
+            self.save_robot_world_local_maps = self.config["SaveRobotWorldLocalMaps"]
+
         self.trigger_size = self.config["TriggerPostProcessing"]
 
         if self.trigger_size == 0 or self.trigger_size > self.num_dataset:
@@ -139,43 +148,57 @@ class DatasetGenerator:
         # Initialize tensors
         self.actions = torch.zeros((self.num_dataset, self.num_robots, 2))
         self.robot_positions = torch.zeros(
-            (self.num_dataset, self.num_robots, 2))
+                (self.num_dataset, self.num_robots, 2))
         self.raw_local_maps = torch.zeros(
-            (
-                self.trigger_size,
-                self.num_robots,
-                self.env_params.pLocalMapSize,
-                self.env_params.pLocalMapSize,
-            )
-        )
+                (
+                    self.trigger_size,
+                    self.num_robots,
+                    self.env_params.pLocalMapSize,
+                    self.env_params.pLocalMapSize,
+                    )
+                )
         self.raw_obstacle_maps = torch.zeros(
-            (
-                self.trigger_size,
-                self.num_robots,
-                self.env_params.pLocalMapSize,
-                self.env_params.pLocalMapSize,
-            )
-        )
+                (
+                    self.trigger_size,
+                    self.num_robots,
+                    self.env_params.pLocalMapSize,
+                    self.env_params.pLocalMapSize,
+                    )
+                )
         self.local_maps = torch.zeros(
-            (self.num_dataset, self.num_robots,
-             self.cnn_map_size, self.cnn_map_size)
-        )
+                (self.num_dataset, self.num_robots,
+                 self.cnn_map_size, self.cnn_map_size)
+                )
         self.obstacle_maps = torch.zeros(
-            (self.num_dataset, self.num_robots,
-             self.cnn_map_size, self.cnn_map_size)
-        )
+                (self.num_dataset, self.num_robots,
+                 self.cnn_map_size, self.cnn_map_size)
+                )
         self.comm_maps = torch.zeros(
-            (self.num_dataset, self.num_robots, 2,
-             self.cnn_map_size, self.cnn_map_size)
-        )
+                (self.num_dataset, self.num_robots, 2,
+                 self.cnn_map_size, self.cnn_map_size)
+                )
         self.coverage_features = torch.zeros(
-            (self.num_dataset, self.num_robots, 7))
+                (self.num_dataset, self.num_robots, 7))
         self.edge_weights = torch.zeros(
-            (self.num_dataset, self.num_robots, self.num_robots)
-        )
+                (self.num_dataset, self.num_robots, self.num_robots)
+                )
 
         if self.save_objective:
             self.objectives = torch.zeros(self.num_dataset)
+
+        if self.save_robot_world_local_maps:
+            self.raw_robot_world_local_maps = torch.zeros(
+                    self.trigger_size,
+                    self.num_robots,
+                    self.env_params.pLocalMapSize,
+                    self.env_params.pLocalMapSize,
+                    )
+            self.robot_world_local_maps = torch.zeros(
+                    self.num_dataset,
+                    self.num_robots,
+                    self.cnn_map_size,
+                    self.cnn_map_size
+                    )
 
         self.start_time = datetime.datetime.now()
         # Write metrics
@@ -191,20 +214,20 @@ class DatasetGenerator:
         self.print_tensor_sizes()
 
         columns = [
-            BarColumn(bar_width=None),
-            TaskProgressColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            MofNCompleteColumn(),
-            TextColumn("#Envs: {task.fields[num_envs]}"),
-            TimeRemainingColumn(),
-            TimeElapsedColumn(),
-        ]
+                BarColumn(bar_width=None),
+                TaskProgressColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                MofNCompleteColumn(),
+                TextColumn("#Envs: {task.fields[num_envs]}"),
+                TimeRemainingColumn(),
+                TimeElapsedColumn(),
+                ]
         with Progress(*columns, expand=True) as self.progress:
             self.task = self.progress.add_task(
-                "[bold blue]Generating dataset",
-                total=self.num_dataset,
-                num_envs="",
-            )
+                    "[bold blue]Generating dataset",
+                    total=self.num_dataset,
+                    num_envs="",
+                    )
 
             self.run_data_generation()
 
@@ -222,25 +245,25 @@ class DatasetGenerator:
 
             if self.algorithm == "CentralizedCVT":
                 self.alg = CentralizedCVT(
-                    self.env_params, self.num_robots, self.env)
+                        self.env_params, self.num_robots, self.env)
             else:
                 self.alg = ClairvoyantCVT(
-                    self.env_params, self.num_robots, self.env)
+                        self.env_params, self.num_robots, self.env)
 
             self.env_count += 1
             self.progress.update(
-                self.task,
-                num_envs=f"{self.env_count}"
-            )
+                    self.task,
+                    num_envs=f"{self.env_count}"
+                    )
             self.progress.refresh()
             num_steps = 0
             is_converged = False
 
             while (
-                num_steps < self.env_params.pEpisodeSteps
-                and not is_converged
-                and self.dataset_count < self.num_dataset
-            ):
+                    num_steps < self.env_params.pEpisodeSteps
+                    and not is_converged
+                    and self.dataset_count < self.num_dataset
+                    ):
 
                 if num_steps % self.every_num_step == 0 and self.non_converged_dataset_count < self.num_non_converged_dataset:
                     is_converged = self.step_with_save()
@@ -265,21 +288,25 @@ class DatasetGenerator:
         count = self.dataset_count
         self.actions[count] = CoverageEnvUtils.to_tensor(actions)
         self.robot_positions[count] = CoverageEnvUtils.get_robot_positions(
-            self.env)
+                self.env)
         self.coverage_features[count] = CoverageEnvUtils.get_voronoi_features(
-            self.env)
+                self.env)
         self.raw_local_maps[self.trigger_count] = CoverageEnvUtils.get_raw_local_maps(
-            self.env, self.env_params
-        )
+                self.env, self.env_params
+                )
         self.raw_obstacle_maps[self.trigger_count] = (
-            CoverageEnvUtils.get_raw_obstacle_maps(self.env, self.env_params)
-        )
+                CoverageEnvUtils.get_raw_obstacle_maps(self.env, self.env_params)
+                )
+        if self.save_robot_world_local_maps:
+            self.raw_robot_world_local_maps[self.trigger_count] = (
+                    CoverageEnvUtils.get_raw_robot_world_local_maps(self.env, self.env_params)
+                    )
         self.comm_maps[count] = CoverageEnvUtils.get_communication_maps(
-            self.env, self.env_params, self.cnn_map_size
-        )
+                self.env, self.env_params, self.cnn_map_size
+                )
         self.edge_weights[count] = CoverageEnvUtils.get_weights(
-            self.env, self.env_params
-        )
+                self.env, self.env_params
+                )
 
         if self.save_objective:
             self.objectives[count] = self.env.GetObjectiveValue()
@@ -303,37 +330,52 @@ class DatasetGenerator:
         if self.trigger_start_idx > self.num_dataset - 1:
             return
         trigger_end_idx = min(
-            self.num_dataset, self.trigger_start_idx + self.trigger_size
-        )
+                self.num_dataset, self.trigger_start_idx + self.trigger_size
+                )
         raw_local_maps = self.raw_local_maps[
-            0: trigger_end_idx - self.trigger_start_idx
-        ]
+                0: trigger_end_idx - self.trigger_start_idx
+                ]
         raw_local_maps = raw_local_maps.to(self.device)
         resized_local_maps = CoverageEnvUtils.resize_maps(
-            raw_local_maps, self.cnn_map_size
-        )
+                raw_local_maps, self.cnn_map_size
+                )
         self.local_maps[self.trigger_start_idx: trigger_end_idx] = (
-            resized_local_maps.view(
-                -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
-            )
-            .cpu()
-            .clone()
-        )
+                resized_local_maps.view(
+                    -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
+                    )
+                .cpu()
+                .clone()
+                )
+        if self.save_robot_world_local_maps:
+            raw_robot_world_local_maps = self.raw_robot_world_local_maps[
+                    0: trigger_end_idx - self.trigger_start_idx
+                    ]
+            raw_robot_world_local_maps = raw_robot_world_local_maps.to(self.device)
+            resized_robot_world_local_maps = CoverageEnvUtils.resize_maps(
+                    raw_robot_world_local_maps, self.cnn_map_size
+                    )
+            self.robot_world_local_maps[self.trigger_start_idx: trigger_end_idx] = (
+                    resized_robot_world_local_maps.view(
+                        -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
+                        )
+                    .cpu()
+                    .clone()
+                    )
 
         raw_obstacle_maps = self.raw_obstacle_maps[
-            0: trigger_end_idx - self.trigger_start_idx
-        ]
+                0: trigger_end_idx - self.trigger_start_idx
+                ]
         raw_obstacle_maps = raw_obstacle_maps.to(self.device)
         resized_obstacle_maps = CoverageEnvUtils.resize_maps(
-            raw_obstacle_maps, self.cnn_map_size
-        )
+                raw_obstacle_maps, self.cnn_map_size
+                )
         self.obstacle_maps[self.trigger_start_idx: trigger_end_idx] = (
-            resized_obstacle_maps.view(
-                -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
-            )
-            .cpu()
-            .clone()
-        )
+                resized_obstacle_maps.view(
+                    -1, self.num_robots, self.cnn_map_size, self.cnn_map_size
+                    )
+                .cpu()
+                .clone()
+                )
 
         self.trigger_start_idx = trigger_end_idx
 
@@ -395,8 +437,8 @@ class DatasetGenerator:
         tensor = tensor.cpu()
         train_tensor = tensor[0: self.train_size].clone()
         validation_tensor = tensor[
-            self.train_size: self.train_size + self.validation_size
-        ].clone()
+                self.train_size: self.train_size + self.validation_size
+                ].clone()
         test_tensor = tensor[self.train_size + self.validation_size:].clone()
 
         if as_sparse:
@@ -417,11 +459,11 @@ class DatasetGenerator:
 
         if self.split_dataset:
             self.train_size = int(
-                self.num_dataset * self.config["DataSetSplit"]["TrainRatio"]
-            )
+                    self.num_dataset * self.config["DataSetSplit"]["TrainRatio"]
+                    )
             self.validation_size = int(
-                self.num_dataset * self.config["DataSetSplit"]["ValRatio"]
-            )
+                    self.num_dataset * self.config["DataSetSplit"]["ValRatio"]
+                    )
             self.test_size = self.num_dataset - self.train_size - self.validation_size
 
             # Make sure the folder exists
@@ -437,6 +479,8 @@ class DatasetGenerator:
 
         self.save_tensor(self.robot_positions, "robot_positions.pt")
         self.save_tensor(self.local_maps, "local_maps.pt", as_sparse)
+        if self.save_robot_world_local_maps:
+            self.save_tensor(self.robot_world_local_maps, "robot_world_local_maps.pt", as_sparse)
         self.save_tensor(self.obstacle_maps, "obstacle_maps.pt", as_sparse)
         self.save_tensor(self.edge_weights, "edge_weights.pt", as_sparse)
 
@@ -452,22 +496,22 @@ class DatasetGenerator:
 
         if self.config["NormalizeQ"]:
             normalized_actions, actions_mean, actions_std = self.normalize_tensor(
-                self.actions, is_symmetric=True, zero_mean=True
-            )
+                    self.actions, is_symmetric=True, zero_mean=True
+                    )
             self.save_tensor(normalized_actions, "normalized_actions.pt")
             torch.save(actions_mean, self.dataset_dir_path / "actions_mean.pt")
             torch.save(actions_std, self.dataset_dir_path / "actions_std.pt")
             if self.save_objective:
                 normalize_objectives, objectives_mean, objectives_std = self.normalize_tensor(
-                    self.objectives
-                )
+                        self.objectives
+                        )
                 self.save_tensor(normalize_objectives, "normalized_objectives.pt")
                 torch.save(
-                    objectives_mean, self.dataset_dir_path / "objectives_mean.pt"
-                )
+                        objectives_mean, self.dataset_dir_path / "objectives_mean.pt"
+                        )
                 torch.save(
-                    objectives_std, self.dataset_dir_path / "objectives_std.pt"
-                )
+                        objectives_std, self.dataset_dir_path / "objectives_std.pt"
+                        )
 
             # coverage_features, coverage_features_mean, coverage_features_std = (
             #     self.normalize_tensor(self.coverage_features)
@@ -499,34 +543,37 @@ class DatasetGenerator:
         print("Tensor sizes:", file=file)
         print("Actions:", self.get_tensor_byte_size_mb(self.actions), file=file)
         print(
-            "Robot positions:",
-            self.get_tensor_byte_size_mb(self.robot_positions),
-            file=file,
-        )
+                "Robot positions:",
+                self.get_tensor_byte_size_mb(self.robot_positions),
+                file=file,
+                )
         print(
-            "Raw local maps:",
-            self.get_tensor_byte_size_mb(self.raw_local_maps),
-            file=file,
-        )
+                "Raw local maps:",
+                self.get_tensor_byte_size_mb(self.raw_local_maps),
+                file=file,
+                )
         print(
-            "Raw obstacle maps:",
-            self.get_tensor_byte_size_mb(self.raw_obstacle_maps),
-            file=file,
-        )
+                "Raw obstacle maps:",
+                self.get_tensor_byte_size_mb(self.raw_obstacle_maps),
+                file=file,
+                )
         print("Local maps:", self.get_tensor_byte_size_mb(
             self.local_maps), file=file)
+        if self.save_robot_world_local_maps:
+            print("Robot world local maps: ", self.get_tensor_byte_size_mb(
+                self.robot_world_local_maps), file=file)
         print(
-            "Obstacle maps:",
-            self.get_tensor_byte_size_mb(self.obstacle_maps),
-            file=file,
-        )
+                "Obstacle maps:",
+                self.get_tensor_byte_size_mb(self.obstacle_maps),
+                file=file,
+                )
         print("Comm maps:", self.get_tensor_byte_size_mb(
             self.comm_maps), file=file)
         print(
-            "Coverage features:",
-            self.get_tensor_byte_size_mb(self.coverage_features),
-            file=file,
-        )
+                "Coverage features:",
+                self.get_tensor_byte_size_mb(self.coverage_features),
+                file=file,
+                )
 
 
 if __name__ == "__main__":

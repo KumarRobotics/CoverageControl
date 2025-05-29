@@ -303,6 +303,8 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
            "Get Positions of Robots", py::arg("force_no_noise") = false)
       .def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap,
            py::return_value_policy::reference_internal)
+      .def("GetRobotWorldMap", &CoverageSystem::GetRobotWorldMap,
+           py::return_value_policy::reference_internal)
       .def("GetRobotMap", &CoverageSystem::GetRobotMap,
            py::return_value_policy::reference_internal)
       .def("GetRobotMapMutable", &CoverageSystem::GetRobotMapMutable,

@@ -70,6 +70,7 @@ class RobotModel {
                           //!< reference as world map.
   MapType sensor_view_;   //!< Stores the current sensor view of the robot
   MapType local_map_;     //!< Stores the local map of the robot
+  MapType world_local_map_;    //!< Stores the obstacle map
   MapType obstacle_map_;  //!< Stores the obstacle map
   MapType system_map_;    //!< Stores the obstacle map
   MapType
@@ -128,6 +129,7 @@ class RobotModel {
     sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
     local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
     obstacle_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
+    world_local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
 
     local_start_position_ = Point2{0, 0};
     local_current_position_ = local_start_position_;
@@ -316,6 +318,16 @@ class RobotModel {
   const MapType &GetRobotLocalMap() {
     ComputeLocalMap();
     return local_map_;
+  }
+
+  const MapType &GetWorldLocalMap() {
+    if (not MapUtils::IsPointOutsideBoundary(
+            params_.pResolution, global_current_position_,
+            params_.pLocalMapSize, params_.pWorldMapSize)) {
+      world_idf_->GetSubWorldMap(global_current_position_, params_.pSensorSize,
+                                 world_local_map_);
+    }
+    return world_local_map_;
   }
 
   const MapType &GetExplorationMap() {

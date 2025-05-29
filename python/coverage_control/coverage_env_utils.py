@@ -117,6 +117,28 @@ class CoverageEnvUtils:
         return local_maps
 
     @staticmethod
+    def get_raw_robot_world_local_maps(env: CoverageSystem, params: Parameters) -> torch.Tensor:
+        """
+        Get robot world local maps
+
+        Args:
+            env: coverage environment
+            params: parameters
+
+        Returns:
+            torch.Tensor: raw robot world local maps
+
+        """
+        robot_world_local_maps = torch.zeros(
+            (env.GetNumRobots(), params.pLocalMapSize, params.pLocalMapSize)
+        )
+
+        for r_idx in range(env.GetNumRobots()):
+            robot_world_local_maps[r_idx] = CoverageEnvUtils.to_tensor(env.GetRobotWorldMap(r_idx))
+
+        return robot_world_local_maps
+
+    @staticmethod
     def get_raw_obstacle_maps(env: CoverageSystem, params: Parameters) -> torch.Tensor:
         """
         Get raw obstacle maps
