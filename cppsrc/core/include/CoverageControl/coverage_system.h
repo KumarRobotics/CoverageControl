@@ -64,9 +64,9 @@ namespace CoverageControl {
  * library.
  */
 class CoverageSystem {
-  Parameters const params_;          //!< Parameters for the coverage system
-  std::shared_ptr <WorldIDF> world_idf_ptr_; //!< World IDF object
-  size_t num_robots_ = 0;            //!< Number of robots
+  Parameters const params_;  //!< Parameters for the coverage system
+  std::shared_ptr<WorldIDF> world_idf_ptr_;  //!< World IDF object
+  size_t num_robots_ = 0;                    //!< Number of robots
   std::vector<RobotModel> robots_;   //!< Vector of robots of type RobotModel
   double normalization_factor_ = 0;  //!< Normalization factor for the world IDF
   Voronoi voronoi_;                  //!< Voronoi object
@@ -78,6 +78,7 @@ class CoverageSystem {
   std::uniform_real_distribution<>
       distrib_pts_;  //!< Uniform distribution for generating random points
   PointVector robot_global_positions_;  //!< Global positions of the robots
+  PointVector noisy_robot_global_positions_;  //!< Global noisy positions of the robots
   MapType
       system_map_;  //!< System map contains explored and unexplored locations
   MapType
@@ -146,6 +147,10 @@ class CoverageSystem {
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
       robot_global_positions_[iRobot] =
           robots_[iRobot].GetGlobalCurrentPosition();
+      if (params_.pAddNoisePositions) {
+        noisy_robot_global_positions_[iRobot] =
+            robots_[iRobot].GetNoisyGlobalCurrentPosition();
+      }
     }
   }
 
@@ -347,7 +352,8 @@ class CoverageSystem {
     }
     auto const &history = robot_positions_history_[robot_id];
     Point2 const last_pos = history.back();
-    auto it_end = std::next(history.crbegin(), std::min(6, static_cast<int>(history.size()) - 1));
+    auto it_end = std::next(history.crbegin(),
+                            std::min(6, static_cast<int>(history.size()) - 1));
     bool flag = false;
     int count = 0;
     std::for_each(history.crbegin(), it_end,
@@ -515,24 +521,17 @@ class CoverageSystem {
   PointVector GetRobotPositions(bool force_no_noise = false) {
     UpdateRobotPositions();
     if (params_.pAddNoisePositions and not force_no_noise) {
-      PointVector noisy_robot_global_positions;
-      for (Point2 pt : robot_global_positions_) {
-        noisy_robot_global_positions.push_back(AddNoise(pt));
-      }
-      return noisy_robot_global_positions;
+      return noisy_robot_global_positions_;
     }
     return robot_global_positions_;
   }
 
   Point2 GetRobotPosition(int const robot_id,
                           bool force_no_noise = false) const {
-    Point2 robot_pos;
-    robot_pos[0] = robots_[robot_id].GetGlobalCurrentPosition()[0];
-    robot_pos[1] = robots_[robot_id].GetGlobalCurrentPosition()[1];
     if (params_.pAddNoisePositions and not force_no_noise) {
-      return AddNoise(robot_pos);
+      return robots_[robot_id].GetNoisyGlobalCurrentPosition();
     }
-    return robot_pos;
+    return robots_[robot_id].GetGlobalCurrentPosition();
   }
 
   const MapType &GetRobotLocalMap(size_t const id) {
@@ -567,25 +566,6 @@ class CoverageSystem {
   const MapType &GetRobotSensorView(size_t const id) const {
     CheckRobotID(id);
     return robots_[id].GetSensorView();
-  }
-
-  auto GetRobotsInCommunication(size_t const id) const {
-    CheckRobotID(id);
-    PointVector robot_neighbors_pos;
-    for (size_t i = 0; i < num_robots_; ++i) {
-      if (id == i) {
-        continue;
-      }
-      Point2 relative_pos =
-          robot_global_positions_[i] - robot_global_positions_[id];
-      if (relative_pos.norm() < params_.pCommunicationRange) {
-        robot_neighbors_pos.push_back(relative_pos);
-      }
-    }
-    std::sort(
-        robot_neighbors_pos.begin(), robot_neighbors_pos.end(),
-        [](Point2 const &a, Point2 const &b) { return a.norm() < b.norm(); });
-    return robot_neighbors_pos;
   }
 
   std::pair<MapType, MapType> GetRobotCommunicationMaps(size_t const, size_t);

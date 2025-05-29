@@ -64,14 +64,15 @@ class DecentralizedCVT : public AbstractController {
   std::vector<double> voronoi_mass_;
 
   bool is_converged_ = false;
+  bool force_no_noise_ = false;
 
  public:
-  DecentralizedCVT(Parameters const &params, CoverageSystem &env)
-      : DecentralizedCVT(params, params.pNumRobots, env) {}
+  DecentralizedCVT(Parameters const &params, CoverageSystem &env, bool force_no_noise = false)
+      : DecentralizedCVT(params, params.pNumRobots, env, force_no_noise) {}
   DecentralizedCVT(Parameters const &params, size_t const &num_robots,
-                   CoverageSystem &env)
-      : params_{params}, num_robots_{num_robots}, env_{env} {
-    robot_global_positions_ = env_.GetRobotPositions();
+                   CoverageSystem &env, bool force_no_noise = false)
+      : params_{params}, num_robots_{num_robots}, env_{env}, force_no_noise_{force_no_noise} {
+    robot_global_positions_ = env_.GetRobotPositions(force_no_noise_);
     actions_.resize(num_robots_);
     goals_ = robot_global_positions_;
     voronoi_mass_.resize(num_robots_, 0);
@@ -80,17 +81,17 @@ class DecentralizedCVT : public AbstractController {
 
   PointVector GetActions() { return actions_; }
 
-  PointVector GetGoals() { return goals_; }
+  auto GetGoals() { return goals_; }
 
   void ComputeGoals() {
 #pragma omp parallel for num_threads(num_robots_)
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-      Point2 const &pos = robot_global_positions_[iRobot];
+      auto const &pos = robot_global_positions_[iRobot];
       MapUtils::MapBounds index, offset;
       MapUtils::ComputeOffsets(params_.pResolution, pos, params_.pLocalMapSize,
                                params_.pWorldMapSize, index, offset);
-      MapType robot_map = env_.GetRobotMap(iRobot);
-      MapType robot_local_map = robot_map.block(index.left + offset.left,
+      auto robot_map = env_.GetRobotMap(iRobot);
+      auto robot_local_map = robot_map.block(index.left + offset.left,
                                              index.bottom + offset.bottom,
                                              offset.width, offset.height);
       Point2 map_translation(
@@ -114,7 +115,7 @@ class DecentralizedCVT : public AbstractController {
       /* std::cout << "Voronoi: " << robot_positions[0][0] << " " <<
        * robot_positions[0][1] << std::endl; */
       int count = 1;
-      for (Point2 const &pos : robot_neighbors_pos) {
+      for (auto const &pos : robot_neighbors_pos) {
         robot_positions[count] = pos - map_translation;
         ++count;
       }
@@ -144,7 +145,7 @@ class DecentralizedCVT : public AbstractController {
 
   int ComputeActions() {
     is_converged_ = true;
-    robot_global_positions_ = env_.GetRobotPositions();
+    robot_global_positions_ = env_.GetRobotPositions(force_no_noise_);
     ComputeGoals();
     for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
       actions_[iRobot] = Point2(0, 0);

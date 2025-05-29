@@ -123,10 +123,9 @@ class DatasetGenerator:
         self.cnn_map_size = self.config["CNNMapSize"]
         self.every_num_step = self.config["EveryNumSteps"]
 
+        self.save_objective = False
         if "SaveObjective" in self.config:
             self.save_objective = self.config["SaveObjective"]
-        else:
-            self.save_objective = False
 
         if "TimeStep" in self.config:
             self.env_params.pTimeStep = self.config["TimeStep"]
@@ -243,12 +242,13 @@ class DatasetGenerator:
         while self.dataset_count < self.num_dataset:
             self.env = CoverageSystem(self.env_params)
 
+            self.force_no_noise = True
             if self.algorithm == "CentralizedCVT":
                 self.alg = CentralizedCVT(
-                        self.env_params, self.num_robots, self.env)
+                        self.env_params, self.num_robots, self.env, self.force_no_noise)
             else:
                 self.alg = ClairvoyantCVT(
-                        self.env_params, self.num_robots, self.env)
+                        self.env_params, self.num_robots, self.env, self.force_no_noise)
 
             self.env_count += 1
             self.progress.update(

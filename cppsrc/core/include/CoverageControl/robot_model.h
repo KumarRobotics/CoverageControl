@@ -37,6 +37,7 @@
 #include <cmath>
 #include <iostream>
 #include <memory>
+#include <random>
 #include <vector>
 
 #include "CoverageControl/constants.h"
@@ -62,8 +63,8 @@ class RobotModel {
  private:
   Parameters const params_;
 
-  Point2 global_start_position_, global_current_position_;
-  Point2 local_start_position_, local_current_position_;
+  Point2 global_start_position_, global_current_position_, noisy_global_current_position_;
+  Point2 local_start_position_, local_current_position_, noisy_local_current_position_;
   double normalization_factor_ = 0;
 
   MapType robot_map_;     //!< Stores what the robot has seen. Has the same
@@ -78,6 +79,11 @@ class RobotModel {
   MapType exploration_map_;    //!< Binary map: true for unexplored locations
   double time_step_dist_ = 0;
   double sensor_area_ = 0;
+
+  mutable std::mt19937 gen_;
+  std::uniform_real_distribution<> noise_sigma_dist_;
+  mutable std::normal_distribution<double> noise_normal_dist_;
+  double noise_sigma_;
 
   std::shared_ptr<const WorldIDF>
       world_idf_;  //!< Robots cannot change the world
@@ -123,8 +129,26 @@ class RobotModel {
   }
 
   void Initialize() {
+    if (params_.pAddNoisePositions) {
+      // std::srand(std::time(nullptr));
+      gen_ = std::mt19937(std::random_device{}());
+      double sigma_min = params_.pPositionsNoiseSigmaMin;
+      double sigma_max = params_.pPositionsNoiseSigmaMax;
+      if (std::abs(sigma_min - sigma_max) < kEps) {
+        noise_sigma_ = sigma_min;
+      } else {
+        noise_sigma_dist_ = std::uniform_real_distribution<double>(
+            params_.pPositionsNoiseSigmaMin, params_.pPositionsNoiseSigmaMax);
+        noise_sigma_ = noise_sigma_dist_(gen_);
+      }
+      noise_normal_dist_ = std::normal_distribution<double>{0, noise_sigma_};
+    }
+
     normalization_factor_ = world_idf_->GetNormalizationFactor();
     global_current_position_ = global_start_position_;
+    noisy_global_current_position_ = ComputeNoisyGlobalCurrentPosition();
+    noisy_local_current_position_ = noisy_global_current_position_ -
+                                    global_start_position_;
 
     sensor_view_ = MapType::Zero(params_.pSensorSize, params_.pSensorSize);
     local_map_ = MapType::Zero(params_.pLocalMapSize, params_.pLocalMapSize);
@@ -153,6 +177,31 @@ class RobotModel {
         params_.pMaxRobotSpeed * params_.pTimeStep * params_.pResolution;
     sensor_area_ = params_.pSensorSize * params_.pSensorSize;
   }
+
+  Point2 GetNoise() {
+    Point2 noise;
+    noise[0] = noise_normal_dist_(gen_);
+    noise[1] = noise_normal_dist_(gen_);
+    return noise;
+  }
+
+  Point2 ComputeNoisyGlobalCurrentPosition() {
+    Point2 noisy_pt = global_current_position_ + GetNoise();
+    if (noisy_pt[0] < kLargeEps) {
+      noisy_pt[0] = kLargeEps;
+    }
+    if (noisy_pt[1] < kLargeEps) {
+      noisy_pt[1] = kLargeEps;
+    }
+    if (noisy_pt[0] > params_.pWorldMapSize - kLargeEps) {
+      noisy_pt[0] = params_.pWorldMapSize - kLargeEps;
+    }
+    if (noisy_pt[1] > params_.pWorldMapSize - kLargeEps) {
+      noisy_pt[1] = params_.pWorldMapSize - kLargeEps;
+    }
+    return noisy_pt;
+  }
+
 
  public:
   /*!
@@ -230,31 +279,7 @@ class RobotModel {
   //! Set robot position relative to the current position
   void SetRobotPosition(Point2 const &pos) {
     Point2 new_global_pos = pos + global_start_position_;
-    if (new_global_pos.x() <= 0) {
-      new_global_pos[0] = 0 + kLargeEps;
-    }
-    if (new_global_pos.y() <= 0) {
-      new_global_pos[1] = 0 + kLargeEps;
-    }
-    double max_xy = params_.pWorldMapSize * params_.pResolution;
-    if (new_global_pos.x() >= max_xy) {
-      new_global_pos[0] = max_xy - kLargeEps;
-    }
-    if (new_global_pos.y() >= max_xy) {
-      new_global_pos[1] = max_xy - kLargeEps;
-    }
-
-    local_current_position_ = new_global_pos - global_start_position_;
-    global_current_position_ = new_global_pos;
-    if (params_.pUpdateSensorView == true) {
-      UpdateSensorView();
-    }
-    if (params_.pUpdateRobotMap == true) {
-      UpdateRobotMap();
-    }
-    if (params_.pUpdateExplorationMap == true) {
-      UpdateExplorationMap();
-    }
+    SetGlobalRobotPosition(new_global_pos);
   }
 
   void SetGlobalRobotPosition(Point2 const &pos) {
@@ -275,6 +300,11 @@ class RobotModel {
 
     local_current_position_ = new_global_pos - global_start_position_;
     global_current_position_ = new_global_pos;
+    if (params_.pAddNoisePositions == true) {
+      noisy_global_current_position_ = ComputeNoisyGlobalCurrentPosition();
+      noisy_local_current_position_ = noisy_global_current_position_ -
+                                      global_start_position_;
+    }
     if (params_.pUpdateSensorView == true) {
       UpdateSensorView();
     }
@@ -288,6 +318,8 @@ class RobotModel {
 
   Point2 GetGlobalStartPosition() const { return global_start_position_; }
   Point2 GetGlobalCurrentPosition() const { return global_current_position_; }
+  Point2 GetNoisyGlobalCurrentPosition() const { return noisy_global_current_position_; }
+
 
   const MapType &GetRobotMap() const { return robot_map_; }
   const MapType &GetSensorView() const { return sensor_view_; }

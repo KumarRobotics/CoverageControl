@@ -35,7 +35,7 @@
 namespace CoverageControl {
 void Parameters::ParseParameters() {
   std::cout << std::boolalpha;
-  std::cout << "Using config file: " << config_file_ << std::endl;
+  // std::cout << "Using config file: " << config_file_ << std::endl;
   if (not std::filesystem::exists(config_file_)) {
     std::cerr << "Could not find config file " << config_file_ << std::endl;
     throw std::runtime_error("Could not open config file");
@@ -219,13 +219,18 @@ void Parameters::ParseParameters() {
   if (toml_RobotModel["AddNoise"]) {
     auto toml_AddNoisePositions =
         toml_RobotModel["AddNoise"]["AddNoisePositions"].value<bool>();
-    auto toml_PositionsNoiseSigma =
-        toml_RobotModel["AddNoise"]["PositionsNoiseSigma"].value<double>();
+    auto toml_PositionsNoiseSigmaMin =
+        toml_RobotModel["AddNoise"]["PositionsNoiseSigmaMin"].value<double>();
+    auto toml_PositionsNoiseSigmaMax =
+        toml_RobotModel["AddNoise"]["PositionsNoiseSigmaMax"].value<double>();
     if (toml_AddNoisePositions) {
       pAddNoisePositions = toml_AddNoisePositions.value();
     }
-    if (toml_PositionsNoiseSigma) {
-      pPositionsNoiseSigma = toml_PositionsNoiseSigma.value();
+    if (toml_PositionsNoiseSigmaMin) {
+      pPositionsNoiseSigmaMin = toml_PositionsNoiseSigmaMin.value();
+    }
+    if (toml_PositionsNoiseSigmaMax) {
+      pPositionsNoiseSigmaMax = toml_PositionsNoiseSigmaMax.value();
     }
   }
 
@@ -302,7 +307,8 @@ void Parameters::PrintParameters() const {
   std::cout << "TimeStep: " << pTimeStep << std::endl;
 
   std::cout << "AddNoisePositions: " << pAddNoisePositions << std::endl;
-  std::cout << "PositionsNoiseSigma: " << pPositionsNoiseSigma << std::endl;
+  std::cout << "PositionsNoiseSigmaMin: " << pPositionsNoiseSigmaMin << std::endl;
+  std::cout << "PositionsNoiseSigmaMax: " << pPositionsNoiseSigmaMax << std::endl;
 
   std::cout << "EpisodeSteps: " << pEpisodeSteps << std::endl;
   std::cout << "CheckOscillations: " << pCheckOscillations << std::endl;

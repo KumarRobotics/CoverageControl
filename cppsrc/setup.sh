@@ -43,6 +43,8 @@ while true; do
 	esac
 done
 
+# Add CMAKE_BUILD_TYPE RelWithDebInfo
+CMAKE_END_FLAGS="${CMAKE_END_FLAGS} -DCMAKE_BUILD_TYPE=RelWithDebInfo"
 if [[ ${WS_DIR} ]]
 then
 	BUILD_DIR=${WS_DIR}/build/

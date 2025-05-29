@@ -35,6 +35,8 @@
 #include <cmath>
 #include <string>
 
+#include <array>
+
 namespace CoverageControl {
 
 /*!
@@ -143,7 +145,8 @@ class Parameters {
    * @{
    */
   bool pAddNoisePositions = false;
-  double pPositionsNoiseSigma = 0.;
+  double pPositionsNoiseSigmaMin = 0;
+  double pPositionsNoiseSigmaMax = 0;
   /*! @} */
   /*! @} */
 
