@@ -66,6 +66,7 @@ class RobotModel {
   Point2 global_start_position_, global_current_position_, noisy_global_current_position_;
   Point2 local_start_position_, local_current_position_, noisy_local_current_position_;
   double normalization_factor_ = 0;
+  bool is_clairvoyant_ = false;
 
   MapType robot_map_;     //!< Stores what the robot has seen. Has the same
                           //!< reference as world map.
@@ -143,6 +144,9 @@ class RobotModel {
       }
       noise_normal_dist_ = std::normal_distribution<double>{0, noise_sigma_};
     }
+    if (params_.pSensorSize >= params_.pWorldMapSize) {
+      is_clairvoyant_ = true;
+    }
 
     normalization_factor_ = world_idf_->GetNormalizationFactor();
     global_current_position_ = global_start_position_;
@@ -159,6 +163,10 @@ class RobotModel {
     local_current_position_ = local_start_position_;
 
     ClearRobotMap();
+
+    if (is_clairvoyant_) {
+      robot_map_ = world_idf_->GetWorldMap();
+    }
 
     if (params_.pUpdateExplorationMap == true) {
       exploration_map_ =
@@ -240,7 +248,7 @@ class RobotModel {
     if (params_.pUpdateSensorView == true) {
       UpdateSensorView();
     }
-    if (params_.pUpdateRobotMap == true) {
+    if (params_.pUpdateRobotMap == true and not is_clairvoyant_) {
       UpdateRobotMap();
     }
   }
@@ -308,7 +316,7 @@ class RobotModel {
     if (params_.pUpdateSensorView == true) {
       UpdateSensorView();
     }
-    if (params_.pUpdateRobotMap == true) {
+    if (params_.pUpdateRobotMap == true and not is_clairvoyant_) {
       UpdateRobotMap();
     }
     if (params_.pUpdateExplorationMap == true) {
