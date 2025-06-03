@@ -144,7 +144,7 @@ class RobotModel {
       }
       noise_normal_dist_ = std::normal_distribution<double>{0, noise_sigma_};
     }
-    if (params_.pSensorSize >= params_.pWorldMapSize) {
+    if (params_.pSensorSize >= 2 * params_.pWorldMapSize) {
       is_clairvoyant_ = true;
     }
 
@@ -166,19 +166,20 @@ class RobotModel {
 
     if (is_clairvoyant_) {
       robot_map_ = world_idf_->GetWorldMap();
+      sensor_view_ = robot_map_;
     }
 
-    if (params_.pUpdateExplorationMap == true) {
+    if (params_.pUpdateExplorationMap == true and not is_clairvoyant_) {
       exploration_map_ =
           MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 1);
       local_exploration_map_ =
-          MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 1);
+          MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 1);
       UpdateExplorationMap();
     } else {
       exploration_map_ =
           MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 0);
       local_exploration_map_ =
-          MapType::Constant(params_.pRobotMapSize, params_.pRobotMapSize, 0);
+          MapType::Constant(params_.pLocalMapSize, params_.pLocalMapSize, 0);
     }
 
     time_step_dist_ =
@@ -245,7 +246,7 @@ class RobotModel {
       robot_map_ = MapType::Zero(params_.pRobotMapSize, params_.pRobotMapSize);
     }
 
-    if (params_.pUpdateSensorView == true) {
+    if (params_.pUpdateSensorView == true and not is_clairvoyant_) {
       UpdateSensorView();
     }
     if (params_.pUpdateRobotMap == true and not is_clairvoyant_) {
@@ -313,13 +314,13 @@ class RobotModel {
       noisy_local_current_position_ = noisy_global_current_position_ -
                                       global_start_position_;
     }
-    if (params_.pUpdateSensorView == true) {
+    if (params_.pUpdateSensorView == true and not is_clairvoyant_) {
       UpdateSensorView();
     }
     if (params_.pUpdateRobotMap == true and not is_clairvoyant_) {
       UpdateRobotMap();
     }
-    if (params_.pUpdateExplorationMap == true) {
+    if (params_.pUpdateExplorationMap == true and not is_clairvoyant_) {
       UpdateExplorationMap();
     }
   }
@@ -370,6 +371,7 @@ class RobotModel {
     return world_local_map_;
   }
 
+  const MapType &GetFullExplorationMap() const { return exploration_map_; }
   const MapType &GetExplorationMap() {
     /* local_exploration_map_ = MapType::Constant(params_.pLocalMapSize,
      * params_.pLocalMapSize, 0); */

@@ -70,6 +70,7 @@ class CoverageSystem {
   std::vector<RobotModel> robots_;   //!< Vector of robots of type RobotModel
   double normalization_factor_ = 0;  //!< Normalization factor for the world IDF
   Voronoi voronoi_;                  //!< Voronoi object
+  bool is_clairvoyant_ = false;  //!< If true, no need to update maps every step
   std::vector<VoronoiCell> voronoi_cells_;  //!< Voronoi cells for each robot
   mutable std::random_device
       rd_;                    //!< Random device for random number generation
@@ -78,7 +79,8 @@ class CoverageSystem {
   std::uniform_real_distribution<>
       distrib_pts_;  //!< Uniform distribution for generating random points
   PointVector robot_global_positions_;  //!< Global positions of the robots
-  PointVector noisy_robot_global_positions_;  //!< Global noisy positions of the robots
+  PointVector
+      noisy_robot_global_positions_;  //!< Global noisy positions of the robots
   MapType
       system_map_;  //!< System map contains explored and unexplored locations
   MapType
@@ -102,33 +104,7 @@ class CoverageSystem {
   void InitSetup();
 
   //! Update the exploration map, explored IDF map, and system map
-  void UpdateSystemMap() {
-    // This is not necessarily thread safe. Do NOT parallelize this for loop
-    for (size_t i = 0; i < num_robots_; ++i) {
-      MapUtils::MapBounds index, offset;
-      MapUtils::ComputeOffsets(params_.pResolution, robot_global_positions_[i],
-                               params_.pSensorSize, params_.pWorldMapSize,
-                               index, offset);
-      explored_idf_map_.block(index.left + offset.left,
-                              index.bottom + offset.bottom, offset.width,
-                              offset.height) =
-          GetRobotSensorView(i).block(offset.left, offset.bottom, offset.width,
-                                      offset.height);
-      exploration_map_.block(
-          index.left + offset.left, index.bottom + offset.bottom, offset.width,
-          offset.height) = MapType::Zero(offset.width, offset.height);
-    }
-    system_map_ = explored_idf_map_ - exploration_map_;
-    /* exploration_ratio_ = 1.0 -
-     * (double)(exploration_map_.sum())/(params_.pWorldMapSize *
-     * params_.pWorldMapSize); */
-    /* weighted_exploration_ratio_ =
-     * (double)(explored_idf_map_.sum())/(total_idf_weight_); */
-    /* std::cout << "Exploration: " << exploration_ratio_ << " Weighted: " <<
-     * weighted_exploration_ratio_ << std::endl; */
-    /* std::cout << "Diff: " << (exploration_map_.count() -
-     * exploration_map_.sum()) << std::endl; */
-  }
+  void UpdateSystemMap();
 
   //! Execute updates after a step for robot_id (avoid using this function, use
   //! PostStepCommands() instead).
@@ -139,20 +115,8 @@ class CoverageSystem {
   //! of the system
   void PostStepCommands();
 
-  //! Compute the adjacency matrix for communication
-  void ComputeAdjacencyMatrix();
-
   //! Update the positions of all robots from the RobotModel objects
-  void UpdateRobotPositions() {
-    for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
-      robot_global_positions_[iRobot] =
-          robots_[iRobot].GetGlobalCurrentPosition();
-      if (params_.pAddNoisePositions) {
-        noisy_robot_global_positions_[iRobot] =
-            robots_[iRobot].GetNoisyGlobalCurrentPosition();
-      }
-    }
-  }
+  void UpdateRobotPositions();
 
   //! Update the neighbors of all robots
   void UpdateNeighbors();
@@ -337,36 +301,10 @@ class CoverageSystem {
     return 0;
   }
 
-  //! Add noise to the given point and ensure within bounds
-  Point2 AddNoise(Point2 const pt) const;
-
   //! Check if the robot is oscillating about its current position
   //! \warning This function is dependent on the size of the robot positions
   //! history
-  bool CheckOscillation(size_t const robot_id) const {
-    if (params_.pCheckOscillations == false) {
-      return false;
-    }
-    if (robot_positions_history_[robot_id].size() < 3) {
-      return false;
-    }
-    auto const &history = robot_positions_history_[robot_id];
-    Point2 const last_pos = history.back();
-    auto it_end = std::next(history.crbegin(),
-                            std::min(6, static_cast<int>(history.size()) - 1));
-    bool flag = false;
-    int count = 0;
-    std::for_each(history.crbegin(), it_end,
-                  [last_pos, &count](Point2 const &pt) {
-                    if ((pt - last_pos).norm() < kLargeEps) {
-                      ++count;
-                    }
-                  });
-    if (count > 2) {
-      flag = true;
-    }
-    return flag;
-  }
+  bool CheckOscillation(size_t const robot_id) const;
 
   void CheckRobotID(size_t const id) const {
     if (id >= num_robots_) {
@@ -374,13 +312,7 @@ class CoverageSystem {
     }
   }
 
-  void ComputeVoronoiCells() {
-    UpdateRobotPositions();
-    voronoi_ = Voronoi(robot_global_positions_, GetWorldMap(),
-                       Point2(params_.pWorldMapSize, params_.pWorldMapSize),
-                       params_.pResolution);
-    voronoi_cells_ = voronoi_.GetVoronoiCells();
-  }
+  void ComputeVoronoiCells();
 
   /*!
    * Step a robot towards a given goal

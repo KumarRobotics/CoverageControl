@@ -32,7 +32,6 @@
 
 #include "CoverageControl/cgal/polygon_utils.h"
 #include "CoverageControl/coverage_system.h"
-#include "CoverageControl/plotter.h"
 
 namespace CoverageControl {
 
@@ -129,9 +128,12 @@ CoverageSystem::CoverageSystem(Parameters const &params,
   }
   robots_.reserve(robot_positions.size());
   num_robots_ = robot_positions.size();
-  if(params_.pNumRobots != static_cast<int>(num_robots_)) {
-    std::cerr << "Number of robots in the file does not match the number of robots in the parameters\n";
-    std::cerr << "Number of robots in the file: " << num_robots_ << " Number of robots in the parameters: " << params_.pNumRobots << std::endl;
+  if (params_.pNumRobots != static_cast<int>(num_robots_)) {
+    std::cerr << "Number of robots in the file does not match the number of "
+                 "robots in the parameters\n";
+    std::cerr << "Number of robots in the file: " << num_robots_
+              << " Number of robots in the parameters: " << params_.pNumRobots
+              << std::endl;
     exit(1);
   }
   for (Point2 const &pos : robot_positions) {
@@ -223,7 +225,42 @@ void CoverageSystem::InitSetup() {
     relative_positions_neighbors_[iRobot].reserve(num_robots_);
     neighbor_ids_[iRobot].reserve(num_robots_);
   }
+  if (params_.pSensorSize >= 2 * params_.pWorldMapSize) {
+    is_clairvoyant_ = true;
+    explored_idf_map_ = GetWorldMap();
+    exploration_map_ =
+        MapType::Constant(params_.pWorldMapSize, params_.pWorldMapSize, 0);
+    system_map_ = explored_idf_map_ - exploration_map_;
+  }
   PostStepCommands();
+}
+
+void CoverageSystem::UpdateSystemMap() {
+  // This is not necessarily thread safe. Do NOT parallelize this for loop
+  for (size_t i = 0; i < num_robots_; ++i) {
+    MapUtils::MapBounds index, offset;
+    MapUtils::ComputeOffsets(params_.pResolution, robot_global_positions_[i],
+                             params_.pSensorSize, params_.pWorldMapSize, index,
+                             offset);
+    explored_idf_map_.block(index.left + offset.left,
+                            index.bottom + offset.bottom, offset.width,
+                            offset.height) =
+        GetRobotSensorView(i).block(offset.left, offset.bottom, offset.width,
+                                    offset.height);
+    exploration_map_.block(
+        index.left + offset.left, index.bottom + offset.bottom, offset.width,
+        offset.height) = MapType::Zero(offset.width, offset.height);
+  }
+  system_map_ = explored_idf_map_ - exploration_map_;
+  /* exploration_ratio_ = 1.0 -
+   * (double)(exploration_map_.sum())/(params_.pWorldMapSize *
+   * params_.pWorldMapSize); */
+  /* weighted_exploration_ratio_ =
+   * (double)(explored_idf_map_.sum())/(total_idf_weight_); */
+  /* std::cout << "Exploration: " << exploration_ratio_ << " Weighted: " <<
+   * weighted_exploration_ratio_ << std::endl; */
+  /* std::cout << "Diff: " << (exploration_map_.count() -
+   * exploration_map_.sum()) << std::endl; */
 }
 
 void CoverageSystem::PostStepCommands(size_t robot_id) {
@@ -231,7 +268,7 @@ void CoverageSystem::PostStepCommands(size_t robot_id) {
       robots_[robot_id].GetGlobalCurrentPosition();
   UpdateNeighbors();
 
-  if (params_.pUpdateSystemMap) {
+  if (params_.pUpdateSystemMap and not is_clairvoyant_) {
     MapUtils::MapBounds index, offset;
     MapUtils::ComputeOffsets(
         params_.pResolution, robot_global_positions_[robot_id],
@@ -258,7 +295,7 @@ void CoverageSystem::PostStepCommands(size_t robot_id) {
 void CoverageSystem::PostStepCommands() {
   UpdateRobotPositions();
   UpdateNeighbors();
-  if (params_.pUpdateSystemMap) {
+  if (params_.pUpdateSystemMap and not is_clairvoyant_) {
     UpdateSystemMap();
   }
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
@@ -272,12 +309,23 @@ void CoverageSystem::PostStepCommands() {
   }
 }
 
+void CoverageSystem::UpdateRobotPositions() {
+  for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+    robot_global_positions_[iRobot] =
+        robots_[iRobot].GetGlobalCurrentPosition();
+    if (params_.pAddNoisePositions) {
+      noisy_robot_global_positions_[iRobot] =
+          robots_[iRobot].GetNoisyGlobalCurrentPosition();
+    }
+  }
+}
+
 void CoverageSystem::UpdateNeighbors() {
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
     relative_positions_neighbors_[iRobot].clear();
     neighbor_ids_[iRobot].clear();
   }
-  PointVector robot_global_positions = GetRobotPositions(); // Can be noisy
+  PointVector robot_global_positions = GetRobotPositions();  // Can be noisy
   for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
     for (size_t jRobot = iRobot + 1; jRobot < num_robots_; ++jRobot) {
       Point2 relative_pos =
@@ -290,6 +338,39 @@ void CoverageSystem::UpdateNeighbors() {
       }
     }
   }
+}
+
+bool CoverageSystem::CheckOscillation(size_t const robot_id) const {
+  if (params_.pCheckOscillations == false) {
+    return false;
+  }
+  if (robot_positions_history_[robot_id].size() < 3) {
+    return false;
+  }
+  auto const &history = robot_positions_history_[robot_id];
+  Point2 const last_pos = history.back();
+  auto it_end = std::next(history.crbegin(),
+                          std::min(6, static_cast<int>(history.size()) - 1));
+  bool flag = false;
+  int count = 0;
+  std::for_each(history.crbegin(), it_end,
+                [last_pos, &count](Point2 const &pt) {
+                  if ((pt - last_pos).norm() < kLargeEps) {
+                    ++count;
+                  }
+                });
+  if (count > 2) {
+    flag = true;
+  }
+  return flag;
+}
+
+void CoverageSystem::ComputeVoronoiCells() {
+  UpdateRobotPositions();
+  voronoi_ = Voronoi(robot_global_positions_, GetWorldMap(),
+                     Point2(params_.pWorldMapSize, params_.pWorldMapSize),
+                     params_.pResolution);
+  voronoi_cells_ = voronoi_.GetVoronoiCells();
 }
 
 bool CoverageSystem::StepRobotToGoal(int const robot_id, Point2 const &goal,
@@ -401,9 +482,9 @@ void CoverageSystem::RenderRecordedMap(std::string const &dir_name,
                      params_.pCommunicationRange);
     auto iPlotterVoronoi = plotter_voronoi;
     iPlotterVoronoi.SetPlotName("voronoi_map", i);
-    iPlotterVoronoi.PlotMap(plotter_data_[i].world_map, plotter_data_[i].positions,
-                            plotter_data_[i].voronoi,
-                            plotter_data_[i].positions_history);
+    iPlotterVoronoi.PlotMap(
+        plotter_data_[i].world_map, plotter_data_[i].positions,
+        plotter_data_[i].voronoi, plotter_data_[i].positions_history);
   }
   bool ffmpeg_call =
       system(("ffmpeg -y -r 30 -i " + frame_dir +
@@ -546,7 +627,7 @@ void CoverageSystem::PlotRobotSystemMap(std::string const &dir_name,
 }
 
 void CoverageSystem::PlotRobotLocalMap(std::string const &dir_name,
-                                     int const &robot_id, int const &step) {
+                                       int const &robot_id, int const &step) {
   Plotter plotter(dir_name, params_.pLocalMapSize * params_.pResolution,
                   params_.pResolution);
   plotter.SetScale(params_.pPlotScale);
