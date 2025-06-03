@@ -4,6 +4,7 @@ EnvironmentConfig = "${CoverageControl_ws}/lpac/params/coverage_control_params.t
 EnvironmentDataDir = "${CoverageControl_ws}/lpac/envs/" # Absolute location
 NumEnvironments = 2
 NumSteps = 600
+EveryNumSteps = 5
 
 [[Controllers]]
 Name = "lpac"

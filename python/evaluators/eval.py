@@ -52,6 +52,7 @@ class Evaluator:
         self.num_features = self.cc_params.pNumGaussianFeatures
         self.num_envs = self.config["NumEnvironments"]
         self.num_steps = self.config["NumSteps"]
+        self.every_num_steps = self.config["EveryNumSteps"]
 
         self.columns = [
             BarColumn(bar_width=None),
@@ -66,7 +67,8 @@ class Evaluator:
         ]
 
     def evaluate(self, save=True):
-        cost_data = np.zeros((self.num_controllers, self.num_envs, self.num_steps))
+        total_samples = self.num_steps // self.every_num_steps
+        cost_data = np.zeros((self.num_controllers, self.num_envs, total_samples))
 
         with Progress(*self.columns, expand=True) as progress:
             task = progress.add_task(
@@ -94,7 +96,7 @@ class Evaluator:
                 robot_init_pos = env_main.GetRobotPositions(force_no_noise=True)
 
                 for controller_id in range(self.num_controllers):
-                    step_count = 0
+                    sample_count = 0
                     env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
                     if self.controllers_configs[controller_id]["Type"] == "Learning":
@@ -105,30 +107,30 @@ class Evaluator:
                         self.controllers_configs[controller_id], self.cc_params, env
                     )
                     initial_objective_value = env.GetObjectiveValue()
-                    cost_data[controller_id, env_count, step_count] = (
+                    cost_data[controller_id, env_count, sample_count] = (
                         env.GetObjectiveValue() / initial_objective_value
                     )
-                    step_count = step_count + 1
+                    sample_count = sample_count + 1
 
-                    while step_count < self.num_steps:
+                    for step_count in range(1, self.num_steps):
                         converged = controller.step(env)
-                        objective_value = env.GetObjectiveValue()
-                        normalized_objective_value = (
-                            objective_value / initial_objective_value
-                        )
-                        cost_data[controller_id, env_count, step_count] = (
-                            normalized_objective_value
-                        )
-
-                        step_count = step_count + 1
-
-                        if converged:
-                            cost_data[controller_id, env_count, step_count:] = (
+                        if step_count % self.every_num_steps == 0:
+                            objective_value = env.GetObjectiveValue()
+                            normalized_objective_value = (
+                                objective_value / initial_objective_value
+                            )
+                            cost_data[controller_id, env_count, sample_count] = (
                                 normalized_objective_value
                             )
-                            step_count = self.num_steps
+                            sample_count = sample_count + 1
 
-                        if (step_count) % 10 == 0 or step_count == self.num_steps:
+                            if converged:
+                                cost_data[controller_id, env_count, sample_count:] = (
+                                    normalized_objective_value
+                                )
+                                step_count = self.num_steps
+                                sample_count = total_samples
+
                             info = f"Controller {controller_id}/{self.num_controllers}: {controller.name} "
 
                             progress.update(
