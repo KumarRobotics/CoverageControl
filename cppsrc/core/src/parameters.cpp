@@ -28,277 +28,287 @@
 
 #include <filesystem>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 #include "CoverageControl/extern/tomlplusplus/toml.hpp"
 #include "CoverageControl/parameters.h"
 
 namespace CoverageControl {
+namespace {
+
+template <typename T>
+bool SafeExtractValue(const toml::node_view<toml::node>& node, T& target,
+                      const std::string& param_name = "",
+                      bool log_default = true) {
+  if (auto val = node.value<T>()) {
+    target = val.value();
+    return true;
+  }
+  if (log_default && !param_name.empty()) {
+    std::cout << param_name << " (default): " << target << std::endl;
+  }
+  return false;
+}
+
+bool ValidatePositiveInt(int value, const std::string& param_name) {
+  if (value <= 0) {
+    std::cerr << param_name << " must be greater than 0, got: " << value
+              << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool ValidatePositiveDouble(double value, const std::string& param_name) {
+  if (value <= 0.0) {
+    std::cerr << param_name << " must be greater than 0.0, got: " << value
+              << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool ValidateRange(double value, double min, double max,
+                   const std::string& param_name) {
+  if (value < min || value > max) {
+    std::cerr << param_name << " must be between " << min << " and " << max
+              << ", got: " << value << std::endl;
+    return false;
+  }
+  return true;
+}
+}  // namespace
+
 void Parameters::ParseParameters() {
   std::cout << std::boolalpha;
   // std::cout << "Using config file: " << config_file_ << std::endl;
   if (not std::filesystem::exists(config_file_)) {
-    std::cerr << "Could not find config file " << config_file_ << std::endl;
-    throw std::runtime_error("Could not open config file");
+    throw std::runtime_error("Config file does not exist: " + config_file_);
   }
 
-  toml::table toml_config;
+  toml::table config;
   try {
-    toml_config = toml::parse_file(config_file_);
+    config = toml::parse_file(config_file_);
+  } catch (const toml::parse_error& e) {
+    std::cerr << "TOML parse error in " << config_file_ << ":\n"
+              << "  Line " << e.source().begin.line << ", Column "
+              << e.source().begin.column << ": " << e.description()
+              << std::endl;
+    throw std::runtime_error("Failed to parse TOML config file");
   } catch (const std::exception& e) {
-    std::cerr << "Error parsing config file: " << e.what() << std::endl;
-    std::cerr << "Please check the config file format" << std::endl;
-    std::cerr << "File: " << config_file_ << std::endl;
-    throw std::runtime_error("Error parsing config file");
+    std::cerr << "Error reading config file " << config_file_ << ": "
+              << e.what() << std::endl;
+    throw std::runtime_error("Failed to read config file");
   }
 
-  if (toml_config["NumRobots"].value<int>()) {
-    if (toml_config["NumRobots"].value<int>().value() < 1) {
-      std::cerr << "NumRobots must be greater than 0" << std::endl;
-      throw std::runtime_error("NumRobots must be greater than 0");
-    }
-    pNumRobots = toml_config["NumRobots"].value<int>().value();
-  } else {
-    std::cout << "NumRobots (default): " << pNumRobots << std::endl;
-  }
-
-  auto toml_IO = toml_config["IO"];
-  if (toml_IO["PlotScale"].value<double>()) {
-    pPlotScale = toml_IO["PlotScale"].value<double>().value();
-  } else {
-    std::cout << "PlotScale (default): " << pPlotScale << std::endl;
-  }
-
-  auto toml_EnvironmentMaps = toml_config["Environment"]["Maps"];
-
-  if (toml_EnvironmentMaps) {
-    auto toml_Resolution = toml_EnvironmentMaps["Resolution"].value<double>();
-    auto toml_WorldMapSize = toml_EnvironmentMaps["WorldMapSize"].value<int>();
-    auto toml_RobotMapSize = toml_EnvironmentMaps["RobotMapSize"].value<int>();
-    auto toml_LocalMapSize = toml_EnvironmentMaps["LocalMapSize"].value<int>();
-
-    if (toml_Resolution) {
-      pResolution = toml_Resolution.value();
-    }
-
-    if (toml_WorldMapSize) {
-      pWorldMapSize = toml_WorldMapSize.value();
-    }
-    if (toml_RobotMapSize) {
-      pRobotMapSize = toml_RobotMapSize.value();
-    }
-    if (toml_LocalMapSize) {
-      pLocalMapSize = toml_LocalMapSize.value();
-    }
-
-    auto toml_EnvironmentMapsUpdateSettings =
-        toml_EnvironmentMaps["UpdateSettings"];
-
-    if (toml_EnvironmentMapsUpdateSettings) {
-      auto toml_UpdateRobotMap =
-          toml_EnvironmentMapsUpdateSettings["UpdateRobotMap"].value<bool>();
-      auto toml_UpdateSensorView =
-          toml_EnvironmentMapsUpdateSettings["UpdateSensorView"].value<bool>();
-      auto toml_UpdateExplorationMap =
-          toml_EnvironmentMapsUpdateSettings["UpdateExplorationMap"]
-              .value<bool>();
-      auto toml_UpdateSystemMap =
-          toml_EnvironmentMapsUpdateSettings["UpdateSystemMap"].value<bool>();
-
-      if (toml_UpdateRobotMap) {
-        pUpdateRobotMap = toml_UpdateRobotMap.value();
-      }
-      if (toml_UpdateSensorView) {
-        pUpdateSensorView = toml_UpdateSensorView.value();
-      }
-      if (toml_UpdateExplorationMap) {
-        pUpdateExplorationMap = toml_UpdateExplorationMap.value();
-      }
-      if (toml_UpdateSystemMap) {
-        pUpdateSystemMap = toml_UpdateSystemMap.value();
+  try {
+    if (SafeExtractValue(config["NumRobots"], pNumRobots, "NumRobots")) {
+      if (!ValidatePositiveInt(pNumRobots, "NumRobots")) {
+        throw std::runtime_error("Invalid NumRobots value");
       }
     }
+
+    if (auto env_maps = config["Environment"]["Maps"]) {
+      SafeExtractValue(env_maps["Resolution"], pResolution, "Resolution");
+      SafeExtractValue(env_maps["WorldMapSize"], pWorldMapSize, "WorldMapSize");
+      SafeExtractValue(env_maps["RobotMapSize"], pRobotMapSize, "RobotMapSize");
+      SafeExtractValue(env_maps["LocalMapSize"], pLocalMapSize, "LocalMapSize");
+
+      // UpdateSettings subsection
+      if (auto update_settings = env_maps["UpdateSettings"]) {
+        SafeExtractValue(update_settings["UpdateRobotMap"], pUpdateRobotMap,
+                         "UpdateRobotMap");
+        SafeExtractValue(update_settings["UpdateSensorView"], pUpdateSensorView,
+                         "UpdateSensorView");
+        SafeExtractValue(update_settings["UpdateExplorationMap"],
+                         pUpdateExplorationMap, "UpdateExplorationMap");
+        SafeExtractValue(update_settings["UpdateSystemMap"], pUpdateSystemMap,
+                         "UpdateSystemMap");
+      }
+    }
+
+    // Environment.IDF section
+    if (auto env_idf = config["Environment"]["IDF"]) {
+      SafeExtractValue(env_idf["NumGaussianFeatures"], pNumGaussianFeatures,
+                       "NumGaussianFeatures");
+      SafeExtractValue(env_idf["TruncationBND"], pTruncationBND,
+                       "TruncationBND");
+      SafeExtractValue(env_idf["Norm"], pNorm, "Norm");
+      SafeExtractValue(env_idf["MinSigma"], pMinSigma, "MinSigma");
+      SafeExtractValue(env_idf["MaxSigma"], pMaxSigma, "MaxSigma");
+      SafeExtractValue(env_idf["MinPeak"], pMinPeak, "MinPeak");
+      SafeExtractValue(env_idf["MaxPeak"], pMaxPeak, "MaxPeak");
+      SafeExtractValue(env_idf["NumPolygons"], pNumPolygons, "NumPolygons");
+      SafeExtractValue(env_idf["MaxVertices"], pMaxVertices, "MaxVertices");
+      SafeExtractValue(env_idf["PolygonRadius"], pPolygonRadius,
+                       "PolygonRadius");
+      SafeExtractValue(env_idf["UnknownImportance"], pUnknownImportance,
+                       "UnknownImportance");
+      SafeExtractValue(env_idf["RobotMapUseUnknownImportance"],
+                       pRobotMapUseUnknownImportance,
+                       "RobotMapUseUnknownImportance");
+    }
+
+    if (auto io_section = config["IO"]) {
+      SafeExtractValue(io_section["PlotScale"], pPlotScale, "PlotScale");
+    }
+    if (auto robot_model = config["RobotModel"]) {
+      SafeExtractValue(robot_model["SensorSize"], pSensorSize, "SensorSize");
+      SafeExtractValue(robot_model["CommunicationRange"], pCommunicationRange,
+                       "CommunicationRange");
+      SafeExtractValue(robot_model["MaxRobotSpeed"], pMaxRobotSpeed,
+                       "MaxRobotSpeed");
+      SafeExtractValue(robot_model["RobotInitDist"], pRobotInitDist,
+                       "RobotInitDist");
+      SafeExtractValue(robot_model["RobotPosHistorySize"], pRobotPosHistorySize,
+                       "RobotPosHistorySize");
+      SafeExtractValue(robot_model["TimeStep"], pTimeStep, "TimeStep");
+
+      // AddNoise subsection
+      if (auto add_noise = robot_model["AddNoise"]) {
+        SafeExtractValue(add_noise["AddNoisePositions"], pAddNoisePositions,
+                         "AddNoisePositions");
+        SafeExtractValue(add_noise["PositionsNoiseSigmaMin"],
+                         pPositionsNoiseSigmaMin, "PositionsNoiseSigmaMin");
+        SafeExtractValue(add_noise["PositionsNoiseSigmaMax"],
+                         pPositionsNoiseSigmaMax, "PositionsNoiseSigmaMax");
+      }
+    }
+    if (auto algorithm = config["Algorithm"]) {
+      SafeExtractValue(algorithm["EpisodeSteps"], pEpisodeSteps,
+                       "EpisodeSteps");
+      SafeExtractValue(algorithm["CheckOscillations"], pCheckOscillations,
+                       "CheckOscillations");
+
+      // Global-CVT subsection
+      if (auto global_cvt = algorithm["Global-CVT"]) {
+        SafeExtractValue(global_cvt["LloydMaxIterations"], pLloydMaxIterations,
+                         "LloydMaxIterations");
+        SafeExtractValue(global_cvt["LloydNumTries"], pLloydNumTries,
+                         "LloydNumTries");
+      }
+
+      // Exploration subsection
+      if (auto exploration = algorithm["Exploration"]) {
+        SafeExtractValue(exploration["NumFrontiers"], pNumFrontiers,
+                         "NumFrontiers");
+      }
+    }
+
+  } catch (const std::exception& e) {
+    std::cerr << "Error parsing parameters: " << e.what() << std::endl;
+    throw;
+  }
+  ValidateParameters();
+}
+
+void Parameters::ValidateParameters() {
+  std::vector<std::string> errors;
+
+  // Validate positive integers
+  if (!ValidatePositiveInt(pNumRobots, "NumRobots"))
+    errors.push_back("NumRobots");
+  if (!ValidatePositiveInt(pWorldMapSize, "WorldMapSize"))
+    errors.push_back("WorldMapSize");
+  if (!ValidatePositiveInt(pRobotMapSize, "RobotMapSize"))
+    errors.push_back("RobotMapSize");
+  if (!ValidatePositiveInt(pLocalMapSize, "LocalMapSize"))
+    errors.push_back("LocalMapSize");
+  if (!ValidatePositiveInt(pSensorSize, "SensorSize"))
+    errors.push_back("SensorSize");
+  if (!ValidatePositiveInt(pEpisodeSteps, "EpisodeSteps"))
+    errors.push_back("EpisodeSteps");
+
+  // Validate positive doubles
+  if (!ValidatePositiveDouble(pResolution, "Resolution"))
+    errors.push_back("Resolution");
+  if (!ValidatePositiveDouble(pCommunicationRange, "CommunicationRange"))
+    errors.push_back("CommunicationRange");
+  if (!ValidatePositiveDouble(pMaxRobotSpeed, "MaxRobotSpeed"))
+    errors.push_back("MaxRobotSpeed");
+  if (!ValidatePositiveDouble(pTimeStep, "TimeStep"))
+    errors.push_back("TimeStep");
+
+  // Validate ranges
+  if (!ValidateRange(pPlotScale, 0.1, 10.0, "PlotScale"))
+    errors.push_back("PlotScale");
+
+  // Validate sensor size is even
+  if (pSensorSize % 2 != 0) {
+    std::cerr << "SensorSize must be even, got: " << pSensorSize << std::endl;
+    errors.push_back("SensorSize");
   }
 
-  auto toml_EnvironmentIDF = toml_config["Environment"]["IDF"];
-
-  if (toml_EnvironmentIDF) {
-    if (toml_EnvironmentIDF["NumGaussianFeatures"].value<int>()) {
-      pNumGaussianFeatures = toml_EnvironmentIDF["NumGaussianFeatures"].value<int>().value();
-    } else {
-      std::cout << "NumGaussianFeatures (default): " << pNumGaussianFeatures << std::endl;
-    }
-    auto toml_TruncationBND =
-        toml_EnvironmentIDF["TruncationBND"].value<double>();
-    auto toml_Norm = toml_EnvironmentIDF["Norm"].value<double>();
-    auto toml_MinSigma = toml_EnvironmentIDF["MinSigma"].value<double>();
-    auto toml_MaxSigma = toml_EnvironmentIDF["MaxSigma"].value<double>();
-    auto toml_MinPeak = toml_EnvironmentIDF["MinPeak"].value<double>();
-    auto toml_MaxPeak = toml_EnvironmentIDF["MaxPeak"].value<double>();
-    auto toml_UnknownImportance =
-        toml_EnvironmentIDF["UnknownImportance"].value<double>();
-    auto toml_RobotMapUseUnknownImportance =
-        toml_EnvironmentIDF["RobotMapUseUnknownImportance"].value<bool>();
-
-    if (toml_TruncationBND) {
-      pTruncationBND = toml_TruncationBND.value();
-    }
-    if (toml_Norm) {
-      pNorm = toml_Norm.value();
-    }
-    if (toml_MinSigma) {
-      pMinSigma = toml_MinSigma.value();
-    }
-    if (toml_MaxSigma) {
-      pMaxSigma = toml_MaxSigma.value();
-    }
-    if (toml_MinPeak) {
-      pMinPeak = toml_MinPeak.value();
-    }
-    if (toml_MaxPeak) {
-      pMaxPeak = toml_MaxPeak.value();
-    }
-
-    if (toml_EnvironmentIDF["NumPolygons"].value<int>()) {
-      pNumPolygons = toml_EnvironmentIDF["NumPolygons"].value<int>().value();
-    } else {
-      std::cout << "NumPolygons (default): " << pNumPolygons << std::endl;
-    }
-
-    if (toml_EnvironmentIDF["MaxVertices"].value<int>()) {
-      pMaxVertices = toml_EnvironmentIDF["MaxVertices"].value<int>().value();
-    } else {
-      std::cout << "MaxVertices (default): " << pMaxVertices << std::endl;
-    }
-
-    if (toml_EnvironmentIDF["PolygonRadius"].value<double>()) {
-      pPolygonRadius = toml_EnvironmentIDF["PolygonRadius"].value<double>().value();
-    } else {
-      std::cout << "PolygonRadius (default): " << pPolygonRadius << std::endl;
-    }
-
-    if (toml_UnknownImportance) {
-      pUnknownImportance = toml_UnknownImportance.value();
-    }
-    if (toml_RobotMapUseUnknownImportance) {
-      pRobotMapUseUnknownImportance = toml_RobotMapUseUnknownImportance.value();
-    }
+  // Validate sigma ranges
+  if (pMinSigma >= pMaxSigma) {
+    std::cerr << "MinSigma (" << pMinSigma << ") must be less than MaxSigma ("
+              << pMaxSigma << ")" << std::endl;
+    errors.push_back("Sigma range");
   }
 
-  auto toml_RobotModel = toml_config["RobotModel"];
-
-  if (toml_RobotModel) {
-    auto toml_SensorSize = toml_RobotModel["SensorSize"].value<int>();
-    auto toml_CommunicationRange =
-        toml_RobotModel["CommunicationRange"].value<double>();
-    auto toml_MaxRobotSpeed = toml_RobotModel["MaxRobotSpeed"].value<double>();
-    auto toml_RobotInitDist = toml_RobotModel["RobotInitDist"].value<double>();
-    auto toml_RobotPosHistorySize =
-        toml_RobotModel["RobotPosHistorySize"].value<int>();
-    auto toml_TimeStep = toml_RobotModel["TimeStep"].value<double>();
-
-    if (toml_SensorSize) {
-      pSensorSize = toml_SensorSize.value();
-    }
-    if (toml_CommunicationRange) {
-      pCommunicationRange = toml_CommunicationRange.value();
-    }
-    if (toml_MaxRobotSpeed) {
-      pMaxRobotSpeed = toml_MaxRobotSpeed.value();
-    }
-    if (toml_RobotInitDist) {
-      pRobotInitDist = toml_RobotInitDist.value();
-    }
-    if (toml_RobotPosHistorySize) {
-      pRobotPosHistorySize = toml_RobotPosHistorySize.value();
-    }
-    if (toml_TimeStep) {
-      pTimeStep = toml_TimeStep.value();
-    }
+  // Validate peak ranges
+  if (pMinPeak >= pMaxPeak) {
+    std::cerr << "MinPeak (" << pMinPeak << ") must be less than MaxPeak ("
+              << pMaxPeak << ")" << std::endl;
+    errors.push_back("Peak range");
   }
 
-  if (toml_RobotModel["AddNoise"]) {
-    auto toml_AddNoisePositions =
-        toml_RobotModel["AddNoise"]["AddNoisePositions"].value<bool>();
-    auto toml_PositionsNoiseSigmaMin =
-        toml_RobotModel["AddNoise"]["PositionsNoiseSigmaMin"].value<double>();
-    auto toml_PositionsNoiseSigmaMax =
-        toml_RobotModel["AddNoise"]["PositionsNoiseSigmaMax"].value<double>();
-    if (toml_AddNoisePositions) {
-      pAddNoisePositions = toml_AddNoisePositions.value();
-    }
-    if (toml_PositionsNoiseSigmaMin) {
-      pPositionsNoiseSigmaMin = toml_PositionsNoiseSigmaMin.value();
-    }
-    if (toml_PositionsNoiseSigmaMax) {
-      pPositionsNoiseSigmaMax = toml_PositionsNoiseSigmaMax.value();
-    }
+  // Validate noise sigma ranges
+  if (pAddNoisePositions &&
+      pPositionsNoiseSigmaMin >= pPositionsNoiseSigmaMax) {
+    std::cerr << "PositionsNoiseSigmaMin (" << pPositionsNoiseSigmaMin
+              << ") must be less than PositionsNoiseSigmaMax ("
+              << pPositionsNoiseSigmaMax << ")" << std::endl;
+    errors.push_back("Noise sigma range");
   }
 
-  auto toml_Algorithm = toml_config["Algorithm"];
-
-  if (toml_Algorithm) {
-    auto toml_EpisodeSteps = toml_Algorithm["EpisodeSteps"].value<int>();
-    if (toml_EpisodeSteps) {
-      pEpisodeSteps = toml_EpisodeSteps.value();
-    }
-    if (toml_Algorithm["CheckOscillations"].value<bool>()) {
-      pCheckOscillations =
-          toml_Algorithm["CheckOscillations"].value<bool>().value();
-    }
-
-    auto toml_LloydMaxIterations =
-        toml_Algorithm["Global-CVT"]["LloydMaxIterations"].value<int>();
-    auto toml_LloydNumTries =
-        toml_Algorithm["Global-CVT"]["LloydNumTries"].value<int>();
-    if (toml_LloydMaxIterations) {
-      pLloydMaxIterations = toml_LloydMaxIterations.value();
-    }
-    if (toml_LloydNumTries) {
-      pLloydNumTries = toml_LloydNumTries.value();
-    }
-
-    auto toml_NumFrontiers =
-        toml_Algorithm["Exploration"]["NumFrontiers"].value<int>();
-    if (toml_NumFrontiers) {
-      pNumFrontiers = toml_NumFrontiers.value();
-    }
+  // Validate speed constraint
+  double max_displacement_per_step = pMaxRobotSpeed * pTimeStep / pResolution;
+  if (max_displacement_per_step >= pSensorSize / 2.0) {
+    std::cerr << "Robot speed constraint violated: MaxRobotSpeed * TimeStep / "
+                 "Resolution ("
+              << max_displacement_per_step << ") must be < SensorSize/2 ("
+              << pSensorSize / 2.0 << ")" << std::endl;
+    errors.push_back("Speed constraint");
   }
 }
 
 void Parameters::PrintParameters() const {
+  std::cout << "\n=== CoverageControl Parameters ===" << std::endl;
+
+  std::cout << "\n[Environment]" << std::endl;
   std::cout << "NumRobots: " << pNumRobots << std::endl;
+  std::cout << "NumGaussianFeatures: " << pNumGaussianFeatures << std::endl;
   std::cout << "NumPolygons: " << pNumPolygons << std::endl;
   std::cout << "MaxVertices: " << pMaxVertices << std::endl;
   std::cout << "PolygonRadius: " << pPolygonRadius << std::endl;
 
+  std::cout << "\n[IO]" << std::endl;
   std::cout << "PlotScale: " << pPlotScale << std::endl;
 
+  std::cout << "\n[Maps]" << std::endl;
   std::cout << "Resolution: " << pResolution << std::endl;
   std::cout << "WorldMapSize: " << pWorldMapSize << std::endl;
   std::cout << "RobotMapSize: " << pRobotMapSize << std::endl;
   std::cout << "LocalMapSize: " << pLocalMapSize << std::endl;
-
   std::cout << "UpdateRobotMap: " << pUpdateRobotMap << std::endl;
   std::cout << "UpdateSensorView: " << pUpdateSensorView << std::endl;
   std::cout << "UpdateExplorationMap: " << pUpdateExplorationMap << std::endl;
   std::cout << "UpdateSystemMap: " << pUpdateSystemMap << std::endl;
 
-  std::cout << "NumGaussianFeatures: " << pNumGaussianFeatures << std::endl;
+  std::cout << "\n[IDF Parameters]" << std::endl;
   std::cout << "TruncationBND: " << pTruncationBND << std::endl;
   std::cout << "Norm: " << pNorm << std::endl;
   std::cout << "MinSigma: " << pMinSigma << std::endl;
   std::cout << "MaxSigma: " << pMaxSigma << std::endl;
   std::cout << "MinPeak: " << pMinPeak << std::endl;
   std::cout << "MaxPeak: " << pMaxPeak << std::endl;
-
-  std::cout << "pNumPolygons: " << pNumPolygons << std::endl;
-  std::cout << "pMaxVertices: " << pMaxVertices << std::endl;
-  std::cout << "pPolygonRadius: " << pPolygonRadius << std::endl;
-
   std::cout << "UnknownImportance: " << pUnknownImportance << std::endl;
   std::cout << "RobotMapUseUnknownImportance: " << pRobotMapUseUnknownImportance
             << std::endl;
 
+  std::cout << "\n[Robot Model]" << std::endl;
   std::cout << "SensorSize: " << pSensorSize << std::endl;
   std::cout << "CommunicationRange: " << pCommunicationRange << std::endl;
   std::cout << "MaxRobotSpeed: " << pMaxRobotSpeed << std::endl;
@@ -306,14 +316,21 @@ void Parameters::PrintParameters() const {
   std::cout << "RobotPosHistorySize: " << pRobotPosHistorySize << std::endl;
   std::cout << "TimeStep: " << pTimeStep << std::endl;
 
+  std::cout << "\n[Noise Parameters]" << std::endl;
   std::cout << "AddNoisePositions: " << pAddNoisePositions << std::endl;
-  std::cout << "PositionsNoiseSigmaMin: " << pPositionsNoiseSigmaMin << std::endl;
-  std::cout << "PositionsNoiseSigmaMax: " << pPositionsNoiseSigmaMax << std::endl;
+  std::cout << "PositionsNoiseSigmaMin: " << pPositionsNoiseSigmaMin
+            << std::endl;
+  std::cout << "PositionsNoiseSigmaMax: " << pPositionsNoiseSigmaMax
+            << std::endl;
 
+  std::cout << "\n[Algorithm]" << std::endl;
   std::cout << "EpisodeSteps: " << pEpisodeSteps << std::endl;
   std::cout << "CheckOscillations: " << pCheckOscillations << std::endl;
   std::cout << "LloydMaxIterations: " << pLloydMaxIterations << std::endl;
   std::cout << "LloydNumTries: " << pLloydNumTries << std::endl;
   std::cout << "NumFrontiers: " << pNumFrontiers << std::endl;
+
+  std::cout << "\n=================================" << std::endl;
 }
-} /* namespace CoverageControl */
+
+}  // namespace CoverageControl

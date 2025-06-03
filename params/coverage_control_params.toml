@@ -1,11 +1,6 @@
 # Specify parameters for coverage control in toml format
 
 NumRobots = 32
-NumFeatures = 32
-
-NumPolygons = 0
-MaxVertices = 10
-PolygonRadius = 64
 
 [IO]
 # Determines the quality of the plot and videos
@@ -27,19 +22,20 @@ WorldMapSize = 1024
 RobotMapSize = 1024
 
 # Local map is used for computing mass. Actual area would be LocalMapSize * Resolution
-# Should be greater than CommunicationRange so that they can form different channels of the same image.
 LocalMapSize = 256
 
 # Map update settings
 [Environment.Maps.UpdateSettings]
 
-UpdateRobotMap = true # Set UpdateRobotMap to false for centralized known world
+UpdateRobotMap = true
 UpdateSensorView = true
 UpdateExplorationMap = false
 UpdateSystemMap = true
 
 # Parameters for the IDF
 [Environment.IDF]
+
+NumGaussianFeatures = 32
 
 # Bivariate Normal Distribution truncated after TruncationBND * sigma
 # Makes it more realistic and reduces the number of erfc evaluations
@@ -53,6 +49,11 @@ MinSigma = 40
 MaxSigma = 60
 MinPeak = 6
 MaxPeak = 10
+
+# Polygonal features
+NumPolygons = 0
+MaxVertices = 10
+PolygonRadius = 64
 
 # Add importance to unknown regions
 UnknownImportance = 0.5 # fraction of the largest imaportance of a grid cell
@@ -80,7 +81,8 @@ TimeStep = 0.2 # in seconds
 
 # Add noise to the robot's position and sensor readings
 AddNoisePositions = false
-PositionsNoiseSigma = 0.1
+PositionsNoiseSigmaMin = 1.0
+PositionsNoiseSigmaMax = 2.0
 
 # Parameters for the standard baseline coverage control algorithms
 [Algorithm]

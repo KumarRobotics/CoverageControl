@@ -32,10 +32,9 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_PARAMETERS_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_PARAMETERS_H_
 
+#include <array>
 #include <cmath>
 #include <string>
-
-#include <array>
 
 namespace CoverageControl {
 
@@ -55,7 +54,7 @@ class Parameters {
    * \name Environment Parameters
    * @{
    */
-  int pNumRobots = 32;    //!< Number of robots
+  int pNumRobots = 32;  //!< Number of robots
 
   /*! \name IO Parameters
    * @{
@@ -171,15 +170,15 @@ class Parameters {
                            /*! @} */
 
   /*! @} */
-  Parameters() {}
+  Parameters() = default;
 
-  explicit Parameters(std::string const &config_file)
+  explicit Parameters(std::string const& config_file)
       : config_file_{config_file} {
     ParseParameters();
     /* PrintParameters(); */
   }
 
-  void SetConfig(std::string const &config_file) {
+  void SetConfig(std::string const& config_file) {
     config_file_ = config_file;
     ParseParameters();
   }
@@ -187,7 +186,9 @@ class Parameters {
   void PrintParameters() const;
 
  private:
+
   void ParseParameters();
+  void ValidateParameters();
 };
 
 /*!

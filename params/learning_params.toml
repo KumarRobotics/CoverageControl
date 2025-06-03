@@ -7,6 +7,7 @@ NumWorkers = 4
 # Similarly, for the optimizer
 [LPACModel]
 Dir = "${CoverageControl_ws}/lpac/models/"
+# PreTrainedModel = "model.pt"
 
 [CNNModel]
 Dir = "${CoverageControl_ws}/lpac/models/" # Absolute location

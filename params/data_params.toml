@@ -22,6 +22,9 @@ ConvergedDataRatio = 0.02
 # Resizing of maps and Sparsification of tensors are triggered every TriggerPostProcessing dataset
 # This should be set based on RAM resources available on the system
 TriggerPostProcessing = 100
+SaveObjective = false
+TimeStep = 5 # Overrides TimeStep in coverge_control_params.toml
+SaveRobotWorldLocalMaps = false
 
 CNNMapSize = 32
 SaveAsSparseQ = true
