@@ -66,9 +66,24 @@ class Evaluator:
             TimeElapsedColumn(),
         ]
 
+    def get_normalized_objective_value(self, env, initial_objective_value):
+        """
+        Returns the normalized objective value of the environment
+        :param env: The environment object
+        :param initial_objective_value: The initial objective value of the environment
+        :return: The normalized objective value
+        """
+        objective_value = env.GetObjectiveValue()
+        return objective_value / initial_objective_value
+
     def evaluate(self, save=True):
         total_samples = self.num_steps // self.every_num_steps
+        if self.every_num_steps != 1:
+            total_samples += 1
         cost_data = np.zeros((self.num_controllers, self.num_envs, total_samples))
+        progress_update_rate = self.every_num_steps
+        if self.every_num_steps < 10:
+            progress_update_rate = self.every_num_steps * (10 // self.every_num_steps)
 
         with Progress(*self.columns, expand=True) as progress:
             task = progress.add_task(
@@ -97,6 +112,7 @@ class Evaluator:
 
                 for controller_id in range(self.num_controllers):
                     sample_count = 0
+                    converged = False
                     env = CoverageSystem(self.cc_params, world_idf, robot_init_pos)
 
                     if self.controllers_configs[controller_id]["Type"] == "Learning":
@@ -107,41 +123,30 @@ class Evaluator:
                         self.controllers_configs[controller_id], self.cc_params, env
                     )
                     initial_objective_value = env.GetObjectiveValue()
-                    cost_data[controller_id, env_count, sample_count] = (
-                        env.GetObjectiveValue() / initial_objective_value
-                    )
-                    sample_count = sample_count + 1
+                    cost_data[controller_id, env_count, sample_count] = self.get_normalized_objective_value(env, initial_objective_value)
+                    sample_count += 1
 
                     for step_count in range(1, self.num_steps):
                         converged = controller.step(env)
-                        if step_count % self.every_num_steps == 0:
-                            objective_value = env.GetObjectiveValue()
-                            normalized_objective_value = (
-                                objective_value / initial_objective_value
-                            )
-                            cost_data[controller_id, env_count, sample_count] = (
-                                normalized_objective_value
-                            )
-                            sample_count = sample_count + 1
-
-                            if converged:
-                                cost_data[controller_id, env_count, sample_count:] = (
-                                    normalized_objective_value
+                        if (step_count + 1) % self.every_num_steps == 0:
+                            normalized_objective_value = self.get_normalized_objective_value(env, initial_objective_value)
+                            cost_data[controller_id, env_count, sample_count] = normalized_objective_value
+                            sample_count += 1
+                            if (step_count + 1) % progress_update_rate == 0:
+                                info = f"Controller {controller_id}/{self.num_controllers}: {controller.name} "
+                                progress.update(
+                                    task,
+                                    info=info,
+                                    step_count=step_count+1,
+                                    obj=normalized_objective_value,
                                 )
-                                step_count = self.num_steps
-                                sample_count = total_samples
-
-                            info = f"Controller {controller_id}/{self.num_controllers}: {controller.name} "
-
-                            progress.update(
-                                task,
-                                info=info,
-                                step_count=step_count,
-                                obj=normalized_objective_value,
-                            )
-                            progress.refresh()
+                                progress.refresh()
 
                         if converged:
+                            cost_data[controller_id, env_count, sample_count:] = self.get_normalized_objective_value(env, initial_objective_value)
+                            step_count = self.num_steps
+                            sample_count = total_samples
+
                             break
 
                     if controller_id == self.num_controllers - 1:
