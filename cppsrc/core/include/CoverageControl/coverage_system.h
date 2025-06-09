@@ -438,7 +438,8 @@ class CoverageSystem {
     return weighted_exploration_ratio;
   }
 
-  PointVector GetRelativePositonsNeighbors(size_t const robot_id);
+  PointVector GetRelativePositonsNeighbors (size_t const robot_id) const;
+
   std::vector<int> GetNeighborIDs(size_t const robot_id) const {
     return neighbor_ids_[robot_id];
   }
@@ -511,6 +512,13 @@ class CoverageSystem {
       communication_maps[2 * i + 1] = comm_map.second;
     }
     return communication_maps;
+  }
+
+  auto GetObjectiveValueConst() const {
+    auto voronoi = Voronoi(robot_global_positions_, GetWorldMap(),
+                       Point2(params_.pWorldMapSize, params_.pWorldMapSize),
+                       params_.pResolution);
+    return voronoi.GetSumIDFSiteDistSqr();
   }
 
   auto GetObjectiveValue() {

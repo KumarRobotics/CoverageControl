@@ -679,8 +679,8 @@ void CoverageSystem::PlotRobotCommunicationMaps(std::string const &dir_name,
   plotter_y.PlotMap(robot_communication_maps.second);
 }
 
-PointVector CoverageSystem::GetRelativePositonsNeighbors(
-    size_t const robot_id) {
+PointVector CoverageSystem::GetRelativePositonsNeighbors (
+    size_t const robot_id) const {
   return relative_positions_neighbors_[robot_id];
 }
 
