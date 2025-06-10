@@ -10,11 +10,15 @@ if [ "$#" -ne 1 ]; then
     print_usage
 fi
 
+DATESTAMP=$(date -u +'%Y%m%dZ')
+echo "DATESTAMP: ${DATESTAMP}"
+
+
 build_image() {
     echo "Building image $2"
     TAG_NAME=$2
     ALL_BUILD_ARGS="--no-cache --build-arg CUDA_VERSION=${CUDA_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} --build-arg PYTORCH_VERSION=${PYTORCH_VERSION} --build-arg IMAGE_TYPE=${IMAGE_TYPE} --build-arg UBUNTU_VERSION=${UBUNTU_VERSION} --build-arg ROS_DISTRO=${ROS_DISTRO}"
-    DOCKER_BUILDKIT=1 docker buildx build --push ${ALL_BUILD_ARGS} $3 -t ${1}:${TAG_NAME} .
+    DOCKER_BUILDKIT=1 docker buildx build --push ${ALL_BUILD_ARGS} $3 -t ${1}:${TAG_NAME}-${DATESTAMP} .
     if [ $? -ne 0 ]; then
         echo "Failed to build image $2"
         exit 1
@@ -41,6 +45,7 @@ build_image $1 $TAG_NAME "--target ros2"
 TAG_NAME=jammy-torch${PYTORCH_VERSION}
 build_image $1 $TAG_NAME "--target base"
 
+IMAGE_TYPE="arm64"
 TAG_NAME=arm64-jammy-torch${PYTORCH_VERSION}-humble
 build_image $1 $TAG_NAME "--platform linux/arm64 --target ros2"
 
@@ -61,8 +66,9 @@ IMAGE_TYPE="cpu"
 TAG_NAME=noble-torch${PYTORCH_VERSION}-jazzy
 build_image $1 $TAG_NAME "--target ros2"
 
-TAG_NAME=noble-torch${PYTORCH_VERSION}
-build_image $1 $TAG_NAME "--target base -t ${1}:latest"
+# TAG_NAME=noble-torch${PYTORCH_VERSION}
+# build_image $1 $TAG_NAME "--target base -t ${1}:latest"
 
+IMAGE_TYPE="arm64"
 TAG_NAME=arm64-noble-torch${PYTORCH_VERSION}-jazzy
 build_image $1 $TAG_NAME "--platform linux/arm64 --target ros2"
