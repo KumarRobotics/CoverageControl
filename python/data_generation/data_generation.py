@@ -57,6 +57,7 @@ from coverage_control import IOUtils
 from coverage_control import CoverageEnvUtils
 from coverage_control.algorithms import ClairvoyantCVT
 from coverage_control.algorithms import CentralizedCVT
+from coverage_control.algorithms import NearOptimalCVT
 
 # @ingroup python_api
 
@@ -146,6 +147,7 @@ class DatasetGenerator:
 
         # Initialize tensors
         self.actions = torch.zeros((self.num_dataset, self.num_robots, 2))
+        self.goals = torch.zeros((self.num_dataset, self.num_robots, 2))
         self.robot_positions = torch.zeros(
                 (self.num_dataset, self.num_robots, 2))
         self.raw_local_maps = torch.zeros(
@@ -246,6 +248,9 @@ class DatasetGenerator:
             if self.algorithm == "CentralizedCVT":
                 self.alg = CentralizedCVT(
                         self.env_params, self.num_robots, self.env, self.force_no_noise)
+            elif self.algorithm == "NearOptimalCVT":
+                self.alg = NearOptimalCVT(
+                        self.env_params, self.num_robots, self.env, self.force_no_noise)
             else:
                 self.alg = ClairvoyantCVT(
                         self.env_params, self.num_robots, self.env, self.force_no_noise)
@@ -285,8 +290,14 @@ class DatasetGenerator:
         self.alg.ComputeActions()
         converged = self.alg.IsConverged()
         actions = self.alg.GetActions()
+        goals = self.alg.GetGoals()
+        robot_pos = self.env.GetRobotPositions()
+        for i, pos in enumerate(robot_pos):
+            goals[i] -= pos
+
         count = self.dataset_count
         self.actions[count] = CoverageEnvUtils.to_tensor(actions)
+        self.goals[count] = CoverageEnvUtils.to_tensor(goals)
         self.robot_positions[count] = CoverageEnvUtils.get_robot_positions(
                 self.env)
         self.coverage_features[count] = CoverageEnvUtils.get_voronoi_features(
@@ -490,6 +501,7 @@ class DatasetGenerator:
         # torch.save(range_val, self.dataset_dir / 'comm_maps_range.pt')
 
         self.save_tensor(self.actions, "actions.pt")
+        self.save_tensor(self.goals, "goals.pt")
         self.save_tensor(self.coverage_features, "coverage_features.pt")
         if self.save_objective:
             self.save_tensor(self.objectives, "objectives.pt")
@@ -498,9 +510,15 @@ class DatasetGenerator:
             normalized_actions, actions_mean, actions_std = self.normalize_tensor(
                     self.actions, is_symmetric=True, zero_mean=True
                     )
+            normalized_goals, goals_mean, goals_std = self.normalize_tensor(
+                    self.goals, is_symmetric=True, zero_mean=True
+                    )
             self.save_tensor(normalized_actions, "normalized_actions.pt")
             torch.save(actions_mean, self.dataset_dir_path / "actions_mean.pt")
             torch.save(actions_std, self.dataset_dir_path / "actions_std.pt")
+            self.save_tensor(normalized_goals, "normalized_goals.pt")
+            torch.save(goals_mean, self.dataset_dir_path / "goals_mean.pt")
+            torch.save(goals_std, self.dataset_dir_path / "goals_std.pt")
             if self.save_objective:
                 normalize_objectives, objectives_mean, objectives_std = self.normalize_tensor(
                         self.objectives
@@ -542,6 +560,7 @@ class DatasetGenerator:
         # Set to two decimal places
         print("Tensor sizes:", file=file)
         print("Actions:", self.get_tensor_byte_size_mb(self.actions), file=file)
+        print("Goals:", self.get_tensor_byte_size_mb(self.goals), file=file)
         print(
                 "Robot positions:",
                 self.get_tensor_byte_size_mb(self.robot_positions),

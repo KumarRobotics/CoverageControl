@@ -373,6 +373,25 @@ void CoverageSystem::ComputeVoronoiCells() {
   voronoi_cells_ = voronoi_.GetVoronoiCells();
 }
 
+bool CoverageSystem::StepRobotsToRelativeGoals(PointVector const &goals) {
+  for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+    Point2 action = Point2(0, 0);
+    Point2 diff = goals[iRobot];
+    double dist = diff.norm();
+    double speed = dist / params_.pTimeStep;
+    speed = std::min(params_.pMaxRobotSpeed, speed);
+    Point2 direction(diff);
+    direction.normalize();
+    action = speed * direction;
+    if (robots_[iRobot].StepControl(direction, speed)) {
+      std::cerr << "Control incorrect\n";
+      return 1;
+    }
+  }
+  PostStepCommands();
+  return 0;
+}
+
 bool CoverageSystem::StepRobotToGoal(int const robot_id, Point2 const &goal,
                                      double const speed_factor) {
   Point2 curr_pos = robots_[robot_id].GetGlobalCurrentPosition();

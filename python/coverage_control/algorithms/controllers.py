@@ -130,6 +130,10 @@ class ControllerNN:
             self.model = cc_nn.LPAC(self.learning_params).to(self.device)
             self.model.load_model(IOUtils.sanitize_path(self.config["ModelStateDict"]))
 
+        self.target_type = "actions"
+        if "TargetType" in self.learning_params["ModelConfig"]:
+            self.target_type = self.learning_params["ModelConfig"]["TargetType"]
+
         self.actions_mean = self.model.actions_mean.to(self.device)
         self.actions_std = self.model.actions_std.to(self.device)
         self.model = self.model.to(self.device)
@@ -166,7 +170,10 @@ class ControllerNN:
             Objective value and convergence flag
         """
         actions, converged = self.get_actions(env)
-        env.StepActions(actions)
+        if self.target_type == "actions":
+            env.StepActions(actions)
+        else:
+            env.StepRobotsToRelativeGoals(actions)
 
         # Check if actions are all zeros (1e-12)
         return converged

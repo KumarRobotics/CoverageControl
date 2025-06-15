@@ -89,7 +89,7 @@ class LocalMapCNNDataset(Dataset):
 
         # self.targets, self.targets_mean, self.targets_std = DataLoaderUtils.load_features(f"{self.data_dir}/{self.stage}", self.output_dim)
         self.targets, self.targets_mean, self.targets_std = (
-                DataLoaderUtils.load_actions(f"{self.data_dir}/{self.stage}")
+                DataLoaderUtils.load_targets(f"{self.data_dir}/{self.stage}")
                 )
         self.targets = self.targets.view(-1, self.targets.shape[2])
 
@@ -99,7 +99,7 @@ class CNNGNNDataset(Dataset):
     Dataset for hybrid CNN-GNN training
     """
 
-    def __init__(self, data_dir, stage, use_comm_map, world_size):
+    def __init__(self, data_dir, stage, use_comm_map, world_size, target_type="actions"):
         super().__init__(None, None, None, None)
 
         self.stage = stage
@@ -108,7 +108,7 @@ class CNNGNNDataset(Dataset):
         self.dataset_size = self.maps.shape[0]
 
         self.targets, self.targets_mean, self.targets_std = (
-                DataLoaderUtils.load_actions(f"{data_dir}/{stage}")
+                DataLoaderUtils.load_targets(f"{data_dir}/{stage}", target_type)
                 )
         self.edge_weights = DataLoaderUtils.load_edge_weights(f"{data_dir}/{stage}")
 
@@ -155,7 +155,7 @@ class VoronoiGNNDataset(Dataset):
         self.features = DataLoaderUtils.load_features(f"{data_dir}/{stage}", output_dim)
         self.dataset_size = self.features[0].shape[0]
         self.targets, self.targets_mean, self.targets_std = (
-                DataLoaderUtils.load_actions(f"{data_dir}/{stage}")
+                DataLoaderUtils.load_targets(f"{data_dir}/{stage}")
                 )
         self.edge_weights = DataLoaderUtils.load_edge_weights(f"{data_dir}/{stage}")
 

@@ -19,6 +19,7 @@
 #  You should have received a copy of the GNU General Public License along with
 #  CoverageControl library. If not, see <https://www.gnu.org/licenses/>.
 
+from pathlib import Path
 import torch
 import torch_geometric
 from coverage_control import IOUtils
@@ -108,29 +109,32 @@ class DataLoaderUtils:
         )
 
     @staticmethod
-    def load_actions(path: str) -> tuple[torch.tensor, torch.tensor, torch.tensor]:
+    def load_targets(path: str, target_type: str) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """
-        Function to load normalized actions
+        Function to load normalized targets
 
-        The actions are stored as tensors in the following format:
-        - {path}/normalized_actions.pt: Normalized actions
-        - {path}/../actions_mean.pt: Mean of the actions
-        - {path}/../actions_std.pt: Standard deviation of the actions
+        The targets = actions|goals are stored as tensors in the following format:
+        - {path}/normalized_targets.pt: Normalized targets
+        - {path}/../targets_mean.pt: Mean of the targets
+        - {path}/../targets_std.pt: Standard deviation of the targets
 
         Args:
-            path (str): Path to the directory containing the actions
+            path (str): Path to the directory containing the targets
 
         Returns:
-            actions: The loaded actions
-            actions_mean: Mean of the actions
-            actions_std: Standard deviation of the actions
+            targets: The loaded targets
+            targets_mean: Mean of the targets
+            targets_std: Standard deviation of the targets
 
         """
-        actions = IOUtils.load_tensor(f"{path}/normalized_actions.pt")
-        actions_mean = IOUtils.load_tensor(f"{path}/../actions_mean.pt")
-        actions_std = IOUtils.load_tensor(f"{path}/../actions_std.pt")
+        path_ = Path(path)
+        if target_type not in ["actions", "goals"]:
+            raise ValueError(f"Valid target_type actions or goals. Given: {target_type}")
+        targets = IOUtils.load_tensor(path_ / f"normalized_{target_type}.pt")
+        targets_mean = IOUtils.load_tensor(path_.parent / f"{target_type}_mean.pt")
+        targets_std = IOUtils.load_tensor(path_.parent / f"{target_type}_std.pt")
 
-        return actions, actions_mean, actions_std
+        return targets, targets_mean, targets_std
 
     @staticmethod
     def load_robot_positions(path: str) -> torch.tensor:

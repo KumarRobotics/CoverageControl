@@ -16,6 +16,7 @@ Optimizer = "optimizer.pt"
 
 [ModelConfig]
 UseCommMaps = true
+TargetType = "actions" # or goals
 
 [GNNBackBone]
 InputDim = 7

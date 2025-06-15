@@ -53,8 +53,12 @@ if "PreTrainedModel" in config["LPACModel"]:
             )
     model.load_model(lpac_pretrained_model)
 
-train_dataset = CNNGNNDataset(data_dir, "train", use_comm_map, world_size)
-val_dataset = CNNGNNDataset(data_dir, "val", use_comm_map, world_size)
+target_type = "actions"
+if "TargetType" in config["ModelConfig"]:
+    target_type = config["ModelConfig"]["TargetType"]
+
+train_dataset = CNNGNNDataset(data_dir, "train", use_comm_map, world_size, target_type)
+val_dataset = CNNGNNDataset(data_dir, "val", use_comm_map, world_size, target_type)
 
 # Check if buffer exists
 
@@ -104,7 +108,7 @@ trainer = TrainModel(
 
 trainer.train()
 
-test_dataset = CNNGNNDataset(data_dir, "test", use_comm_map, world_size)
+test_dataset = CNNGNNDataset(data_dir, "test", use_comm_map, world_size, target_type)
 test_loader = torch_geometric.loader.DataLoader(
         test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers
         )

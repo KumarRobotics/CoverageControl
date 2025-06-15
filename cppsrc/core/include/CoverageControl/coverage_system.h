@@ -334,6 +334,8 @@ class CoverageSystem {
    */
   bool StepRobotsToGoals(PointVector const &goals, PointVector &actions);
 
+  bool StepRobotsToRelativeGoals(PointVector const &goals);
+
   void ClearRobotMaps() {
     for (size_t i = 0; i < num_robots_; ++i) {
       robots_[i].ClearRobotMap();

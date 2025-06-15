@@ -179,7 +179,9 @@ void pyCoverageControl_core(py::module &m) {
 
   py::class_<NearOptimalCVT>(m, "NearOptimalCVT")
       .def(py::init<Parameters const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
       .def("ComputeActions", &NearOptimalCVT::ComputeActions)
       .def("GetActions", &NearOptimalCVT::GetActions)
       .def("IsConverged", &NearOptimalCVT::IsConverged)
@@ -293,6 +295,7 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("StepControl", &CoverageSystem::StepControl)
       .def("StepAction", &CoverageSystem::StepAction)
       .def("StepActions", &CoverageSystem::StepActions)
+      .def("StepRobotsToRelativeGoals", &CoverageSystem::StepRobotsToRelativeGoals)
       .def("SetLocalRobotPositions", &CoverageSystem::SetLocalRobotPositions)
       .def("SetLocalRobotPosition", &CoverageSystem::SetLocalRobotPosition)
       .def("SetGlobalRobotPosition", &CoverageSystem::SetGlobalRobotPosition)
