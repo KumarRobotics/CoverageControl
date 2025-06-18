@@ -461,6 +461,19 @@ class CoverageSystem {
     return robot_global_positions_;
   }
 
+  PointVector GetRobotPositionsConst(bool force_no_noise = false) const {
+    PointVector robot_global_positions{num_robots_};
+    for (size_t iRobot = 0; iRobot < num_robots_; ++iRobot) {
+      robot_global_positions[iRobot] =
+          robots_[iRobot].GetGlobalCurrentPosition();
+      if (params_.pAddNoisePositions and not force_no_noise) {
+        robot_global_positions[iRobot] =
+            robots_[iRobot].GetNoisyGlobalCurrentPosition();
+      }
+    }
+    return robot_global_positions;
+  }
+
   Point2 GetRobotPosition(int const robot_id,
                           bool force_no_noise = false) const {
     if (params_.pAddNoisePositions and not force_no_noise) {

@@ -49,8 +49,10 @@
 #include <CoverageControl/algorithms/oracle_explore_exploit.h>
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
 
-#include <vector>
+#include <cmath>
+#include <iomanip>
 #include <sstream>
+#include <vector>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -82,17 +84,37 @@ void pyCoverageControl_core(py::module &m) {
   py::bind_vector<std::vector<std::vector<double>>>(m, "DblVectorVector");
   py::bind_vector<std::vector<int>>(m, "intVector");
 
+  auto formatPointVector = [](const PointVector &vec) {
+    std::stringstream ss;
+    double max_val = 0.0;
+    bool has_negative = false;
+    for (const auto &p : vec) {
+      max_val = std::max(max_val, std::abs(p.x()));
+      max_val = std::max(max_val, std::abs(p.y()));
+      if (p.x() < 0.0 || p.y() < 0.0) {
+        has_negative = true;
+      }
+    }
+    
+    int width = (max_val == 0.0) ? 1 : static_cast<int>(std::log10(max_val)) + 1;
+    width += 1 + 2; // decimal point + precision
+    if (has_negative) {
+      width += 1; // negative sign
+    }
+    
+    ss << std::fixed << std::setprecision(2);
+    ss << "PointVector([\n";
+    for (size_t i = 0; i < vec.size(); ++i) {
+      if (i > 0) ss << ",\n";
+      ss << "[" << std::setw(width) << vec[i].x() << ", " << std::setw(width) << vec[i].y() << "]";
+    }
+    ss << "\n])";
+    return ss.str();
+  };
+
   py::bind_vector<PointVector>(m, "PointVector")
-      .def("__str__", [](const PointVector& v) {
-          std::stringstream ss;
-          ss << "PointVector([";
-          for (size_t i = 0; i < v.size(); ++i) {
-              if (i > 0) ss << ", ";
-              ss << "(" << v[i].x() << ", " << v[i].y() << ")";
-          }
-          ss << "])";
-          return ss.str();
-      });
+      .def("__repr__", formatPointVector)
+      .def("__str__", formatPointVector);
   py::bind_vector<std::vector<Point3>>(m, "Point3Vector");
   py::bind_vector<std::vector<MapType>>(m, "MapTypeVector");
 
@@ -192,7 +214,8 @@ void pyCoverageControl_core(py::module &m) {
       .def(py::init<Parameters const &, CoverageSystem &>())
       .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &,
+                    bool>())
       .def("ComputeActions", &NearOptimalCVT::ComputeActions)
       .def("GetActions", &NearOptimalCVT::GetActions)
       .def("IsConverged", &NearOptimalCVT::IsConverged)
@@ -203,7 +226,8 @@ void pyCoverageControl_core(py::module &m) {
       .def(py::init<Parameters const &, CoverageSystem &>())
       .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &,
+                    bool>())
       .def("ComputeActions", &ClairvoyantCVT::ComputeActions)
       .def("IsConverged", &ClairvoyantCVT::IsConverged)
       .def("GetActions", &ClairvoyantCVT::GetActions)
@@ -214,7 +238,8 @@ void pyCoverageControl_core(py::module &m) {
       .def(py::init<Parameters const &, CoverageSystem &>())
       .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &,
+                    bool>())
       .def("ComputeActions", &DecentralizedCVT::ComputeActions)
       .def("IsConverged", &DecentralizedCVT::IsConverged)
       .def("GetActions", &DecentralizedCVT::GetActions)
@@ -224,7 +249,8 @@ void pyCoverageControl_core(py::module &m) {
       .def(py::init<Parameters const &, CoverageSystem &>())
       .def(py::init<Parameters const &, CoverageSystem &, bool>())
       .def(py::init<Parameters const &, size_t const &, CoverageSystem &>())
-      .def(py::init<Parameters const &, size_t const &, CoverageSystem &, bool>())
+      .def(py::init<Parameters const &, size_t const &, CoverageSystem &,
+                    bool>())
       .def("ComputeActions", &CentralizedCVT::ComputeActions)
       .def("IsConverged", &CentralizedCVT::IsConverged)
       .def("GetActions", &CentralizedCVT::GetActions)
@@ -306,7 +332,8 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
       .def("StepControl", &CoverageSystem::StepControl)
       .def("StepAction", &CoverageSystem::StepAction)
       .def("StepActions", &CoverageSystem::StepActions)
-      .def("StepRobotsToRelativeGoals", &CoverageSystem::StepRobotsToRelativeGoals)
+      .def("StepRobotsToRelativeGoals",
+           &CoverageSystem::StepRobotsToRelativeGoals)
       .def("SetLocalRobotPositions", &CoverageSystem::SetLocalRobotPositions)
       .def("SetLocalRobotPosition", &CoverageSystem::SetLocalRobotPosition)
       .def("SetGlobalRobotPosition", &CoverageSystem::SetGlobalRobotPosition)
@@ -321,6 +348,10 @@ void pyCoverageControl_core_coverage_system(py::module &m) {
            py::arg("force_no_noise") = false)
       .def("GetRobotPositions", &CoverageSystem::GetRobotPositions,
            "Get Positions of Robots", py::arg("force_no_noise") = false)
+      .def("GetRobotPositionsConst", &CoverageSystem::GetRobotPositionsConst,
+           py::return_value_policy::copy,
+           "Get Positions of Robots const",
+           py::arg("force_no_noise") = false)
       .def("GetRobotLocalMap", &CoverageSystem::GetRobotLocalMap,
            py::return_value_policy::reference_internal)
       .def("GetRobotWorldMap", &CoverageSystem::GetRobotWorldMap,
