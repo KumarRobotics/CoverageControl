@@ -50,6 +50,7 @@
 #include <CoverageControl/algorithms/simul_explore_exploit.h>
 
 #include <vector>
+#include <sstream>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -81,7 +82,17 @@ void pyCoverageControl_core(py::module &m) {
   py::bind_vector<std::vector<std::vector<double>>>(m, "DblVectorVector");
   py::bind_vector<std::vector<int>>(m, "intVector");
 
-  py::bind_vector<PointVector>(m, "PointVector");
+  py::bind_vector<PointVector>(m, "PointVector")
+      .def("__str__", [](const PointVector& v) {
+          std::stringstream ss;
+          ss << "PointVector([";
+          for (size_t i = 0; i < v.size(); ++i) {
+              if (i > 0) ss << ", ";
+              ss << "(" << v[i].x() << ", " << v[i].y() << ")";
+          }
+          ss << "])";
+          return ss.str();
+      });
   py::bind_vector<std::vector<Point3>>(m, "Point3Vector");
   py::bind_vector<std::vector<MapType>>(m, "MapTypeVector");
 
