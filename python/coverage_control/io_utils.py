@@ -26,11 +26,12 @@
 The module provides utility functions for loading data from files
 """
 
+from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
 from typing import Union, Dict, Any
-import torch
 import yaml
 
 # Handle tomllib import based on Python version
@@ -86,6 +87,16 @@ class IOUtils:
             FileNotFoundError: If the file does not exist
             RuntimeError: If the file cannot be loaded or contains no tensor data
         """
+        # torch is an optional dependency (the [nn] extra); import lazily so
+        # the base package works without it
+        try:
+            import torch
+        except ImportError as exc:
+            raise ImportError(
+                "IOUtils.load_tensor requires torch; "
+                "install with: pip install coverage_control[nn]"
+            ) from exc
+
         # Convert to Path object and sanitize
         if isinstance(path, str):
             path = IOUtils.sanitize_path(path)

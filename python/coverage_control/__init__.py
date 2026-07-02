@@ -11,7 +11,13 @@ import os.path as _osp
 from ._version import version as __version__
 from .core import *
 from .io_utils import IOUtils
-from .coverage_env_utils import CoverageEnvUtils
+
+try:
+    from .coverage_env_utils import CoverageEnvUtils
+except ImportError:
+    # torch/torch_geometric/torchvision are optional (the [nn] extra);
+    # CoverageEnvUtils is unavailable without them
+    CoverageEnvUtils = None
 
 # from .nn import *
 
