@@ -15,7 +15,7 @@ See \ref params/coverage_control_params.toml for an example configuration file.
 Import the `coverage_control` library and the `ClairvoyantCVT` algorithm.
 ```python
 import coverage_control as cc
-from coverage_control import ClairvoyantCVT as CoverageAlgorithm
+from coverage_control.algorithms import ClairvoyantCVT as CoverageAlgorithm
 ```
 
 You can choose one of the following algorithms instead of `ClairvoyantCVT`:
