@@ -21,11 +21,11 @@ ${CoverageControl_ws}/
     └── params/ # Parameters for training and evaluation
 ```
 
-The models folder already contains a trained LPAC model for a 1024x1024 environment with 32 robots, 32 features, and 128 communication radius.
+The models folder already contains a trained LPAC model for a 1024x1024 environment with 32 robots, 32 features, and a communication radius of 128.
 
 # Dataset Generation
 
-There are two ways to classes for dataset generation located in `python/data_generation/`
+There are two classes for dataset generation located in `python/data_generation/`
 1. `simple_data_generation.py`
 2. `data_generation.py`
 

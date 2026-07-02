@@ -76,7 +76,7 @@ print(f"Improvement %: {100 * (init_cost - current_cost)/init_cost:.2f}")
 ```
 
 Plot the final state of the environment:
-```cpp
+```python
 env.PlotSystemMap("final_map");
 ```
 
@@ -170,7 +170,7 @@ See \ref cppsrc/main/coverage_algorithm.cpp for a complete example.
 ## Compile and Run
 
 Create a `CMakeLists.txt` file with the following content:
-```python
+```cmake
 cmake_minimum_required(VERSION 3.16)
 project(coveragecontrol)
 

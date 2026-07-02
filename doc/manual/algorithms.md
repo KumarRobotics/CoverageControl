@@ -5,7 +5,7 @@
 We discuss an iterative gradient descent algorithm that uses the centroidal Voronoi tessellation (CVT) to generate a robot configuration that provides good coverage of the environment.
 The algorithm, also referred to as Lloyd's algorithm, is widely used to solve the coverage control problem.
 It relies on computing the Voronoi partition (or tessellation) of the region with respect to the locations of the robots.
-The Voronoi partition can be computed in \f$\mathcal O(N\log N)\f$ time using sweep line algorithm, and efficient implementations are available.
+The Voronoi partition can be computed in \f$\mathcal O(N\log N)\f$ time using a sweep line algorithm, and efficient implementations are available.
 The Voronoi partition~\f$\mathcal P\f$ can be defined as:
 
 \f{eqnarray*}{
@@ -35,13 +35,13 @@ Taking the partial derivative of the objective function with respect to the loca
 		\frac{\partial \mathcal J(\mathcal P)}{\partial \mathbf p_i} = 2m_i (\mathbf p_i - \mathbf c_i)
 \f}
 
-The partial derivates vanish at the centroid of the Voronoi cell, i.e., \f$\mathbf p_i = \mathbf c_i\f$; thus, the centroid of the Voronoi cell is the local minimum of the objective function.
+The partial derivatives vanish at the centroid of the Voronoi cell, i.e., \f$\mathbf p_i = \mathbf c_i\f$; thus, the centroid of the Voronoi cell is the local minimum of the objective function.
 Hence, we can write a control law that drives the robot towards the centroid of the Voronoi cell as:
 \f{eqnarray*}{
         \mathbf u_i = \dot{\mathbf p}_i = -k (\mathbf p_i - \mathbf c_i).
 \f}
 Here, \f$k\f$ is a positive gain for the control law.
-The control law in has nice convergence properties; it is guaranteed to converge to a local minimum of the objective function.
+The control law has nice convergence properties; it is guaranteed to converge to a local minimum of the objective function.
 
 \note An abstract class \ref CoverageControl::AbstractController is provided, which can be used to implement different control algorithms. The class defines `GetActions()` and `ComputeActions()` methods as pure virtual functions.
 
@@ -82,7 +82,7 @@ The clairvoyant algorithm is used to generate the dataset for training, and the 
 ## References
 S. Lloyd, "Least squares quantization in PCM," IEEE Transactions on Information Theory, vol. 28, no. 2, pp. 129–137, 1982.
 
-J. Cortés, S. Martı̀nez, T. Karataş, and F. Bullo, "Coverage control for mobile sensing networks," IEEE Transactions on Robotics and Automation, vol. 20, no. 2, pp. 243–255, 2004.
+J. Cortés, S. Martínez, T. Karataş, and F. Bullo, "Coverage control for mobile sensing networks," IEEE Transactions on Robotics and Automation, vol. 20, no. 2, pp. 243–255, 2004.
 
 M. Karavelas, "2D Voronoi diagram adaptor," in CGAL User and Reference Manual, 5th ed. CGAL Editorial Board, 2023. [Online]. Available: https://doc.cgal.org/5.6/Manual/packages.html#PkgVoronoiDiagram2
 
