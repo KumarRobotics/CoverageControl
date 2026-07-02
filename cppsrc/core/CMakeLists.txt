@@ -108,18 +108,18 @@ endif()
 ###########################
 #### CGAL dependency ####
 ###########################
-find_package(CGAL 6.0.1 EXACT QUIET)
-if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.0.1)
-  message(STATUS "CGAL 6.0.1 not found, fetching it")
+find_package(CGAL 6.0.3 EXACT QUIET)
+if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.0.3)
+  message(STATUS "CGAL 6.0.3 not found, fetching it")
   include(FetchContent)
   FetchContent_Declare(CGAL
-    URL https://github.com/CGAL/cgal/releases/download/v6.0.1/CGAL-6.0.1.tar.xz
-    URL_HASH SHA256=0acdfbf317c556630dd526f3253780f29b6ec9713ee92903e81b5c93c0f59b7f 
+    URL https://github.com/CGAL/cgal/releases/download/v6.0.3/CGAL-6.0.3.tar.xz
+    URL_HASH SHA256=b83fdf5de2cd8b3de3b159d222d3a76add91dec0ff2b0d6b3d433e6197195c47
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
   FetchContent_Populate(CGAL)   # finish fetching and unpacking before continuing
   set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
-  find_package(CGAL 6.0.1 REQUIRED)
+  find_package(CGAL 6.0.3 REQUIRED)
 endif()
 
 ###########################
@@ -170,7 +170,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 
 if(COVERAGECONTROL_WITH_CUDA)
-  set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES all POSITION_INDEPENDENT_CODE ON)
+  # "all" triggers a CCCL preprocessor overflow in CUDA >= 12.9 thrust
+  # headers (NVIDIA/cccl#4967); all-major still covers every GPU generation.
+  set_target_properties(${PROJECT_NAME} PROPERTIES CUDA_ARCHITECTURES all-major POSITION_INDEPENDENT_CODE ON)
 else()
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()

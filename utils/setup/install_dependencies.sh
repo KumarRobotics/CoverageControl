@@ -170,13 +170,13 @@ MPFR_VERSION="4.2.1"
 MPFR_TAR_NAME="mpfr-${MPFR_VERSION}"
 EIGEN_VERSION="3.4.0"
 EIGEN_TAR_NAME="eigen-${EIGEN_VERSION}"
-CGAL_VERSION="6.0.1"
+CGAL_VERSION="6.0.3"
 CGAL_TAR_NAME="CGAL-${CGAL_VERSION}"
 OPENCV_VERSION="4.8.0"
 
 InstallBoost() {
   info_message "Setting up Boost"
-  wget -q --tries=4 "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Boost"
+  wget -q --tries=4 "https://archives.boost.io/release/${BOOST_VERSION}/source/${BOOST_TAR_NAME}.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Boost"
   tar -xf "${MAIN_DIR}/src/${BOOST_TAR_NAME}.tar.gz" -C "${MAIN_DIR}/src"
   cd "${MAIN_DIR}/src/${BOOST_TAR_NAME}"
   if [[ -z "$INSTALL_DIR" ]]; then
@@ -190,6 +190,8 @@ InstallBoost() {
 
 InstallGMP() {
   info_message "Setting up GMP"
+  # gmplib.org/mpfr.org have blocked downloads from GitHub CI runners;
+  # the GitHub mirror fallback is the reliable path in CI. Keep both.
   wget -q --tries=1 "https://gmplib.org/download/gmp/${GMP_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
   wget -q --tries=4 "https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${GMP_TAR_NAME}/${GMP_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
   error_exit "Failed to download GMP"
@@ -202,7 +204,7 @@ InstallGMP() {
 
 InstallMPFR() {
   info_message "Setting up MPFR"
-  wget -q --tries=1 "https://www.mpfr.org/mpfr-current/${MPFR_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
+  wget -q --tries=1 "https://www.mpfr.org/${MPFR_TAR_NAME}/${MPFR_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
   wget -q --tries=4 "https://github.com/AgarwalSaurav/gmp-mpfr/releases/download/${MPFR_TAR_NAME}/${MPFR_TAR_NAME}.tar.xz" -P "${MAIN_DIR}/src" || \
   error_exit "Failed to download MPFR"
   tar -xf "${MAIN_DIR}/src/${MPFR_TAR_NAME}.tar.xz" -C "${MAIN_DIR}/src"
@@ -238,9 +240,9 @@ InstallCGAL() {
 
 InstallPybind11() {
   info_message "Setting up Pybind11"
-  wget -q --tries=4 "https://github.com/pybind/pybind11/archive/refs/tags/v2.12.0.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Pybind11"
-  tar -xf "${MAIN_DIR}/src/v2.12.0.tar.gz" -C "${MAIN_DIR}/src"
-  cmake -S "${MAIN_DIR}/src/pybind11-2.12.0" -B "${BUILD_DIR}/pybind11" -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
+  wget -q --tries=4 "https://github.com/pybind/pybind11/archive/refs/tags/v3.0.4.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Pybind11"
+  tar -xf "${MAIN_DIR}/src/v3.0.4.tar.gz" -C "${MAIN_DIR}/src"
+  cmake -S "${MAIN_DIR}/src/pybind11-3.0.4" -B "${BUILD_DIR}/pybind11" -DPYBIND11_TEST=OFF ${CMAKE_END_FLAGS}
   cmake --build "${BUILD_DIR}/pybind11" -j"$(nproc)"
   cmake --install "${BUILD_DIR}/pybind11" || error_exit "Pybind11 install failed"
   info_message "Pybind11 install succeeded"

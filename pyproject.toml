@@ -58,7 +58,7 @@ write_to = "python/coverage_control/_version.py"
 
 [tool.cibuildwheel]
 build = "*"
-skip = ["pp*", "*musllinux*"]
+skip = ["pp*", "*musllinux*", "cp314t-*"]
 test-skip = ""
 
 # archs = ["x86_64", "aarch64"]
