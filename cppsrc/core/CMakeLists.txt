@@ -169,6 +169,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags CGAL::CGAL Boost::b
 target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 
+# Never re-export symbols pulled in from static archives. A toolchain that
+# resolves -lstdc++ to libstdc++.a (Arch gcc 16.1.1-r346-3 shipped no
+# libstdc++.so in gcc's libdir) would otherwise leave unversioned std::
+# symbols here that interpose on the process's real libstdc++.so.6, so
+# objects built by one copy get destroyed by the other -- torch's
+# std::stringstream aborts with "free(): invalid size" on import.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  target_link_options(${PROJECT_NAME} PRIVATE "LINKER:--exclude-libs,ALL")
+endif()
+
 if(COVERAGECONTROL_WITH_CUDA)
   # "all" triggers a CCCL preprocessor overflow in CUDA >= 12.9 thrust
   # headers (NVIDIA/cccl#4967); all-major still covers every GPU generation.
