@@ -10,7 +10,7 @@ if(NOT TARGET CoverageControl::${PN})
 include("${CMAKE_CURRENT_LIST_DIR}/${PN}Targets.cmake")
 
 find_package(OpenMP REQUIRED)
-find_package(Eigen3 3.4 REQUIRED)
+find_package(Eigen3 5.0 REQUIRED)
 
 set(dependencies_list Eigen3::Eigen OpenMP::OpenMP_CXX)
 target_link_libraries(CoverageControl::${PN} INTERFACE ${${PN}_LIBRARY} ${dependencies_list})

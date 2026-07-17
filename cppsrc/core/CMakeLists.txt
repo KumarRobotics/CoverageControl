@@ -93,12 +93,12 @@ find_package(Boost REQUIRED COMPONENTS iostreams)
 ###########################
 #### Eigen3 dependency ####
 ###########################
-find_package(Eigen3 3.4 QUIET)
-if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 3.4)
-  message(STATUS "Eigen3 3.4 not found, fetching it")
+find_package(Eigen3 5.0 QUIET)
+if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 5.0)
+  message(STATUS "Eigen3 5.0 not found, fetching it")
   include(FetchContent)
   FetchContent_Declare(eigen3
-    URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+    URL https://gitlab.com/libeigen/eigen/-/archive/5.0.1/eigen-5.0.1.tar.gz
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
   FetchContent_Populate(eigen3)   # finish fetching and unpacking before continuing
@@ -108,18 +108,18 @@ endif()
 ###########################
 #### CGAL dependency ####
 ###########################
-find_package(CGAL 6.0.3 EXACT QUIET)
-if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.0.3)
-  message(STATUS "CGAL 6.0.3 not found, fetching it")
+find_package(CGAL 6.2 EXACT QUIET)
+if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.2)
+  message(STATUS "CGAL 6.2 not found, fetching it")
   include(FetchContent)
   FetchContent_Declare(CGAL
-    URL https://github.com/CGAL/cgal/releases/download/v6.0.3/CGAL-6.0.3.tar.xz
-    URL_HASH SHA256=b83fdf5de2cd8b3de3b159d222d3a76add91dec0ff2b0d6b3d433e6197195c47
+    URL https://github.com/CGAL/cgal/releases/download/v6.2/CGAL-6.2.tar.xz
+    URL_HASH SHA256=fbc32816745e871a5cbdeb6245317e9dbf10ae1a957b0ab1edb00b4fde00ba8d
   )
   set(FETCHCONTENT_QUIET FALSE) # show progress dialog
   FetchContent_Populate(CGAL)   # finish fetching and unpacking before continuing
   set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
-  find_package(CGAL 6.0.3 REQUIRED)
+  find_package(CGAL 6.2 REQUIRED)
 endif()
 
 ###########################

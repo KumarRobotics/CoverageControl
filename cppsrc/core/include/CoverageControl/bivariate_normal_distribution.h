@@ -29,6 +29,7 @@
 #ifndef CPPSRC_CORE_INCLUDE_COVERAGECONTROL_BIVARIATE_NORMAL_DISTRIBUTION_H_
 #define CPPSRC_CORE_INCLUDE_COVERAGECONTROL_BIVARIATE_NORMAL_DISTRIBUTION_H_
 
+#include <cassert>
 #include <cmath>
 
 #include "CoverageControl/constants.h"

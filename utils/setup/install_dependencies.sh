@@ -168,9 +168,9 @@ GMP_VERSION="6.3.0"
 GMP_TAR_NAME="gmp-${GMP_VERSION}"
 MPFR_VERSION="4.2.1"
 MPFR_TAR_NAME="mpfr-${MPFR_VERSION}"
-EIGEN_VERSION="3.4.0"
+EIGEN_VERSION="5.0.1"
 EIGEN_TAR_NAME="eigen-${EIGEN_VERSION}"
-CGAL_VERSION="6.0.3"
+CGAL_VERSION="6.2"
 CGAL_TAR_NAME="CGAL-${CGAL_VERSION}"
 OPENCV_VERSION="4.8.0"
 
@@ -222,7 +222,9 @@ InstallEigen3() {
   info_message "Setting up Eigen3"
   wget -q --tries=4 "https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/${EIGEN_TAR_NAME}.tar.gz" -P "${MAIN_DIR}/src" || error_exit "Failed to download Eigen3"
   tar -xf "${MAIN_DIR}/src/${EIGEN_TAR_NAME}.tar.gz" -C "${MAIN_DIR}/src"
-  cmake -S "${MAIN_DIR}/src/${EIGEN_TAR_NAME}" -B "${BUILD_DIR}/eigen3" ${CMAKE_END_FLAGS}
+  cmake -S "${MAIN_DIR}/src/${EIGEN_TAR_NAME}" -B "${BUILD_DIR}/eigen3" ${CMAKE_END_FLAGS} \
+    -DEIGEN_BUILD_DOC=OFF -DBUILD_TESTING=OFF \
+    -DEIGEN_BUILD_BLAS=OFF -DEIGEN_BUILD_LAPACK=OFF -DEIGEN_BUILD_DEMOS=OFF
   cmake --build "${BUILD_DIR}/eigen3" -j"$(nproc)"
   cmake --install "${BUILD_DIR}/eigen3" || error_exit "Eigen3 install failed"
   info_message "Eigen3 install succeeded"

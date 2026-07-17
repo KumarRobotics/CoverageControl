@@ -174,6 +174,6 @@ Option | Description
 `--with-cuda` | Build with CUDA support
 
 
-\warning Ubuntu 22.04 (Jammy) has CGAL 5.4 (libcgal-dev) in the official repositories, which has bugs and is not compatible with the library. The package requires `CGAL 5.6`, which is automatically installed from the official CGAL repository through `CMake`.
+\warning Ubuntu 22.04 (Jammy) has CGAL 5.4 (libcgal-dev) in the official repositories, which has bugs and is not compatible with the library. The package requires `CGAL 6.2`, which is automatically installed from the official CGAL repository through `CMake`.
 
 --------
