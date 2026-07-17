@@ -10,7 +10,14 @@ if(NOT TARGET CoverageControl::${PN})
 include("${CMAKE_CURRENT_LIST_DIR}/${PN}Targets.cmake")
 
 find_package(OpenMP REQUIRED)
-find_package(Eigen3 5.0 REQUIRED)
+
+# Bundled Eigen: consumers compile against the exact version this library was
+# built with (Eigen types cross the ABI boundary). Yields to an Eigen3::Eigen
+# target the consumer has already defined.
+if(NOT TARGET Eigen3::Eigen)
+  add_library(Eigen3::Eigen INTERFACE IMPORTED)
+  target_include_directories(Eigen3::Eigen INTERFACE "${${PN}_INCLUDE_DIR}/eigen3")
+endif()
 
 set(dependencies_list Eigen3::Eigen OpenMP::OpenMP_CXX)
 target_link_libraries(CoverageControl::${PN} INTERFACE ${${PN}_LIBRARY} ${dependencies_list})

@@ -13,8 +13,6 @@ set(PYBIND11_NEWPYTHON True)
 find_package(pybind11 REQUIRED)
 
 find_package(OpenMP REQUIRED)
-find_package(Eigen3 5.0 REQUIRED)
-find_package(CGAL 6.2 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(CoverageControl REQUIRED)
 find_package(CoverageControlTorch REQUIRED)

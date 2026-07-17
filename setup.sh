@@ -53,9 +53,9 @@ then
 	if [[ ${WS_DIR} ]]
 	then
 		INSTALL_DIR=${WS_DIR}/install/
-		bash ${DIR}/utils/setup/install_dependencies.sh -d ${INSTALL_DIR} --eigen --cgal
+		bash ${DIR}/utils/setup/install_dependencies.sh -d ${INSTALL_DIR} --cgal
 	else
-		bash ${DIR}/utils/setup/install_dependencies.sh --eigen --cgal
+		bash ${DIR}/utils/setup/install_dependencies.sh --cgal
 	fi
 	if [ $? -ne 0 ]; then
 		echo "deps build failed"

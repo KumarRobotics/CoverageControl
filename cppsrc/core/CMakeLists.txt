@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.28...4.4)
 
 if(DEFINED SKBUILD_PROJECT_VERSION)
   set(PROJECT_VERSION ${SKBUILD_PROJECT_VERSION})
@@ -26,7 +26,6 @@ endif()
 option(COVERAGECONTROL_WITH_CUDA "Enable CUDA support" ON)
 
 if(COVERAGECONTROL_WITH_CUDA)
-  cmake_minimum_required(VERSION 3.24)
   include(CheckLanguage)
   check_language(CUDA)
   if(NOT CMAKE_CUDA_COMPILER)
@@ -88,38 +87,38 @@ if(OpenMP_FOUND)
 endif()
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS iostreams)
+find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
+
+include(FetchContent)
+set(FETCHCONTENT_QUIET FALSE) # show download progress
 
 ###########################
 #### Eigen3 dependency ####
 ###########################
-find_package(Eigen3 5.0 QUIET)
-if(NOT Eigen3_FOUND OR Eigen3_VERSION VERSION_LESS 5.0)
-  message(STATUS "Eigen3 5.0 not found, fetching it")
-  include(FetchContent)
-  FetchContent_Declare(eigen3
-    URL https://gitlab.com/libeigen/eigen/-/archive/5.0.1/eigen-5.0.1.tar.gz
-  )
-  set(FETCHCONTENT_QUIET FALSE) # show progress dialog
-  FetchContent_Populate(eigen3)   # finish fetching and unpacking before continuing
-  add_subdirectory(${FETCHCONTENT_BASE_DIR}/eigen3-src ${CMAKE_CURRENT_BINARY_DIR}/eigen3)
-endif()
+# Always fetched, never taken from the system: Eigen types cross this
+# library's ABI boundary, so the headers bundled into the install below must
+# be the exact version the library was compiled with.
+FetchContent_Declare(Eigen3
+  URL https://gitlab.com/libeigen/eigen/-/archive/5.0.1/eigen-5.0.1.tar.gz
+  URL_HASH SHA256=e9c326dc8c05cd1e044c71f30f1b2e34a6161a3b6ecf445d56b53ff1669e3dec
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(Eigen3)
 
 ###########################
 #### CGAL dependency ####
 ###########################
-find_package(CGAL 6.2 EXACT QUIET)
-if(NOT CGAL_FOUND OR CGAL_VERSION VERSION_LESS 6.2)
-  message(STATUS "CGAL 6.2 not found, fetching it")
-  include(FetchContent)
-  FetchContent_Declare(CGAL
-    URL https://github.com/CGAL/cgal/releases/download/v6.2/CGAL-6.2.tar.xz
-    URL_HASH SHA256=fbc32816745e871a5cbdeb6245317e9dbf10ae1a957b0ab1edb00b4fde00ba8d
-  )
-  set(FETCHCONTENT_QUIET FALSE) # show progress dialog
-  FetchContent_Populate(CGAL)   # finish fetching and unpacking before continuing
-  set(CGAL_DIR "${FETCHCONTENT_BASE_DIR}/cgal-src")
-  find_package(CGAL 6.2 REQUIRED)
+FetchContent_Declare(CGAL
+  URL https://github.com/CGAL/cgal/releases/download/v6.2/CGAL-6.2.tar.xz
+  URL_HASH SHA256=fbc32816745e871a5cbdeb6245317e9dbf10ae1a957b0ab1edb00b4fde00ba8d
+  # CGAL's release build system only works as the top-level project, so the
+  # non-existent SOURCE_SUBDIR makes this a download-only dependency.
+  SOURCE_SUBDIR use-find-package-instead
+  FIND_PACKAGE_ARGS 6.2 EXACT
+)
+FetchContent_MakeAvailable(CGAL)
+if(NOT CGAL_FOUND)
+  include("${cgal_SOURCE_DIR}/CGALConfig.cmake")
 endif()
 
 ###########################
@@ -159,13 +158,16 @@ if(COVERAGECONTROL_WITH_CUDA)
 endif()
 list(TRANSFORM sources_list PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-set(dependencies_list Eigen3::Eigen OpenMP::OpenMP_CXX)
+# BUILD_INTERFACE keeps Eigen out of the install export set (it may be a
+# non-exportable subproject target when fetched); the installed package
+# config re-finds Eigen3 and links it to the imported target itself.
+set(dependencies_list "$<BUILD_INTERFACE:Eigen3::Eigen>" OpenMP::OpenMP_CXX)
 
 add_library(${PROJECT_NAME} SHARED ${sources_list})
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_BINARY_DIR}")
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_INSTALL_INCLUDEDIR}")
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags CGAL::CGAL Boost::boost Boost::iostreams)
+target_link_libraries(${PROJECT_NAME} PRIVATE compiler_flags CGAL::CGAL Boost::headers Boost::iostreams)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${dependencies_list})
 set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 
@@ -191,7 +193,18 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:${CMAKE_INCLUDE_OUTPUT_DIRECTORY}>")
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INCLUDE_OUTPUT_DIRECTORY})
+# The cgal/ headers are implementation detail: nothing reachable from the
+# public API includes them, and installing them would require shipping CGAL.
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}
+  PATTERN "cgal" EXCLUDE)
+install(DIRECTORY ${eigen3_SOURCE_DIR}/Eigen DESTINATION ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eigen3)
+install(FILES
+  ${eigen3_SOURCE_DIR}/COPYING.APACHE
+  ${eigen3_SOURCE_DIR}/COPYING.BSD
+  ${eigen3_SOURCE_DIR}/COPYING.MINPACK
+  ${eigen3_SOURCE_DIR}/COPYING.MPL2
+  ${eigen3_SOURCE_DIR}/COPYING.README
+  DESTINATION ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eigen3)
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/Config.h" DESTINATION ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/${PROJECT_NAME})
 

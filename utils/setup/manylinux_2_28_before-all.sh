@@ -20,4 +20,4 @@ export CUDA_ROOT=/usr/local/cuda
 export CUDA_PATH=/usr/local/cuda
 export CUDADIR=/usr/local/cuda
 
-bash utils/setup/install_dependencies.sh --boost --gmp --mpfr --eigen --cgal
+bash utils/setup/install_dependencies.sh --boost --gmp --mpfr --cgal

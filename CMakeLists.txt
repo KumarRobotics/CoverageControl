@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.28...4.4)
 if(NOT DEFINED SKBUILD_PROJECT_NAME)
 	set(PROJECT_NAME "CoverageControl")
 else()
